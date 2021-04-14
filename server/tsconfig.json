@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "target": "es2017", 
+    "outDir": "dist",
+    "rootDir": "./",
+    "sourceMap": true,
+    "baseUrl": ".", 
+    "moduleResolution": "node",
+    "removeComments": true,
+    "typeRoots": [ "node_modules/@types" ],
+    "paths": {
+      "@ls-base/*": ["src/*"],
+      "@ls-api": ["src/api"],
+      "@ls-api/*": ["src/api/*"],
+      "@ls-service/*": ["src/service/*"],
+      "@ls-util/*": ["src/util/*"],
+      "@ls-model/*": ["src/model/*"],
+      "*": [
+        "node_modules/@types/*",
+        "src/types/*"
+      ]
+    }
+  }
+}

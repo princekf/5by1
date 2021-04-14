@@ -1,0 +1,15 @@
+{
+    "root": false,
+    "extends": [
+        "plugin:angular/johnpapa" // Uses the recommended rules from @eslint-plugin-angular
+    ],
+    "plugins": [
+        "angular"
+    ],
+    "rules": {
+        "no-empty-function": ["error", { "allow": ["constructors"] }],
+        "no-unused-vars": ["error", { "args": "none" }],
+        "new-cap": ["error", { "newIsCap": true, "capIsNewExceptionPattern" : "Injectable|Component|NgModule|ViewChild|Inject|Input|Output"}],
+        "max-params": ["error", 7]
+    }
+}
