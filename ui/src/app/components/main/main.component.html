@@ -1,0 +1,11 @@
+<mat-drawer-container autosize class="main-container">
+    <mat-drawer #drawer class="sidenav" mode="side" opened="true"
+    (mouseenter)="openLeftMenuDrawer()" (mouseleave)="closeLeftMenuDrawer()">
+      <app-left-nav></app-left-nav>
+    </mat-drawer>
+    <app-header></app-header>
+    <div class="main-content">
+      <router-outlet></router-outlet>
+    </div>
+  
+  </mat-drawer-container>

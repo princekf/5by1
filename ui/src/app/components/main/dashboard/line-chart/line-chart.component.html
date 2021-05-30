@@ -1,0 +1,31 @@
+<mat-card>
+    <mat-card-header class="line-chart-header">
+      <mat-card-title>
+        {{lineData.title.value}}
+      </mat-card-title>
+      <div>
+        <ngx-charts-legend *ngIf="legendNames" [horizontal]="true" [width]="250"  class="chart-legend" [title]="" [data]="legendNames" [colors]="legendColors"></ngx-charts-legend>
+        <button mat-icon-button aria-label="Horizontal menu">
+          <mat-icon class="mat-5by1-white">more_horiz</mat-icon>
+        </button>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="line-chart-area">
+        <ngx-charts-line-chart
+          [scheme]="colorScheme"
+          [legend]="false"
+          [legendPosition]="'below'"
+          [showXAxisLabel]="false"
+          [showYAxisLabel]="false"
+          [xAxis]="true"
+          [yAxis]="true"
+          [timeline]="false"
+          [results]="lineData.results"
+          [animations]="true"
+        >
+      </ngx-charts-line-chart>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
