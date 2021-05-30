@@ -1,0 +1,54 @@
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    .title {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 0;
+    }
+  }
+  .datepicker-button {
+    background-color: "#0062FF"
+  }
+
+  .datepicker-input {
+    height: 1px;
+    visibility: hidden;
+    width: 220px;
+  }
+  
+  .datepicker-icon {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+  }
+  .page-content{
+    width: 98%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .page-content > * {
+    margin: 1em 0;
+  }
+  .dashboard-item{
+    display: inline-block;
+  }
+  .w33p{
+    width: 32%;
+  }
+  .w50p{
+    width: 48%;
+  }
+  .w100p{
+    width: 100%;
+  }
+  .chart-header-details{
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+  }

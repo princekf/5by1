@@ -1,0 +1,24 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon class="mat-5by1-white">{{tableData.title.icon}}</mat-icon>
+      {{tableData.title.value}}
+    </mat-card-title>
+    <div>
+      <button mat-icon-button aria-label="Horizontal menu">
+        <mat-icon class="mat-5by1-white">more_horiz</mat-icon>
+      </button>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+
+    <mat-table [dataSource]="tableData.results">
+      <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+        <mat-header-cell *matHeaderCellDef> {{column.toUpperCase()}}</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element[column]}} </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </mat-card-content>
+</mat-card>

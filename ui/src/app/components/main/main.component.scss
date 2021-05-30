@@ -1,0 +1,45 @@
+.home {
+    text-align: center;
+    margin-top: 10%;
+    font-weight: bolder;
+}
+
+.main-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  
+ .sidenav {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: #12284B;
+    border-right: 0px;
+    padding-right: 2%;
+    overflow-x: hidden;
+  }
+  .sidenav:before{
+		content: "";
+		position: absolute;
+		height: 100%;
+		width: 20%;
+	}
+
+	.sidenav:before {
+		top: 0;
+		right: -20%;
+		border-radius: 10px 0 0 0;
+		box-shadow: -10px 0 0 0 #fff;
+	}
+
+  .main-content{
+    background-color: #FFFFFF;
+    height: 100%;
+  }
+
+
+  

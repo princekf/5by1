@@ -1,0 +1,45 @@
+<header>
+    <div class="container">
+        <mat-toolbar class="toolbar">
+            <button mat-icon-button aria-label="Menu">
+                <mat-icon color="primary" (click)="toggleLeftMenuDrawer()">{{leftMenuDrawerOpened ? 'menu_open' : 'menu'}}</mat-icon>
+              </button>
+
+              <div class="header-search">
+                <mat-form-field appearance="outline">
+                  <mat-icon color="primary" matPrefix>search</mat-icon>
+                  <mat-label>Search here</mat-label>
+                  <input matInput>
+                </mat-form-field>
+              </div>
+
+              <div class="d-flex ml-auto">
+                <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+                  <mat-icon color="primary">add_box</mat-icon>
+                </button>
+                <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+                  <mat-icon color="primary">notifications</mat-icon>
+                </button>
+                <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+                  <mat-icon color="primary">contact_support</mat-icon>
+                </button>
+        
+                <div class="profile">
+                  <div class="avatar" [ngStyle]="{'background-image': 'url(https://images.pexels.com/photos/6437836/pexels-photo-6437836.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500)'}"></div>
+                  <p class="user">Prince Francis</p>
+                </div>
+                
+                <button primary mat-icon-button [matMenuTriggerFor]="menu" aria-label="Vertical menu">
+                  <mat-icon color="primary">more_horiz</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button type="button" mat-menu-item>
+                    logout
+                  </button>
+                </mat-menu>
+              </div>
+
+        </mat-toolbar>
+    </div>
+    <mat-divider></mat-divider>
+</header>

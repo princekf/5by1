@@ -1,0 +1,22 @@
+<mat-card>
+    <mat-card-header class="pie-chart-header">
+        <mat-card-title>
+            {{pieData.title.value}}
+        </mat-card-title>
+        <div>
+            <button mat-icon-button aria-label="Horizontal menu">
+                <mat-icon class="mat-5by1-white">more_horiz</mat-icon>
+            </button>
+        </div>
+    </mat-card-header>
+    <mat-card-content>
+
+        <div class="pie-chart-area">
+            <ngx-charts-pie-chart class="chart" [scheme]="colorScheme"
+                [results]="pieData.results" [gradient]="true" [legend]="false" [tooltipDisabled]="true">
+            </ngx-charts-pie-chart>
+            <ngx-charts-legend *ngIf="legendNames" class="chart-legend" [title]="" [data]="legendNames" [colors]="legendColors">
+            </ngx-charts-legend>
+        </div>
+    </mat-card-content>
+</mat-card>

@@ -60,5 +60,6 @@
     "clean:server": "cd server && yarn cache clean",
     "clean:shared": "cd shared && yarn cache clean",
     "clean:parent": "yarn cache clean"
-  }
+  },
+  "dependencies": {}
 }

@@ -6,7 +6,7 @@ import { UserService } from '@services/user.service';
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: [ './signup.component.scss', '../../shared/style/login-register.scss' ]
+  styleUrls: [ '../common/login-register.scss' ]
 })
 export class SignupComponent {
 
