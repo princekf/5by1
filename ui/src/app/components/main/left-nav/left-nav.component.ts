@@ -20,15 +20,30 @@ const TREE_DATA: FoodNode[] = [
     name: 'Sale',
     icon: 'paid',
     children: [
-      {name: 'sale1'},
-      {name: 'sale2'},
-      {name: 'sale3'},
+      {name: 'Invoices'},
+      {name: 'Revenues'},
+      {name: 'Customers'},
     ]
   },
   {name: 'Purchases',
-    icon: 'shopping_cart' },
+    icon: 'shopping_cart',
+    children: [
+      {name: 'Bills'},
+      {name: 'Payments'},
+      {name: 'Vendors'},
+    ]},
   {name: 'Banking',
-    icon: 'business_center' },
+    icon: 'business_center',
+    children: [
+      {name: 'Accounts'},
+      {name: 'Tranfers'},
+      {name: 'Transactions'},,
+      {name: 'Reconciliations'},
+    ] },
+  {name: 'Reports',
+    icon: 'pie_chart'},
+  {name: 'Settings',
+    icon: 'settings'},
 ];
 
 @Component({

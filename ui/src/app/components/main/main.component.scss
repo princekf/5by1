@@ -5,6 +5,7 @@
 }
 
 .main-container {
+    background-color: #FFFFFF;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -20,25 +21,28 @@
     background-color: #12284B;
     border-right: 0px;
     padding-right: 2%;
+    padding-left: .2em;
     overflow-x: hidden;
   }
+  /*
   .sidenav:before{
 		content: "";
 		position: absolute;
 		height: 100%;
-		width: 20%;
+		width: 30%;
 	}
 
 	.sidenav:before {
 		top: 0;
-		right: -20%;
-		border-radius: 10px 0 0 0;
-		box-shadow: -10px 0 0 0 #fff;
+		right: -30%;
+		border-radius: 20px 0 0 0;
+		box-shadow: -20px 0 0 0 #fff;
 	}
-
+*/
   .main-content{
     background-color: #FFFFFF;
     height: 100%;
+    padding-left: 20px;
   }
 
 
