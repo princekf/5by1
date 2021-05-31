@@ -1,23 +1,26 @@
 header {
-    background-color: #fff;
+    background-color: #1E3354;
     position: sticky;
     top: 0;
     z-index: 999;
     
     .toolbar {
-      height: 78px;
-      padding: 18px 0;
-      background: transparent;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top-left-radius: 20px;
     }
   }
 .header-search {
-  margin-left: 24px;
-  margin-right: 24px;
-  flex-grow: 1;
-
+  width: 60%;
+  font-size: 10px;
+  padding-top: 15px;
   .mat-form-field  {
     width: 100%;
-    max-width: 765px;
+    mat-label {
+      color: rgba(#1E3354, .5);
+    }
   }
 
   .mat-form-field-wrapper {
@@ -25,10 +28,7 @@ header {
     padding-bottom: 0;
   }
 
-  .mat-form-field-label {
-    font-weight: 500;
-    color: rgba(#1E3354, .5);
-  }
+  
 }
 
 .profile {
@@ -43,10 +43,13 @@ header {
   margin-left: 16px;
 }
 .avatar {
-  width: 45px;
-  height: 45px;
+  width: 30px;
+  height: 30px;
   border-radius: 8px;
   background-position: center;
   background-size: cover;
   display: inline-block;
+}
+.header-divider{
+  border-top-color: #E3E3E3;
 }

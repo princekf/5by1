@@ -1,0 +1,29 @@
+.summary-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.summary-content-text{
+    font-weight: 900;
+    font-size: 30px;
+}
+.summary-content-footer{
+    padding-top: 20px;
+    font-size: 15px;
+    color: rgba(#1E3354, .8);
+}
+.dashboard-5by1-card-title-container{
+    display: flex;
+    align-content:center;
+    line-height: 2;
+    span {
+        padding-left: 10px;
+    }
+}
+.dashboard-5by1-card-title-text{
+  font-size: 15px;
+  color: rgba(#1E3354, .8);
+}
+.dashboard-5by1-card-summary-container{
+  padding-top: 10px;
+}
