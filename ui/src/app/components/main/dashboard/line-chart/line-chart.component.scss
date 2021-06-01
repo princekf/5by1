@@ -27,7 +27,6 @@
     align-items: center;
     justify-content: space-between;
 }
-
 .line-chart-area{
     width: 100%;
     height: 300px;
@@ -43,4 +42,13 @@
 .dashboard-5by1-card-title-text{
   font-size: 15px;
   color: rgba(#1E3354, .8);
+}
+@media only screen and (max-width: 768px) {
+  .chart-legend{
+    display: none;
+  }
+
+  .line-chart-area{
+      height: 150px;
+  }
 }

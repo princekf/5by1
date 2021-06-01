@@ -1,5 +1,7 @@
 <mat-drawer-container autosize class="main-container">
-    <mat-drawer #drawer class="sidenav" mode="side" opened="true"
+    <mat-drawer #drawer class="sidenav" [mode]="menuMode"
+    [opened]="defaultOpen"
+    hasBackdrop="true"
     (mouseenter)="openLeftMenuDrawer()" (mouseleave)="closeLeftMenuDrawer()">
       <app-left-nav></app-left-nav>
     </mat-drawer>

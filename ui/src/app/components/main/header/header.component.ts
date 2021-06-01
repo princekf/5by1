@@ -10,18 +10,23 @@ export class HeaderComponent implements OnInit {
 
   leftMenuDrawerOpened = true;
 
-  constructor(private readonly mainService: MainService) {
+  constructor(private readonly mainService: MainService) {}
+
+  ngOnInit(): void {
 
     this.mainService.leftMenuDrawerSubject.subscribe((opened) => (this.leftMenuDrawerOpened = opened));
 
   }
 
-  ngOnInit(): void {
-  }
-
   toggleLeftMenuDrawer = ():void => {
 
     this.mainService.toggleLeftMenuDrawer();
+
+  }
+
+  showLeftMenuDrawer = ():void => {
+
+    this.mainService.showLeftMenuDrawer();
 
   }
 

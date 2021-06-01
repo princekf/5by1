@@ -37,13 +37,13 @@ const TREE_DATA: FoodNode[] = [
     children: [
       {name: 'Accounts'},
       {name: 'Tranfers'},
-      {name: 'Transactions'},,
+      {name: 'Transactions'},
       {name: 'Reconciliations'},
     ] },
   {name: 'Reports',
     icon: 'pie_chart'},
   {name: 'Settings',
-    icon: 'settings'},
+    icon: 'settings'}
 ];
 
 @Component({
@@ -64,11 +64,13 @@ export class LeftNavComponent implements OnInit {
   constructor(private readonly mainService: MainService) {
 
     this.dataSource.data = TREE_DATA;
-    this.mainService.leftMenuDrawerSubject.subscribe((opened) => (this.leftMenuDrawerOpened = opened));
 
   }
 
   ngOnInit(): void {
+
+    this.mainService.leftMenuDrawerSubject.subscribe((opened) => (this.leftMenuDrawerOpened = opened));
+
   }
 
   hasChild = (level: number, node: FoodNode):boolean => Boolean(node.children) && node.children.length > 0;

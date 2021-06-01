@@ -12,6 +12,10 @@
       margin-bottom: 0;
     }
   }
+  .dashboard-datepicker{
+    background-color: #FFFFFF;
+    color: #0062FF;
+  }
   .datepicker-button {
     background-color: #0062FF
   }
@@ -53,4 +57,16 @@
     margin-left: auto;
     display: flex;
     align-items: center;
+  }
+  @media only screen and (max-width: 768px) {
+
+  .w33p{
+    width: 100%;
+  }
+  .w50p{
+    width: 100%;
+  }
+  .w100p{
+    width: 100%;
+  }
   }

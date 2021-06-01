@@ -1,7 +1,7 @@
 <div class="page-header">
     <h3 class="title">Dashboard</h3>
     <div>
-        <button mat-flat-button (click)="picker.open()" color="5by1-blue">
+        <button mat-flat-button (click)="picker.open()" class="dashboard-datepicker">
             <mat-icon class="datepicker-icon">calendar_today</mat-icon>
             {{range.value.start | date: 'd, MMMM, y' }} - {{range.value.end | date: 'd, MMMM, y' }}
         </button>

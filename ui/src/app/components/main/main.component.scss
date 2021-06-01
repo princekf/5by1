@@ -20,9 +20,20 @@
     justify-content: center;
     background-color: #12284B;
     border-right: 0px;
-    padding-right: 2%;
-    padding-left: .2em;
+    padding-left: .25em;
     overflow-x: hidden;
+    padding-right: .25em;
+  }
+  :host ::ng-deep {
+    .mat-drawer-inner-container {
+      overflow-y: scroll;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    }
+    .mat-drawer-inner-container::-webkit-scrollbar { /* WebKit */
+      width: 0;
+      height: 0;
+    }
   }
   /*
   .sidenav:before{

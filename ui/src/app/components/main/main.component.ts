@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MatDrawer } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { MainService } from '@services/main.service';
 import { ACCESS_TOKEN_ID } from '@shared/Constants';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-main',
@@ -10,11 +12,36 @@ import { ACCESS_TOKEN_ID } from '@shared/Constants';
 })
 export class MainComponent implements OnInit {
 
-  public showFiller = false;
+  menuMode = 'side';
 
-  constructor(private router: Router, private readonly mainService: MainService) { }
+  defaultOpen = true;
+
+  @ViewChild('drawer') drawer: MatDrawer;
+
+  constructor(private router: Router, private readonly mainService: MainService,
+    @Inject(DOCUMENT) private document: Document) { }
 
   ngOnInit():void {
+
+    const MOBILE_SCREEN_MAX_WIDTH = 768;
+    if (this.document.defaultView.innerWidth <= MOBILE_SCREEN_MAX_WIDTH) {
+
+      this.defaultOpen = false;
+      this.menuMode = 'over';
+
+    }
+
+    this.mainService.leftMenuDrawerMobileSubject.subscribe((opened) => {
+
+      if (opened) {
+
+        this.menuMode = 'over';
+        this.drawer?.open();
+
+      }
+
+    });
+
   }
 
   logout = ():void => {

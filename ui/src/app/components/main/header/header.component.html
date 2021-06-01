@@ -1,8 +1,9 @@
 <header>
   <mat-toolbar class="toolbar">
     <button mat-icon-button aria-label="Menu">
-      <mat-icon class="mat-5by1-white" (click)="toggleLeftMenuDrawer()">{{leftMenuDrawerOpened ? 'menu_open' : 'menu'}}
+      <mat-icon class="mat-5by1-white menu-icon-large-screen" (click)="toggleLeftMenuDrawer()">{{leftMenuDrawerOpened ? 'menu_open' : 'menu'}}
       </mat-icon>
+      <mat-icon class="mat-5by1-white menu-icon-mobile-screen" (click)="showLeftMenuDrawer()">menu</mat-icon>
     </button>
 
     <div class="header-search">
