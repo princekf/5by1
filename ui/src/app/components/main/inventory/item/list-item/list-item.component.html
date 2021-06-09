@@ -1,0 +1,20 @@
+<mat-table matSort *ngIf="items" [dataSource]="items" (matSortChange)="sortData($event)">
+    <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Name</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.name}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="sPrice">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Sale Price</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.sPrice}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="pPrice">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Purchase Price</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.pPrice}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Status</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.status}} </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
