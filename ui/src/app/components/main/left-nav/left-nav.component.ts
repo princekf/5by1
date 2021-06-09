@@ -4,6 +4,7 @@ import {MatTreeNestedDataSource} from '@angular/material/tree';
 import { MainService } from '@services/main.service';
 
 interface FoodNode {
+  path: string;
   name: string;
   icon?: string;
   children?: FoodNode[];
@@ -11,38 +12,55 @@ interface FoodNode {
 
 const TREE_DATA: FoodNode[] = [
   {
+    path: 'dashboard',
     name: 'Dashboard',
     icon: 'space_dashboard'
   },
-  {name: 'Items',
+  {path: 'item',
+    name: 'Items',
     icon: 'layers'},
   {
+    path: 'sale',
     name: 'Sale',
     icon: 'paid',
     children: [
-      {name: 'Invoices'},
-      {name: 'Revenues'},
-      {name: 'Customers'},
+      {path: 'invoice',
+        name: 'Invoices'},
+      {path: 'revenue',
+        name: 'Revenues'},
+      {path: 'customer',
+        name: 'Customers'},
     ]
   },
-  {name: 'Purchases',
+  {path: 'purchase',
+    name: 'Purchases',
     icon: 'shopping_cart',
     children: [
-      {name: 'Bills'},
-      {name: 'Payments'},
-      {name: 'Vendors'},
+      {path: 'bill',
+        name: 'Bills'},
+      {path: 'payment',
+        name: 'Payments'},
+      {path: 'vendor',
+        name: 'Vendors'},
     ]},
-  {name: 'Banking',
+  {path: 'dashboard',
+    name: 'banking',
     icon: 'business_center',
     children: [
-      {name: 'Accounts'},
-      {name: 'Tranfers'},
-      {name: 'Transactions'},
-      {name: 'Reconciliations'},
+      {path: 'account',
+        name: 'Accounts'},
+      {path: 'tranfer',
+        name: 'Tranfers'},
+      {path: 'transaction',
+        name: 'Transactions'},
+      {path: 'reconciliation',
+        name: 'Reconciliations'},
     ] },
-  {name: 'Reports',
+  {path: 'report',
+    name: 'Reports',
     icon: 'pie_chart'},
-  {name: 'Settings',
+  {path: 'setting',
+    name: 'Settings',
     icon: 'settings'}
 ];
 
