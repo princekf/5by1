@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { UserS } from '@shared/entity/User';
-import { BASE_URI, USER_API, SIGNUP_API, LOGIN_API } from '@shared/serverAPI';
+import { BASE_URI, USER_API, SIGNUP_API, LOGIN_API } from '@shared/server-apis';
 import { catchError } from 'rxjs/operators';
 
 
