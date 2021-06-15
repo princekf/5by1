@@ -1,3 +1,16 @@
+
+<div class="button"> 
+<span class="heading">Items</span>
+<div class="item"></div>
+  <button mat-raised-button class="btn-background"><mat-icon color="primary">save_alt</mat-icon>Import</button>
+  <button mat-raised-button   class="btn-background" ><mat-icon color="primary">ios_share</mat-icon>Export</button>
+  <button mat-raised-button color="primary">+ Add new</button>
+</div>
+<div class="button"> 
+<span class="heading">List of items</span>
+<div class="item"></div>
+<button mat-raised-button  color="primary"><mat-icon color="basic">filter_alt</mat-icon> </button>
+</div>   
 <mat-table matSort *ngIf="items" [dataSource]="items" (matSortChange)="sortData($event)">
     <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Name</mat-header-cell>
@@ -15,6 +28,23 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Status</mat-header-cell>
         <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.status}} </mat-cell>
     </ng-container>
+
+    <ng-container matColumnDef="enable">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Enabled</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row">   
+            <mat-slide-toggle color="primary"> </mat-slide-toggle>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Actions</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row">   
+            <button class="btn-action" mat-button color="primary"><mat-icon>keyboard_control</mat-icon></button>
+        </mat-cell>
+    </ng-container>
+    
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
+
+<mat-paginator [pageSizeOptions]="[2, 10,15, 20]" showFirstLastButtons></mat-paginator>
