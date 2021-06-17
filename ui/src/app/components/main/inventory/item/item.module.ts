@@ -13,7 +13,10 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
- 
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import { AngularFileUploaderModule } from "angular-file-uploader";
+
 @NgModule({
   declarations: [
     ListItemComponent,
@@ -23,6 +26,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     CommonModule,
     ItemRoutingModule,
     MatTableModule,
-    MatSortModule, MatIconModule,MatPaginatorModule,MatButtonModule, MatButtonToggleModule,MatSlideToggleModule,]
+    MatSortModule,MatInputModule, 
+    MatSelectModule, MatIconModule,MatPaginatorModule,
+    MatButtonModule, MatButtonToggleModule,MatSlideToggleModule,AngularFileUploaderModule]
 })
 export class ItemModule { }

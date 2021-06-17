@@ -21,6 +21,9 @@ const routes: Routes = [
         pathMatch: 'full',
         redirectTo: 'dashboard',
       },
+
+      
+      
     ]
   },
 ];
