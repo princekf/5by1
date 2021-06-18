@@ -33,7 +33,7 @@ export class ListProductComponent implements OnInit {
 
   constructor(private productService:ProductService) {
 
-    this.displayedColumns = [ 'name', 'pPrice', 'sPrice', 'status', 'enable', 'actions' ];
+    this.displayedColumns = [ 'name', 'code', 'location', 'unit.name', 'status', 'enable', 'actions' ];
 
   }
 

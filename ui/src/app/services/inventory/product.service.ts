@@ -15,6 +15,7 @@ export class ProductService {
       name: 'Xiaomi Redmi Note 10',
       code: 'XYZ',
       brand: 'Samsung',
+      location: 'Rack-1',
       unit: {
         name: 'Kilogram',
         code: 'KG'
@@ -26,6 +27,7 @@ export class ProductService {
       name: 'Realme 8 Pro',
       code: 'XYZ',
       brand: 'Samsung',
+      location: 'Rack-1',
       unit: {
         name: 'Kilogram',
         code: 'KG'
@@ -37,6 +39,7 @@ export class ProductService {
       name: 'Vivo iQOO 7',
       code: 'XYZ',
       brand: 'Samsung',
+      location: 'Rack-1',
       unit: {
         name: 'Kilogram',
         code: 'KG'
@@ -48,6 +51,7 @@ export class ProductService {
       name: 'Samsung Galaxy F62',
       code: 'XYZ',
       brand: 'Samsung',
+      location: 'Rack-1',
       unit: {
         name: 'Kilogram',
         code: 'KG'
@@ -55,7 +59,7 @@ export class ProductService {
       status: 'Active',
       _id: 'a4'
     },
-     
+
   ];
 
   constructor() { }
