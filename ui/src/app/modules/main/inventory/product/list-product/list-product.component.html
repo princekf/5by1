@@ -16,13 +16,17 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Name</mat-header-cell>
         <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.name}} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="sPrice">
-        <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Sale Price</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.sPrice}} </mat-cell>
+    <ng-container matColumnDef="code">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Code</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.code}} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="pPrice">
-        <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Purchase Price</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.pPrice}} </mat-cell>
+    <ng-container matColumnDef="location">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Location</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.location}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="unit.name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Unit</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.unit.name}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="status">
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Status</mat-header-cell>
