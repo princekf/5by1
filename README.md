@@ -1,4 +1,4 @@
-# A starter project for angular-material-fastify-typescript combination #
+# Simple ERP application built with the following technologies #
 
 * Server - Fastify
 * Database - MongoDB

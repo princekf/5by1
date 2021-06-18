@@ -13,8 +13,8 @@ const routes: Routes = [
         loadChildren: () => import('./dashboard/dashboard.module').then((mod) => mod.DashboardModule)
       },
       {
-        path: 'item',
-        loadChildren: () => import('./inventory/item/item.module').then((mod) => mod.ItemModule)
+        path: 'product',
+        loadChildren: () => import('./inventory/product/product.module').then((mod) => mod.ProductModule)
       },
       {
         path: '',
@@ -22,8 +22,6 @@ const routes: Routes = [
         redirectTo: 'dashboard',
       },
 
-      
-      
     ]
   },
 ];

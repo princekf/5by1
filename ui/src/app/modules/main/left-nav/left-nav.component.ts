@@ -16,16 +16,16 @@ const TREE_DATA: FoodNode[] = [
     name: 'Dashboard',
     icon: 'space_dashboard'
   },
-  {path: 'product',
-    name: 'Product',
+  {path: 'item',
+    name: 'Item',
     icon: 'layers',
     children: [
       {path: 'tax',
         name: 'Taxes'},
       {path: 'category',
         name: 'Categories'},
-      {path: 'item',
-        name: 'Items'},
+      {path: 'product',
+        name: 'Products'},
     ]},
   {
     path: 'sale',

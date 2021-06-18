@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AuthModule } from './components/auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @NgModule({
   declarations: [

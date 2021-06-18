@@ -1,24 +1,23 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ListItemComponent } from './list-item/list-item.component';
-import { CreateItemComponent } from './create-item/create-item.component';
- 
+import { ListProductComponent } from './list-product/list-product.component';
+import { CreateProductComponent } from './create-product/create-product.component';
+
 const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-   
-    component: ListItemComponent
+
+    component: ListProductComponent
   },
   {
     path: 'create',
     pathMatch: 'full',
-    component: CreateItemComponent
+    component: CreateProductComponent
   },
 
-   
-   
+
 ];
 
 @NgModule({
