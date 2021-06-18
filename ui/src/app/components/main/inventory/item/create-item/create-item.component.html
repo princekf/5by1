@@ -1,1 +1,72 @@
-<p>create-item works!</p>
+ 
+ <h3>create item</h3>
+ 
+   <form>
+       <div class="form">
+    <mat-form-field class="details" appearance="outline" >
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Enter name.." >
+    </mat-form-field>
+    
+    <mat-form-field class="details"  appearance="outline" >
+        <mat-label>Tax</mat-label>
+        <mat-select>
+            <mat-option value="tax1">tax1</mat-option>
+            <mat-option value="tax2">tax2</mat-option>
+            <mat-option value="tax3">tax3</mat-option>
+
+        </mat-select>
+      </mat-form-field>
+
+      <h3>Discription</h3>
+
+      <mat-form-field class="text" appearance="outline" >
+        <mat-label>Enter discription...</mat-label>
+        <input matInput #message maxlength="256" placeholder="Enter discription...">
+        <mat-hint align="start"><strong> </strong> </mat-hint>
+        <mat-hint align="end">{{message.value.length}} / 256</mat-hint>
+      </mat-form-field>
+        <br>
+      <mat-form-field class="details" appearance="outline" >
+        <mat-label>Sale price</mat-label>
+        <input matInput placeholder="Enter Sale price.." >
+      </mat-form-field>
+      
+      <mat-form-field  class="details" appearance="outline" >
+          <mat-label>purchase price</mat-label>
+          <input matInput placeholder=" Enter purchase price.." >
+        </mat-form-field> <br>
+ 
+         
+        <mat-form-field class="text"  appearance="outline" >
+          <mat-label>category</mat-label>
+          <mat-select>
+              <mat-option value="category1">category1</mat-option>
+              <mat-option value="category2">category2</mat-option>
+              <mat-option value="category3">category3</mat-option>
+  
+          </mat-select>
+        </mat-form-field> <br>
+
+        <mat-form-field class="text" appearance="outline" >
+          
+          <mat-label>picture</mat-label>
+          <input matInput placeholder="Darag and Drop images heare...." >
+        </mat-form-field> <br>
+        <h3 class="enable">Enabled</h3><br>
+        <mat-button-toggle-group class="btn-toggle"  >
+          
+          <mat-button-toggle  >Yes</mat-button-toggle>
+          <mat-button-toggle >No</mat-button-toggle>
+        </mat-button-toggle-group>
+         <div class="parent">
+        <div class="container"></div>
+         <button mat-raised-button color="basic">Cancel</button>
+         <button mat-raised-button color="primary">Save</button>
+    </div>
+  </div>
+  </form>
+
+ 
+
+ 

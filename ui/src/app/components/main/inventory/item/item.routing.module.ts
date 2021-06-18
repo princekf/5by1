@@ -3,10 +3,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ListItemComponent } from './list-item/list-item.component';
 import { CreateItemComponent } from './create-item/create-item.component';
+ 
 const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
+   
     component: ListItemComponent
   },
   {
@@ -14,6 +16,9 @@ const routes: Routes = [
     pathMatch: 'full',
     component: CreateItemComponent
   },
+
+   
+   
 ];
 
 @NgModule({
