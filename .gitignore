@@ -6,6 +6,7 @@
 #env file
 .env
 yarn.lock
+package-lock.json
 
 # Node artifact files
 node_modules/
