@@ -10,7 +10,7 @@ const routes: Routes = [
   {
     canActivate: [ ],
     path: '',
-    loadChildren: () => import('./components/main/main.module').then((mod) => mod.MainModule)
+    loadChildren: () => import('./modules/main/main.module').then((mod) => mod.MainModule)
   }
 ];
 

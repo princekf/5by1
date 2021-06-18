@@ -3,11 +3,9 @@ import { CommonModule } from '@angular/common';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 
-import { ItemRoutingModule } from './item.routing.module';
-import { ListItemComponent } from './list-item/list-item.component';
-import { CreateItemComponent } from './create-item/create-item.component';
-
-
+import { ItemRoutingModule } from './product.routing.module';
+import { ListProductComponent } from './list-product/list-product.component';
+import { CreateProductComponent } from './create-product/create-product.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatPaginatorModule} from '@angular/material/paginator';
@@ -15,19 +13,19 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
-import { AngularFileUploaderModule } from "angular-file-uploader";
 
 @NgModule({
   declarations: [
-    ListItemComponent,
-    CreateItemComponent,
+    ListProductComponent,
+    CreateProductComponent,
   ],
   imports: [
     CommonModule,
     ItemRoutingModule,
     MatTableModule,
-    MatSortModule,MatInputModule, 
-    MatSelectModule, MatIconModule,MatPaginatorModule,
-    MatButtonModule, MatButtonToggleModule,MatSlideToggleModule,AngularFileUploaderModule]
+    MatSortModule, MatInputModule,
+    MatSelectModule, MatIconModule, MatPaginatorModule,
+    MatButtonModule, MatButtonToggleModule, MatSlideToggleModule
+  ]
 })
-export class ItemModule { }
+export class ProductModule { }
