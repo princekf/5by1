@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 
-import { ItemRoutingModule } from './product.routing.module';
+import { ProductRoutingModule } from './product.routing.module';
 import { ListProductComponent } from './list-product/list-product.component';
 import { CreateProductComponent } from './create-product/create-product.component';
 import {MatIconModule} from '@angular/material/icon';
@@ -21,7 +21,7 @@ import {MatSelectModule} from '@angular/material/select';
   ],
   imports: [
     CommonModule,
-    ItemRoutingModule,
+    ProductRoutingModule,
     MatTableModule,
     MatSortModule, MatInputModule,
     MatSelectModule, MatIconModule, MatPaginatorModule,
