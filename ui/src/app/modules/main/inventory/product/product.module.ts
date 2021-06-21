@@ -13,7 +13,11 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
-
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatRadioModule} from '@angular/material/radio';
+ 
 @NgModule({
   declarations: [
     ListProductComponent,
@@ -25,7 +29,9 @@ import {MatSelectModule} from '@angular/material/select';
     MatTableModule,
     MatSortModule, MatInputModule,
     MatSelectModule, MatIconModule, MatPaginatorModule,
-    MatButtonModule, MatButtonToggleModule, MatSlideToggleModule
+    MatButtonModule, MatButtonToggleModule, MatSlideToggleModule,MatAutocompleteModule, FormsModule, 
+    ReactiveFormsModule,
+    MatChipsModule, MatRadioModule,ReactiveFormsModule ,
   ]
 })
 export class ProductModule { }
