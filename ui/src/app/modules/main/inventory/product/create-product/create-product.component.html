@@ -69,6 +69,7 @@
                   <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                 </mat-chip>
                 <input placeholder="Choose colour"
+                       formControlName="colour"
                        [matChipInputFor]="chipList"
                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                        [matChipInputAddOnBlur]="addOnBlur"
@@ -93,12 +94,11 @@
         <mat-button-toggle-group class="btn-toggle"  >
           <mat-button-toggle >Yes</mat-button-toggle>
           <mat-button-toggle >No</mat-button-toggle>
-        </mat-button-toggle-group>
+        </mat-button-toggle-group><br>
          
          <div class="parent">
-        <div class="container"></div>
-         <button mat-raised-button color="basic">Cancel</button>
-         <button mat-raised-button color="primary">Save</button>
+         <button class="btn-responsive" mat-raised-button color="basic">Cancel</button>
+         <button class="btn-responsive" mat-raised-button color="primary">Save</button>
     </div>
   </div>
   </form>

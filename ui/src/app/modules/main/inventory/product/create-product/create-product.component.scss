@@ -25,15 +25,11 @@ h3{
   }
   .parent{
     display: flex;
-    margin-right: 44rem;
+     margin-top: 1rem;
+     margin-left: 500px;
   }
 
-  .container{
-    flex:1 1;
-   margin-right: 20rem;
-   padding-top: 0px;
-  }
-
+   
   .chip{
     margin-top: 1rem;
     margin-bottom:  1rem;
@@ -73,3 +69,22 @@ $app-theme: mat-light-theme($app-primary, $app-accent);
 
 // Include the mixin
 @include mix-app-theme($app-theme);
+
+
+@media only screen and (max-width: 768px){
+
+  .details{
+    width:60%;
+     
+}
+.text{
+  width:60%;
+}
+ .parent{
+  margin-left:1rem;
+  padding-top: 2rem;
+ }
+
+}
+
+ 
