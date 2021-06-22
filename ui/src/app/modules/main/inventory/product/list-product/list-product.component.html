@@ -11,7 +11,8 @@
 <div class="item"></div>
 <button mat-raised-button  color="primary"><mat-icon color="basic">filter_alt</mat-icon> </button>
 </div>   
-<mat-table matSort *ngIf="items" [dataSource]="items" (matSortChange)="sortData($event)">
+ 
+<mat-table  matSort *ngIf="items" [dataSource]="items" (matSortChange)="sortData($event)">
     <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Name</mat-header-cell>
         <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.name}} </mat-cell>
@@ -52,3 +53,5 @@
 </mat-table>
 
 <mat-paginator [pageSizeOptions]="[2, 10,15, 20]" showFirstLastButtons></mat-paginator>
+
+ 
