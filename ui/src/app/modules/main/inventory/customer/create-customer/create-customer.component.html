@@ -1,1 +1,49 @@
-<p>create-customer works!</p>
+<div class="customer" >
+  <form >
+  <h3>Customer</h3>
+  
+ <mat-form-field  class="details"appearance="outline" >
+     <mat-label>Name</mat-label>
+     <input [formControl]='name' matInput placeholder=Enter your namae>
+     <mat-error *ngIf="name.hasError('required')">Enter your name</mat-error>
+   </mat-form-field>
+   
+   <mat-form-field class="details"  appearance="outline">
+     <mat-label>Email</mat-label>
+     <input type="email" matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com">
+     <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+       Please enter a valid email address
+     </mat-error>
+     <mat-error *ngIf="emailFormControl.hasError('required')">
+       Email is <strong>required</strong>
+     </mat-error>
+   </mat-form-field><br>
+ 
+   <mat-form-field class="details" appearance="outline">
+     <mat-label >State</mat-label>
+     <mat-select [formControl]="state">
+       <mat-option  *ngFor="let state of states" [value]="state.viewValue">
+         {{state.viewValue}}
+       </mat-option>
+     </mat-select>
+     <mat-error   *ngIf="state.hasError('required')">Please choose an state</mat-error>
+   </mat-form-field>
+ 
+   <mat-form-field class="details"  appearance="outline">
+     <mat-label>Telephone</mat-label>
+     <span matPrefix>+91 &nbsp;</span>
+     <input type="tel" [formControl]="phone"  maxlength="10" minlength="10" matInput placeholder="555-555-1234">
+     <mat-icon matSuffix>mode_edit</mat-icon>
+     <mat-error   *ngIf="phone.hasError('required')">enter phone number</mat-error>  
+   </mat-form-field><br>
+
+   <mat-form-field class="address"  appearance="outline">
+      <mat-label>Address</mat-label>
+      <textarea [formControl]="customer"  matInput placeholder="Add address"></textarea>
+      <mat-error   *ngIf="customer.hasError('required')">write your address</mat-error>
+    </mat-form-field> <br>
+    <button mat-raised-button class="btn-save">Save</button>
+  </form>
+ </div>
+
+

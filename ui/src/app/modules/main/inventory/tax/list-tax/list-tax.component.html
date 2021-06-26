@@ -1,1 +1,43 @@
-<p>list-tax works!</p>
+ 
+<div class="tax">
+<h3>Taxes</h3>
+<div class="btn-align">
+<div class="container"></div>
+<button mat-raised-button routerLink="./create">+Add New</button>
+</div>
+<mat-form-field appearance="standard">
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+</mat-form-field>
+
+
+<table mat-table [dataSource]="dataSource"  class="mat-elevation-z8" matSort>
+
+  <ng-container  matColumnDef="gcolour">
+    <th mat-header-cell  *matHeaderCellDef mat-sort-header > Group Colour </th>
+    <td mat-cell *matCellDef="let element"> {{element.gcolour}} </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+
+  <!-- Weight Column -->
+  <ng-container matColumnDef="rate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Rate</th>
+    <td mat-cell *matCellDef="let element"> {{element.rate}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="apliedTo">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>ApliedTo</th>
+    <td mat-cell *matCellDef="let element"> {{element.apliedTo}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
