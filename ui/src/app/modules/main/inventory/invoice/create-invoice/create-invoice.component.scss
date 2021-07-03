@@ -1,0 +1,42 @@
+h2{
+    font-weight: bold;
+    padding-top: 1rem;
+    margin-left: 3rem;
+    margin-bottom: 2rem;
+}
+.create-invoice{
+    display:flex;
+    width: 90%;
+    height: 70%; 
+    justify-content:center;
+    align-items:center;
+}
+
+
+
+.details{
+    padding-right: 3rem;
+    padding-left: 3rem;
+    padding-bottom: 2rem;      
+}
+
+ 
+.mat-form-field {
+    width: 20vw;
+}
+
+.btn-save{
+    margin-left: 3rem;
+    background-color: #0062FF
+}
+
+@media only screen and (max-width: 768px){
+    .details{
+        width:80%;
+         
+    }
+    h2{
+        margin-left: 4%;
+         margin-top: 8%;
+    }
+}

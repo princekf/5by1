@@ -42,6 +42,12 @@ h3{
      padding-left: 1rem;
 
    }
+
+   .btn-responsive1{
+     margin-left: 37%;
+     background-color: #0062ff ;
+   }
+   
  
  @import '~@angular/material/theming';
 
@@ -74,17 +80,27 @@ $app-theme: mat-light-theme($app-primary, $app-accent);
 @media only screen and (max-width: 768px){
 
   .details{
-    width:60%;
+    width:80%;
      
 }
 .text{
-  width:60%;
+  width:80%;
 }
  .parent{
   margin-left:1rem;
   padding-top: 2rem;
  }
-
+ .btn-responsive{
+  margin-top: 3%;
+   width:100%;
+   margin-left: 0;
+   width: 80%;
+ }
+ 
+.prduct{
+  margin-left:2%;
+ 
+}
 }
 
  

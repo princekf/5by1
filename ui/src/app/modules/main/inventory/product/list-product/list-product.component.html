@@ -1,50 +1,56 @@
-
+<div class="product" >
 <div class="button"> 
 <span class="heading">Items</span>
 <div class="item"></div>
-  <button mat-raised-button class="btn-background"><mat-icon color="primary">save_alt</mat-icon>Import</button>
-  <button mat-raised-button   class="btn-background" ><mat-icon color="primary">ios_share</mat-icon>Export</button>
-  <a mat-raised-button routerLink="./create" color="primary" class="btn2-background">+ Add new</a>
+  <button mat-raised-button class="btn-background " color="primary"><mat-icon >save_alt</mat-icon><span class="btn-none">Import</span></button>
+  <button mat-raised-button   class="btn-background" color="primary" ><mat-icon >ios_share</mat-icon><span class="btn-none">Export</span></button>
+  <button mat-raised-button routerLink="./create" color="primary" class="btn2-background"><mat-icon >add</mat-icon><span class="btn-none">Add new</span></button>
 </div>
 <div class="button"> 
 <span class="heading">List of items</span>
 <div class="item"></div>
-<button mat-raised-button  color="primary"><mat-icon color="basic">filter_alt</mat-icon> </button>
-</div>   
+<button mat-raised-button class="btn-background "  color="primary"><mat-icon color="basic">filter_alt</mat-icon> </button>
+</div>  
+
+
+<mat-form-field appearance="standard">
+    <mat-label>Filter</mat-label>
+    <input matInput   placeholder="Ex. ium" #input>
+  </mat-form-field>
  
-<mat-table  matSort *ngIf="items" [dataSource]="items" (matSortChange)="sortData($event)">
+<mat-table class="mat-elevation-z8" matSort *ngIf="items" [dataSource]="items" (matSortChange)="sortData($event)">
     <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Name</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.name}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row" data-label="name"> {{element.name}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="code">
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Code</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.code}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row" data-label="code"> {{element.code}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="location">
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Location</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.location}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row" data-label="location"> {{element.location}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="unit.name">
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Unit</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.unit.name}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row" data-label="unit"> {{element.unit.name}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="status">
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Status</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="summary-table-value-row"> {{element.status}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row" data-label="status"> {{element.status}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="enable">
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Enabled</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="summary-table-value-row">   
+        <mat-cell *matCellDef="let element" class="summary-table-value-row" data-label="enabled">   
             <mat-slide-toggle color="primary"> </mat-slide-toggle>
         </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Actions</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="summary-table-value-row">   
-            <button class="btn-action" mat-button color="primary"><mat-icon>keyboard_control</mat-icon></button>
+        <mat-header-cell class="btn-action" *matHeaderCellDef mat-sort-header class="summary-table-header-row">Actions</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="summary-table-value-row" data-label="actions">   
+            <button  mat-button ><mat-icon  color="primary">keyboard_control</mat-icon></button>
         </mat-cell>
     </ng-container>
     
@@ -54,4 +60,4 @@
 
 <mat-paginator [pageSizeOptions]="[2, 10,15, 20]" showFirstLastButtons></mat-paginator>
 
- 
+</div>

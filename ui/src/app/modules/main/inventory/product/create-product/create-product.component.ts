@@ -2,8 +2,6 @@ import { Component, OnInit, } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import { FormGroup } from '@angular/forms';
-import { FormBuilder } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
@@ -56,24 +54,16 @@ export class CreateProductComponent implements OnInit {
   myControl = new FormControl();
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
-  constructor(private formBuilder: FormBuilder) { }
-  productForm= this.formBuilder.group({
-    name:['',Validators.required],
-    picture:['',Validators.required],
-    brand:['',Validators.required],
-    location:['',Validators.required],
-    code:['',Validators.required],
-    colour:['',Validators.required],
-     
-
-  });
-
+   
+  name=new FormControl('', Validators.required);
+  picture=new FormControl('', Validators.required);
+  brand=new FormControl('', Validators.required);
+  location=new FormControl('', Validators.required);
+  code=new FormControl('', Validators.required);
+  color=new FormControl('', Validators.required);
   
-
-  saveForm(){
-    console.log('Form data is ', this.productForm.value);
-  }
-
+    
+     
   ngOnInit(): void{
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),

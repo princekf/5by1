@@ -3,7 +3,7 @@
      display: flex;
      align-items: center;
      padding-bottom: 25px;
-     padding-right: 25px;
+     
       
  }
  .item{
@@ -13,83 +13,98 @@
  }
  button{
      margin-left: 2rem;
-     
+      
  }
+  
 
  .heading{
      font-weight: bold;
+   
  }
 
  .btn-background{
-     background:rgba(0,98,255,0.3);
+     background-color:#0062FF;
  }
 
  .btn2-background{
     margin-left: 2rem;
+    background-color:#0062FF;
  }
   
+.product{
+  margin-right:2rem;
+  margin-left: 2rem;
+  height:80%;
+  margin-top: 0.5rem;
+}
+.actions{
+  padding-left: 0%;
+}
+  .btn-action{
+ margin-right:2rem;
+
+  }
  @media screen and (max-width: 960px) {
-    .mat-table {
-      border: 0;
-      vertical-align: middle;
+ 
+    .mat-header-cell{
+      display:none;
     }
-  
-    .mat-table caption {
-      font-size: 1em;
-    }
-  
+     
     .mat-table .mat-row {
-      border-bottom: 5px solid #ddd;
+      border-bottom: 8px solid #ddd;
       display: block;
     }
   
     .mat-table .mat-cell {
-      border-bottom: 1px solid #ddd;
       display: block;
-      font-size: 1em;
-    //   text-align: right;
-    //   font-weight: bold;
-      height: 30px;
+      text-align: right;
       margin-bottom: 4%;
+      border-bottom: 1px solid #ddd;
+      height:40px;
+      margin-left: 10px;
+      margin-right: 10px;
+       
     }
     .mat-table .mat-cell:before {
       content: attr(data-label);
       float: left;
       text-transform: uppercase;
       font-weight: normal;
-  
-      
     }
     .mat-table .mat-cell:last-child {
-      border-bottom: 0;
+      padding-right: 0%;
+      border-bottom: 0; 
+      height:60px;
+      border-bottom: 1px solid #ddd;
+      display: block;
     }
     .mat-table .mat-cell:first-child {
-      margin-top: 4%;
-    }
-
-    .mat-header-cell{
-
-         padding: 1px;
-    }
-    button{
-        margin-left: 1rem;
-        font-size:10px;
-       
-        
-    }
-    .mat-icon{
-        
-            width: 20px;
-            height: 20px;
-            font-size: 20px;
-             
       
-          }
+      padding-left: 0%;
+      margin-top: 4%;
+      margin-top: 10%;
+    }
 
-      .btn2-background{
-          font-size:10px ;
-          width: 20px; 
-           
-      } 
+     
+    button{
+        margin-left: 4%;
+        width:20%;   
+    }
+     
+       .btn2-background{
+         margin-left:4%
+       
+       }
+      .product{
+        width: 95%;
+       margin-left: 0%;
+       margin-right:0%;
+      }
+      .heading{
+         margin-left:2%;
+    }
+    .btn-none{
+      display:none;
+    }
        
     }
