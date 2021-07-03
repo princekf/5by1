@@ -17,11 +17,13 @@ import { MainComponent } from './main.component';
 import { HeaderComponent } from './header/header.component';
 import { LeftNavComponent } from './left-nav/left-nav.component';
 
+
 @NgModule({
   declarations: [
     MainComponent,
     LeftNavComponent,
     HeaderComponent,
+
   ],
   imports: [
     CommonModule,

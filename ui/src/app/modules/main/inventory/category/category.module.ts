@@ -6,7 +6,7 @@ import { CategoryRoutingModule } from './category.routing.module';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import {FormsModule,} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';

@@ -22,7 +22,7 @@
   <mat-form-field class="details" appearance="outline">
     <mat-label>Rate</mat-label>
     <input [formControl]="rate" matInput type="number" placeholder="enter rate"  >
-    <mat-error *ngIf="rate.hasError('required')">Please write name</mat-error>
+    <mat-error *ngIf="rate.hasError('required')">Name is required</mat-error>
   </mat-form-field>
   
   <mat-form-field class="details" appearance="outline">

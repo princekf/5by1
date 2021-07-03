@@ -11,8 +11,7 @@ import {MatTableDataSource} from '@angular/material/table';
   styleUrls: [ './list-product.component.scss' ]
 })
 export class ListProductComponent implements OnInit {
-
-
+  
   displayedColumns:Array<string> = null;
 
   items:Array<Product> = null;
@@ -30,6 +29,7 @@ export class ListProductComponent implements OnInit {
     this.dataSource.sort = this.sort;
 
   }
+   
 
   constructor(private productService:ProductService) {
 
