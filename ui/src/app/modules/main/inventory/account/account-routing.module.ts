@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import{ListAccountComponent} from './list-account/list-account.component'
-import{CreateAccountComponent} from './create-account/create-account.component'
+ import{CreateAccountComponent} from './create-account/create-account.component'
 
 const routes: Routes = [
 
@@ -15,7 +15,7 @@ const routes: Routes = [
   {
     path: 'create',
     pathMatch: 'full',
-    component: CreateAccountComponent
+    component:  CreateAccountComponent
   },
 
 

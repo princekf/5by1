@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AccountRoutingModule } from './account-routing.module';
 import { ListAccountComponent } from './list-account/list-account.component';
-import { CreateAccountComponent } from './create-account/create-account.component';
+ 
 
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -17,10 +17,11 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { CreateAccountComponent } from './create-account/create-account.component';
 
 
 @NgModule({
-  declarations: [ListAccountComponent, CreateAccountComponent],
+  declarations: [ListAccountComponent, CreateAccountComponent,  ],
   imports: [
     CommonModule,
     AccountRoutingModule,
