@@ -1,28 +1,36 @@
-h3{
-  margin-top: 2rem;
+.heading{
   font-weight: bold;
+  margin-top: 0.5rem;
 }
 
+.btn-align{
+  display: flex;
+}
+
+.container{
+  flex: 1 1;
+}
+
+
+.btn-background{
+background-color:#0062FF
+}
+button{
+margin-left: 2rem;
+margin-bottom: 1rem;
+}
 table {
   width: 100%;
   
 }
 
-.btn-align{
-    display: flex;
-}
-
-.container{
-    flex: 1 1;
-}
+ 
 .reconciliation{
   margin-left: 4rem; 
   margin-right: 4rem;
+  margin-top: 2rem;
 }
 
-button{
-  background-color:#0062FF
-}
 
 
 @media screen and (max-width: 960px) {
@@ -67,6 +75,13 @@ button{
      width: 95%;
      margin-left: 0%;
      margin-right:0%;
+  }
+
+  .btn-none{
+    display: none;
+  }
+  button{
+    margin-left: 4%;
   }
   
 }

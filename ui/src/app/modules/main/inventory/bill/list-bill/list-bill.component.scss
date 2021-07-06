@@ -1,15 +1,23 @@
-h3{
-    margin-top: 2rem;
-    font-weight: bold;
+.heading{
+  font-weight: bold;
+  margin-top: 0.5rem;
 }
 
-.button{
-  padding-top: 10px;
+.btn-align{
   display: flex;
-  align-items: center;
-  padding-bottom: 25px;
-  
-   
+}
+
+.container{
+  flex: 1 1;
+}
+
+
+.btn-background{
+background-color:#0062FF
+}
+button{
+margin-left: 2rem;
+margin-bottom: 1rem;
 }
 
 table {
@@ -17,22 +25,13 @@ table {
     
   }
 
-  .btn-align{
-      display: flex;
-  }
-
-  .container{
-      flex: 1 1;
-  }
 .bill{
     margin-left: 4rem; 
     margin-right: 4rem;
+    margin-top: 2rem;
 }
 
-button{
-    background-color:#0062FF
-}
-
+ 
 
 @media screen and (max-width: 960px) {
       
@@ -76,6 +75,12 @@ button{
        width: 95%;
        margin-left: 0%;
        margin-right:0%;
+    }
+    .btn-none{
+      display: none;
+    }
+    button{
+      margin-left: 4%;
     }
     
   }
