@@ -1,9 +1,16 @@
 <div class="transaction">
-    <h3>Transation</h3>
-    <div class="btn-align">
-    <div class="container"></div>
-    <button mat-raised-button routerLink="./create">+Add New</button>
-    </div>
+  <div class="btn-align">
+    <span class="heading">Transaction</span>
+  <div class="container"></div>
+  <button mat-raised-button class="btn-background" color="primary"><mat-icon >save_alt</mat-icon><span class="btn-none">Import</span></button>
+  <button mat-raised-button   class="btn-background" color="primary" ><mat-icon >ios_share</mat-icon><span class="btn-none">Export</span></button>
+  <button mat-raised-button class="btn-background"  routerLink="./create" color="primary" ><mat-icon >add</mat-icon><span class="btn-none">Add new</span></button> 
+  </div>
+  <div class="btn-align"> 
+  <span class="heading">List of Transaction</span>
+  <div class="container"></div>
+  <button mat-raised-button class="btn-background"  color="primary"><mat-icon color="basic">filter_alt</mat-icon> </button>
+  </div>
     <mat-form-field appearance="standard">
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>

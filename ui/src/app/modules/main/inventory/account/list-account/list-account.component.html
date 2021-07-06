@@ -1,8 +1,15 @@
-<div class="bill">
-  <h3>Accounts</h3>
+<div class="account">
   <div class="btn-align">
+    <span class="heading">Accounts</span>
   <div class="container"></div>
-  <button mat-raised-button routerLink="./create">+Add New</button>
+  <button mat-raised-button class="btn-background" color="primary"><mat-icon >save_alt</mat-icon><span class="btn-none">Import</span></button>
+  <button mat-raised-button   class="btn-background" color="primary" ><mat-icon >ios_share</mat-icon><span class="btn-none">Export</span></button>
+  <button mat-raised-button class="btn-background"  routerLink="./create" color="primary" ><mat-icon >add</mat-icon><span class="btn-none">Add new</span></button> 
+</div>
+<div class="btn-align"> 
+  <span class="heading">List of Accounts</span>
+  <div class="container"></div>
+  <button mat-raised-button class="btn-background"  color="primary"><mat-icon color="basic">filter_alt</mat-icon> </button>
   </div>
   <mat-form-field appearance="standard">
     <mat-label>Filter</mat-label>
