@@ -18,8 +18,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { CreateAccountComponent } from './create-account/create-account.component';
-
-
+import {MatExpansionModule} from '@angular/material/expansion'; 
+ 
 @NgModule({
   declarations: [ListAccountComponent, CreateAccountComponent,  ],
   imports: [
@@ -27,7 +27,7 @@ import { CreateAccountComponent } from './create-account/create-account.componen
     AccountRoutingModule,
     MatSelectModule,MatFormFieldModule,ReactiveFormsModule,FormsModule,MatAutocompleteModule,
     MatInputModule,MatIconModule,MatIconModule ,MatButtonModule,MatDatepickerModule,
-    MatTableModule,MatSortModule,MatPaginatorModule
+    MatTableModule,MatSortModule,MatPaginatorModule ,MatExpansionModule
   ]
 })
 export class AccountModule { }

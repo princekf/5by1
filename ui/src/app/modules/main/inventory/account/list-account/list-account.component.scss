@@ -82,7 +82,14 @@ table {
   button{
     margin-left: 4%;
   }
-
+  .expand{
+    visibility: hidden;
+  }
+  .visible:hover.expand{
+     
+      visibility: visible;
+    }
 }
+
 
 
