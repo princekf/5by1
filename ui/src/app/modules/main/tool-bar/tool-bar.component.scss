@@ -1,0 +1,53 @@
+
+.main-header{
+    font-weight: 900;
+    margin-top: 0.5rem;
+  }
+  .sub-header {
+    font-weight: 500;
+    margin-top: 0.5em;
+  }
+  .header-container{
+    display: flex;
+  }
+  .sub-header-container{
+    display: flex;
+    margin-top: 2em;
+  }
+  
+.add-new-button{
+    background-color:#0062FF;
+    color: #FFFFFF;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 400;
+    margin-left: 1em;
+    margin-bottom: 1em;
+  }
+  .tool-bar-button {
+    background-color:#0062FF22;
+    color: #0062FF;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 400;
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+    margin-left: 1em;
+    margin-bottom: 1em;
+  }
+  .filter-button {
+    min-width: 30px;
+    padding: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .empy-space{
+    flex: 1 1;
+  }  
+
+  @media screen and (max-width: 960px) {
+    .tool-bar-button-caption{
+        display: none;
+    }
+  }

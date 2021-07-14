@@ -1,63 +1,90 @@
-import { Component, OnInit } from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {MatSort} from '@angular/material/sort';
-import {ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-export interface Taxtable {
-  gcolour: string;
-  name: string;
-  rate: number;
-  apliedTo: number;
-}
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { Tax } from '@shared/entity/inventory/tax';
+import { MainService } from '@services/main.service';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
-const Tax_DATA: Taxtable[] = [
-  {gcolour: 'abc', name: 'fan',rate:9555,apliedTo: 55555},
-  {gcolour: 'abc', name: 'fan',rate:3555,apliedTo: 75555},
-  {gcolour: 'abc', name: 'tan',rate:3555,apliedTo: 55555},
-  {gcolour: 'abc', name: 'fan',rate:3555,apliedTo: 25555},
-  {gcolour: 'zbc', name: 'fan',rate:3555,apliedTo: 55555},
-  {gcolour: 'abc', name: 'van',rate:5555,apliedTo: 15555},
-  {gcolour: 'abc', name: 'van',rate:3555,apliedTo: 55555},
-  {gcolour: 'kbc', name: 'fan',rate:3555,apliedTo: 35555},
-  {gcolour: 'abc', name: 'fan',rate:2555,apliedTo: 85555},
-  {gcolour: 'abc', name: 'fan',rate:3555,apliedTo: 55555},
-  {gcolour: 'dbc', name: 'tan',rate:3555,apliedTo: 95555},
-  {gcolour: 'abc', name: 'van',rate:4555,apliedTo: 65555},
-  {gcolour: 'abc', name: 'fan',rate:2555,apliedTo: 55555},
-  {gcolour: 'fbc', name: 'tan',rate:1555,apliedTo: 55555},
-  {gcolour: 'pbc', name: 'fan',rate:3555,apliedTo: 45555},
-   
+const Tax_DATA: Tax[] = [
+  {_id: '01231',
+    groupName: 'IGST',
+    name: 'IGST 5%',
+    rate: 5,
+    appliedTo: 100,
+    description: 'IGST 5% - For other state customers'},
+  {_id: '01232',
+    groupName: 'IGST',
+    name: 'IGST 10%',
+    rate: 10,
+    appliedTo: 100,
+    description: 'IGST 10% - For other state customers'},
+  {_id: '01233',
+    groupName: 'IGST',
+    name: 'IGST 12%',
+    rate: 12,
+    appliedTo: 100,
+    description: 'IGST 12% - For other state customers'}
 ];
 
 @Component({
   selector: 'app-list-tax',
   templateUrl: './list-tax.component.html',
-  styleUrls: ['./list-tax.component.scss']
+  styleUrls: [ './list-tax.component.scss' ],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px',
+        minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 
 
 export class ListTaxComponent implements OnInit {
-  displayedColumns: string[] = ['gcolour', 'name', 'rate', 'apliedTo'];
-  dataSource = new MatTableDataSource<Taxtable>(Tax_DATA);
 
-  
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  expandedElement: Tax | null;
+
+  displayedColumns: string[] = [ 'groupName', 'name', 'rate', 'appliedTo', 'description' ];
+
+  columnHeaders = {
+    groupName: 'Group Name',
+    name: 'Name',
+    rate: 'Rate (%)',
+    appliedTo: 'Applied To (%)',
+    description: 'Description'
+
   }
+
+  extraColumns: string[] = [ ];
+
+  dataSource = new MatTableDataSource<Tax>(Tax_DATA);
+
 
   @ViewChild(MatSort) sort: MatSort;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  ngAfterViewInit() {
+
+  constructor(private readonly mainService: MainService) { }
+
+  ngAfterViewInit():void {
+
+    if (this.mainService.isMobileView()) {
+
+      const COLUMN_COUNT_MOBILE_VIEW = 3;
+      this.extraColumns = this.displayedColumns;
+      this.displayedColumns = this.extraColumns.splice(0, COLUMN_COUNT_MOBILE_VIEW);
+
+    }
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+
   }
-  
-  constructor() { }
 
   ngOnInit(): void {
 
-     
+
   }
 
 }

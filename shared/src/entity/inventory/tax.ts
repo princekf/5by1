@@ -7,6 +7,8 @@ export interface TaxS {
     rate: number;
     // Applied to - like 100% of total, 50% of total etc
     appliedTo: number;
+    // Descriptions like : For other state customers, etc
+    description?: string;
 }
 
 export interface Tax extends TaxS {
