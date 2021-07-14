@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+const MOBILE_SCREEN_MAX_WIDTH = 768;
 @Injectable({
   providedIn: 'root'
 })
@@ -11,6 +13,10 @@ export class MainService {
   leftMenuDrawerMobileSubject = new BehaviorSubject(false);
 
   private leftMenuLastToggleStatus = true;
+
+  constructor(@Inject(DOCUMENT) private document: Document) { }
+
+  isMobileView = ():boolean => this.document.defaultView.innerWidth <= MOBILE_SCREEN_MAX_WIDTH;
 
   setLeftMenuDrawerSubject = (val:boolean):void => {
 

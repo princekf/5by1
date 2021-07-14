@@ -18,13 +18,11 @@ export class MainComponent implements OnInit {
 
   @ViewChild('drawer') drawer: MatDrawer;
 
-  constructor(private router: Router, private readonly mainService: MainService,
-    @Inject(DOCUMENT) private document: Document) { }
+  constructor(private router: Router, private readonly mainService: MainService) { }
 
   ngOnInit():void {
 
-    const MOBILE_SCREEN_MAX_WIDTH = 768;
-    if (this.document.defaultView.innerWidth <= MOBILE_SCREEN_MAX_WIDTH) {
+    if (this.mainService.isMobileView()) {
 
       this.defaultOpen = false;
       this.menuMode = 'over';
