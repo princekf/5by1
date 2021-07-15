@@ -14,12 +14,14 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import { ToolBarComponent } from '../../tool-bar/tool-bar.component';
+import { ToolBarModule } from '../../tool-bar/tool-bar.module';
+
 @NgModule({
-  declarations: [ CreateTaxComponent, ListTaxComponent, ToolBarComponent ],
+  declarations: [ CreateTaxComponent, ListTaxComponent ],
   imports: [
     CommonModule,
     TaxRoutingModule,
+    ToolBarModule,
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule, MatAutocompleteModule,
     MatInputModule, MatIconModule, MatIconModule, MatButtonModule, MatDatepickerModule,
     MatTableModule, MatSortModule, MatPaginatorModule
