@@ -23,7 +23,6 @@ import { LeftNavComponent } from './left-nav/left-nav.component';
     MainComponent,
     LeftNavComponent,
     HeaderComponent,
-
   ],
   imports: [
     CommonModule,

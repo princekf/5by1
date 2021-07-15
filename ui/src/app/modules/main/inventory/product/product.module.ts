@@ -17,7 +17,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatRadioModule} from '@angular/material/radio';
- 
+import { ToolBarModule } from '../../tool-bar/tool-bar.module';
+
 @NgModule({
   declarations: [
     ListProductComponent,
@@ -25,6 +26,7 @@ import {MatRadioModule} from '@angular/material/radio';
   ],
   imports: [
     CommonModule,
+    ToolBarModule,
     ProductRoutingModule,
     MatTableModule,
     MatSortModule, MatInputModule,
