@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {MatSort, Sort} from '@angular/material/sort';
-import { ProductService } from '@services/inventory/product.service';
+import { ProductService } from '@fboservices/inventory/product.service';
 import { Product } from '@shared/entity/inventory/product';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';

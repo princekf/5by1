@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MainService } from '@services/main.service';
+import { MainService } from '@fboservices/main.service';
 
 @Component({
   selector: 'app-header',

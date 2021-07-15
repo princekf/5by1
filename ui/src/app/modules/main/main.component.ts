@@ -1,9 +1,8 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
-import { MainService } from '@services/main.service';
+import { MainService } from '@fboservices/main.service';
 import { ACCESS_TOKEN_ID } from '@shared/Constants';
-import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-main',

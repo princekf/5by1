@@ -1,31 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { Tax } from '@shared/entity/inventory/tax';
-import { MainService } from '@services/main.service';
+import { QueryData } from '@shared/util/query-data';
+import { MainService } from '@fboservices/main.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-
-const Tax_DATA: Tax[] = [
-  {_id: '01231',
-    groupName: 'IGST',
-    name: 'IGST 5%',
-    rate: 5,
-    appliedTo: 100,
-    description: 'IGST 5% - For other state customers'},
-  {_id: '01232',
-    groupName: 'IGST',
-    name: 'IGST 10%',
-    rate: 10,
-    appliedTo: 100,
-    description: 'IGST 10% - For other state customers'},
-  {_id: '01233',
-    groupName: 'IGST',
-    name: 'IGST 12%',
-    rate: 12,
-    appliedTo: 100,
-    description: 'IGST 12% - For other state customers'}
-];
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PAGE_SIZE_OPTIONS } from '@fboutil/constants';
+import { TaxService } from '@fboservices/inventory/tax.service';
 
 @Component({
   selector: 'app-list-tax',
@@ -40,9 +24,7 @@ const Tax_DATA: Tax[] = [
     ]),
   ],
 })
-
-
-export class ListTaxComponent implements OnInit {
+export class ListTaxComponent {
 
   expandedElement: Tax | null;
 
@@ -54,19 +36,46 @@ export class ListTaxComponent implements OnInit {
     rate: 'Rate (%)',
     appliedTo: 'Applied To (%)',
     description: 'Description'
-
   }
 
   extraColumns: string[] = [ ];
 
-  dataSource = new MatTableDataSource<Tax>(Tax_DATA);
+  dataSource = new MatTableDataSource<Tax>([]);
+
+  pageSizeOptions:Array<number> = PAGE_SIZE_OPTIONS;
+
+  queryParams:QueryData = { };
+
+  routerSubscription: Subscription;
+
+  loading = true;
 
 
   @ViewChild(MatSort) sort: MatSort;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private readonly mainService: MainService) { }
+  constructor(private router:Router,
+    private activatedRoute : ActivatedRoute,
+    private readonly mainService: MainService,
+    private readonly taxService:TaxService) { }
+
+  private loadData = () => {
+
+    this.loading = true;
+    this.taxService.list(this.queryParams).subscribe((taxes) => {
+
+      this.dataSource.data = taxes;
+      this.loading = false;
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
+
+  };
 
   ngAfterViewInit():void {
 
@@ -77,14 +86,34 @@ export class ListTaxComponent implements OnInit {
       this.displayedColumns = this.extraColumns.splice(0, COLUMN_COUNT_MOBILE_VIEW);
 
     }
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    this.sort.sortChange.subscribe((cSort:Sort) => {
+
+      this.queryParams.sortc = cSort.active;
+      this.queryParams.sortd = cSort.direction;
+      this.router.navigate([], { queryParams: this.queryParams });
+
+    });
+    this.subscribeParamChange();
+    this.queryParams = {...this.activatedRoute.snapshot.queryParams};
+    this.loadData();
 
   }
 
-  ngOnInit(): void {
+  private subscribeParamChange = () => {
 
+    this.activatedRoute.queryParams.subscribe((value) => {
 
-  }
+      this.queryParams = {
+        start: value.start ?? 0,
+        limit: value.limit ?? this.pageSizeOptions[0],
+        sortc: value.sortc ? value.sortc : null,
+        sortd: value.sortd ? value.sortd : null,
+        qrs: value.qrs ?? null,
+      };
+      this.loadData();
+
+    });
+
+  };
 
 }

@@ -14,6 +14,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
 
 @NgModule({
@@ -24,7 +26,7 @@ import { ToolBarModule } from '../../tool-bar/tool-bar.module';
     ToolBarModule,
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule, MatAutocompleteModule,
     MatInputModule, MatIconModule, MatIconModule, MatButtonModule, MatDatepickerModule,
-    MatTableModule, MatSortModule, MatPaginatorModule
+    MatTableModule, MatSortModule, MatPaginatorModule, NgxSkeletonLoaderModule
   ]
 })
 export class TaxModule {}
