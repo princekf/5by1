@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
-import { MainService } from '@services/main.service';
+import { MainService } from '@fboservices/main.service';
 
 interface FoodNode {
   path: string;

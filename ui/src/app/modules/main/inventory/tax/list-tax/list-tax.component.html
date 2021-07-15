@@ -1,6 +1,9 @@
 <app-tool-bar createUri="./create" mainHeader="Tax" subHeader="List of Taxes"></app-tool-bar>
-
-<table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="fiveby1-table">
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+  <!-- above line will produce the rendering of 5 circles with the pulse animation and the aria-valuetext attribute set with "This item is actually loading..." -->
+</div>
+<table [style.display]="loading ? 'none': ''" mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="fiveby1-table">
 
   <!-- Group Name Column -->
   <ng-container matColumnDef="groupName">
@@ -55,4 +58,4 @@
     (click)="expandedElement = expandedElement === element ? null : element"></tr>
   <tr mat-row *matRowDef="let element; columns: ['expandedDetail']" class="fiveby1-detail-row"></tr>
 </table>
-<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator *ngIf="!loading" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>

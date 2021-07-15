@@ -26,7 +26,8 @@
     "@angular/platform-browser-dynamic": "11.0.5",
     "@angular/router": "11.0.5",
     "@shared": "link:../shared/dist",
-    "@swimlane/ngx-charts": "^18.0.1",
+    "@swimlane/ngx-charts": "18.0.1",
+    "ngx-skeleton-loader": "2.10.1",
     "rxjs": "6.5.5",
     "tslib": "2.0.0",
     "zone.js": "0.10.3"
