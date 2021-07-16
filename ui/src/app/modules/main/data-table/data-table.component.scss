@@ -1,4 +1,32 @@
 
+.table-header {
+    font-weight: 500;
+    margin-top: 0.5em;
+}
+.table-header-container{
+    display: flex;
+    margin-top: 2em;
+}
+
+.empy-space{
+    flex: 1 1;
+}  
+
+.filter-button {
+  background-color:#0062FF;
+  color: #FFFFFF;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 400;
+  margin-left: 1em;
+  margin-bottom: 1em;
+  min-width: 30px;
+  padding: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+
 .fiveby1-table {
     width: 100%;
   }
@@ -34,3 +62,11 @@
     width: 50%;
     vertical-align: middle;
   }
+
+.fob-table-paginator {
+  ::ng-deep {
+      .mat-paginator-outer-container {
+          display: inherit;
+      }
+  }
+}
