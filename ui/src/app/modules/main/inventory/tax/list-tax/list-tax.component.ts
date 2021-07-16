@@ -1,6 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { Component } from '@angular/core';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -31,10 +29,6 @@ export class ListTaxComponent {
   loading = true;
 
   taxes:Array<Tax> = [];
-
-  @ViewChild(MatSort) sort: MatSort;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     private activatedRoute : ActivatedRoute,
