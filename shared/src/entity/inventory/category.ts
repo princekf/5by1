@@ -8,8 +8,8 @@ interface CategoryTax {
 
 export interface Category {
     name: string;
-    // Id of parent category
-    parent?: string;
+    // Parent category
+    parent?: Category;
     // Products under one category may have more than one taxes
     taxRules?: Array<CategoryTax>
 }
