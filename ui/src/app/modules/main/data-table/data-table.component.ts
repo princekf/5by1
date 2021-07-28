@@ -7,6 +7,7 @@ import { MainService } from '@fboservices/main.service';
 import { PAGE_SIZE_OPTIONS } from '@fboutil/constants';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import { QueryData } from '@shared/util/query-data';
+import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 
 @Component({
   selector: 'app-data-table',
@@ -29,19 +30,22 @@ export class DataTableComponent {
 
   @Input() columnHeaders: Record<string, string>;
 
-  private _tableData:Array<unknown>;
+  private _tableData:ListQueryRespType<unknown>;
+
+  totalItems:number;
 
   @Input()
-  get tableData(): Array<unknown> {
+  get tableData(): ListQueryRespType<unknown> {
 
     return this._tableData;
 
   }
 
-  set tableData(tableData: Array<unknown>) {
+  set tableData(tableData: ListQueryRespType<unknown>) {
 
     this._tableData = tableData;
-    this.dataSource.data = tableData;
+    this.dataSource.data = tableData.items;
+    this.totalItems = tableData.totalItems;
 
   }
 

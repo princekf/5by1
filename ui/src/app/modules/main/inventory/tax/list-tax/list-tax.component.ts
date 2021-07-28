@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TaxService } from '@fboservices/inventory/tax.service';
 import { Tax } from '@shared/entity/inventory/tax';
+import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 @Component({
   selector: 'app-list-tax',
   templateUrl: './list-tax.component.html',
@@ -28,7 +29,10 @@ export class ListTaxComponent {
 
   loading = true;
 
-  taxes:Array<Tax> = [];
+  taxes:ListQueryRespType<Tax> = {
+    totalItems: 0,
+    items: []
+  };
 
   constructor(
     private activatedRoute : ActivatedRoute,
