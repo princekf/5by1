@@ -40,4 +40,4 @@
   <tr mat-row *matRowDef="let element; columns: ['expandedDetail']" class="fiveby1-detail-row"></tr>
 </table>
 <mat-paginator [style.display]="loading ? 'none': ''" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons
-  class="fob-table-paginator"></mat-paginator>
+  class="fob-table-paginator" [length]="totalItems"></mat-paginator>
