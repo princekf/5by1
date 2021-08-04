@@ -7,7 +7,7 @@
   <button mat-flat-button class="tool-bar-button">
     <mat-icon>ios_share</mat-icon><span class="tool-bar-button-caption">Export</span>
   </button>
-  <button mat-flat-button class="add-new-button" routerLink="{{createUri}}">
+  <button mat-flat-button class="add-new-button" (click)="onCreateClick()">
     <mat-icon>add</mat-icon><span class="tool-bar-button-caption">Add new</span>
   </button>
 </div>

@@ -1,41 +1,27 @@
-h2{
-    font-weight: bold;
-    padding-top: 1rem;
-    margin-left: 3rem;
-    margin-bottom: 2rem;
-}
-.create-tax{
-    display:flex;
-    width: 90%;
-    height: 70%; 
-    justify-content:center;
-    align-items:center;
+.tax-create-form{
+    width: 40%;
+    margin-top: 3%;
+    margin-left: 10%;
 }
 
-
-
-.details{
-    padding-right: 3rem;
-    padding-left: 3rem;
-    padding-bottom: 2rem;      
+.tax-create-form .mat-form-field {
+    width: 100%;
+    min-width: 300px;
 }
 
- 
-.mat-form-field {
-    width: 20vw;
-}
-
-.btn-save{
-    margin-left: 3rem;
-    background-color: #0062FF
-}
-
-@media only screen and (max-width: 768px){
-    .details{
-        width:70%;
-    }
-    h2{
-        margin-left: 0px;
-         margin-top: 2rem;
-    }
-}
+.tax-submit-container {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+  }
+  .cancel-button{
+    width: 22%;
+    background-color: rgba(0,98,255, .3);
+    color: #0062FF;
+  }
+  .submit-button{
+    width: 22%;
+    background-color: #0062FF;
+    color: #FFFFFF;
+    margin-left: 4%;
+  }

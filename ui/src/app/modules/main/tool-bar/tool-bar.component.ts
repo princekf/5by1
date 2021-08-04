@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tool-bar',
@@ -13,9 +14,15 @@ export class ToolBarComponent implements OnInit {
 
   @Input() subHeader: string;
 
-  constructor() { }
+  constructor(private readonly router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  onCreateClick(): void {
+
+    this.router.navigate([ this.createUri ], { queryParams: {burl: this.router.url} });
+
   }
 
 }

@@ -1,35 +1,55 @@
-<div class="create-tax">
-<form>  
+<form [formGroup]="form" class="tax-create-form" (ngSubmit)="upsertTax()">
   <h2>Create Taxes</h2>
-   
-  <mat-form-field class="details" appearance="outline">
-    <mat-label>Group colour</mat-label>
-    <mat-select [formControl]="groupname" required>
-      <mat-option>--</mat-option>
-      <mat-option *ngFor="let Gname of Gnames" [value]="Gname">
-        {{Gname.name}}
-      </mat-option>
-    </mat-select>
-    <mat-error *ngIf="groupname.hasError('required')">Please choose a Group name</mat-error> 
-  </mat-form-field>
-  
-  <mat-form-field class="details" appearance="outline">
-    <mat-label>Name</mat-label>
-    <input [formControl]="name" type="text"  matInput placeholder="enter name" >
-    <mat-error *ngIf="name.hasError('required')">Please write name</mat-error> 
-  </mat-form-field> <br>
-  
-  <mat-form-field class="details" appearance="outline">
-    <mat-label>Rate</mat-label>
-    <input [formControl]="rate" matInput type="number" placeholder="enter rate"  >
-    <mat-error *ngIf="rate.hasError('required')">Name is required</mat-error>
-  </mat-form-field>
-  
-  <mat-form-field class="details" appearance="outline">
-    <mat-label>AppliedTo</mat-label>
-    <input [formControl]="appliedTo" matInput type="number" placeholder="enter rate"  >
-    <mat-error *ngIf="appliedTo.hasError('required')">complte the feature</mat-error>
-  </mat-form-field><br>
-  <button class="btn-save" mat-raised-button color="primary">save</button>
-  </form>
-</div>
+  <p>
+    <mat-form-field>
+      <mat-label>Group name</mat-label>
+      <input type="text" matInput placeholder="Ex. CGST, SGST etc" formControlName="groupName">
+      <mat-error *ngIf="form.controls['groupName'].hasError('required')">
+        Group name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input type="text" matInput placeholder="Ex. CGST-9%" formControlName="name">
+      <mat-error *ngIf="form.controls['name'].hasError('required')">
+        Name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Rate</mat-label>
+      <input type="number" matInput placeholder="Ex. 9" formControlName="rate">
+      <mat-error *ngIf="form.controls['rate'].hasError('required')">
+        Rate is <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="form.controls['rate'].hasError('min')">
+        Rate should be greater than or equal to <strong>0</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Applied to</mat-label>
+      <input type="number" matInput placeholder="Ex. 50" formControlName="appliedTo">
+      <mat-error *ngIf="form.controls['appliedTo'].hasError('required')">
+        Applied to is <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="form.controls['appliedTo'].hasError('min') || form.controls['appliedTo'].hasError('max')">
+        Rate should be between <strong>0</strong> and <strong>100</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+  </p>
+  <p class="tax-submit-container">
+    <button class="cancel-button" mat-button (click)="goToTaxes()">Cancel</button>
+    <button type="submit" class="submit-button" mat-button>Save</button>
+  </p>
+</form>

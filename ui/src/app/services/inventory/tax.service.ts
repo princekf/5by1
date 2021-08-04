@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Tax } from '@shared/entity/inventory/tax';
+import { Tax, TaxS } from '@shared/entity/inventory/tax';
 import { delay } from 'rxjs/internal/operators';
 import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
@@ -93,11 +93,22 @@ export class TaxService {
 
       const limit = queryParams.limit ?? 10;
       const start = queryParams.start ?? 0;
+      const pageIndex = Math.ceil(start / limit);
       const resp:ListQueryRespType<Tax> = {
         totalItems: this.items.length,
-        items: this.items.slice(start, start + limit)
+        items: this.items.slice(start, start + limit),
+        pageIndex
       };
       return of(resp).pipe(delay(FAKE_TIMEOUT));
+
+    }
+
+    public save(tax:TaxS):Observable<Tax> {
+
+      const taxC = <Tax> tax;
+      taxC._id = `auto_id_${this.items.length}`;
+      this.items.push(taxC);
+      return of(taxC).pipe(delay(FAKE_TIMEOUT));
 
     }
 

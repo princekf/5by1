@@ -34,6 +34,8 @@ export class DataTableComponent {
 
   totalItems:number;
 
+  pageIndex = 0;
+
   @Input()
   get tableData(): ListQueryRespType<unknown> {
 
@@ -46,6 +48,7 @@ export class DataTableComponent {
     this._tableData = tableData;
     this.dataSource.data = tableData.items;
     this.totalItems = tableData.totalItems;
+    this.pageIndex = tableData.pageIndex;
 
   }
 
