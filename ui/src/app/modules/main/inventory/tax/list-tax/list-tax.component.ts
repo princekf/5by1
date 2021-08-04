@@ -31,6 +31,7 @@ export class ListTaxComponent {
 
   taxes:ListQueryRespType<Tax> = {
     totalItems: 0,
+    pageIndex: 0,
     items: []
   };
 
