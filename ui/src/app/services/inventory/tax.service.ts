@@ -31,7 +31,7 @@ export class TaxService {
         rate: 12,
         appliedTo: 100,
         description: 'IGST 12% - For other state customers'},
-      {_id: '01233',
+      {_id: '01234',
         groupName: 'IGST',
         name: 'IGST 18%',
         rate: 18,
@@ -55,31 +55,31 @@ export class TaxService {
         rate: 6,
         appliedTo: 100,
         description: 'SGST 6% - For intra state sale'},
-      {_id: '01333',
+      {_id: '01334',
         groupName: 'SGST',
         name: 'SGST 9%',
         rate: 9,
         appliedTo: 100,
         description: 'SGST 9% - For intra state sale'},
-      {_id: '01331',
+      {_id: '01335',
         groupName: 'CGST',
         name: 'CGST 2.5%',
         rate: 2.5,
         appliedTo: 100,
         description: 'CGST 2.5% - For intra state sale'},
-      {_id: '01332',
+      {_id: '01336',
         groupName: 'CGST',
         name: 'CGST 5%',
         rate: 5,
         appliedTo: 100,
         description: 'CGST 5% - For intra state sale'},
-      {_id: '01333',
+      {_id: '01337',
         groupName: 'CGST',
         name: 'CGST 6%',
         rate: 6,
         appliedTo: 100,
         description: 'CGST 6% - For intra state sale'},
-      {_id: '01333',
+      {_id: '01338',
         groupName: 'CGST',
         name: 'CGST 9%',
         rate: 9,
@@ -103,6 +103,24 @@ export class TaxService {
 
     }
 
+    public listByIds(taxIds: Array<string>):Observable<Array<Tax>> {
+
+      const fItems = this.items.filter((taxP) => taxIds.includes(taxP._id));
+      return of(fItems).pipe(delay(FAKE_TIMEOUT));
+
+    }
+
+    public deleteByIds(taxIds: Array<string>):Observable<Array<Tax>> {
+
+      const deletedArray:Array<Tax> = [];
+      const balanceArray:Array<Tax> = [];
+      this.items.forEach((taxP) => (taxIds.includes(taxP._id) ? deletedArray.push(taxP) : balanceArray.push(taxP)));
+      this.items = balanceArray;
+      return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
+
+    }
+
+
     public save(tax:TaxS):Observable<Tax> {
 
       const taxC = <Tax> tax;
@@ -124,6 +142,22 @@ export class TaxService {
 
       const taxC = this.items.find((taxT) => taxT._id === taxId);
       return of(taxC).pipe(delay(FAKE_TIMEOUT));
+
+    }
+
+    public getGroupNames():Observable<Array<string>> {
+
+      const groupNames:Array<string> = [];
+      for (const taxP of this.items) {
+
+        if (!groupNames.includes(taxP.groupName)) {
+
+          groupNames.push(taxP.groupName);
+
+        }
+
+      }
+      return of(groupNames).pipe(delay(FAKE_TIMEOUT));
 
     }
 

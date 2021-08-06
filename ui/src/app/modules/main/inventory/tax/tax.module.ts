@@ -12,12 +12,15 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import {MatSortModule} from '@angular/material/sort';
+import {MatTableModule} from '@angular/material/table';
 
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
 import { DataTableModule } from '../../data-table/data-table.module';
+import { DeleteTaxComponent } from './delete-tax/delete-tax.component';
 
 @NgModule({
-  declarations: [ CreateTaxComponent, ListTaxComponent ],
+  declarations: [ CreateTaxComponent, ListTaxComponent, DeleteTaxComponent ],
   imports: [
     CommonModule,
     TaxRoutingModule,
@@ -25,7 +28,7 @@ import { DataTableModule } from '../../data-table/data-table.module';
     DataTableModule,
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule, MatAutocompleteModule,
     MatInputModule, MatIconModule, MatIconModule, MatButtonModule, MatDatepickerModule,
-    NgxSkeletonLoaderModule,
+    NgxSkeletonLoaderModule, MatSortModule, MatTableModule,
   ]
 })
 export class TaxModule {}

@@ -7,7 +7,13 @@
   <p>
     <mat-form-field>
       <mat-label>Group name</mat-label>
-      <input type="text" matInput placeholder="Ex. CGST, SGST etc" formControlName="groupName">
+      <input type="text" matInput placeholder="Ex. CGST, SGST etc" formControlName="groupName"
+      [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let option of groupNameOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
       <mat-error *ngIf="form.controls['groupName'].hasError('required')">
         Group name is <strong>required</strong>
       </mat-error>
@@ -52,7 +58,7 @@
       <textarea matInput formControlName="description"></textarea>
     </mat-form-field>
   </p>
-  <p class="tax-submit-container">
+  <p class="form-submit-container">
     <button class="cancel-button" mat-button (click)="goToTaxes()">Cancel</button>
     <button type="submit" class="submit-button" mat-button>Save</button>
   </p>

@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ListTaxComponent } from './list-tax/list-tax.component';
 import { CreateTaxComponent } from './create-tax/create-tax.component';
+import { DeleteTaxComponent } from './delete-tax/delete-tax.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,11 @@ const routes: Routes = [
     path: 'create',
     pathMatch: 'full',
     component: CreateTaxComponent
+  },
+  {
+    path: 'delete',
+    pathMatch: 'full',
+    component: DeleteTaxComponent
   },
 ];
 

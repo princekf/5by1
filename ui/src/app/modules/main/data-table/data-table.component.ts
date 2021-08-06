@@ -9,7 +9,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Tax } from '../../../../../../shared/dist/entity/inventory/tax';
+import { Tax } from '@shared/entity/inventory/tax';
 
 @Component({
   selector: 'app-data-table',
@@ -71,6 +71,8 @@ export class DataTableComponent {
   @Input() loading:boolean;
 
   @Input() editUri: string;
+
+  @Input() deleteUri: string;
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -152,6 +154,16 @@ export class DataTableComponent {
 
     const [ selectedTax ] = <Array<Tax>> this.selection.selected;
     this.router.navigate([ this.editUri ], { queryParams: {id: selectedTax._id,
+      burl: this.router.url} });
+
+  }
+
+  deleteSelected = (): void => {
+
+    const selectedTaxes = <Array<Tax>> this.selection.selected;
+    const ids = [];
+    selectedTaxes.forEach((taxP) => ids.push(taxP._id));
+    this.router.navigate([ this.deleteUri ], { queryParams: {ids: ids.join(),
       burl: this.router.url} });
 
   }
