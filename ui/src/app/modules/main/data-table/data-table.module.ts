@@ -7,7 +7,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatTableModule} from '@angular/material/table';
-
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [ DataTableComponent ],
@@ -18,7 +18,8 @@ import {MatTableModule} from '@angular/material/table';
     MatSortModule,
     MatPaginatorModule,
     NgxSkeletonLoaderModule,
-    MatTableModule
+    MatTableModule,
+    MatCheckboxModule
   ],
   exports: [ DataTableComponent ]
 })

@@ -16,8 +16,6 @@ const routes: Routes = [
     pathMatch: 'full',
     component: CreateTaxComponent
   },
-
-
 ];
 
 @NgModule({

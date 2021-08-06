@@ -1,6 +1,10 @@
 <div class="table-header-container">
   <span class="table-header">{{tableHeader}}</span>
   <div class="empy-space"></div>
+  <button mat-flat-button class="filter-button" [disabled]="selection.selected.length !== 1"
+  (click)="editSelected()">
+    <mat-icon>edit</mat-icon>
+  </button>
   <button mat-flat-button class="filter-button">
     <mat-icon>filter_alt</mat-icon>
   </button>
@@ -11,32 +15,44 @@
 <table [style.display]="loading ? 'none': ''" mat-table [dataSource]="dataSource" multiTemplateDataRows matSort
   class="fiveby1-table">
 
-  <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+  <!-- Checkbox Column -->
+  <ng-container matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef>
+      <mat-checkbox (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+      </mat-checkbox>
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+  
+  <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumnsO">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> {{columnHeaders[column]}} </th>
     <td mat-cell *matCellDef="let element"> {{findColumnValue(element, column)}} </td>
   </ng-container>
 
   <!-- Expandable section -->
   <ng-container matColumnDef="expandedDetail">
-    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumnsO.length">
       <div class="fiveby1-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
         <div *ngFor="let column of extraColumns" class="extra-row">
           <span>{{columnHeaders[column]}}</span>
           <span>{{element[column]}}</span>
         </div>
-        <div class="extra-row">
-          <span>Actions</span>
-          <mat-icon>edit</mat-icon>
-          <mat-icon>delete</mat-icon>
-        </div>
       </div>
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns" class="fiveby1-table-header"></tr>
-  <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="fiveby1-element-row"
+  <tr mat-header-row *matHeaderRowDef="displayedColumnsS" class="fiveby1-table-header"></tr>
+  <tr mat-row *matRowDef="let element; columns: displayedColumnsS;" class="fiveby1-element-row"
     [class.fiveby1-expanded-row]="expandedElement === element"
     (click)="expandedElement = expandedElement === element ? null : element"></tr>
+
   <tr mat-row *matRowDef="let element; columns: ['expandedDetail']" class="fiveby1-detail-row"></tr>
 </table>
 <mat-paginator [style.display]="loading ? 'none': ''" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons
