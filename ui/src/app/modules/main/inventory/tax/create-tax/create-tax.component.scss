@@ -12,19 +12,12 @@
     min-width: 300px;
 }
 
-.tax-submit-container {
-    width: 100%;
-    display: flex;
-    justify-content: right;
-  }
-  .cancel-button{
-    width: 22%;
-    background-color: rgba(0,98,255, .3);
-    color: #0062FF;
-  }
-  .submit-button{
-    width: 22%;
-    background-color: #0062FF;
-    color: #FFFFFF;
-    margin-left: 4%;
+  @media only screen and (max-width: 768px) {
+    .form-header {
+      margin-left: 0%;
+    }
+    .tax-create-form{
+        width: 100%;
+        margin-left: 0%;
+    }
   }

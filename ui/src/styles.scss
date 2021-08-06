@@ -28,6 +28,49 @@ body { margin: 0; font-family: "Montserrat-Regular"; }
     justify-content: flex-end;
 }
 
+.form-submit-container {
+  width: 100%;
+  display: flex;
+  justify-content: right;
+}
+
+.form-submit-container button{
+  width: 22%;
+  margin-left: 4%;
+}
+
+.cancel-button{
+  background-color: rgba(0,98,255, .3);
+  color: #0062FF;
+}
+
+.submit-button{
+  background-color: #0062FF;
+  color: #FFFFFF;
+}
+
+.delete-submit-container {
+  padding-top: 3%;
+  width: 100%;
+  display: flex;
+  justify-content: right;
+}
+
+.delete-submit-container button {
+  width: 12%;
+  margin-right: 4%;
+}
+
+.delete-cancel-button {
+  background-color: rgba(0,98,255, .3);
+  color: #0062FF;
+}
+
+.delete-submit-button{
+  background-color: #FF5722;
+  color: #FFFFFF;
+}
+
 @keyframes slide {
     100% { top: 4%; }
   }
@@ -129,3 +172,15 @@ cursor: pointer;
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+
+@media only screen and (max-width: 768px) {
+  
+  .delete-submit-container button {
+    width: 30%;
+    margin-right: 4%;
+  }
+
+}

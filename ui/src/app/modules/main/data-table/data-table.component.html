@@ -1,6 +1,10 @@
 <div class="table-header-container">
   <span class="table-header">{{tableHeader}}</span>
   <div class="empy-space"></div>
+  <button mat-flat-button class="filter-button" [disabled]="selection.selected.length < 1"
+  (click)="deleteSelected()">
+    <mat-icon>delete</mat-icon>
+  </button>
   <button mat-flat-button class="filter-button" [disabled]="selection.selected.length !== 1"
   (click)="editSelected()">
     <mat-icon>edit</mat-icon>
@@ -38,7 +42,7 @@
 
   <!-- Expandable section -->
   <ng-container matColumnDef="expandedDetail">
-    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumnsO.length">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumnsO.length + 1">
       <div class="fiveby1-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
         <div *ngFor="let column of extraColumns" class="extra-row">
           <span>{{columnHeaders[column]}}</span>

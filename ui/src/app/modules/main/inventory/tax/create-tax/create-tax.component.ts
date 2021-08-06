@@ -4,6 +4,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaxService } from '@fboservices/inventory/tax.service';
 import { Tax } from '@shared/entity/inventory/tax';
+import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 const MAX_RATE = 100;
 @Component({
@@ -16,6 +18,11 @@ export class CreateTaxComponent implements OnInit {
   formHeader = 'Create Taxes';
 
   loading = false;
+
+  private groupNames: string[] = [];
+
+  groupNameOptions: Observable<string[]>;
+
 
   emailFormControl = new FormControl('', [
     Validators.required,
@@ -33,10 +40,26 @@ export class CreateTaxComponent implements OnInit {
   });
 
   constructor(private readonly router: Router,
-    private route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private readonly taxService:TaxService) { }
 
+  private _filter(value: string): string[] {
+
+    const filterValue = value.toLowerCase();
+    return this.groupNames.filter((option) => option.toLowerCase().includes(filterValue));
+
+  }
+
   ngOnInit(): void {
+
+    this.groupNameOptions = this.form.controls.groupName.valueChanges.pipe(
+      startWith(''), map((value) => this._filter(value))
+    );
+    this.taxService.getGroupNames().subscribe((groupNames) => {
+
+      this.groupNames = groupNames;
+
+    });
 
     const tId = this.route.snapshot.queryParamMap.get('id');
     if (tId) {

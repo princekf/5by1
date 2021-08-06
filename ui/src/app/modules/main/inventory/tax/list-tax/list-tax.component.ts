@@ -12,7 +12,6 @@ import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 })
 export class ListTaxComponent {
 
-
   displayedColumns: string[] = [ 'groupName', 'name', 'rate', 'appliedTo', 'description' ];
 
   columnHeaders = {
