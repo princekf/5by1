@@ -112,4 +112,19 @@ export class TaxService {
 
     }
 
+    public update(tax:Tax):Observable<Tax> {
+
+      const idx = this.items.findIndex((taxT) => taxT._id === tax._id);
+      this.items[idx] = tax;
+      return of(tax).pipe(delay(FAKE_TIMEOUT));
+
+    }
+
+    public get(taxId:string):Observable<Tax> {
+
+      const taxC = this.items.find((taxT) => taxT._id === taxId);
+      return of(taxC).pipe(delay(FAKE_TIMEOUT));
+
+    }
+
 }

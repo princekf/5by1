@@ -1,5 +1,9 @@
-<form [formGroup]="form" class="tax-create-form" (ngSubmit)="upsertTax()">
-  <h2>Create Taxes</h2>
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="tax-create-form" (ngSubmit)="upsertTax()">
   <p>
     <mat-form-field>
       <mat-label>Group name</mat-label>

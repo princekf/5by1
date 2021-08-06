@@ -8,6 +8,8 @@ import { PAGE_SIZE_OPTIONS } from '@fboutil/constants';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Tax } from '../../../../../../shared/dist/entity/inventory/tax';
 
 @Component({
   selector: 'app-data-table',
@@ -25,8 +27,6 @@ import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 export class DataTableComponent {
 
   @Input() tableHeader: string;
-
-  @Input() displayedColumns: Array<string>;
 
   @Input() columnHeaders: Record<string, string>;
 
@@ -52,7 +52,25 @@ export class DataTableComponent {
 
   }
 
+  displayedColumnsO: Array<string>;
+
+  @Input()
+  get displayedColumns(): Array<string> {
+
+    return this.displayedColumnsO;
+
+  }
+
+  set displayedColumns(displayedColumnsP: Array<string>) {
+
+    this.displayedColumnsO = displayedColumnsP;
+    this.displayedColumnsS = [ 'select', ...this.displayedColumns ];
+
+  }
+
   @Input() loading:boolean;
+
+  @Input() editUri: string;
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -68,8 +86,35 @@ export class DataTableComponent {
 
   queryParams:QueryData = { };
 
+  selection = new SelectionModel<unknown>(true, []);
+
+  displayedColumnsS: Array<string>;
+
   constructor(private router:Router,
     private readonly mainService: MainService) { }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected(): boolean {
+
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle(): void {
+
+    if (this.isAllSelected()) {
+
+      this.selection.clear();
+      return;
+
+    }
+
+    this.selection.select(...this.dataSource.data);
+
+  }
 
   ngAfterViewInit():void {
 
@@ -102,5 +147,13 @@ export class DataTableComponent {
   }
 
   findColumnValue = (element:unknown, column:string):string => <string>column.split('.').reduce((acc, cur) => acc[cur], element);
+
+  editSelected = (): void => {
+
+    const [ selectedTax ] = <Array<Tax>> this.selection.selected;
+    this.router.navigate([ this.editUri ], { queryParams: {id: selectedTax._id,
+      burl: this.router.url} });
+
+  }
 
 }
