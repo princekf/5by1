@@ -6,6 +6,7 @@ import { TaxService } from '@fboservices/inventory/tax.service';
 import { Tax } from '@shared/entity/inventory/tax';
 import { Observable } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 const MAX_RATE = 100;
 @Component({
@@ -41,7 +42,8 @@ export class CreateTaxComponent implements OnInit {
 
   constructor(private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly taxService:TaxService) { }
+    private readonly taxService:TaxService,
+    private readonly toastr: ToastrService) { }
 
   private _filter(value: string): string[] {
 
@@ -104,11 +106,13 @@ export class CreateTaxComponent implements OnInit {
     const taxP = <Tax> this.form.value;
     (taxP._id ? this.taxService.update(taxP) : this.taxService.save(taxP)).subscribe((taxC) => {
 
+      this.toastr.success('Tax saved', `Tax ${taxC.name} is saved successfully`);
       this.goToTaxes();
 
     }, (error) => {
 
       this.loading = false;
+      this.toastr.error('Tax not saved', `Error in saving tax ${taxP.name}`);
       console.error(error);
 
     });

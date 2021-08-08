@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Tax, TaxS } from '@shared/entity/inventory/tax';
+import { Tax } from '@shared/entity/inventory/tax';
 import { delay } from 'rxjs/internal/operators';
 import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
@@ -87,8 +87,6 @@ export class TaxService {
         description: 'CGST 9% - For intra state sale'}
     ]
 
-    constructor() { }
-
     public list(queryParams:QueryData):Observable<ListQueryRespType<Tax>> {
 
       const limit = queryParams.limit ?? 10;
@@ -120,8 +118,7 @@ export class TaxService {
 
     }
 
-
-    public save(tax:TaxS):Observable<Tax> {
+    public save(tax:Tax):Observable<Tax> {
 
       const taxC = <Tax> tax;
       taxC._id = `auto_id_${this.items.length}`;
