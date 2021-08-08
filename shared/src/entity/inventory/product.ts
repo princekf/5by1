@@ -1,6 +1,7 @@
 import { Unit } from './unit';
 
-export interface ProductS {
+export interface Product {
+    _id?: string;
     name: string;
     code?: string;
     brand?: string;
@@ -11,7 +12,4 @@ export interface ProductS {
     colors?: string[];
     hasBatch?: boolean;
     status: 'Active' | 'Disabled' | 'Deleted';
-}
-export interface Product extends ProductS {
-    _id?: string;
 }

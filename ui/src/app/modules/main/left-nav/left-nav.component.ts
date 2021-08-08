@@ -20,6 +20,8 @@ const TREE_DATA: FoodNode[] = [
     name: 'Item',
     icon: 'layers',
     children: [
+      {path: 'unit',
+        name: 'Units'},
       {path: 'tax',
         name: 'Taxes'},
       {path: 'category',
