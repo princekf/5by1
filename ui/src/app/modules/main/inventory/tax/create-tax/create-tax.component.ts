@@ -25,12 +25,6 @@ export class CreateTaxComponent implements OnInit {
   groupNameOptions: Observable<string[]>;
 
 
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email,
-  ]);
-
-
   form: FormGroup = new FormGroup({
     _id: new FormControl(null),
     groupName: new FormControl('', [ Validators.required ]),

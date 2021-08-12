@@ -40,6 +40,12 @@ export class UnitService {
 
     ]
 
+    public listAll():Observable<Array<Unit>> {
+
+      return of(this.items).pipe(delay(FAKE_TIMEOUT));
+
+    }
+
     public list(queryParams:QueryData):Observable<ListQueryRespType<Unit>> {
 
       const limit = queryParams.limit ?? 10;
@@ -88,9 +94,9 @@ export class UnitService {
 
     }
 
-    public get(id:string):Observable<Unit> {
+    public get(objId:string):Observable<Unit> {
 
-      const unitC = this.items.find((uitT) => uitT._id === id);
+      const unitC = this.items.find((uitT) => uitT._id === objId);
       return of(unitC).pipe(delay(FAKE_TIMEOUT));
 
     }
