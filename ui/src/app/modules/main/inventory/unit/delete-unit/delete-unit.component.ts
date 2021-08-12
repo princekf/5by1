@@ -97,13 +97,13 @@ export class DeleteUnitComponent implements OnInit {
     this.unitService.deleteByIds(tIds).subscribe((unitsP) => {
 
       this.loading = false;
-      this.toastr.success('Unit deleted', 'Units are deleted successfully');
+      this.toastr.success('Units are deleted successfully', 'Unit deleted');
       this.goToUnits();
 
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error('Unit not deleted', 'Error in deleting units');
+      this.toastr.error('Error in deleting units', 'Unit not deleted');
       console.error(error);
 
     });

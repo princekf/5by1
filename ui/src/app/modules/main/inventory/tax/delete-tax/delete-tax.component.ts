@@ -94,13 +94,13 @@ export class DeleteTaxComponent implements OnInit {
     this.taxService.deleteByIds(tIds).subscribe((taxesP) => {
 
       this.loading = false;
-      this.toastr.success('Tax deleted', 'Taxes are deleted successfully');
+      this.toastr.success('Taxes are deleted successfully', 'Tax deleted');
       this.goToTaxes();
 
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error('Tax not deleted', 'Error in deleting taxes');
+      this.toastr.error('Error in deleting taxes', 'Tax not deleted');
       console.error(error);
 
     });

@@ -1,6 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UnitService } from '@fboservices/inventory/unit.service';
 import { ToastrService } from 'ngx-toastr';
@@ -22,15 +22,36 @@ export class CreateUnitComponent implements OnInit {
 
   groupNameOptions: Observable<string[]>;
 
-  // TODO Implement validation : https://angular.io/guide/form-validation
-  form: FormGroup = new FormGroup({
+  timesConditionallyRequiredValidator = (formControl: AbstractControl): ValidationErrors => {
+
+    if (!formControl.parent) {
+
+      return null;
+
+    }
+    if (formControl.parent.get('parent').value) {
+
+      let errors = Validators.required(formControl);
+      if (!errors) {
+
+        errors = Validators.min(1)(formControl);
+
+      }
+      return errors;
+
+    }
+    return null;
+
+  }
+
+  fboForm: FormGroup = new FormGroup({
     _id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
     code: new FormControl('', [ Validators.required ]),
     parent: new FormControl(''),
-    times: new FormControl('', [ Validators.min(1) ]),
-    decimalPlaces: new FormControl('', [ Validators.min(0) ]),
-    description: new FormControl('', [ Validators.required ]),
+    times: new FormControl('', [ this.timesConditionallyRequiredValidator ]),
+    decimalPlaces: new FormControl('', [ Validators.required, Validators.min(0) ]),
+    description: new FormControl(''),
   });
 
   constructor(private readonly router: Router,
@@ -50,7 +71,7 @@ export class CreateUnitComponent implements OnInit {
         this.formHeader = 'Update Units';
         this.unitService.get(tId).subscribe((unitC) => {
 
-          this.form.setValue({_id: unitC._id,
+          this.fboForm.setValue({_id: unitC._id,
             name: unitC.name,
             code: unitC.code,
             parent: unitC.parent,
@@ -91,17 +112,22 @@ export class CreateUnitComponent implements OnInit {
 
   upsertUnit(): void {
 
+    if (!this.fboForm.valid) {
+
+      return;
+
+    }
     this.loading = true;
-    const unitP = <Unit> this.form.value;
+    const unitP = <Unit> this.fboForm.value;
     (unitP._id ? this.unitService.update(unitP) : this.unitService.save(unitP)).subscribe((unitC) => {
 
-      this.toastr.success('Unit saved', `Unit ${unitC.name} is saved successfully`);
+      this.toastr.success(`Unit ${unitC.name} is saved successfully`, 'Unit saved');
       this.goToUnits();
 
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error('Unit not saved', `Error in saving unit ${unitP.name}`);
+      this.toastr.error(`Error in saving unit ${unitP.name}`, 'Unit not saved');
       console.error(error);
 
     });

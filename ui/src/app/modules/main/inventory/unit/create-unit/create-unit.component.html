@@ -3,12 +3,13 @@
 <div *ngIf="loading">
   <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
 </div>
-<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertUnit()">
+<form [style.display]="loading ? 'none': ''" 
+[formGroup]="fboForm" class="fbo-create-form" (ngSubmit)="upsertUnit()">
   <p>
     <mat-form-field>
       <mat-label>Name</mat-label>
       <input type="text" matInput placeholder="Ex. Kilogram" formControlName="name">
-      <mat-error *ngIf="form.controls['name'].hasError('required')">
+      <mat-error *ngIf="fboForm.controls['name'].hasError('required')">
         Name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
@@ -17,7 +18,7 @@
     <mat-form-field>
       <mat-label>Code</mat-label>
       <input type="text" matInput placeholder="Ex. KG" formControlName="code">
-      <mat-error *ngIf="form.controls['name'].hasError('required')">
+      <mat-error *ngIf="fboForm.controls['code'].hasError('required')">
         Code is <strong>required</strong>
       </mat-error>
     </mat-form-field>
@@ -32,17 +33,26 @@
     </mat-form-field>
   </p>
   <p>
-    <mat-form-field>
+    <mat-form-field *ngIf="fboForm.controls['parent'].value">
       <mat-label>Times</mat-label>
       <input type="number" matInput placeholder="Ex. 100" formControlName="times">
+      <mat-error *ngIf="fboForm.controls['times'].hasError('required')">
+        Times is <strong>required</strong> if parent is selected
+      </mat-error>
+      <mat-error *ngIf="fboForm.controls['times'].hasError('min')">
+        Times should be greater than or equal to <strong>1</strong>
+      </mat-error>
     </mat-form-field>
   </p>
   <p>
     <mat-form-field>
       <mat-label>Decimal places</mat-label>
       <input type="number" matInput placeholder="Ex. 3" formControlName="decimalPlaces">
-      <mat-error *ngIf="form.controls['name'].hasError('required')">
+      <mat-error *ngIf="fboForm.controls['decimalPlaces'].hasError('required')">
         Decimal place is <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="fboForm.controls['decimalPlaces'].hasError('min')">
+        Rate should be greater than or equal to <strong>0</strong>
       </mat-error>
     </mat-form-field>
   </p>
