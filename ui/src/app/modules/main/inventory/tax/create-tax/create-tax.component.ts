@@ -96,17 +96,22 @@ export class CreateTaxComponent implements OnInit {
 
   upsertTax(): void {
 
+    if (!this.form.valid) {
+
+      return;
+
+    }
     this.loading = true;
     const taxP = <Tax> this.form.value;
     (taxP._id ? this.taxService.update(taxP) : this.taxService.save(taxP)).subscribe((taxC) => {
 
-      this.toastr.success('Tax saved', `Tax ${taxC.name} is saved successfully`);
+      this.toastr.success(`Tax ${taxC.name} is saved successfully`, 'Tax saved');
       this.goToTaxes();
 
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error('Tax not saved', `Error in saving tax ${taxP.name}`);
+      this.toastr.error(`Error in saving tax ${taxP.name}`, 'Tax not saved');
       console.error(error);
 
     });
