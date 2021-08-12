@@ -1,1 +1,59 @@
-<p>create-unit works!</p>
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertUnit()">
+  <p>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input type="text" matInput placeholder="Ex. Kilogram" formControlName="name">
+      <mat-error *ngIf="form.controls['name'].hasError('required')">
+        Name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Code</mat-label>
+      <input type="text" matInput placeholder="Ex. KG" formControlName="code">
+      <mat-error *ngIf="form.controls['name'].hasError('required')">
+        Code is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Parent</mat-label>
+      <mat-select placeholder="Ex. Milliegram is the parent of Kilogram" formControlName="parent">
+        <mat-option></mat-option>
+        <mat-option *ngFor="let unit of units" [value]="unit">{{unit.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Times</mat-label>
+      <input type="number" matInput placeholder="Ex. 100" formControlName="times">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Decimal places</mat-label>
+      <input type="number" matInput placeholder="Ex. 3" formControlName="decimalPlaces">
+      <mat-error *ngIf="form.controls['name'].hasError('required')">
+        Decimal place is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+  </p>
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToUnits()">Cancel</button>
+    <button type="submit" class="submit-button" mat-button>Save</button>
+  </p>
+</form>
