@@ -25,19 +25,19 @@
   </p>
   <p>
     <mat-form-field>
-      <mat-label>Parent</mat-label>
-      <mat-select placeholder="Ex. Milliegram is the parent of Kilogram" formControlName="parent">
+      <mat-label>Base Unit</mat-label>
+      <mat-select placeholder="Ex. Milliegram is the base unit of Kilogram" formControlName="baseUnit">
         <mat-option></mat-option>
         <mat-option *ngFor="let unit of units" [value]="unit">{{unit.name}}</mat-option>
       </mat-select>
     </mat-form-field>
   </p>
   <p>
-    <mat-form-field *ngIf="fboForm.controls['parent'].value">
+    <mat-form-field *ngIf="fboForm.controls['baseUnit'].value">
       <mat-label>Times</mat-label>
       <input type="number" matInput placeholder="Ex. 100" formControlName="times">
       <mat-error *ngIf="fboForm.controls['times'].hasError('required')">
-        Times is <strong>required</strong> if parent is selected
+        Times is <strong>required</strong> if base unit is selected
       </mat-error>
       <mat-error *ngIf="fboForm.controls['times'].hasError('min')">
         Times should be greater than or equal to <strong>1</strong>

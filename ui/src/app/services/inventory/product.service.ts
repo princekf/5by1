@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Product } from '@shared/entity/inventory/product';
 import { delay } from 'rxjs/internal/operators';
+import { Unit } from '../../../../../shared/dist/entity/inventory/unit';
 
 const FAKE_TIMEOUT = 1000;
 
@@ -10,16 +11,19 @@ const FAKE_TIMEOUT = 1000;
 })
 export class ProductService {
 
+  private numberUnit:Unit = {
+    name: 'Number',
+    code: 'No',
+    decimalPlaces: 0
+  }
+
   private items:Array<Product> = [
     {
       name: 'Xiaomi Redmi Note 10',
       code: 'XYZ',
       brand: 'Samsung',
       location: 'Rack-1',
-      unit: {
-        name: 'Kilogram',
-        code: 'KG'
-      },
+      unit: this.numberUnit,
       status: 'Active',
       _id: 'a1'
     },
@@ -28,10 +32,7 @@ export class ProductService {
       code: 'XYZ',
       brand: 'Samsung',
       location: 'Rack-1',
-      unit: {
-        name: 'Kilogram',
-        code: 'KG'
-      },
+      unit: this.numberUnit,
       status: 'Active',
       _id: 'a2'
     },
@@ -40,10 +41,7 @@ export class ProductService {
       code: 'XYZ',
       brand: 'Samsung',
       location: 'Rack-1',
-      unit: {
-        name: 'Kilogram',
-        code: 'KG'
-      },
+      unit: this.numberUnit,
       status: 'Active',
       _id: 'a3'
     },
@@ -52,10 +50,7 @@ export class ProductService {
       code: 'XYZ',
       brand: 'Samsung',
       location: 'Rack-1',
-      unit: {
-        name: 'Kilogram',
-        code: 'KG'
-      },
+      unit: this.numberUnit,
       status: 'Active',
       _id: 'a4'
     },

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
@@ -9,17 +9,17 @@ import { UnitService } from '@fboservices/inventory/unit.service';
 @Component({
   selector: 'app-list-unit',
   templateUrl: './list-unit.component.html',
-  styleUrls: ['./list-unit.component.scss']
+  styleUrls: [ './list-unit.component.scss' ]
 })
 export class ListUnitComponent {
 
-  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'parent.name', 'times' ];
+  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'baseUnit.name', 'times' ];
 
   columnHeaders = {
     name: 'Name',
     code: 'Code',
     decimalPlaces: 'Decimals',
-    'parent.name': 'Parent',
+    'baseUnit.name': 'Base Unit',
     times: 'Times'
   }
 
@@ -43,28 +43,28 @@ export class ListUnitComponent {
 
       this.loading = true;
       this.unitService.list(this.queryParams).subscribe((units) => {
-  
+
         this.units = units;
         this.loading = false;
-  
+
       }, (error) => {
-  
+
         console.error(error);
         this.loading = false;
-  
+
       });
-  
+
     };
-  
+
     ngAfterViewInit():void {
-  
+
       this.activatedRoute.queryParams.subscribe((value) => {
-  
+
         this.queryParams = { ...value };
         this.loadData();
-  
+
       });
-  
+
     }
 
 }
