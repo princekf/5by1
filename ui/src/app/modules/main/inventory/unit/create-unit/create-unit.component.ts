@@ -29,7 +29,7 @@ export class CreateUnitComponent implements OnInit {
       return null;
 
     }
-    if (formControl.parent.get('parent').value) {
+    if (formControl.parent.get('baseUnit').value) {
 
       let errors = Validators.required(formControl);
       if (!errors) {
@@ -48,7 +48,7 @@ export class CreateUnitComponent implements OnInit {
     _id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
     code: new FormControl('', [ Validators.required ]),
-    parent: new FormControl(''),
+    baseUnit: new FormControl(''),
     times: new FormControl('', [ this.timesConditionallyRequiredValidator ]),
     decimalPlaces: new FormControl('', [ Validators.required, Validators.min(0) ]),
     description: new FormControl(''),
@@ -74,7 +74,7 @@ export class CreateUnitComponent implements OnInit {
           this.fboForm.setValue({_id: unitC._id,
             name: unitC.name,
             code: unitC.code,
-            parent: unitC.parent,
+            baseUnit: unitC.baseUnit,
             times: unitC.times ?? 1,
             decimalPlaces: unitC.decimalPlaces ?? 0,
             description: unitC.description ?? ''});

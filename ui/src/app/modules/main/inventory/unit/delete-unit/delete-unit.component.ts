@@ -23,7 +23,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class DeleteUnitComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'parent.name', 'times', 'description' ];
+  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'baseUnit.name', 'times', 'description' ];
 
   extraColumns: Array<string>;
 
@@ -33,7 +33,7 @@ export class DeleteUnitComponent implements OnInit {
     name: 'Name',
     code: 'Code',
     decimalPlaces: 'Decimals',
-    'parent.name': 'Parent',
+    'baseUnit.name': 'Base Unit',
     description: 'Description',
     times: 'Times'
   }

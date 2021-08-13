@@ -11,30 +11,19 @@ const FAKE_TIMEOUT = 1000;
 })
 export class CategoryService {
 
+
   private items:Array<Category> = [
     {
       name: 'Fridge',
-      parent: {
-        name: 'Household'
-      }
     },
     {
       name: 'Washing Machine',
-      parent: {
-        name: 'Household'
-      }
     },
     {
       name: 'Television',
-      parent: {
-        name: 'Electronics'
-      }
     },
     {
       name: 'Mobile',
-      parent: {
-        name: 'Electronics'
-      }
     }
   ]
 
@@ -46,4 +35,5 @@ export class CategoryService {
     return of(this.items).pipe(delay(FAKE_TIMEOUT));
 
   }
+
 }
