@@ -1,4 +1,4 @@
-export interface Account {
+export interface Bank {
     // Bank, Cash etc
     type: 'Bank' | 'Cash' | 'Other';
     // Name of Bank

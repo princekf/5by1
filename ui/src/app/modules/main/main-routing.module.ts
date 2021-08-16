@@ -57,23 +57,19 @@ const routes: Routes = [
         pathMatch: 'full',
         redirectTo: 'dashboard',
       },
+
       {
-        path: 'account',
-        loadChildren: () => import('./inventory/account/account.module').then((mod) => mod.AccountModule)
+        path: 'bank',
+        loadChildren: () => import('./inventory/bank/bank.module').then((mod) => mod.BankModule)
       },
 
       {
-        path: 'tranfer',
-        loadChildren: () => import('./inventory/tranfer/tranfer.module').then((mod) => mod.TranferModule)
+        path: 'transfer',
+        loadChildren: () => import('./inventory/transfer/transfer.module').then((mod) => mod.TransferModule)
       },
       {
         path: 'transaction',
         loadChildren: () => import('./inventory/transaction/transaction.module').then((mod) => mod.TransactionModule)
-      },
-
-      {
-        path: 'reconciliation',
-        loadChildren: () => import('./inventory/reconciliation/reconciliation.module').then((mod) => mod.ReconciliationModule)
       },
 
 
