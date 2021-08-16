@@ -10,6 +10,7 @@ import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Tax } from '@shared/entity/inventory/tax';
+import { findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
 
 @Component({
   selector: 'app-data-table',
@@ -35,6 +36,8 @@ export class DataTableComponent {
   totalItems:number;
 
   pageIndex = 0;
+
+  findColumnValue = _findColumnValue;
 
   @Input()
   get tableData(): ListQueryRespType<unknown> {
@@ -147,8 +150,6 @@ export class DataTableComponent {
     });
 
   }
-
-  findColumnValue = (element:unknown, column:string):string => <string> column.split('.').reduce((acc, cur) => acc[cur] ?? '', element);
 
   editSelected = (): void => {
 

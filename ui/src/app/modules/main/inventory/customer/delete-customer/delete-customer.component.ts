@@ -3,15 +3,17 @@ import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UnitService } from '@fboservices/inventory/unit.service';
+import { CustomerService } from '@fboservices/inventory/customer.service';
 import { MainService } from '@fboservices/main.service';
-import { Unit } from '@shared/entity/inventory/unit';
-import { ToastrService } from 'ngx-toastr';
 import { findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
+import { Customer } from '@shared/entity/inventory/customer';
+import { ToastrService } from 'ngx-toastr';
+
+
 @Component({
-  selector: 'app-delete-unit',
-  templateUrl: './delete-unit.component.html',
-  styleUrls: [ './delete-unit.component.scss' ],
+  selector: 'app-delete-customer',
+  templateUrl: './delete-customer.component.html',
+  styleUrls: [ './delete-customer.component.scss', '../../../../../util/styles/fbo-table-style.scss' ],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px',
@@ -21,21 +23,21 @@ import { findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
     ]),
   ],
 })
-export class DeleteUnitComponent implements OnInit {
-
-  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'baseUnit.name', 'times', 'description' ];
+export class DeleteCustomerComponent implements OnInit {
 
   extraColumns: Array<string>;
 
-  dataSource = new MatTableDataSource<Unit>([]);
+  dataSource = new MatTableDataSource<Customer>([]);
+
+  displayedColumns: string[] = [ 'name', 'email', 'mobile', 'state', 'address', 'gstNo' ];
 
   columnHeaders = {
     name: 'Name',
-    code: 'Code',
-    decimalPlaces: 'Decimals',
-    'baseUnit.name': 'Base Unit',
-    description: 'Description',
-    times: 'Times'
+    email: 'E-Mail',
+    mobile: 'Mobile',
+    state: 'State',
+    address: 'Address',
+    gstNo: 'GST No'
   }
 
   loading = true;
@@ -44,7 +46,7 @@ export class DeleteUnitComponent implements OnInit {
 
   constructor(private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly unitService:UnitService,
+    private readonly customerService:CustomerService,
     private readonly mainService: MainService,
     private readonly toastr: ToastrService) { }
 
@@ -52,7 +54,7 @@ export class DeleteUnitComponent implements OnInit {
 
     const tIds = this.route.snapshot.queryParamMap.get('ids');
     const tIdArray = tIds.split(',');
-    this.unitService.listByIds(tIdArray).subscribe((units) => {
+    this.customerService.listByIds(tIdArray).subscribe((units) => {
 
       this.dataSource.data = units;
       this.loading = false;
@@ -75,7 +77,7 @@ export class DeleteUnitComponent implements OnInit {
   }
 
 
-  goToUnits(): void {
+  goToCustomers(): void {
 
     const burl = this.route.snapshot.queryParamMap.get('burl');
     const uParams:Record<string, string> = {};
@@ -86,7 +88,7 @@ export class DeleteUnitComponent implements OnInit {
       keys.forEach((key) => (uParams[key] = httpParams.get(key)));
 
     }
-    this.router.navigate([ '/unit' ], {queryParams: uParams});
+    this.router.navigate([ '/customer' ], {queryParams: uParams});
 
   }
 
@@ -96,16 +98,16 @@ export class DeleteUnitComponent implements OnInit {
     const units = this.dataSource.data;
     const tIds = [];
     units.forEach((taxP) => tIds.push(taxP._id));
-    this.unitService.deleteByIds(tIds).subscribe((unitsP) => {
+    this.customerService.deleteByIds(tIds).subscribe((unitsP) => {
 
       this.loading = false;
-      this.toastr.success('Units are deleted successfully', 'Unit deleted');
-      this.goToUnits();
+      this.toastr.success('Customers are deleted successfully', 'Customer deleted');
+      this.goToCustomers();
 
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error('Error in deleting units', 'Unit not deleted');
+      this.toastr.error('Error in deleting customers', 'Customer not deleted');
       console.error(error);
 
     });

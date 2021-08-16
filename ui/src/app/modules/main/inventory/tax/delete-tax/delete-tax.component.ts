@@ -7,7 +7,7 @@ import { Tax } from '@shared/entity/inventory/tax';
 import { HttpParams } from '@angular/common/http';
 import { MainService } from '@fboservices/main.service';
 import { ToastrService } from 'ngx-toastr';
-
+import { findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
 @Component({
   selector: 'app-delete-tax',
   templateUrl: './delete-tax.component.html',
@@ -38,6 +38,8 @@ export class DeleteTaxComponent implements OnInit {
   }
 
   loading = true;
+
+  findColumnValue = _findColumnValue;
 
   constructor(private readonly router: Router,
     private readonly route: ActivatedRoute,
@@ -106,7 +108,5 @@ export class DeleteTaxComponent implements OnInit {
     });
 
   }
-
-  findColumnValue = (element:unknown, column:string):string => <string>column.split('.').reduce((acc, cur) => acc[cur], element);
 
 }

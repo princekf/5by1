@@ -12,7 +12,7 @@ const MAX_RATE = 100;
 @Component({
   selector: 'app-create-tax',
   templateUrl: './create-tax.component.html',
-  styleUrls: [ './create-tax.component.scss' ]
+  styleUrls: [ './create-tax.component.scss', '../../../../../util/styles/fbo-form-style.scss' ]
 })
 export class CreateTaxComponent implements OnInit {
 

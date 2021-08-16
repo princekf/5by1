@@ -10,7 +10,7 @@ import { Unit } from '@shared/entity/inventory/unit';
 @Component({
   selector: 'app-create-unit',
   templateUrl: './create-unit.component.html',
-  styleUrls: [ './create-unit.component.scss' ]
+  styleUrls: [ './create-unit.component.scss', '../../../../../util/styles/fbo-form-style.scss' ]
 })
 export class CreateUnitComponent implements OnInit {
 
