@@ -1,8 +1,8 @@
-import { Account } from './account';
+import { Bank } from './bank';
 
 export interface Transaction {
-    fromAccount: Account;
-    toAccount: Account;
+    fromAccount: Bank;
+    toAccount: Bank;
     transactionDate: Date;
     note: string;
 }

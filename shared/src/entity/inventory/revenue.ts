@@ -1,4 +1,4 @@
-import { Account } from './account';
+import { Bank } from './bank';
 import { Customer } from './customer';
 import { Invoice } from './invoice';
 
@@ -6,7 +6,7 @@ export interface Revenue {
     receivedDate: Date;
     customer?: Customer;
     invoice?: Invoice;
-    account?: Account;
+    bank?: Bank;
     // Category like Sale etc
     category?: string;
     amount: number;
