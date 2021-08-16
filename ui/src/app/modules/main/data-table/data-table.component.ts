@@ -10,20 +10,13 @@ import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Tax } from '@shared/entity/inventory/tax';
-import { findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
+import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
 
 @Component({
   selector: 'app-data-table',
   templateUrl: './data-table.component.html',
   styleUrls: [ './data-table.component.scss' ],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({height: '0px',
-        minHeight: '0'})),
-      state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+  animations: fboTableRowExpandAnimation,
 })
 export class DataTableComponent {
 

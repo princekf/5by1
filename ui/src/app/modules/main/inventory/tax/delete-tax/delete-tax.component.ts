@@ -7,19 +7,12 @@ import { Tax } from '@shared/entity/inventory/tax';
 import { HttpParams } from '@angular/common/http';
 import { MainService } from '@fboservices/main.service';
 import { ToastrService } from 'ngx-toastr';
-import { findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
+import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
 @Component({
   selector: 'app-delete-tax',
   templateUrl: './delete-tax.component.html',
-  styleUrls: [ './delete-tax.component.scss' ],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({height: '0px',
-        minHeight: '0'})),
-      state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+  styleUrls: [ './delete-tax.component.scss', '../../../../../util/styles/fbo-table-style.scss' ],
+  animations: fboTableRowExpandAnimation,
 })
 export class DeleteTaxComponent implements OnInit {
 

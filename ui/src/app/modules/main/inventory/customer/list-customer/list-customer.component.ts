@@ -31,7 +31,7 @@ export class ListCustomerComponent {
 
   loading = true;
 
-  customers:ListQueryRespType<Customer> = {
+  rawDatas:ListQueryRespType<Customer> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -44,9 +44,9 @@ export class ListCustomerComponent {
     private loadData = () => {
 
       this.loading = true;
-      this.customerService.list(this.queryParams).subscribe((customers) => {
+      this.customerService.list(this.queryParams).subscribe((rawDatas) => {
 
-        this.customers = customers;
+        this.rawDatas = rawDatas;
         this.loading = false;
 
       }, (error) => {

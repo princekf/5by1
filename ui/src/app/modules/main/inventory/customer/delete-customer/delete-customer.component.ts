@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerService } from '@fboservices/inventory/customer.service';
 import { MainService } from '@fboservices/main.service';
-import { findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
+import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
 import { Customer } from '@shared/entity/inventory/customer';
 import { ToastrService } from 'ngx-toastr';
 
@@ -14,14 +14,7 @@ import { ToastrService } from 'ngx-toastr';
   selector: 'app-delete-customer',
   templateUrl: './delete-customer.component.html',
   styleUrls: [ './delete-customer.component.scss', '../../../../../util/styles/fbo-table-style.scss' ],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({height: '0px',
-        minHeight: '0'})),
-      state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+  animations: fboTableRowExpandAnimation,
 })
 export class DeleteCustomerComponent implements OnInit {
 
@@ -54,9 +47,9 @@ export class DeleteCustomerComponent implements OnInit {
 
     const tIds = this.route.snapshot.queryParamMap.get('ids');
     const tIdArray = tIds.split(',');
-    this.customerService.listByIds(tIdArray).subscribe((units) => {
+    this.customerService.listByIds(tIdArray).subscribe((items) => {
 
-      this.dataSource.data = units;
+      this.dataSource.data = items;
       this.loading = false;
 
     });
@@ -97,8 +90,8 @@ export class DeleteCustomerComponent implements OnInit {
     this.loading = true;
     const units = this.dataSource.data;
     const tIds = [];
-    units.forEach((taxP) => tIds.push(taxP._id));
-    this.customerService.deleteByIds(tIds).subscribe((unitsP) => {
+    units.forEach((itemP) => tIds.push(itemP._id));
+    this.customerService.deleteByIds(tIds).subscribe((itemsP) => {
 
       this.loading = false;
       this.toastr.success('Customers are deleted successfully', 'Customer deleted');

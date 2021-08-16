@@ -51,9 +51,9 @@ export class CreateCustomerComponent implements OnInit {
     this.statesOptions = this.fboForm.controls.state.valueChanges.pipe(
       startWith(''), map((value) => this._filter(value))
     );
-    this.customerService.getStates().subscribe((groupNames) => {
+    this.customerService.getStates().subscribe((states) => {
 
-      this.states = groupNames;
+      this.states = states;
 
     });
 
@@ -62,15 +62,15 @@ export class CreateCustomerComponent implements OnInit {
 
       this.formHeader = 'Update Customers';
       this.loading = true;
-      this.customerService.get(tId).subscribe((taxC) => {
+      this.customerService.get(tId).subscribe((itemC) => {
 
-        this.fboForm.setValue({_id: taxC._id,
-          name: taxC.name,
-          email: taxC.email,
-          mobile: taxC.mobile,
-          state: taxC.state,
-          address: taxC.address,
-          gstNo: taxC.gstNo, });
+        this.fboForm.setValue({_id: itemC._id,
+          name: itemC.name,
+          email: itemC.email,
+          mobile: itemC.mobile,
+          state: itemC.state,
+          address: itemC.address,
+          gstNo: itemC.gstNo, });
 
         this.loading = false;
 
@@ -104,16 +104,16 @@ export class CreateCustomerComponent implements OnInit {
 
     }
     this.loading = true;
-    const unitP = <Customer> this.fboForm.value;
-    (unitP._id ? this.customerService.update(unitP) : this.customerService.save(unitP)).subscribe((unitC) => {
+    const itemP = <Customer> this.fboForm.value;
+    (itemP._id ? this.customerService.update(itemP) : this.customerService.save(itemP)).subscribe((itemC) => {
 
-      this.toastr.success(`Customer ${unitC.name} is saved successfully`, 'Customer saved');
+      this.toastr.success(`Customer ${itemC.name} is saved successfully`, 'Customer saved');
       this.goToCustomers();
 
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error(`Error in saving customer ${unitP.name}`, 'Customer not saved');
+      this.toastr.error(`Error in saving customer ${itemP.name}`, 'Customer not saved');
       console.error(error);
 
     });

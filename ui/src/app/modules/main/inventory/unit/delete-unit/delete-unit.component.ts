@@ -7,19 +7,12 @@ import { UnitService } from '@fboservices/inventory/unit.service';
 import { MainService } from '@fboservices/main.service';
 import { Unit } from '@shared/entity/inventory/unit';
 import { ToastrService } from 'ngx-toastr';
-import { findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
+import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
 @Component({
   selector: 'app-delete-unit',
   templateUrl: './delete-unit.component.html',
-  styleUrls: [ './delete-unit.component.scss' ],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({height: '0px',
-        minHeight: '0'})),
-      state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+  styleUrls: [ './delete-unit.component.scss', '../../../../../util/styles/fbo-table-style.scss' ],
+  animations: fboTableRowExpandAnimation,
 })
 export class DeleteUnitComponent implements OnInit {
 

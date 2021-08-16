@@ -74,7 +74,7 @@ export class CreateUnitComponent implements OnInit {
           this.fboForm.setValue({_id: unitC._id,
             name: unitC.name,
             code: unitC.code,
-            baseUnit: unitC.baseUnit,
+            baseUnit: unitC.baseUnit ?? '',
             times: unitC.times ?? 1,
             decimalPlaces: unitC.decimalPlaces ?? 0,
             description: unitC.description ?? ''});
