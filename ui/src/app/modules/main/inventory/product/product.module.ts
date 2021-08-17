@@ -18,11 +18,13 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatRadioModule} from '@angular/material/radio';
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
+import { DeleteProductComponent } from './delete-product/delete-product.component';
 
 @NgModule({
   declarations: [
     ListProductComponent,
     CreateProductComponent,
+    DeleteProductComponent,
   ],
   imports: [
     CommonModule,

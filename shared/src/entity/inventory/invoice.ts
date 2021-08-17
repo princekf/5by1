@@ -3,7 +3,7 @@ import { Product } from './product';
 import { Tax } from './tax';
 import { Unit } from './unit';
 
-interface SaleItem {
+export interface SaleItem {
     product: Product;
     unitPrice: number;
     unit: Unit;

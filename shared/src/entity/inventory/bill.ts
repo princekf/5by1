@@ -3,7 +3,7 @@ import { Tax } from './tax';
 import { Unit } from './unit';
 import { Vendor } from './vendor';
 
-interface PurchaseItem {
+export interface PurchaseItem {
     product: Product;
     unitPrice: number;
     unit: Unit;
