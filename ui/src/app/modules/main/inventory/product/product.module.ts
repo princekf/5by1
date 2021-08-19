@@ -18,11 +18,13 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatRadioModule} from '@angular/material/radio';
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
-
+import { DeleteProductComponent } from './delete-product/delete-product.component';
+import {MatMenuModule} from '@angular/material/menu';
 @NgModule({
   declarations: [
     ListProductComponent,
     CreateProductComponent,
+    DeleteProductComponent
   ],
   imports: [
     CommonModule,
@@ -31,9 +33,9 @@ import { ToolBarModule } from '../../tool-bar/tool-bar.module';
     MatTableModule,
     MatSortModule, MatInputModule,
     MatSelectModule, MatIconModule, MatPaginatorModule,
-    MatButtonModule, MatButtonToggleModule, MatSlideToggleModule,MatAutocompleteModule, FormsModule, 
-    ReactiveFormsModule,
-    MatChipsModule, MatRadioModule,ReactiveFormsModule ,
+    MatButtonModule, MatButtonToggleModule, MatSlideToggleModule, MatAutocompleteModule, FormsModule,
+    ReactiveFormsModule, MatMenuModule,
+    MatChipsModule, MatRadioModule, ReactiveFormsModule,
   ]
 })
 export class ProductModule { }
