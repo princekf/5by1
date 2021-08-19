@@ -1,4 +1,4 @@
-<app-tool-bar createUri="./create" mainHeader="Product" subHeader="List of Products"></app-tool-bar>
+<app-tool-bar createUri="product/create" mainHeader="Product" subHeader="List of Products"></app-tool-bar>
 <mat-table class="mat-elevation-z8" matSort *ngIf="items" [dataSource]="items" (matSortChange)="sortData($event)">
     <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Name</mat-header-cell>
@@ -9,6 +9,11 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Code</mat-header-cell>
         <mat-cell *matCellDef="let element" class="summary-table-value-row" data-label="code"> {{element.code}}
         </mat-cell>
+    </ng-container>
+        <ng-container matColumnDef="brand">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">brand</mat-header-cell>
+            <mat-cell *matCellDef="let element" class="summary-table-value-row" data-label="code"> {{element.brand}}
+            </mat-cell>
     </ng-container>
     <ng-container matColumnDef="location">
         <mat-header-cell *matHeaderCellDef mat-sort-header class="summary-table-header-row">Location</mat-header-cell>
@@ -37,10 +42,21 @@
         <mat-header-cell class="btn-action" *matHeaderCellDef mat-sort-header class="summary-table-header-row">Actions
         </mat-header-cell>
         <mat-cell *matCellDef="let element" class="summary-table-value-row" data-label="actions">
-            <button mat-button>
-                <mat-icon color="primary">keyboard_control</mat-icon>
+            <button mat-button [matMenuTriggerFor]="menu">
+                <mat-icon color="primary" >more_vert</mat-icon>
             </button>
+          
         </mat-cell>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item >
+                <mat-icon>delete</mat-icon>
+              <span>Delete</span>
+            </button>
+            <button mat-menu-item>
+                <mat-icon>edit</mat-icon>
+                <span>Edit</span>
+              </button>
+              </mat-menu>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
