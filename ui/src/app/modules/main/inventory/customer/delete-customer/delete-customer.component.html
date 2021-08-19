@@ -31,7 +31,7 @@
   <tr mat-row *matRowDef="let element; columns: ['expandedDetail']" class="fiveby1-detail-row"></tr>
 </table>
 <p class="delete-submit-container">
-    <button class="delete-cancel-button" mat-button (click)="goToCustomers()"
+    <button class="delete-cancel-button" mat-button (click)="goToPreviousPage(route, router)"
     [disabled]="loading">No, Cancel</button>
     <button class="delete-submit-button" mat-button (click)="deleteUnits()"
     [disabled]="loading">Yes, Delete</button>

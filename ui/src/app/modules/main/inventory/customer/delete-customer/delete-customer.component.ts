@@ -1,14 +1,11 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerService } from '@fboservices/inventory/customer.service';
 import { MainService } from '@fboservices/main.service';
-import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
+import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { Customer } from '@shared/entity/inventory/customer';
 import { ToastrService } from 'ngx-toastr';
-
 
 @Component({
   selector: 'app-delete-customer',
@@ -17,6 +14,8 @@ import { ToastrService } from 'ngx-toastr';
   animations: fboTableRowExpandAnimation,
 })
 export class DeleteCustomerComponent implements OnInit {
+
+  goToPreviousPage = _goToPreviousPage;
 
   extraColumns: Array<string>;
 
@@ -37,8 +36,8 @@ export class DeleteCustomerComponent implements OnInit {
 
   findColumnValue = _findColumnValue;
 
-  constructor(private readonly router: Router,
-    private readonly route: ActivatedRoute,
+  constructor(public readonly router: Router,
+    public readonly route: ActivatedRoute,
     private readonly customerService:CustomerService,
     private readonly mainService: MainService,
     private readonly toastr: ToastrService) { }
@@ -69,22 +68,6 @@ export class DeleteCustomerComponent implements OnInit {
 
   }
 
-
-  goToCustomers(): void {
-
-    const burl = this.route.snapshot.queryParamMap.get('burl');
-    const uParams:Record<string, string> = {};
-    if (burl?.includes('?')) {
-
-      const httpParams = new HttpParams({ fromString: burl.split('?')[1] });
-      const keys = httpParams.keys();
-      keys.forEach((key) => (uParams[key] = httpParams.get(key)));
-
-    }
-    this.router.navigate([ '/customer' ], {queryParams: uParams});
-
-  }
-
   deleteUnits(): void {
 
     this.loading = true;
@@ -95,7 +78,7 @@ export class DeleteCustomerComponent implements OnInit {
 
       this.loading = false;
       this.toastr.success('Customers are deleted successfully', 'Customer deleted');
-      this.goToCustomers();
+      this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 

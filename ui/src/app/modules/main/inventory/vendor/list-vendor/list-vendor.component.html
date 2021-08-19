@@ -1,1 +1,9 @@
-<p>list-vendor works!</p>
+<app-tool-bar createUri="/vendor/create" mainHeader="Vendor"></app-tool-bar>
+<app-data-table tableHeader="List of Vendors"
+[displayedColumns]="displayedColumns"
+[columnHeaders]="columnHeaders"
+[loading]="loading"
+[tableData]="rawDatas"
+editUri="/vendor/create"
+deleteUri="/vendor/delete"
+></app-data-table>

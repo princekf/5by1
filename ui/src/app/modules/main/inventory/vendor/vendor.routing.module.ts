@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ListVendorComponent } from './list-vendor/list-vendor.component';
 import { CreateVendorComponent } from './create-vendor/create-vendor.component';
+import { DeleteVendorComponent } from './delete-vendor/delete-vendor.component';
 
 const routes: Routes = [
   {
@@ -16,7 +17,11 @@ const routes: Routes = [
     pathMatch: 'full',
     component: CreateVendorComponent
   },
-
+  {
+    path: 'delete',
+    pathMatch: 'full',
+    component: DeleteVendorComponent
+  },
 
 ];
 

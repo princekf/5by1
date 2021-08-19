@@ -1,4 +1,3 @@
-import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,7 +6,7 @@ import { Tax } from '@shared/entity/inventory/tax';
 import { Observable } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
-
+import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 const MAX_RATE = 100;
 @Component({
   selector: 'app-create-tax',
@@ -15,6 +14,8 @@ const MAX_RATE = 100;
   styleUrls: [ './create-tax.component.scss', '../../../../../util/styles/fbo-form-style.scss' ]
 })
 export class CreateTaxComponent implements OnInit {
+
+  goToPreviousPage = _goToPreviousPage;
 
   formHeader = 'Create Taxes';
 
@@ -34,8 +35,8 @@ export class CreateTaxComponent implements OnInit {
     description: new FormControl(''),
   });
 
-  constructor(private readonly router: Router,
-    private readonly route: ActivatedRoute,
+  constructor(public readonly router: Router,
+    public readonly route: ActivatedRoute,
     private readonly taxService:TaxService,
     private readonly toastr: ToastrService) { }
 
@@ -79,21 +80,6 @@ export class CreateTaxComponent implements OnInit {
 
   }
 
-  goToTaxes(): void {
-
-    const burl = this.route.snapshot.queryParamMap.get('burl');
-    const uParams:Record<string, string> = {};
-    if (burl?.includes('?')) {
-
-      const httpParams = new HttpParams({ fromString: burl.split('?')[1] });
-      const keys = httpParams.keys();
-      keys.forEach((key) => (uParams[key] = httpParams.get(key)));
-
-    }
-    this.router.navigate([ '/tax' ], {queryParams: uParams});
-
-  }
-
   upsertTax(): void {
 
     if (!this.form.valid) {
@@ -106,7 +92,7 @@ export class CreateTaxComponent implements OnInit {
     (taxP._id ? this.taxService.update(taxP) : this.taxService.save(taxP)).subscribe((taxC) => {
 
       this.toastr.success(`Tax ${taxC.name} is saved successfully`, 'Tax saved');
-      this.goToTaxes();
+      this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 

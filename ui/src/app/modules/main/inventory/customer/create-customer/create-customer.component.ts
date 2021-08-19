@@ -1,4 +1,3 @@
-import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,7 +6,7 @@ import { Customer } from '@shared/entity/inventory/customer';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-
+import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 @Component({
   selector: 'app-create-customer',
   templateUrl: './create-customer.component.html',
@@ -16,7 +15,9 @@ import { map, startWith } from 'rxjs/operators';
 export class CreateCustomerComponent implements OnInit {
 
 
-  formHeader = 'Create Units';
+  goToPreviousPage = _goToPreviousPage;
+
+  formHeader = 'Create Customers';
 
   loading = false;
 
@@ -41,8 +42,8 @@ export class CreateCustomerComponent implements OnInit {
 
   }
 
-  constructor(private readonly router: Router,
-    private readonly route: ActivatedRoute,
+  constructor(public readonly router: Router,
+    public readonly route: ActivatedRoute,
     private readonly customerService:CustomerService,
     private readonly toastr: ToastrService) { }
 
@@ -80,22 +81,6 @@ export class CreateCustomerComponent implements OnInit {
 
   }
 
-
-  goToCustomers(): void {
-
-    const burl = this.route.snapshot.queryParamMap.get('burl');
-    const uParams:Record<string, string> = {};
-    if (burl?.includes('?')) {
-
-      const httpParams = new HttpParams({ fromString: burl.split('?')[1] });
-      const keys = httpParams.keys();
-      keys.forEach((key) => (uParams[key] = httpParams.get(key)));
-
-    }
-    this.router.navigate([ '/customer' ], {queryParams: uParams});
-
-  }
-
   upsertCustomer(): void {
 
     if (!this.fboForm.valid) {
@@ -108,7 +93,7 @@ export class CreateCustomerComponent implements OnInit {
     (itemP._id ? this.customerService.update(itemP) : this.customerService.save(itemP)).subscribe((itemC) => {
 
       this.toastr.success(`Customer ${itemC.name} is saved successfully`, 'Customer saved');
-      this.goToCustomers();
+      this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 

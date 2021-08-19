@@ -1,4 +1,3 @@
-import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,6 +9,7 @@ import { CustomerService } from '@fboservices/inventory/customer.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { Product } from '@shared/entity/inventory/product';
 import { ProductService } from '@fboservices/inventory/product.service';
+import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 
 @Component({
   selector: 'app-create-invoice',
@@ -17,6 +17,8 @@ import { ProductService } from '@fboservices/inventory/product.service';
   styleUrls: [ './create-invoice.component.scss', '../../../../../util/styles/fbo-form-style.scss' ]
 })
 export class CreateInvoiceComponent implements OnInit {
+
+  goToPreviousPage = _goToPreviousPage;
 
   formHeader = 'Create Invoices';
 
@@ -26,11 +28,7 @@ export class CreateInvoiceComponent implements OnInit {
 
   fboForm: FormGroup;
 
-  /*
-   * https://stackblitz.com/edit/angular-custom-pagination-mat-table?file=src%2Fapp%2Ftable-basic-example.html
-   * DisplayedColumns: string[] = [ 'product', 'unitPrice', 'quantity', 'discount', 'totalTax', 'totalAmount', 'batchNumber' ];
-   */
-  displayedColumns: string[] = [ 'product', 'quantity' ];
+  displayedColumns: string[] = [ 'product', 'quantity', 'unitPrice', 'discount', 'totalAmount' ];
 
  dataSource = new MatTableDataSource<AbstractControl>();
 
@@ -38,8 +36,8 @@ export class CreateInvoiceComponent implements OnInit {
 
  // Items = this.fboForm.get('items') as FormArray;
 
- constructor(private readonly router: Router,
-    private readonly route: ActivatedRoute,
+ constructor(public readonly router: Router,
+  public readonly route: ActivatedRoute,
     private readonly fBuilder: FormBuilder,
     private readonly invoiceService:InvoiceService,
     private readonly productService:ProductService,
@@ -127,21 +125,6 @@ export class CreateInvoiceComponent implements OnInit {
 
     }
 
-    goToInvoices(): void {
-
-      const burl = this.route.snapshot.queryParamMap.get('burl');
-      const uParams:Record<string, string> = {};
-      if (burl?.includes('?')) {
-
-        const httpParams = new HttpParams({ fromString: burl.split('?')[1] });
-        const keys = httpParams.keys();
-        keys.forEach((key) => (uParams[key] = httpParams.get(key)));
-
-      }
-      this.router.navigate([ '/invoice' ], {queryParams: uParams});
-
-    }
-
     upsertInvoice(): void {
 
       if (!this.fboForm.valid) {
@@ -154,7 +137,7 @@ export class CreateInvoiceComponent implements OnInit {
       (itemP._id ? this.invoiceService.update(itemP) : this.invoiceService.save(itemP)).subscribe((itemC) => {
 
         this.toastr.success(`Invoice ${itemC.invoiceNumber} is saved successfully`, 'Invoice saved');
-        this.goToInvoices();
+        this.goToPreviousPage(this.route, this.router);
 
       }, (error) => {
 
@@ -163,6 +146,16 @@ export class CreateInvoiceComponent implements OnInit {
         console.error(error);
 
       });
+
+    }
+
+    extractNameOfProduct = (prod: Product): string => prod.name;
+
+    handleProductSelect = (prod: Product, pos: number): void => {
+
+      const itemsFormArray = <FormArray> this.fboForm.get('items');
+      const formControl = itemsFormArray.get([ pos ]);
+      formControl.get('quantity').setValue(1);
 
     }
 
