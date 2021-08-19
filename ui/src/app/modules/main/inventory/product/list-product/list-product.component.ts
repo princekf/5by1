@@ -40,7 +40,7 @@ export class ListProductComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.productService.list(0, 10).subscribe((items) => (this.items = items));
+    this.productService.list({}).subscribe((items) => (this.items = items));
 
 
   }

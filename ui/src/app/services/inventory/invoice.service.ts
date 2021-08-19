@@ -4,9 +4,7 @@ import { Invoice } from '@shared/entity/inventory/invoice';
 import { delay } from 'rxjs/internal/operators';
 import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
-import { Customer } from '@shared/entity/inventory/customer';
-import { Product } from '@shared/entity/inventory/product';
-import { Unit } from '@shared/entity/inventory/unit';
+import { invoice1, invoice2 } from '../mock-data/invoice.data';
 
 const FAKE_TIMEOUT = 1000;
 
@@ -15,58 +13,7 @@ const FAKE_TIMEOUT = 1000;
 })
 export class InvoiceService {
 
-    private customer1:Customer = {
-      _id: 'cid_001',
-      name: 'Customer 1',
-      email: 'email@email.com',
-      mobile: '098799'
-    }
-
-    private numberUnit: Unit = {
-      _id: 'U-001',
-      name: 'Number',
-      code: 'No',
-      decimalPlaces: 0,
-    }
-
-    private product1A: Product = {
-      _id: 'A001',
-      name: 'Samsung Mobile',
-      unit: this.numberUnit,
-      status: 'Active'
-    }
-
-    private customer2:Customer = {
-      _id: 'cid_002',
-      name: 'Customer 2',
-      email: 'email2@email.com',
-      mobile: '0987992'
-    }
-
-    private items:Array<Invoice> = [
-      {_id: '01231',
-        customer: this.customer1,
-        invoiceDate: new Date('2020-04-13T00:00:00.000+05:30'),
-        dueDate: new Date('2020-04-13T00:00:00.000+05:30'),
-        invoiceNumber: 'INV-001',
-        totalAmount: 1200,
-        totalDisount: 0,
-        totalTax: 200,
-        roundOff: 0,
-        grandTotal: 1400,
-        isReceived: true,
-        items: [ {
-          product: this.product1A,
-          unit: this.numberUnit,
-          unitPrice: 10000,
-          quantity: 1,
-          discount: 0,
-          taxes: [],
-          totalTax: 0,
-          totalAmount: 10000
-        } ] },
-
-    ]
+    private items:Array<Invoice> = [ invoice1, invoice2 ]
 
     public list(queryParams:QueryData):Observable<ListQueryRespType<Invoice>> {
 

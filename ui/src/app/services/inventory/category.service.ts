@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { Category } from '@shared/entity/inventory/category';
 import { delay } from 'rxjs/internal/operators';
 import { QueryData } from '@shared/util/query-data';
-
+import { mobilePhones, television } from '../mock-data/category.data';
 const FAKE_TIMEOUT = 1000;
 
 @Injectable({
@@ -12,20 +12,7 @@ const FAKE_TIMEOUT = 1000;
 export class CategoryService {
 
 
-  private items:Array<Category> = [
-    {
-      name: 'Fridge',
-    },
-    {
-      name: 'Washing Machine',
-    },
-    {
-      name: 'Television',
-    },
-    {
-      name: 'Mobile',
-    }
-  ]
+  private items:Array<Category> = [ television, mobilePhones ]
 
   constructor() { }
 
