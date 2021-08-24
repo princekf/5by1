@@ -14,11 +14,14 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class ListCategoryComponent {
 
-  displayedColumns: string[] = [ 'parent', 'name' ];
+  displayedColumns: string[] = [ 'parent.name', 'name', 'unit.name', 'hsnNumber', 'description' ];
 
   columnHeaders = {
-    parent: 'Parent',
+    'parent.name': 'Parent',
     name: 'Name',
+    'unit.name': 'Unit',
+    hsnNumber: 'hsnNumber',
+    description: 'description',
   }
 
   queryParams:QueryData = { };
