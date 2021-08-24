@@ -6,6 +6,10 @@ import {MatSortModule} from '@angular/material/sort';
 import { ProductRoutingModule } from './product.routing.module';
 import { ListProductComponent } from './list-product/list-product.component';
 import { CreateProductComponent } from './create-product/create-product.component';
+import { ToolBarModule } from '../../tool-bar/tool-bar.module';
+import { DataTableModule } from '../../data-table/data-table.module';
+import { DeleteProductComponent } from './delete-product/delete-product.component';
+
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatPaginatorModule} from '@angular/material/paginator';
@@ -17,8 +21,6 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatRadioModule} from '@angular/material/radio';
-import { ToolBarModule } from '../../tool-bar/tool-bar.module';
-import { DeleteProductComponent } from './delete-product/delete-product.component';
 
 @NgModule({
   declarations: [
@@ -27,15 +29,10 @@ import { DeleteProductComponent } from './delete-product/delete-product.componen
     DeleteProductComponent,
   ],
   imports: [
-    CommonModule,
-    ToolBarModule,
-    ProductRoutingModule,
-    MatTableModule,
-    MatSortModule, MatInputModule,
-    MatSelectModule, MatIconModule, MatPaginatorModule,
-    MatButtonModule, MatButtonToggleModule, MatSlideToggleModule,MatAutocompleteModule, FormsModule, 
-    ReactiveFormsModule,
-    MatChipsModule, MatRadioModule,ReactiveFormsModule ,
+    CommonModule, ToolBarModule, DataTableModule, ProductRoutingModule, MatTableModule,
+    MatSortModule, MatInputModule, MatSelectModule, MatIconModule, MatPaginatorModule,
+    MatButtonModule, MatButtonToggleModule, MatSlideToggleModule, MatAutocompleteModule, FormsModule,
+    ReactiveFormsModule, MatChipsModule, MatRadioModule, ReactiveFormsModule,
   ]
 })
 export class ProductModule { }

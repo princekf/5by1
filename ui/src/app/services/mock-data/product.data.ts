@@ -23,7 +23,7 @@ export const hpDesktop1:Product = {
   location: 'Rack-2',
   status: 'Active',
   hasBatch: false,
-  colors: [ 'Black', 'Silver' ],
+  colors: [ 'White', 'Blue' ],
   category: computer,
   description: 'Processor: Intel Celeron J4025 (2.0 GHz base frequency, up to 2.9 GHz, 2 MB L2 cache, 2 cores)'
 };

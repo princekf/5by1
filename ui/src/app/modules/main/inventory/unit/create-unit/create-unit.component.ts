@@ -3,7 +3,6 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators }
 import { ActivatedRoute, Router } from '@angular/router';
 import { UnitService } from '@fboservices/inventory/unit.service';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
 import { Unit } from '@shared/entity/inventory/unit';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 @Component({
@@ -20,8 +19,6 @@ export class CreateUnitComponent implements OnInit {
   loading = false;
 
   units: Array<Unit> = [];
-
-  groupNameOptions: Observable<string[]>;
 
   timesConditionallyRequiredValidator = (formControl: AbstractControl): ValidationErrors => {
 
