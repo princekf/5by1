@@ -1,167 +1,234 @@
-import { Component, OnInit, } from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductService } from '@fboservices/inventory/product.service';
+import { ToastrService } from 'ngx-toastr';
+import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
+import { Category } from '@shared/entity/inventory/category';
+import { CategoryService } from '@fboservices/inventory/category.service';
 import { Product } from '@shared/entity/inventory/product';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatChipInputEvent} from '@angular/material/chips';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ProductService} from '@fboservices/inventory/product.service';
-import { ToastrService } from 'ngx-toastr';
-import { HttpParams } from '@angular/common/http';
-export interface Colour {
-  name: string;
-}
+import { MatChipInputEvent } from '@angular/material/chips';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+
 @Component({
   selector: 'app-create-product',
   templateUrl: './create-product.component.html',
-  styleUrls: [ './create-product.component.scss' ]
+  styleUrls: [ './create-product.component.scss', '../../../../../util/styles/fbo-form-style.scss' ]
 })
-
-
 export class CreateProductComponent implements OnInit {
 
-  visible = true;
+  goToPreviousPage = _goToPreviousPage;
 
-  selectable = true;
-
-  removable = true;
-
-  addOnBlur = true;
+  formHeader = 'Create Products';
 
   loading = false;
 
-  private name: string[] = [];
+  categories: Array<Category> = [];
 
-  nameOptions: Observable<string[]>;
+  brandsFiltered: string[];
 
-  categories: Array<Product> = [];
+  locationsFiltered: string[];
 
-  readonly separatorKeysCodes = [ ENTER, COMMA ] as const;
+  separatorKeysCodes: number[] = [ ENTER, COMMA ];
 
-  colour: Colour[] = [
-    {name: 'Red'},
-    {name: 'Blue'},
-    {name: 'Green'},
-  ];
+  colors: Array<string> = [];
 
-  add(event: MatChipInputEvent): void {
+  colorsFiltered: Array<string>;
 
-    const value = (event.value || '').trim();
+  categoriesFiltered: Array<Category>;
 
-    // Add our colour
-    if (value) {
+  @ViewChild('colorInput') colorInput: ElementRef<HTMLInputElement>;
 
-      this.colour.push({name: value});
 
-    }
-
-    /*
-     * Clear the input value
-     * event.chipInput!.clear();
-     */
-
-  }
-
-  remove(colour: Colour): void {
-
-    const index = this.colour.indexOf(colour);
-
-    if (index >= 0) {
-
-      this.colour.splice(index, 1);
-
-    }
-
-  }
-
-  myControl = new FormControl();
-
-  options: string[] = [ 'One', 'Two', 'Three' ];
-
-  filteredOptions: Observable<string[]>;
-
-  form: FormGroup = new FormGroup({
-
+  fboForm: FormGroup = new FormGroup({
+    _id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
-
-    picture: new FormControl('', [ Validators.required ]),
-
-    brand: new FormControl('', [ Validators.required ]),
-
-    location: new FormControl('', [ Validators.required ]),
-
-    code: new FormControl('', [ Validators.required ]),
-
-    color: new FormControl('', [ Validators.required ]),
+    code: new FormControl(''),
+    brand: new FormControl(''),
+    location: new FormControl(''),
+    barcode: new FormControl(''),
+    description: new FormControl(''),
+    reorderLevel: new FormControl(''),
+    colors: new FormControl(''),
+    hasBatch: new FormControl(''),
+    status: new FormControl(''),
+    category: new FormControl(''),
   });
 
-  constructor(private readonly router: Router,
-    private readonly route: ActivatedRoute,
+  constructor(public readonly router: Router,
+    public readonly route: ActivatedRoute,
     private readonly productService:ProductService,
+    private readonly categoryService:CategoryService,
     private readonly toastr: ToastrService) { }
 
-  private _filter(value: string): string[] {
+    private initValueChanges = () => {
 
-    const filterValue = value.toLowerCase();
 
-    return this.options.filter((option) => option.toLowerCase().indexOf(filterValue) === 0);
+      this.fboForm.controls.brand.valueChanges.subscribe((brandQ:string) => {
 
-  }
+        if (!brandQ || !brandQ.length) {
 
-  ngOnInit(): void {
+          this.brandsFiltered?.splice(0, this.brandsFiltered.length);
+          return;
 
-    this.nameOptions = this.form.controls.name.valueChanges.pipe(
-      startWith(''), map((value) => this._filter(value))
-    );
-    this.productService.getname().subscribe((name) => {
+        }
 
-      this.name = name;
+        this.productService.searchBrands(brandQ).subscribe((brands) => (this.brandsFiltered = brands));
 
-    });
+      });
+      this.fboForm.controls.location.valueChanges.subscribe((locationQ:string) => {
 
-  }
+        if (!locationQ || !locationQ.length) {
 
-  goToProducts(): void {
+          this.brandsFiltered?.splice(0, this.brandsFiltered.length);
+          return;
 
-    const burl = this.route.snapshot.queryParamMap.get('burl');
-    const uParams:Record<string, string> = {};
-    if (burl?.includes('?')) {
+        }
 
-      const httpParams = new HttpParams({ fromString: burl.split('?')[1] });
-      const keys = httpParams.keys();
-      keys.forEach((key) => (uParams[key] = httpParams.get(key)));
+        this.productService.searchLocations(locationQ).subscribe((locations) => (this.locationsFiltered = locations));
+
+      });
+      this.fboForm.controls.colors.valueChanges.subscribe((colorQ:string) => {
+
+        if (!colorQ || !colorQ.length) {
+
+          this.colorsFiltered?.splice(0, this.colorsFiltered.length);
+          return;
+
+        }
+
+        this.productService.searchColors(colorQ).subscribe((colors) => (this.colorsFiltered = colors));
+
+      });
+      this.fboForm.controls.category.valueChanges.subscribe((categoryQ:string) => {
+
+        if (!categoryQ || !categoryQ.length) {
+
+          this.colorsFiltered?.splice(0, this.colorsFiltered.length);
+          return;
+
+        }
+
+        this.productService.searchCategories(categoryQ)
+          .subscribe((categories) => (this.categoriesFiltered = categories));
+
+      });
 
     }
-    this.router.navigate([ '/product' ], {queryParams: uParams});
 
-  }
+    ngOnInit(): void {
 
- 
-  upsertProducts(): void {
+      this.initValueChanges();
 
-    if (!this.form.valid) {
+      const tId = this.route.snapshot.queryParamMap.get('id');
+      if (tId) {
 
-      return;
+        this.formHeader = 'Update Products';
+
+      }
+      this.loading = true;
+      this.categoryService.listAll().subscribe((categories) => {
+
+        this.categories = categories;
+        if (tId) {
+
+          this.productService.get(tId).subscribe((unitC) => {
+
+            if (!unitC) {
+
+              return;
+
+            }
+            this.colors = unitC.colors;
+            this.fboForm.setValue({_id: unitC._id,
+              name: unitC.name,
+              code: unitC.code ?? '',
+              brand: unitC.brand ?? '',
+              location: unitC.location ?? '',
+              barcode: unitC.barcode ?? '',
+              description: unitC.description ?? '',
+              reorderLevel: unitC.reorderLevel ?? 0,
+              hasBatch: unitC.hasBatch ?? false,
+              status: unitC.status ?? 'Active',
+              category: unitC.category ?? '',
+              colors: unitC.colors ?? ''});
+
+            this.loading = false;
+
+          });
+
+        } else {
+
+          this.loading = false;
+
+        }
+
+      });
+
 
     }
-    this.loading = true;
-    const categoryP = <Product> this.form.value;
-    // eslint-disable-next-line max-len
-    (categoryP._id ? this.productService.update(categoryP) : this.productService.save(categoryP)).subscribe((categoryC) => {
 
-      this.toastr.success(`Category ${categoryC.name} is saved successfully`, 'Category saved');
-      this.goToProducts();
+    extractNameOfCategory = (category: Category): string => category.name;
 
-    }, (error) => {
+    upsertProduct(): void {
 
-      this.loading = false;
-      this.toastr.error(`Error in saving Category ${categoryP.name}`, 'Category not saved');
-      console.error(error);
+      if (!this.fboForm.valid) {
 
-    });
+        return;
+
+      }
+      this.loading = true;
+      const unitP = <Product> this.fboForm.value;
+      (unitP._id ? this.productService.update(unitP) : this.productService.save(unitP)).subscribe((unitC) => {
+
+        this.toastr.success(`Product ${unitC.name} is saved successfully`, 'Product saved');
+        this.goToPreviousPage(this.route, this.router);
+
+      }, (error) => {
+
+        this.loading = false;
+        this.toastr.error(`Error in saving product ${unitP.name}`, 'Product not saved');
+        console.error(error);
+
+      });
+
+    }
+
+  addColor = (event: MatChipInputEvent):void => {
+
+    const value = event.value?.trim() ?? '';
+    if (value) {
+
+      this.colors.push(value);
+
+    }
+    // Clear the input value
+    event.input.value = '';
+
+    this.fboForm.controls.colors.setValue(null);
 
   }
+
+  removeColor = (color: string):void => {
+
+    const index = this.colors.indexOf(color);
+    if (index >= 0) {
+
+      this.colors.splice(index, 1);
+
+    }
+
+  }
+
+  onColorSelected = (event: MatAutocompleteSelectedEvent): void => {
+
+    this.colors.push(event.option.viewValue);
+    this.colorInput.nativeElement.value = '';
+    this.fboForm.controls.colors.setValue(null);
+
+  };
+
 
 }
 

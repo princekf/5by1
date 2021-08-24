@@ -1,5 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,7 +5,8 @@ import { UnitService } from '@fboservices/inventory/unit.service';
 import { MainService } from '@fboservices/main.service';
 import { Unit } from '@shared/entity/inventory/unit';
 import { ToastrService } from 'ngx-toastr';
-import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
+import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
+
 @Component({
   selector: 'app-delete-unit',
   templateUrl: './delete-unit.component.html',
@@ -15,6 +14,8 @@ import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from 
   animations: fboTableRowExpandAnimation,
 })
 export class DeleteUnitComponent implements OnInit {
+
+  goToPreviousPage = _goToPreviousPage;
 
   displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'baseUnit.name', 'times', 'description' ];
 
@@ -35,8 +36,8 @@ export class DeleteUnitComponent implements OnInit {
 
   findColumnValue = _findColumnValue;
 
-  constructor(private readonly router: Router,
-    private readonly route: ActivatedRoute,
+  constructor(public readonly router: Router,
+    public readonly route: ActivatedRoute,
     private readonly unitService:UnitService,
     private readonly mainService: MainService,
     private readonly toastr: ToastrService) { }
@@ -67,22 +68,6 @@ export class DeleteUnitComponent implements OnInit {
 
   }
 
-
-  goToUnits(): void {
-
-    const burl = this.route.snapshot.queryParamMap.get('burl');
-    const uParams:Record<string, string> = {};
-    if (burl?.includes('?')) {
-
-      const httpParams = new HttpParams({ fromString: burl.split('?')[1] });
-      const keys = httpParams.keys();
-      keys.forEach((key) => (uParams[key] = httpParams.get(key)));
-
-    }
-    this.router.navigate([ '/unit' ], {queryParams: uParams});
-
-  }
-
   deleteUnits(): void {
 
     this.loading = true;
@@ -93,7 +78,7 @@ export class DeleteUnitComponent implements OnInit {
 
       this.loading = false;
       this.toastr.success('Units are deleted successfully', 'Unit deleted');
-      this.goToUnits();
+      this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 

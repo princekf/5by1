@@ -1,4 +1,4 @@
-import { Unit } from './unit';
+import { Category } from './category';
 
 export interface Product {
     _id?: string;
@@ -9,10 +9,11 @@ export interface Product {
     // Location of product in the store, like Rack-1 etc
     location?: string;
     barcode?: string;
-    unit: Unit;
     reorderLevel?: number;
     colors?: string[];
     // Enforce batch name and expiry date while entering purchase
     hasBatch?: boolean;
     status: 'Active' | 'Disabled' | 'Deleted';
+    description?: string;
+    category?:Category;
 }

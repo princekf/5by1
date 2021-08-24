@@ -5,7 +5,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { MainService } from '@fboservices/main.service';
 import { PAGE_SIZE_OPTIONS } from '@fboutil/constants';
-import {animate, state, style, transition, trigger} from '@angular/animations';
 import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -69,6 +68,8 @@ export class DataTableComponent {
   @Input() editUri: string;
 
   @Input() deleteUri: string;
+
+  @Input() columnParnsingFn?:(elm:unknown, clm:string)=>string;
 
   @ViewChild(MatSort) sort: MatSort;
 

@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import {animate, state, style, transition, trigger} from '@angular/animations';
 import { TaxService } from '@fboservices/inventory/tax.service';
 import { Tax } from '@shared/entity/inventory/tax';
-import { HttpParams } from '@angular/common/http';
 import { MainService } from '@fboservices/main.service';
 import { ToastrService } from 'ngx-toastr';
-import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
+import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
+
 @Component({
   selector: 'app-delete-tax',
   templateUrl: './delete-tax.component.html',
@@ -15,6 +14,8 @@ import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from 
   animations: fboTableRowExpandAnimation,
 })
 export class DeleteTaxComponent implements OnInit {
+
+  goToPreviousPage = _goToPreviousPage;
 
   displayedColumns: string[] = [ 'groupName', 'name', 'rate', 'appliedTo', 'description' ];
 
@@ -34,8 +35,8 @@ export class DeleteTaxComponent implements OnInit {
 
   findColumnValue = _findColumnValue;
 
-  constructor(private readonly router: Router,
-    private readonly route: ActivatedRoute,
+  constructor(public readonly router: Router,
+    public readonly route: ActivatedRoute,
     private readonly taxService:TaxService,
     private readonly mainService: MainService,
     private readonly toastr: ToastrService) { }
@@ -65,21 +66,6 @@ export class DeleteTaxComponent implements OnInit {
 
   }
 
-  goToTaxes(): void {
-
-    const burl = this.route.snapshot.queryParamMap.get('burl');
-    const uParams:Record<string, string> = {};
-    if (burl?.includes('?')) {
-
-      const httpParams = new HttpParams({ fromString: burl.split('?')[1] });
-      const keys = httpParams.keys();
-      keys.forEach((key) => (uParams[key] = httpParams.get(key)));
-
-    }
-    this.router.navigate([ '/tax' ], {queryParams: uParams});
-
-  }
-
   deleteTaxes(): void {
 
     this.loading = true;
@@ -90,7 +76,7 @@ export class DeleteTaxComponent implements OnInit {
 
       this.loading = false;
       this.toastr.success('Taxes are deleted successfully', 'Tax deleted');
-      this.goToTaxes();
+      this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 

@@ -4,6 +4,7 @@ import { Customer } from '@shared/entity/inventory/customer';
 import { delay } from 'rxjs/internal/operators';
 import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
+import { basha, jomon, pavithran } from '../mock-data/customer.data';
 
 const FAKE_TIMEOUT = 1000;
 
@@ -12,33 +13,7 @@ const FAKE_TIMEOUT = 1000;
 })
 export class CustomerService {
 
-    private items:Array<Customer> = [ {
-      _id: 'A001001',
-      name: 'Jomon Xaviour',
-      mobile: '98778987',
-      email: 'jomon.xaviour@panachikkal.com',
-      state: 'Kerala',
-      address: 'Panachikkal, Kerala',
-      gstNo: 'GST-001'
-    },
-    {
-      _id: 'A001002',
-      name: 'Pavithran M',
-      mobile: '98778985',
-      email: 'pavithran.m@manappally.com',
-      state: 'Kerala',
-      address: 'Manappally, Kerala',
-      gstNo: 'GST-002'
-    },
-    {
-      _id: 'A001003',
-      name: 'Maanik Basha',
-      mobile: '98778986',
-      email: 'maanik.basha@autokkaran.com',
-      state: 'TamilNadu',
-      address: 'Chennai, TN',
-      gstNo: 'GST-003'
-    } ];
+    private items:Array<Customer> = [ jomon, pavithran, basha ];
 
 
     public list(queryParams:QueryData):Observable<ListQueryRespType<Customer>> {
@@ -52,6 +27,12 @@ export class CustomerService {
         pageIndex
       };
       return of(resp).pipe(delay(FAKE_TIMEOUT));
+
+    }
+
+    public listAll():Observable<Array<Customer>> {
+
+      return of(this.items).pipe(delay(FAKE_TIMEOUT));
 
     }
 

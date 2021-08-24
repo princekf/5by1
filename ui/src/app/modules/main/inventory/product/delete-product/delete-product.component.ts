@@ -10,6 +10,7 @@ export class DeleteProductComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    
   }
 
 }

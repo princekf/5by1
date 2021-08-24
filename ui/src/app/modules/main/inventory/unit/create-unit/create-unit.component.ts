@@ -1,12 +1,10 @@
-import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UnitService } from '@fboservices/inventory/unit.service';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
 import { Unit } from '@shared/entity/inventory/unit';
-
+import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 @Component({
   selector: 'app-create-unit',
   templateUrl: './create-unit.component.html',
@@ -14,13 +12,13 @@ import { Unit } from '@shared/entity/inventory/unit';
 })
 export class CreateUnitComponent implements OnInit {
 
+  goToPreviousPage = _goToPreviousPage;
+
   formHeader = 'Create Units';
 
   loading = false;
 
   units: Array<Unit> = [];
-
-  groupNameOptions: Observable<string[]>;
 
   timesConditionallyRequiredValidator = (formControl: AbstractControl): ValidationErrors => {
 
@@ -54,8 +52,8 @@ export class CreateUnitComponent implements OnInit {
     description: new FormControl(''),
   });
 
-  constructor(private readonly router: Router,
-    private readonly route: ActivatedRoute,
+  constructor(public readonly router: Router,
+    public readonly route: ActivatedRoute,
     private readonly unitService:UnitService,
     private readonly toastr: ToastrService) { }
 
@@ -94,22 +92,6 @@ export class CreateUnitComponent implements OnInit {
 
   }
 
-
-  goToUnits(): void {
-
-    const burl = this.route.snapshot.queryParamMap.get('burl');
-    const uParams:Record<string, string> = {};
-    if (burl?.includes('?')) {
-
-      const httpParams = new HttpParams({ fromString: burl.split('?')[1] });
-      const keys = httpParams.keys();
-      keys.forEach((key) => (uParams[key] = httpParams.get(key)));
-
-    }
-    this.router.navigate([ '/unit' ], {queryParams: uParams});
-
-  }
-
   upsertUnit(): void {
 
     if (!this.fboForm.valid) {
@@ -122,7 +104,7 @@ export class CreateUnitComponent implements OnInit {
     (unitP._id ? this.unitService.update(unitP) : this.unitService.save(unitP)).subscribe((unitC) => {
 
       this.toastr.success(`Unit ${unitC.name} is saved successfully`, 'Unit saved');
-      this.goToUnits();
+      this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 

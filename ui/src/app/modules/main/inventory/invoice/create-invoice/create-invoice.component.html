@@ -1,1 +1,96 @@
-<p>create-invoice works!</p>
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" 
+[formGroup]="fboForm" (ngSubmit)="upsertInvoice()" class="fbo-sale-form">
+  <mat-form-field class="sale-form-field">
+    <mat-label>Customer</mat-label>
+    <mat-select placeholder="Select a customer" formControlName="customer">
+      <mat-option></mat-option>
+      <mat-option *ngFor="let customer of customers" [value]="customer">{{customer.name}}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="fboForm.controls['customer'].hasError('required')">
+      Customer is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="sale-form-field">
+    <mat-label>Invoice date</mat-label>
+    <input matInput [matDatepicker]="invoiceDatePicker" formControlName="invoiceDate">
+    <mat-datepicker-toggle matSuffix [for]="invoiceDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #invoiceDatePicker></mat-datepicker>
+    <mat-error *ngIf="fboForm.controls['invoiceDate'].hasError('required')">
+      Invoice date is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="sale-form-field">
+    <mat-label>Due date</mat-label>
+    <input matInput [matDatepicker]="dueDatePicker" formControlName="dueDate">
+    <mat-datepicker-toggle matSuffix [for]="dueDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #dueDatePicker></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field class="sale-form-field">
+    <mat-label>Invoice Number</mat-label>
+    <input matInput formControlName="invoiceNumber">
+  </mat-form-field>
+  <ng-container formArrayName="items">
+    <table mat-table [dataSource]="dataSource" class="sale-item-table">
+      <ng-container matColumnDef="product">
+        <th mat-header-cell *matHeaderCellDef> Product </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          <mat-form-field class="sale-item-product">
+              <input type="text" matInput placeholder="Ex. CGST, SGST etc" formControlName="product"
+              [matAutocomplete]="auto">
+              <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="extractNameOfProduct"
+              (optionSelected)='handleProductSelect($event.option.value, i)'>
+                <mat-option *ngFor="let option of productsFiltered" [value]="option">
+                  {{option.name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="unitPrice">
+        <th mat-header-cell *matHeaderCellDef> Price </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          <mat-form-field class="sale-item-price">
+              <input matInput type="number" formControlName="unitPrice">
+            </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef> Quantity </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          <mat-form-field class="sale-item-quantity">
+              <input matInput type="number" formControlName="quantity">
+            </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="discount">
+        <th mat-header-cell *matHeaderCellDef> Discount </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          <mat-form-field class="sale-item-discount">
+              <input matInput type="number" formControlName="discount">
+            </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="totalAmount">
+        <th mat-header-cell *matHeaderCellDef> Total </th>
+        <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+          <mat-form-field class="sale-item-totalAmount">
+              <input matInput type="number" formControlName="totalAmount">
+            </mat-form-field>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+  </ng-container>
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
+    <button type="submit" class="submit-button" mat-button>Save</button>
+  </p>
+</form>
