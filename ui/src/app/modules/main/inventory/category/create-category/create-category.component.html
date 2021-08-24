@@ -5,31 +5,40 @@
   </div>
   <form [style.display]="loading ? 'none': ''" [formGroup]="form"  (ngSubmit)="upsertCategory()">
   <h2>Create Category</h2>
-  <mat-form-field class="details" appearance="outline">
-      <mat-label>Name</mat-label>
-      <input formControlName="name" type="text"  matInput placeholder="enter name" >
-      <mat-error *ngIf="form.controls['name'].hasError('required')">Please write name</mat-error> 
-    </mat-form-field><br>
-  
-    <mat-form-field appearance="outline" class="details">
-      <mat-label>Enter a date range</mat-label>
-      <mat-date-range-input [rangePicker]="picker">
-        <input formControlName="sdate" matStartDate placeholder="Start date">
-        <input formControlName="edate" matEndDate placeholder="End date">
-      </mat-date-range-input>
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker>
-      <mat-error *ngIf="form.controls['sdate'].hasError('required')">Please choose your start date and</mat-error>
-      <mat-error *ngIf="form.controls['edate'].hasError('required')">end date</mat-error>
-    </mat-form-field> <br>
-    
-  
+
+
     <mat-form-field class="details parent" appearance="outline">
       <mat-label >Parent Name</mat-label>
-      <input formControlName="parent" type="text"  matInput placeholder="enter name" >
-      <mat-error  *ngIf="form.controls['parent'].hasError('required')">write parent name</mat-error>
+      <input formControlName="parent" type="text"  matInput placeholder="Enter name" >
+      <mat-error  *ngIf="form.controls['parent'].hasError('required')">Enter Parent name</mat-error>
     </mat-form-field><br>
-    <button class="cancel-button" mat-raised-button (click)=" goToCategory()">Cancel</button>
+
+    <mat-form-field class="details" appearance="outline">
+      <mat-label>Name</mat-label>
+      <input formControlName="name" type="text"  matInput placeholder="Enter name" >
+      <mat-error *ngIf="form.controls['name'].hasError('required')">Please Enter Name</mat-error> 
+    </mat-form-field><br>
+
+    <mat-form-field class="details" appearance="outline">
+      <mat-label>Unit</mat-label>
+      <input formControlName="unit" type="text"  matInput placeholder="Enter Unit" >
+      <mat-error *ngIf="form.controls['unit'].hasError('required')">Please Enter Unit</mat-error> 
+    </mat-form-field><br>
+
+    <mat-form-field class="details" appearance="outline">
+      <mat-label>HSN Number</mat-label>
+      <input formControlName="hsnNumber" type="text"  matInput placeholder="Enter hsnNumber" >
+      <mat-error *ngIf="form.controls['hsnNumber'].hasError('required')">Please Enter  hsnNumber</mat-error> 
+    </mat-form-field><br>
+
+    <mat-form-field class="details" appearance="outline">
+      <mat-label>Description</mat-label>
+      <input formControlName="description" type="text"  matInput placeholder="Enter description" >
+      <mat-error *ngIf="form.controls['description'].hasError('required')">Please write description</mat-error> 
+    </mat-form-field><br>
+
+
+    <button class="cancel-button" mat-raised-button (click)="goToPreviousPage(route,router)">Cancel</button>
     <button class="btn-save" mat-raised-button color="primary">save</button>
   </form>
   </div>

@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+
 import { CategoryService} from '@fboservices/inventory/category.service';
 import { Category } from '@shared/entity/inventory/category';
 import { ToastrService } from 'ngx-toastr';
-import { HttpParams } from '@angular/common/http';
+
 import { ActivatedRoute, Router } from '@angular/router';
-interface Parent {
-  viewValue: string;
-}
+import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 @Component({
   selector: 'app-create-category',
   templateUrl: './create-category.component.html',
@@ -17,6 +15,7 @@ interface Parent {
 })
 export class CreateCategoryComponent implements OnInit {
 
+  goToPreviousPage = _goToPreviousPage;
 
   loading = false;
 
@@ -33,17 +32,14 @@ export class CreateCategoryComponent implements OnInit {
 
     name: new FormControl('', [ Validators.required ]),
 
-    sdate: new FormControl('', [ Validators.required ]),
+    unit: new FormControl('', [ Validators.required ]),
 
-    edate: new FormControl('', [ Validators.required ]),
+    hsnNumber: new FormControl('', [ Validators.required ]),
+
+    description: new FormControl('', [ Validators.required ]),
 
   });
 
-  parent: Parent[] = [
-    {viewValue: 'p1'},
-    {viewValue: 'P2'},
-    {viewValue: 'p3'}
-  ];
 
   private _filter(value: string): string[] {
 
@@ -52,43 +48,49 @@ export class CreateCategoryComponent implements OnInit {
 
   }
 
-  constructor(private readonly router: Router,
-    private readonly route: ActivatedRoute,
+  constructor(public readonly router: Router,
+    public readonly route: ActivatedRoute,
     private readonly categoryService:CategoryService,
     private readonly toastr: ToastrService) { }
 
 
   ngOnInit(): void {
 
-    this.nameOptions = this.form.controls.name.valueChanges.pipe(
-      startWith(''), map((value) => this._filter(value))
-    );
 
-    this.categoryService.getname().subscribe((name) => {
+    const tId = this.route.snapshot.queryParamMap.get('id');
+    this.loading = true;
+    this.categoryService.listAll().subscribe((categories) => {
 
-      this.name = name;
+      this.categories = categories;
+      if (tId) {
+
+        this.categoryService.get(tId).subscribe((categoryC) => {
+
+          this.form.setValue({_id: categoryC._id,
+            naparentme: categoryC.parent,
+            name: categoryC.name,
+            unit: categoryC.unit ?? '',
+            hsnNumber: categoryC.hsnNumber ?? '',
+            description: categoryC.description ?? ''});
+
+          this.loading = false;
+
+        });
+
+      } else {
+
+        this.loading = false;
+
+      }
 
     });
 
-  }
-
-  goToCategory(): void {
-
-    const burl = this.route.snapshot.queryParamMap.get('burl');
-    const uParams:Record<string, string> = {};
-    if (burl?.includes('?')) {
-
-      const httpParams = new HttpParams({ fromString: burl.split('?')[1] });
-      const keys = httpParams.keys();
-      keys.forEach((key) => (uParams[key] = httpParams.get(key)));
-
-    }
-    this.router.navigate([ '/category' ], {queryParams: uParams});
 
   }
 
 
   upsertCategory(): void {
+
 
     if (!this.form.valid) {
 
@@ -100,13 +102,13 @@ export class CreateCategoryComponent implements OnInit {
     // eslint-disable-next-line max-len
     (categoryP._id ? this.categoryService.update(categoryP) : this.categoryService.save(categoryP)).subscribe((categoryC) => {
 
-      this.toastr.success(`Category ${categoryC.name} is saved successfully`, 'Category saved');
-      this.goToCategory();
+      this.toastr.success(`Unit ${categoryC.name} is saved successfully`, 'Unit saved');
+      this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error(`Error in saving Category ${categoryP.name}`, 'Category not saved');
+      this.toastr.error(`Error in saving unit ${categoryP.name}`, 'Unit not saved');
       console.error(error);
 
     });

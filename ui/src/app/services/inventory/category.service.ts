@@ -3,7 +3,8 @@ import { Observable, of } from 'rxjs';
 import { Category } from '@shared/entity/inventory/category';
 import { delay } from 'rxjs/internal/operators';
 import { QueryData } from '@shared/util/query-data';
-import { mobilePhones, television } from '../mock-data/category.data';
+import { mobilePhones, television, computer, laptop } from '../mock-data/category.data';
+import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 const FAKE_TIMEOUT = 1000;
 
 @Injectable({
@@ -12,7 +13,7 @@ const FAKE_TIMEOUT = 1000;
 export class CategoryService {
 
 
-  private items:Array<Category> = [ television, mobilePhones ]
+  private items:Array<Category> = [ television, mobilePhones, computer, laptop ]
 
   constructor() { }
 
@@ -28,6 +29,12 @@ export class CategoryService {
       pageIndex
     };
     return of(resp).pipe(delay(FAKE_TIMEOUT));
+
+  }
+
+  public listAll():Observable<Array<Category>> {
+
+    return of(this.items).pipe(delay(FAKE_TIMEOUT));
 
   }
 
@@ -74,20 +81,6 @@ export class CategoryService {
 
   }
 
-  public getname():Observable<Array<string>> {
 
-    const groupNames:Array<string> = [];
-    for (const categoryP of this.items) {
-
-      if (!groupNames.includes(categoryP.name)) {
-
-        groupNames.push(categoryP.name);
-
-      }
-
-    }
-    return of(groupNames).pipe(delay(FAKE_TIMEOUT));
-
-  }
 
 }

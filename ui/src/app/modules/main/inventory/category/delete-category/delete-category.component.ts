@@ -1,45 +1,44 @@
 import { Component, OnInit } from '@angular/core';
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CategoryService} from '@fboservices/inventory/category.service';
 import { MainService } from '@fboservices/main.service';
 import { Category} from '@shared/entity/inventory/category';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { HttpParams } from '@angular/common/http';
+
+import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 @Component({
   selector: 'app-delete-category',
   templateUrl: './delete-category.component.html',
-  styleUrls: [ './delete-category.component.scss' ],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({height: '0px',
-        minHeight: '0'})),
-      state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+  styleUrls: [ './delete-category.component.scss', '../../../../../util/styles/fbo-table-style.scss' ],
+  animations: fboTableRowExpandAnimation,
 })
 export class DeleteCategoryComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'parent', 'name' ];
+  displayedColumns: string[] = [ 'parent.name', 'name', 'unit.name', 'hsnNumber', 'description' ];
 
   columnHeaders = {
-    parent: 'Parent',
+    'parent.name': 'Parent',
     name: 'Name',
+    'unit.name': 'Unit',
+    hsnNumber: 'hsnNumber',
+    description: 'description',
   }
+
+  goToPreviousPage = _goToPreviousPage;
 
   extraColumns: Array<string>;
 
   dataSource = new MatTableDataSource<Category>([]);
 
+  findColumnValue = _findColumnValue;
 
   loading = true;
 
 
   constructor(
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
+    public readonly router: Router,
+    public readonly route: ActivatedRoute,
     private readonly categoryService:CategoryService,
     private readonly mainService: MainService,
     private readonly toastr: ToastrService
@@ -52,8 +51,6 @@ export class DeleteCategoryComponent implements OnInit {
     this.categoryService.listByIds(tIdArray).subscribe((categories) => {
 
       this.dataSource.data = categories;
-
-      console.log(this.dataSource);
       this.loading = false;
 
     });
@@ -72,32 +69,18 @@ export class DeleteCategoryComponent implements OnInit {
 
   }
 
-  goToCategory(): void {
-
-    const burl = this.route.snapshot.queryParamMap.get('burl');
-    const uParams:Record<string, string> = {};
-    if (burl?.includes('?')) {
-
-      const httpParams = new HttpParams({ fromString: burl.split('?')[1] });
-      const keys = httpParams.keys();
-      keys.forEach((key) => (uParams[key] = httpParams.get(key)));
-
-    }
-    this.router.navigate([ '/category' ], {queryParams: uParams});
-
-  }
 
   deleteCategory(): void {
 
     this.loading = true;
-    const units = this.dataSource.data;
+    const categories = this.dataSource.data;
     const tIds = [];
-    units.forEach((taxP) => tIds.push(taxP._id));
+    categories.forEach((categoryP) => tIds.push(categoryP._id));
     this.categoryService.deleteByIds(tIds).subscribe((categoryP) => {
 
       this.loading = false;
       this.toastr.success('Categories are deleted successfully', 'Categories deleted');
-      this.goToCategory();
+      this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 
@@ -109,6 +92,5 @@ export class DeleteCategoryComponent implements OnInit {
 
   }
 
-  findColumnValue = (element:unknown, column:string):string => <string>column.split('.').reduce((acc, cur) => acc[cur], element);
 
 }
