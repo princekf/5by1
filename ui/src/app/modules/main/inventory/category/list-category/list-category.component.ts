@@ -5,7 +5,7 @@ import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
 import { Category } from '@shared/entity/inventory/category';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
-import { MatTableDataSource } from '@angular/material/table';
+
 @Component({
   selector: 'app-list-category',
   templateUrl: './list-category.component.html',
@@ -30,8 +30,6 @@ export class ListCategoryComponent {
 
   loading = true;
 
-  dataSource = new MatTableDataSource<Category>([]);
-
   categories:ListQueryRespType<Category> = {
     totalItems: 0,
     pageIndex: 0,
@@ -51,7 +49,6 @@ export class ListCategoryComponent {
 
         this.loading = false;
 
-        console.log(this.categories);
 
       }, (error) => {
 
