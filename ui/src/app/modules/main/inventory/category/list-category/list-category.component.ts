@@ -1,9 +1,12 @@
+
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CategoryService } from '@fboservices/inventory/category.service';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
 import { Category } from '@shared/entity/inventory/category';
+import { ListQueryRespType } from '@fboutil/types/list.query.resp';
+
 @Component({
   selector: 'app-list-category',
   templateUrl: './list-category.component.html',
@@ -12,11 +15,14 @@ import { Category } from '@shared/entity/inventory/category';
 
 export class ListCategoryComponent {
 
-  displayedColumns: string[] = [ 'parent.name', 'name' ];
+  displayedColumns: string[] = [ 'parent.name', 'name', 'unit.name', 'hsnNumber', 'description' ];
 
   columnHeaders = {
     'parent.name': 'Parent',
     name: 'Name',
+    'unit.name': 'Unit',
+    hsnNumber: 'hsnNumber',
+    description: 'description',
   }
 
   queryParams:QueryData = { };
@@ -25,7 +31,11 @@ export class ListCategoryComponent {
 
   loading = true;
 
-  categories:Array<Category> = [];
+  categories:ListQueryRespType<Category> = {
+    totalItems: 0,
+    pageIndex: 0,
+    items: []
+  };
 
 
   constructor(private activatedRoute : ActivatedRoute,
@@ -37,7 +47,9 @@ export class ListCategoryComponent {
       this.categoryService.list(this.queryParams).subscribe((categories) => {
 
         this.categories = categories;
+
         this.loading = false;
+
 
       }, (error) => {
 
