@@ -1,3 +1,4 @@
+
 import { Category } from '@shared/entity/inventory/category';
 import { noUnit} from '../mock-data/unit.data';
 
@@ -7,7 +8,7 @@ export const computer:Category = {
   unit: noUnit,
   description: 'Desktop computers',
   hsnNumber: '234521',
- 
+
 };
 export const laptop:Category = {
   _id: 'CAT-002',
