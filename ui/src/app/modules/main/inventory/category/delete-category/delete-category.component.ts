@@ -5,7 +5,6 @@ import { Category} from '@shared/entity/inventory/category';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 @Component({
   selector: 'app-delete-category',
@@ -33,7 +32,7 @@ export class DeleteCategoryComponent implements OnInit {
 
   findColumnValue = _findColumnValue;
 
-  loading = true;
+  loading =true;
 
 
   constructor(
