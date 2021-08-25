@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Category } from '@shared/entity/inventory/category';
@@ -80,7 +81,5 @@ export class CategoryService {
     return of(categoryC).pipe(delay(FAKE_TIMEOUT));
 
   }
-
-
 
 }
