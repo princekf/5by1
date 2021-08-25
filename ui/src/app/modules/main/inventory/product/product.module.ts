@@ -9,7 +9,7 @@ import { CreateProductComponent } from './create-product/create-product.componen
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
 import { DataTableModule } from '../../data-table/data-table.module';
 import { DeleteProductComponent } from './delete-product/delete-product.component';
-
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatPaginatorModule} from '@angular/material/paginator';
@@ -32,7 +32,7 @@ import {MatRadioModule} from '@angular/material/radio';
     CommonModule, ToolBarModule, DataTableModule, ProductRoutingModule, MatTableModule,
     MatSortModule, MatInputModule, MatSelectModule, MatIconModule, MatPaginatorModule,
     MatButtonModule, MatButtonToggleModule, MatSlideToggleModule, MatAutocompleteModule, FormsModule,
-    ReactiveFormsModule, MatChipsModule, MatRadioModule, ReactiveFormsModule,
+    ReactiveFormsModule, MatChipsModule, MatRadioModule, ReactiveFormsModule, NgxSkeletonLoaderModule
   ]
 })
 export class ProductModule { }
