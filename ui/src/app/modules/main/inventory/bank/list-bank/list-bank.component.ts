@@ -1,5 +1,5 @@
-import { Component} from '@angular/core';
-import {Bank} from '@shared/entity/inventory/bank';
+import { Component } from '@angular/core';
+import { Bank } from '@shared/entity/inventory/bank';
 import { BankService } from '@fboservices/inventory/bank.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
@@ -8,11 +8,11 @@ import { QueryData } from '@shared/util/query-data';
 @Component({
   selector: 'app-list-bank',
   templateUrl: './list-bank.component.html',
-  styleUrls: [ './list-bank.component.scss' ]
+  styleUrls: ['./list-bank.component.scss']
 })
 export class ListBankComponent {
 
-  displayedColumns: string[] = [ 'type', 'name', 'openingBalance', 'description' ];
+  displayedColumns: string[] = ['type', 'name', 'openingBalance', 'description'];
 
 
   columnHeaders = {
@@ -24,51 +24,51 @@ export class ListBankComponent {
 
   loading = true;
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = {};
 
   routerSubscription: Subscription;
 
 
-   banks:ListQueryRespType<Bank> = {
-     totalItems: 0,
-     pageIndex: 0,
-     items: []
-   };
+  banks: ListQueryRespType<Bank> = {
+    totalItems: 0,
+    pageIndex: 0,
+    items: []
+  };
 
-   constructor(private activatedRoute : ActivatedRoute,
-    private bankService:BankService) { }
-
-
-   ngAfterViewInit():void {
-
-     this.activatedRoute.queryParams.subscribe((value) => {
-
-       this.queryParams = { ...value };
-       this.loadData();
-
-     });
+  constructor(private activatedRoute: ActivatedRoute,
+    private bankService: BankService) { }
 
 
-   }
+  ngAfterViewInit(): void {
 
-   private loadData = () => {
+    this.activatedRoute.queryParams.subscribe((value) => {
 
-     this.loading = true;
-     this.bankService.list(this.queryParams).subscribe((banks) => {
+      this.queryParams = { ...value };
+      this.loadData();
 
-       this.banks = banks;
-
-       this.loading = false;
+    });
 
 
-     }, (error) => {
+  }
 
-       console.error(error);
-       this.loading = false;
+  private loadData = () => {
 
-     });
+    this.loading = true;
+    this.bankService.list(this.queryParams).subscribe((banks) => {
 
-   };
+      this.banks = banks;
+
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
+
+  };
 
 
 }

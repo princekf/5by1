@@ -1,4 +1,5 @@
 export interface Bank {
+    _id?: string;
     // Bank, Cash etc
     type: 'Bank' | 'Cash' | 'Other';
     // Name of Bank

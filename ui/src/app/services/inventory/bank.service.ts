@@ -32,5 +32,53 @@ export class BankService {
 
   }
 
+  public listAll():Observable<Array<Bank>> {
+
+    return of(this.items).pipe(delay(FAKE_TIMEOUT));
+
+  }
+
+  public listByIds(ids: Array<string>):Observable<Array<Bank>> {
+
+    const fItems = this.items.filter((bankP) => ids.includes(bankP._id));
+    return of(fItems).pipe(delay(FAKE_TIMEOUT));
+
+  }
+
+
+  public deleteByIds(ids: Array<string>):Observable<Array<Bank>> {
+
+    const deletedArray:Array<Bank> = [];
+    const balanceArray:Array<Bank> = [];
+    // eslint-disable-next-line max-len
+    this.items.forEach((bankP) => (ids.includes(bankP._id) ? deletedArray.push(bankP) : balanceArray.push(bankP)));
+    this.items = balanceArray;
+    return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
+
+  }
+
+  public save(banks:Bank):Observable<Bank> {
+
+    const bankC = <Bank> banks;
+    bankC._id = `auto_id_${this.items.length}`;
+    this.items.push(bankC);
+    return of(bankC).pipe(delay(FAKE_TIMEOUT));
+
+  }
+
+  public update(banks:Bank):Observable<Bank> {
+
+    const idx = this.items.findIndex((bankT) => bankT._id === banks._id);
+    this.items[idx] = banks;
+    return of(banks).pipe(delay(FAKE_TIMEOUT));
+
+  }
+
+  public get(objId:string):Observable<Bank> {
+
+    const bankC = this.items.find((bankT) => bankT._id === objId);
+    return of(bankC).pipe(delay(FAKE_TIMEOUT));
+
+  }
 
 }
