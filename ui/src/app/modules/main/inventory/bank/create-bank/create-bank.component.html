@@ -1,1 +1,46 @@
-<p>create-bank works!</p>
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertBank()">
+  <p>
+    <mat-form-field>
+      <mat-label>Type</mat-label>
+      <mat-select placeholder="Enter Parent Name" formControlName="type">
+        <mat-option [value]="bank.type" *ngFor="let bank of banks">{{bank.type}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input formControlName="name" type="text" matInput placeholder="Enter Name">
+      <mat-error *ngIf="form.controls['name'].hasError('required')">Please Enter Name</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Opening Balance</mat-label>
+      <input formControlName="openingBalance" type="number" matInput placeholder="Enter openingBalance">
+      <mat-error *ngIf="form.controls['openingBalance'].hasError('required')">Please Enter Opening Balance</mat-error>
+
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <input formControlName="description" type="text" matInput placeholder="Enter description">
+      <mat-error *ngIf="form.controls['description'].hasError('required')">Please write description</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
+    <button class="submit-button" mat-button>save</button>
+  </p>
+
+</form>
