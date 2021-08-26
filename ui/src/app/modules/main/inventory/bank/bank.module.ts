@@ -12,11 +12,14 @@ import { ToolBarModule } from '../../tool-bar/tool-bar.module';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
 @NgModule({
   declarations: [ ListBankComponent, CreateBankComponent, DeleteBankComponent ],
   imports: [
     CommonModule, BankRoutingModule, DataTableModule, MatTableModule, NgxSkeletonLoaderModule,
-    MatSortModule, ToolBarModule, MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule
+    MatSortModule, ToolBarModule, MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule,
+    MatInputModule, MatButtonModule
   ]
 })
 export class BankModule { }
