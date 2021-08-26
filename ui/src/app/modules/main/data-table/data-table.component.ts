@@ -115,6 +115,18 @@ export class DataTableComponent {
 
   }
 
+  ngOnInit():void {
+
+    if (this.mainService.isMobileView()) {
+
+      const COLUMN_COUNT_MOBILE_VIEW = 3;
+      this.extraColumns = this.displayedColumns;
+      this.displayedColumns = this.extraColumns.splice(0, COLUMN_COUNT_MOBILE_VIEW);
+
+    }
+
+  }
+
   ngAfterViewInit():void {
 
     // eslint-disable-next-line no-underscore-dangle
@@ -123,9 +135,6 @@ export class DataTableComponent {
 
       // eslint-disable-next-line no-underscore-dangle
       this.paginator._intl.itemsPerPageLabel = '';
-      const COLUMN_COUNT_MOBILE_VIEW = 3;
-      this.extraColumns = this.displayedColumns;
-      this.displayedColumns = this.extraColumns.splice(0, COLUMN_COUNT_MOBILE_VIEW);
 
     }
     this.paginator.page.subscribe((evt: PageEvent) => {

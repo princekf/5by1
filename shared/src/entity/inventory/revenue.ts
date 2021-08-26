@@ -6,8 +6,9 @@ export interface Revenue {
     receivedDate: Date;
     customer?: Customer;
     invoice?: Invoice;
-    bank?: Bank;
+    bank: Bank;
     // Category like Sale etc
     category?: string;
     amount: number;
+    description: string;
 }
