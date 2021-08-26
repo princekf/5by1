@@ -6,8 +6,9 @@ export interface Payment {
     paidDate: Date;
     vendor?: Vendor;
     bill?: Bill;
-    bank?: Bank;
+    bank: Bank;
     // Category like Purchase, Donation etc
     category?: string;
     amount: number;
+    description: string;
 }
