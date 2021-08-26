@@ -1,1 +1,10 @@
-<p>list-bank works!</p>
+<app-tool-bar createUri="/bank/create" mainHeader="Bank"></app-tool-bar>
+<app-data-table tableHeader="List of Banks"
+[displayedColumns]="displayedColumns"
+[columnHeaders]="columnHeaders"
+[loading]="loading"
+[tableData]="banks"
+editUri="/bank/create"
+deleteUri="/bank/delete"
+></app-data-table>
+

@@ -4,4 +4,7 @@ export interface Bank {
     // Name of Bank
     name: string;
     openingBalance: number;
+     // Description of Bank
+    description?:string;
+
 }
