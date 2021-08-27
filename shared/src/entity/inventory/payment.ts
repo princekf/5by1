@@ -3,6 +3,8 @@ import { Bill } from './bill';
 import { Vendor } from './vendor';
 
 export interface Payment {
+
+    _id?:string;
     paidDate: Date;
     vendor?: Vendor;
     bill?: Bill;
