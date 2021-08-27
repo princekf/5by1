@@ -3,6 +3,7 @@ import { Customer } from './customer';
 import { Invoice } from './invoice';
 
 export interface Revenue {
+    _id:string;
     receivedDate: Date;
     customer?: Customer;
     invoice?: Invoice;
