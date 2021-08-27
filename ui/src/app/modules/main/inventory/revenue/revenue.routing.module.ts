@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ListRevenueComponent } from './list-revenue/list-revenue.component';
 import { CreateRevenueComponent } from './create-revenue/create-revenue.component';
-
+import {DeleteRevenueComponent } from './delete-revenue/delete-revenue.component'
 const routes: Routes = [
   {
     path: '',
@@ -15,6 +15,11 @@ const routes: Routes = [
     path: 'create',
     pathMatch: 'full',
     component: CreateRevenueComponent
+  },
+  {
+    path: 'delete',
+    pathMatch: 'full',
+    component: DeleteRevenueComponent
   },
 
 
