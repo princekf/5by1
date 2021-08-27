@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '@fboservices/user.service';
 
@@ -15,10 +15,10 @@ export class SignupComponent {
   loading = false;
 
   form: FormGroup = new FormGroup({
-    name: new FormControl(''),
-    email: new FormControl(''),
-    password: new FormControl(''),
-    cPassword: new FormControl(''),
+    name: new FormControl('', [ Validators.required ]),
+    email: new FormControl('', [ Validators.required ]),
+    password: new FormControl('', [ Validators.required ]),
+    cPassword: new FormControl('', [ Validators.required ]),
   });
 
   constructor(private readonly userService:UserService,
@@ -27,43 +27,35 @@ export class SignupComponent {
   submit():void {
 
     this.error = null;
-    if (!this.form.value.name) {
+    if (this.form.valid === true) {
 
-      this.error = 'Name should not be empty.';
-      return;
+      this.loading = true;
+      this.userService.signUp(this.form.value).subscribe((message) => {
+
+        this.loading = false;
+        this.router.navigateByUrl('/');
+
+      }, (error) => {
+
+        this.loading = false;
+        this.error = error.error.message;
+        if (!(/^(?<name>[a-zA-Z0-9_\-\.]+)@(?<domain>[a-zA-Z0-9_\-\.]+)\.(?<extn>[a-zA-Z]{2,5})$/ugm).test(this.form.value.email)) {
+
+          this.error = 'Please provide a valid email.';
+
+
+        }
+        if (this.form.value.password !== this.form.value.cPassword) {
+
+          this.error = 'Password and confirm password should be same.';
+
+
+        }
+
+      });
+
 
     }
-    if (!this.form.value.password) {
-
-      this.error = 'Password should not be empty.';
-      return;
-
-    }
-    if (this.form.value.password !== this.form.value.cPassword) {
-
-      this.error = 'Password and confirm password should be same.';
-      return;
-
-    }
-    if (!(/^(?<name>[a-zA-Z0-9_\-\.]+)@(?<domain>[a-zA-Z0-9_\-\.]+)\.(?<extn>[a-zA-Z]{2,5})$/ugm).test(this.form.value.email)) {
-
-      this.error = 'Please provide a valid email.';
-      return;
-
-    }
-    this.loading = true;
-    this.userService.signUp(this.form.value).subscribe((message) => {
-
-      this.loading = false;
-      this.router.navigateByUrl('/');
-
-    }, (error) => {
-
-      this.loading = false;
-      this.error = error.error.message;
-
-    });
-
 
   }
 

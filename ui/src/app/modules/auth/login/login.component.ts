@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '@fboservices/user.service';
 
@@ -14,43 +14,46 @@ export class LoginComponent {
 
   loading = false;
 
+
   form: FormGroup = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl(''),
+
+
+    email: new FormControl('', [ Validators.required ]),
+
+    password: new FormControl('', [ Validators.required ]),
+
+
   });
 
-  constructor(private readonly userService:UserService,
-    private readonly router:Router) {}
+  constructor(private readonly userService: UserService,
+    private readonly router: Router) { }
 
-  submit():void {
+  submit(): void {
 
-    if (!this.form.value.email) {
+    if (this.form.valid === true) {
 
-      this.error = 'Please input your email';
-      return;
+      this.loading = true;
+      this.error = null;
+      this.userService.login(this.form.value).subscribe((message) => {
+
+        this.loading = false;
+        this.router.navigateByUrl('/');
+
+      }, (error) => {
+
+        this.loading = false;
+        this.error = error.error.message;
+
+        if (!(/^(?<name>[a-zA-Z0-9_\-\.]+)@(?<domain>[a-zA-Z0-9_\-\.]+)\.(?<extn>[a-zA-Z]{2,5})$/ugm).test(this.form.value.email)) {
+
+          this.error = 'Please provide a valid email.';
+
+
+        }
+
+      });
 
     }
-    if (!this.form.value.password) {
-
-      this.error = 'Please input your password';
-      return;
-
-    }
-
-    this.loading = true;
-    this.error = null;
-    this.userService.login(this.form.value).subscribe((message) => {
-
-      this.loading = false;
-      this.router.navigateByUrl('/');
-
-    }, (error) => {
-
-      this.loading = false;
-      this.error = error.error.message;
-
-    });
-
 
   }
 
