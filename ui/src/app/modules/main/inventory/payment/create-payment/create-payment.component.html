@@ -1,1 +1,80 @@
-<p>create-payment works!</p>
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertPayment()">
+  <p>
+    <mat-form-field>
+      <mat-label>Paid Date</mat-label>
+      <input type="date" matInput placeholder="Enter Date" formControlName="paidDate">
+      <mat-error *ngIf="form.controls['paidDate'].hasError('required')"> Date is required</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Vendor</mat-label>
+      <mat-select placeholder="Enter Vendor name" formControlName="vendor">
+        <mat-option *ngFor="let vendor of vendors" [value]=vendor>{{vendor.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Bill</mat-label>
+      <mat-select matInput placeholder="Enter Bill Name" formControlName="bill">
+        <mat-option *ngFor="let bill of bills" [value]=bill>{{bill.billNumber}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label> Bank</mat-label>
+
+      <mat-select placeholder="Enter Bank name" formControlName="bank">
+        <mat-option *ngFor="let bank of banks" [value]=bank>{{bank.name}}</mat-option>
+      </mat-select>
+
+    </mat-form-field>
+  </p>
+  <!-- <p>
+    <mat-form-field>
+      <mat-label>State</mat-label>
+      <input type="text" matInput placeholder="Ex. Kerala, TamilNadu etc" formControlName="state"
+      [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let option of statesOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="form.controls['state'].hasError('required')">
+        State is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </p> -->
+  <p>
+    <mat-form-field>
+      <mat-label>Category</mat-label>
+      <input type="text" placeholder="Enter Category Name" matInput formControlName="category">
+      <mat-error *ngIf="form.controls['category'].hasError('required')"> Category is required</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label> Amount</mat-label>
+      <input type="number" matInput placeholder="Enter Amount" formControlName="amount">
+      <mat-error *ngIf="form.controls['amount'].hasError('required')"> Amount is required</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label> Description</mat-label>
+      <input type="text" matInput placeholder="Enter description" formControlName="description">
+      <mat-error *ngIf="form.controls['description'].hasError('required')"> Description is required</mat-error>
+    </mat-form-field>
+  </p>
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
+    <button type="submit" class="submit-button" mat-button>Save</button>
+  </p>
+</form>
