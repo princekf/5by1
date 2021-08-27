@@ -1,1 +1,69 @@
-<p>create-revenue works!</p>
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertRevenue()">
+  <p>
+    <mat-form-field>
+      <mat-label>Received Date</mat-label>
+      <input formControlName="receivedDate" type="date" matInput placeholder="Enter Recieved date">
+      <mat-error *ngIf="form.controls['receivedDate'].hasError('required')">Please Enter Name</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Customer Name</mat-label>
+      <mat-select placeholder="Enter Customer name" formControlName="customer">
+        <mat-option *ngFor="let customer of customers" [value]="customer">{{customer.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>InvoiceNumber</mat-label>
+      <mat-select placeholder="Enter InvoiceNumber" formControlName="invoice">
+        <mat-option *ngFor="let invoice of invoices" [value]="invoice">{{invoice.invoiceNumber}}</mat-option>
+      </mat-select>
+
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Bank Number</mat-label>
+      <mat-select placeholder="Enter Bank Name" formControlName="bank">
+        <mat-option *ngFor="let bank of banks" [value]="bank">{{bank.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Category</mat-label>
+      <input formControlName="category" type="text" matInput placeholder="Enter Category">
+      <mat-error *ngIf="form.controls['category'].hasError('required')">Please Enter Category</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Amount</mat-label>
+      <input formControlName="amount" type="number" matInput placeholder="Enter Amount">
+      <mat-error *ngIf="form.controls['amount'].hasError('required')">Please Enter HSN Number</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <input formControlName="description" type="text" matInput placeholder="Enter description">
+      <mat-error *ngIf="form.controls['description'].hasError('required')">Please write description</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
+    <button class="submit-button" mat-button>save</button>
+  </p>
+
+</form>
