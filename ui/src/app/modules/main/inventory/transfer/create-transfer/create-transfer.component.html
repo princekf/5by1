@@ -1,1 +1,55 @@
-<p>create-transfer works!</p>
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertTransfer()">
+  <p>
+    <mat-form-field>
+      <mat-label>From Account</mat-label>
+      <mat-select placeholder="Enter From Account" formControlName="fromAccount">
+        <mat-option *ngFor="let bank of banks" [value]="bank">{{bank.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>To Account</mat-label>
+      <mat-select placeholder="Enter To Account" formControlName="toAccount">
+        <mat-option *ngFor="let bank of banks" [value]="bank">{{bank.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+
+
+
+  <p>
+    <mat-form-field>
+      <mat-label>Transfer Date</mat-label>
+      <input formControlName="transferDate" type="date" matInput placeholder="Enter Transfer Date">
+      <mat-error *ngIf="form.controls['transferDate'].hasError('required')">Please Enter Transfer Date</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Amount</mat-label>
+      <input formControlName="amount" type="number" matInput placeholder="Enter Transfer Amount">
+      <mat-error *ngIf="form.controls['amount'].hasError('required')">Please Enter Transfer Amount</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <input formControlName="description" type="text" matInput placeholder="Enter description">
+      <mat-error *ngIf="form.controls['description'].hasError('required')">Please write description</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
+    <button class="submit-button" mat-button>save</button>
+  </p>
+
+</form>
