@@ -1,28 +1,28 @@
 import { Bank } from '@shared/entity/inventory/bank';
 
 
-export const bank:Bank = {
+export const SBI:Bank = {
   _id: 'bk-001',
   type: 'Bank',
-  name: 'Indian Bank',
+  name: 'SBI',
   openingBalance: 3000,
   description: 'Indian Bank,TN',
 };
 
 
-export const cash:Bank = {
+export const HDFC:Bank = {
   _id: 'bk-002',
   type: 'Cash',
-  name: 'Balance',
+  name: 'HDFC',
   openingBalance: 0,
   description: 'HDFC Kerala',
 
 };
 
-export const Other:Bank = {
+export const ICICI:Bank = {
   _id: 'bk-003',
   type: 'Other',
-  name: 'SBI',
+  name: 'ICICI',
   openingBalance: 2000,
   description: 'SBI TVM',
 
