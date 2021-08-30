@@ -1,4 +1,4 @@
-<p>delete-transfer works!</p>
+<h2>The following Transfer will be deleted.</h2>
 
 <div *ngIf="loading">
   <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
@@ -12,8 +12,8 @@
     <td mat-cell *matCellDef="let element"> {{findColumnValue(element, column)}} </td>
   </ng-container>
 
-  <!--  Expandable section -->
- <ng-container matColumnDef="expandedDetail">
+  <!-- Expandable section -->
+  <ng-container matColumnDef="expandedDetail">
     <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
       <div class="fiveby1-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
         <div *ngFor="let column of extraColumns" class="extra-row">
@@ -22,7 +22,7 @@
         </div>
       </div>
     </td>
-  </ng-container> 
+  </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns" class="fiveby1-table-header"></tr>
   <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="fiveby1-element-row"

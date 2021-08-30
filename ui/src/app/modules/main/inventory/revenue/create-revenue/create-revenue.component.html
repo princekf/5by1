@@ -21,7 +21,6 @@
       <mat-select placeholder="Enter Customer name" formControlName="customer">
         <mat-option *ngFor="let customer of customers" [value]="customer">{{customer.name}}</mat-option>
       </mat-select>
-      <mat-error *ngIf="form.controls['customer'].hasError('required')">Please Enter Customer Name</mat-error>
     </mat-form-field>
   </p>
 
@@ -31,17 +30,16 @@
       <mat-select placeholder="Enter InvoiceNumber" formControlName="invoice">
         <mat-option *ngFor="let invoice of invoices" [value]="invoice">{{invoice.invoiceNumber}}</mat-option>
       </mat-select>
-      <mat-error *ngIf="form.controls['invoice'].hasError('required')">Please Enter Invoice Number</mat-error>
+
     </mat-form-field>
   </p>
 
   <p>
     <mat-form-field>
-      <mat-label>Bank name</mat-label>
+      <mat-label>Bank Number</mat-label>
       <mat-select placeholder="Enter Bank Name" formControlName="bank">
         <mat-option *ngFor="let bank of banks" [value]="bank">{{bank.name}}</mat-option>
       </mat-select>
-      <mat-error *ngIf="form.controls['bank'].hasError('required')">Please Enter Bank name</mat-error>
     </mat-form-field>
   </p>
   <p>
@@ -55,7 +53,7 @@
     <mat-form-field>
       <mat-label>Amount</mat-label>
       <input formControlName="amount" type="number" matInput placeholder="Enter Amount">
-      <mat-error *ngIf="form.controls['amount'].hasError('required')">Please Enter Amount</mat-error>
+      <mat-error *ngIf="form.controls['amount'].hasError('required')">Please Enter HSN Number</mat-error>
     </mat-form-field>
   </p>
   <p>

@@ -17,7 +17,6 @@ import {MatSortModule} from '@angular/material/sort';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
-
 @NgModule({
   declarations: [ ListTransferComponent, CreateTransferComponent, DeleteTransferComponent ],
   imports: [

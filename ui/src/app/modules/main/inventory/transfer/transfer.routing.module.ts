@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ListTransferComponent } from './list-transfer/list-transfer.component';
 import { CreateTransferComponent } from './create-transfer/create-transfer.component';
-import { DeleteTransferComponent} from './delete-transfer/delete-transfer.component';
+import { DeleteTransferComponent } from './delete-transfer/delete-transfer.component';
 const routes: Routes = [
   {
     path: '',
@@ -15,6 +15,11 @@ const routes: Routes = [
     path: 'create',
     pathMatch: 'full',
     component: CreateTransferComponent
+  },
+  {
+    path: 'delete',
+    pathMatch: 'full',
+    component: DeleteTransferComponent
   },
 
 

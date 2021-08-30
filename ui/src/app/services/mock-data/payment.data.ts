@@ -1,6 +1,6 @@
 import {Payment } from '@shared/entity/inventory/payment';
 import { kamala, kandk } from '../mock-data/vendor.data';
-import { Other, bank, cash } from '../mock-data/bank.data';
+import { HDFC, ICICI, SBI } from '../mock-data/bank.data';
 import { bill1, bill2 } from '../mock-data/bill.data';
 
 
@@ -10,7 +10,7 @@ export const payment1:Payment = {
   paidDate: new Date('2020-04-13'),
   vendor: kamala,
   bill: bill1,
-  bank: Other,
+  bank: HDFC,
   // Category like Purchase, Donation etc
   category: 'Purchase',
   amount: 10000,
@@ -24,7 +24,7 @@ export const payment2:Payment = {
   vendor: kandk,
   bill: bill2,
   // eslint-disable-next-line object-shorthand
-  bank: bank,
+  bank: ICICI,
   // Category like Purchase, Donation etc
   category: 'Donation',
   amount: 2000,
@@ -39,7 +39,7 @@ export const payment3:Payment = {
   vendor: kamala,
   bill: bill2,
   // eslint-disable-next-line object-shorthand
-  bank: cash,
+  bank: SBI,
   // Category like Purchase, Donation etc
   category: 'Other payments',
   amount: 22000,
