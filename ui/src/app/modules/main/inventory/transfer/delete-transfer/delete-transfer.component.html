@@ -1,4 +1,4 @@
-<h2>The following Transfer will be deleted.</h2>
+<h2>The following Transfers will be deleted.</h2>
 
 <div *ngIf="loading">
   <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
@@ -23,7 +23,6 @@
       </div>
     </td>
   </ng-container>
-
   <tr mat-header-row *matHeaderRowDef="displayedColumns" class="fiveby1-table-header"></tr>
   <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="fiveby1-element-row"
     [class.fiveby1-expanded-row]="expandedElement === element"
@@ -31,6 +30,7 @@
 
   <tr mat-row *matRowDef="let element; columns: ['expandedDetail']" class="fiveby1-detail-row"></tr>
 </table>
+
 
 <p class="delete-submit-container">
   <button class="delete-cancel-button" mat-button (click)="goToPreviousPage(route,router)" [disabled]="loading">No,
