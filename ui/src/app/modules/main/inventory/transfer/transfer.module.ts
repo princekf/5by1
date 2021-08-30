@@ -22,7 +22,7 @@ import { MatNativeDateModule } from '@angular/material/core';
   imports: [
     CommonModule, TransferRoutingModule, MatSelectModule, MatFormFieldModule, ReactiveFormsModule,
     FormsModule, MatInputModule, MatButtonModule, MatTableModule, MatSortModule,
-    NgxSkeletonLoaderModule, ToolBarModule, DataTableModule,
+    NgxSkeletonLoaderModule, ToolBarModule, DataTableModule, MatNativeDateModule, MatDatepickerModule
   ]
 })
 export class TransferModule { }
