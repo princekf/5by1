@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ListTransferComponent } from './list-transfer/list-transfer.component';
 import { CreateTransferComponent } from './create-transfer/create-transfer.component';
-
+import { DeleteTransferComponent} from './delete-transfer/delete-transfer.component';
 const routes: Routes = [
   {
     path: '',

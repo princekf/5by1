@@ -12,4 +12,52 @@ export class ListTransferComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  queryParams:QueryData = { };
+
+  routerSubscription: Subscription;
+
+  loading = true;
+
+  transfers:ListQueryRespType<Transfer> = {
+    totalItems: 0,
+    pageIndex: 0,
+    items: []
+  };
+
+  constructor(private transferService : TransferService,
+    private activatedRoute : ActivatedRoute
+  ) { }
+
+
+  private loadData = () => {
+
+    this.loading = true;
+    this.transferService.list(this.queryParams).subscribe((transfers) => {
+
+      this.transfers = transfers;
+
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
+
+  };
+
+  ngAfterViewInit():void {
+
+    this.activatedRoute.queryParams.subscribe((value) => {
+
+      this.queryParams = { ...value };
+      this.loadData();
+
+    });
+
+
+  }
+
 }

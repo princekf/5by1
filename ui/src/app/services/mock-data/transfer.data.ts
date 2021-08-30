@@ -1,5 +1,5 @@
 import { Transfer} from '@shared/entity/inventory/transfer';
-import { HDFC, ICICI, SBI } from '../mock-data/bank.data';
+import {HDFC, ICICI, SBI } from '../mock-data/bank.data';
 
 export const transfer1:Transfer = {
 
@@ -27,7 +27,7 @@ export const transfer3:Transfer = {
   _id: 'tfr-003',
   fromAccount: ICICI,
   toAccount: HDFC,
-  transferDate: new Date('2020-11-23'),
+  transferDate: new Date('2020-11-13'),
   amount: 32000,
   description: 'transaction between ICICI to HDFC',
 };
