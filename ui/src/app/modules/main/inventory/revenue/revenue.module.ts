@@ -14,6 +14,8 @@ import { DataTableModule } from '../../data-table/data-table.module';
 import {MatTableModule} from '@angular/material/table';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [ ListRevenueComponent, CreateRevenueComponent, DeleteRevenueComponent ],
@@ -21,8 +23,8 @@ import {MatSortModule} from '@angular/material/sort';
     CommonModule, RevenueRoutingModule,
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule,
     FormsModule, MatInputModule, MatButtonModule, MatTableModule, MatSortModule,
-    NgxSkeletonLoaderModule, ToolBarModule,
-    DataTableModule,
+    NgxSkeletonLoaderModule, ToolBarModule, DataTableModule, MatNativeDateModule,
+    MatDatepickerModule
   ]
 })
 export class RevenueModule { }
