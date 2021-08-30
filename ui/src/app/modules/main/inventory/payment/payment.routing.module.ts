@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ListPaymentComponent } from './list-payment/list-payment.component';
 import { CreatePaymentComponent } from './create-payment/create-payment.component';
+import { DeletePaymentComponent } from './delete-payment/delete-payment.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,11 @@ const routes: Routes = [
     path: 'create',
     pathMatch: 'full',
     component: CreatePaymentComponent
+  },
+  {
+    path: 'delete',
+    pathMatch: 'full',
+    component: DeletePaymentComponent
   },
 
 

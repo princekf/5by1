@@ -39,27 +39,31 @@
         <p>
           <mat-form-field>
             <input type="text" matInput placeholder="Your Name" formControlName="name">
+            <mat-error *ngIf="form.controls['name'].hasError('required')"> Your Name is required</mat-error>
           </mat-form-field>
         </p>
         <p>
           <mat-form-field>
             <input type="text" matInput placeholder="Your E-Mail" formControlName="email">
+            <mat-error *ngIf="form.controls['email'].hasError('required')"> Email Address is required</mat-error>
           </mat-form-field>
         </p>
         <p>
           <mat-form-field>
             <input type="password" matInput placeholder="Password" formControlName="password">
+            <mat-error *ngIf="form.controls['password'].hasError('required')"> Password is required</mat-error>
           </mat-form-field>
         </p>
         <p>
           <mat-form-field>
             <input type="password" matInput placeholder="Confirm Password" formControlName="cPassword">
+            <mat-error *ngIf="form.controls['cPassword'].hasError('required')">Confirm Password is required</mat-error>
           </mat-form-field>
         </p>
-
         <p *ngIf="error" class="error">
           {{ error }}
         </p>
+
 
         <p class="submit-container">
           <button type="submit" mat-button>Register</button>
