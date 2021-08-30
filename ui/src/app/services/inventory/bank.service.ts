@@ -3,7 +3,7 @@ import { QueryData } from '@shared/util/query-data';
 import { Bank } from '@shared/entity/inventory/bank';
 import { Observable, of } from 'rxjs';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
-import {HDFC, ICICI, SBI} from '../mock-data/bank.data';
+import {Other, bank, cash } from '../mock-data/bank.data';
 import { delay } from 'rxjs/internal/operators';
 const FAKE_TIMEOUT = 1000;
 
@@ -15,7 +15,7 @@ export class BankService {
 
   constructor() {}
 
-  private items:Array<Bank> = [ HDFC, ICICI, SBI ]
+  private items:Array<Bank> = [ bank, cash, Other ]
 
 
   public list(queryParams:QueryData):Observable<ListQueryRespType<Bank>> {

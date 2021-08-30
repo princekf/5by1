@@ -1,4 +1,4 @@
-<h2 class="form-header">{{formHeader}} </h2>
+<p>create-transfer works!</p>
 
 <div *ngIf="loading">
   <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
@@ -25,10 +25,11 @@
 
 
   <p>
-    <mat-form-field>
+    <mat-form-field >
       <mat-label>Transfer Date</mat-label>
-      <input formControlName="transferDate" type="date" matInput placeholder="Enter Transfer Date">
-      <mat-error *ngIf="form.controls['transferDate'].hasError('required')">Please Enter Transfer Date</mat-error>
+      <input matInput [matDatepicker]="picker" formControlName="transferDate" placeholder="Pick Transfer Date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
   </p>
   <p>

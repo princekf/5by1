@@ -3,31 +3,23 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeleteTransferComponent } from './delete-transfer.component';
 
 describe('DeleteTransferComponent', () => {
-
   let component: DeleteTransferComponent;
   let fixture: ComponentFixture<DeleteTransferComponent>;
 
-  beforeEach(async() => {
-
+  beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ DeleteTransferComponent ]
     })
-      .compileComponents();
-
+    .compileComponents();
   });
 
   beforeEach(() => {
-
     fixture = TestBed.createComponent(DeleteTransferComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-
   });
 
   it('should create', () => {
-
     expect(component).toBeTruthy();
-
   });
-
 });

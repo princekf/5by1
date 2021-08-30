@@ -6,5 +6,5 @@ export interface Transfer {
     toAccount: Bank;
     transferDate: Date;
     amount: number;
-    description?: string;
+    note?: string;
 }

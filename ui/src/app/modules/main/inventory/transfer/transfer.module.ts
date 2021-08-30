@@ -14,14 +14,18 @@ import { DataTableModule } from '../../data-table/data-table.module';
 import {MatTableModule} from '@angular/material/table';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatIconModule} from '@angular/material/icon';
+import { MatNativeDateModule } from '@angular/material/core';
+
 
 @NgModule({
   declarations: [ ListTransferComponent, CreateTransferComponent, DeleteTransferComponent ],
   imports: [
     CommonModule, TransferRoutingModule, MatSelectModule, MatFormFieldModule, ReactiveFormsModule,
     FormsModule, MatInputModule, MatButtonModule, MatTableModule, MatSortModule,
-    NgxSkeletonLoaderModule, ToolBarModule,
-    DataTableModule,
+    NgxSkeletonLoaderModule, ToolBarModule, MatNativeDateModule, MatIconModule, 
+    DataTableModule, MatDatepickerModule
   ]
 })
 export class TransferModule { }
