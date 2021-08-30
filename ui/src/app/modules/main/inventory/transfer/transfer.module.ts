@@ -14,8 +14,7 @@ import { DataTableModule } from '../../data-table/data-table.module';
 import {MatTableModule} from '@angular/material/table';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatIconModule} from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
 
@@ -24,8 +23,8 @@ import { MatNativeDateModule } from '@angular/material/core';
   imports: [
     CommonModule, TransferRoutingModule, MatSelectModule, MatFormFieldModule, ReactiveFormsModule,
     FormsModule, MatInputModule, MatButtonModule, MatTableModule, MatSortModule,
-    NgxSkeletonLoaderModule, ToolBarModule, MatNativeDateModule, MatIconModule, 
-    DataTableModule, MatDatepickerModule
+    NgxSkeletonLoaderModule, ToolBarModule, MatNativeDateModule, MatDatepickerModule,
+    DataTableModule,
   ]
 })
 export class TransferModule { }
