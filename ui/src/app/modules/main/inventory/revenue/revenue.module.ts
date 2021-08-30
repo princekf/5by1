@@ -16,15 +16,14 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-
 @NgModule({
   declarations: [ ListRevenueComponent, CreateRevenueComponent, DeleteRevenueComponent ],
   imports: [
     CommonModule, RevenueRoutingModule,
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule,
     FormsModule, MatInputModule, MatButtonModule, MatTableModule, MatSortModule,
-    NgxSkeletonLoaderModule, ToolBarModule, DataTableModule, MatNativeDateModule,
-    MatDatepickerModule
+    NgxSkeletonLoaderModule, ToolBarModule, MatDatepickerModule, MatNativeDateModule,
+    DataTableModule,
   ]
 })
 export class RevenueModule { }

@@ -5,13 +5,13 @@
 </div>
 <form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertRevenue()">
   <p>
-  
+
     <mat-form-field >
-      <mat-label>Received Date</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="receivedDate"  placeholder="pick Recieved date">
+      <mat-label>Choose a ReceivedDate </mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="receivedDate" >
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
-      <mat-error *ngIf="form.controls['receivedDate'].hasError('required')">Please Enter Recieved Date</mat-error>
+      <mat-error *ngIf="form.controls['receivedDate'].hasError('required')">Please Enter Paid Date</mat-error>
     </mat-form-field>
   </p>
 
