@@ -11,7 +11,7 @@ export const bill1:Bill = {
   vendor: kamala,
   billDate: new Date('2020-04-23'),
   dueDate: new Date('2021-04-13'),
-  billNumber: 'bil-0123',
+  billNumber: 'bil-001',
   orderNumber: 'order-098',
   orderDate: new Date('2020-01-03'),
   totalAmount: 20,
@@ -45,7 +45,7 @@ export const bill2:Bill = {
   vendor: kandk,
   billDate: new Date('2020-04-23'),
   dueDate: new Date('2021-04-13'),
-  billNumber: 'bil-0123',
+  billNumber: 'bil-002',
   orderNumber: 'order-098',
   orderDate: new Date('2020-01-03'),
   totalAmount: 20,
@@ -68,6 +68,6 @@ export const bill2:Bill = {
     mfgDate: new Date('2019-04-23'),
     mrp: 1300
   } ],
-  isPaid: true,
+  isPaid: false,
 
 };

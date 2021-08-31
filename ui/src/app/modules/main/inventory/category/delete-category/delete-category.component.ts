@@ -35,6 +35,19 @@ export class DeleteCategoryComponent implements OnInit {
 
   loading =true;
 
+  columnParsingFn = (element:unknown, column:string): string => {
+
+    switch (column) {
+
+    case 'isPaid':
+      return element[column] ? 'Yes' : 'No';
+   
+
+    }
+    return null;
+
+  }
+
 
   constructor(
     public readonly router: Router,
@@ -51,7 +64,7 @@ export class DeleteCategoryComponent implements OnInit {
     this.categoryService.listByIds(tIdArray).subscribe((categories) => {
 
       this.dataSource.data = categories;
-      this.loading = false;
+
 
     });
 

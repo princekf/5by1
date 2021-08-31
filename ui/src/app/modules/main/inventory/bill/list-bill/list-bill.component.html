@@ -1,1 +1,10 @@
-<p>list-bill works!</p>
+<app-tool-bar createUri="/bill/create" mainHeader="Bill"></app-tool-bar>
+<app-data-table tableHeader="List of Bills"
+[displayedColumns]="displayedColumns"
+[columnHeaders]="columnHeaders"
+[loading]="loading"
+[tableData]="bills"
+editUri="/bill/create"
+deleteUri="/bill/delete"
+[columnParnsingFn]="columnParsingFn"
+></app-data-table>
