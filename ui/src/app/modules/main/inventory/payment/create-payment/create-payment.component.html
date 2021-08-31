@@ -5,10 +5,13 @@
 </div>
 <form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertPayment()">
   <p>
-    <mat-form-field>
-      <mat-label>Paid Date</mat-label>
-      <input type="date" matInput placeholder="Enter Date" formControlName="paidDate">
-      <mat-error *ngIf="form.controls['paidDate'].hasError('required')"> Date is required</mat-error>
+  
+    <mat-form-field >
+      <mat-label>Choose a Paid date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="paidDate" >
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="form.controls['paidDate'].hasError('required')">Please Enter Paid Date</mat-error>
     </mat-form-field>
   </p>
   <p>

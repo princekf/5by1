@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BankService } from '@fboservices/inventory/bank.service';
 import { TransferService } from '@fboservices/inventory/transfer.service';
 import { Bank } from '@shared/entity/inventory/bank';
-import {Transfer} from '@shared/entity/inventory/transfer';
+import { Transfer } from '@shared/entity/inventory/transfer';
 
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';

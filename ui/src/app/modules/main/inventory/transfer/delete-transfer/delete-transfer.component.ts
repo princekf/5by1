@@ -37,7 +37,7 @@ export class DeleteTransferComponent implements OnInit {
   loading =true;
 
   constructor(
-    public readonly router: Router,
+     public readonly router: Router,
     public readonly route: ActivatedRoute,
     private readonly transferService:TransferService,
     private readonly mainService: MainService,

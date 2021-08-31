@@ -36,8 +36,8 @@ export class ListTransferComponent {
     items: []
   };
 
-  constructor(
-    private transferService : TransferService,
+
+  constructor(private transferService : TransferService,
     private activatedRoute : ActivatedRoute
   ) { }
 
@@ -72,5 +72,6 @@ export class ListTransferComponent {
 
 
   }
+
 
 }

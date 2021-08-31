@@ -14,13 +14,14 @@ import { DataTableModule } from '../../data-table/data-table.module';
 import {MatTableModule} from '@angular/material/table';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
-
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 @NgModule({
   declarations: [ CreatePaymentComponent, ListPaymentComponent, DeletePaymentComponent ],
   imports: [
     CommonModule, PaymentRoutingModule, MatSelectModule, MatFormFieldModule, ReactiveFormsModule,
     FormsModule, MatInputModule, MatButtonModule, MatTableModule, MatSortModule,
-    NgxSkeletonLoaderModule, ToolBarModule,
+    NgxSkeletonLoaderModule, ToolBarModule, MatDatepickerModule, MatNativeDateModule,
     DataTableModule,
   ]
 })

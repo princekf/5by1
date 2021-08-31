@@ -22,12 +22,13 @@
     </mat-form-field>
   </p>
 
-
-
   <p>
-    <mat-form-field>
-      <mat-label>Transfer Date</mat-label>
-      <input formControlName="transferDate" type="date" matInput placeholder="Enter Transfer Date">
+    
+    <mat-form-field >
+      <mat-label>Choose a Transfer date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="transferDate" >
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
       <mat-error *ngIf="form.controls['transferDate'].hasError('required')">Please Enter Transfer Date</mat-error>
     </mat-form-field>
   </p>
@@ -39,7 +40,7 @@
     </mat-form-field>
   </p>
 
-  <p>
+  <p> 
     <mat-form-field>
       <mat-label>Description</mat-label>
       <input formControlName="description" type="text" matInput placeholder="Enter description">
