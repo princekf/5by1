@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
+
 @Component({
   selector: 'app-delete-bill',
   templateUrl: './delete-bill.component.html',
@@ -54,11 +55,14 @@ export class DeleteBillComponent implements OnInit {
     this.billService.listByIds(tIdArray).subscribe((bills) => {
 
       this.dataSource.data = bills;
+
       this.loading = false;
 
     });
 
+
   }
+
 
   ngAfterViewInit():void {
 

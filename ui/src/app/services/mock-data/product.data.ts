@@ -3,7 +3,7 @@ import { computer } from '../mock-data/category.data';
 
 export const lnvDesktop1:Product = {
   _id: 'PRD-001',
-  name: 'IdeaCentre AIO 330 19.5" All-in-One Desktop',
+  name: 'IdeaCentre AIO 330 19.5',
   code: 'LNV-IC-AIO',
   barcode: '11001100',
   brand: 'Lenovo',

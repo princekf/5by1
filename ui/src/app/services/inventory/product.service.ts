@@ -39,6 +39,12 @@ export class ProductService {
 
   }
 
+  public listAll():Observable<Array<Product>> {
+
+    return of(this.items).pipe(delay(FAKE_TIMEOUT));
+
+  }
+
   public deleteByIds(ids: Array<string>):Observable<Array<Product>> {
 
     const deletedArray:Array<Product> = [];
