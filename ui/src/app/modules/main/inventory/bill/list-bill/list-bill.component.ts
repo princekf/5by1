@@ -7,7 +7,8 @@ import { Bill } from '@shared/entity/inventory/bill';
 import { ActivatedRoute } from '@angular/router';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
-
+import { ProductService } from '@fboservices/inventory/product.service';
+import { Product } from '@shared/entity/inventory/product';
 @Component({
   selector: 'app-list-bill',
   templateUrl: './list-bill.component.html',
@@ -40,8 +41,11 @@ export class ListBillComponent {
     items: []
   };
 
+  products: Array<Product> =[];
+
 
   columnParsingFn = (element:unknown, column:string): string => {
+
 
     switch (column) {
 
@@ -57,7 +61,8 @@ export class ListBillComponent {
 
   constructor(
     private activatedRoute : ActivatedRoute,
-    private readonly billService:BillService
+    private readonly billService:BillService,
+    private readonly productService:ProductService,
   ) { }
 
   private loadData = () => {
@@ -70,8 +75,13 @@ export class ListBillComponent {
 
     }, (error) => {
 
-      console.error(error);
       this.loading = false;
+
+    });
+    this.productService.listAll().subscribe((products) => {
+
+      this.products = products;
+
 
     });
 
