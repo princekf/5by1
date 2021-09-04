@@ -9,7 +9,7 @@ export interface PurchaseItem {
     unit: Unit;
     quantity: number;
     discount: number;
-    taxes: Array<Tax>
+    taxes?: Array<Tax>
     totalTax: number;
     totalAmount: number;
     batchNumber?: string;

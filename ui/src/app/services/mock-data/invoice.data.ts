@@ -22,9 +22,14 @@ export const invoice1:Invoice = {
     unitPrice: 20000,
     quantity: 2,
     discount: 0,
-    taxes: [ sgst9, cgst9 ],
+    // Taxes: [ sgst9, cgst9 ],
     totalTax: 7200,
-    totalAmount: 47200
+    totalAmount: 47200,
+    batchNumber: 'batchnumber',
+    expiryDate: new Date('2020-04-23'),
+    mfgDate: new Date('2019-04-23'),
+    mrp: 1300,
+    rrp: 1200,
   },
   {
     product: hpDesktop1,
@@ -32,9 +37,14 @@ export const invoice1:Invoice = {
     unitPrice: 20000,
     quantity: 1,
     discount: 0,
-    taxes: [ sgst9, cgst9 ],
+    // Taxes: [ sgst9, cgst9 ],
     totalTax: 3600,
-    totalAmount: 23600
+    totalAmount: 23600,
+    batchNumber: 'batchnumber',
+    expiryDate: new Date('2020-04-23'),
+    mfgDate: new Date('2019-04-23'),
+    mrp: 1300,
+    rrp: 1200,
   } ]
 };
 
@@ -56,9 +66,14 @@ export const invoice2:Invoice = {
     unitPrice: 20000,
     quantity: 1,
     discount: 0,
-    taxes: [ sgst9, cgst9 ],
+    // Taxes: [ sgst9, cgst9 ],
     totalTax: 3600,
-    totalAmount: 23600
+    totalAmount: 23600,
+    batchNumber: 'batchnumber',
+    expiryDate: new Date('2020-04-23'),
+    mfgDate: new Date('2019-04-23'),
+    mrp: 1300,
+    rrp: 1200,
   },
   {
     product: hpDesktop1,
@@ -66,8 +81,13 @@ export const invoice2:Invoice = {
     unitPrice: 20000,
     quantity: 1,
     discount: 0,
-    taxes: [ sgst9, cgst9 ],
+    // Taxes: [ sgst9, cgst9 ],
     totalTax: 3600,
-    totalAmount: 23600
+    totalAmount: 23600,
+    batchNumber: 'batchnumber',
+    expiryDate: new Date('2020-04-23'),
+    mfgDate: new Date('2019-04-23'),
+    mrp: 1300,
+    rrp: 1200,
   } ]
 };
