@@ -10,7 +10,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Product } from '@shared/entity/inventory/product';
 import { ProductService } from '@fboservices/inventory/product.service';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
-
+import { UnitService } from '@fboservices/inventory/unit.service';
+import { Unit } from '@shared/entity/inventory/unit';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-create-invoice',
   templateUrl: './create-invoice.component.html',
@@ -26,23 +28,42 @@ export class CreateInvoiceComponent implements OnInit {
 
   customers: Array<Customer> = [];
 
+  units: Array<Unit> = [];
+
+  products: Array<Product> = [];
+
+  dynamicRows: number[] = [];
+
   fboForm: FormGroup;
 
-  displayedColumns: string[] = [ 'product', 'quantity', 'unitPrice', 'discount', 'totalAmount' ];
+  displayedColumns: string[] = [ 'product', 'quantity', 'unitPrice', 'unit', 'discount', 'totalAmount', 'totalTax', 'batchNumber', 'expiryDate', 'mfgDate', 'mrp', 'rrp' ];
 
  dataSource = new MatTableDataSource<AbstractControl>();
 
  productsFiltered: Array<Product>;
 
+ filteredOptions: Observable<Product>;
+
  // Items = this.fboForm.get('items') as FormArray;
 
+ // eslint-disable-next-line max-params
  constructor(public readonly router: Router,
   public readonly route: ActivatedRoute,
     private readonly fBuilder: FormBuilder,
     private readonly invoiceService:InvoiceService,
     private readonly productService:ProductService,
     private readonly customerService:CustomerService,
-    private readonly toastr: ToastrService) { }
+    private readonly unitService: UnitService,
+    private readonly toastr: ToastrService,
+    private fb: FormBuilder) {
+
+   this.fboForm = this.fb.group({
+     payedOvertime: [ false, Validators.required ],
+
+   });
+
+ }
+
 
     private createSaleItemForm = ():FormGroup => {
 
@@ -53,28 +74,60 @@ export class CreateInvoiceComponent implements OnInit {
 
       });
       return this.fBuilder.group({
-        product,
-        unitPrice: this.fBuilder.control(''),
-        unit: this.fBuilder.control(''),
-        quantity: this.fBuilder.control(''),
-        discount: this.fBuilder.control(''),
-        totalTax: this.fBuilder.control(''),
-        totalAmount: this.fBuilder.control(''),
-        batchNumber: this.fBuilder.control(''),
+        product: this.fBuilder.control('', [ Validators.required ]),
+
+        unitPrice: this.fBuilder.control('', [ Validators.required ]),
+
+        unit: this.fBuilder.control('', [ Validators.required ]),
+
+        quantity: this.fBuilder.control('', [ Validators.required ]),
+
+        discount: this.fBuilder.control('', [ Validators.required ]),
+
+        totalTax: this.fBuilder.control('', [ Validators.required ]),
+
+        totalAmount: this.fBuilder.control('', [ Validators.required ]),
+
+        batchNumber: this.fBuilder.control('', [ Validators.required ]),
+
+        expiryDate: this.fBuilder.control('', [ Validators.required ]),
+
+        mfgDate: this.fBuilder.control('', [ Validators.required ]),
+
+        mrp: this.fBuilder.control('', [ Validators.required ]),
+
+        rrp: this.fBuilder.control('', [ Validators.required ]),
+
       });
 
     }
 
+    // eslint-disable-next-line max-lines-per-function
     ngOnInit(): void {
 
       this.fboForm = this.fBuilder.group({
         _id: new FormControl(null),
-        invoiceDate: this.fBuilder.control('', [ Validators.required ]),
-        dueDate: this.fBuilder.control(''),
-        invoiceNumber: this.fBuilder.control('', [ Validators.required ]),
-        notes: this.fBuilder.control(''),
-        isReceived: this.fBuilder.control(''),
+
         customer: new FormControl('', [ Validators.required ]),
+
+        invoiceDate: this.fBuilder.control('', [ Validators.required ]),
+
+        dueDate: this.fBuilder.control('', [ Validators.required ]),
+
+        invoiceNumber: this.fBuilder.control('', [ Validators.required ]),
+
+        totalAmount: this.fBuilder.control('', [ Validators.required ]),
+
+        totalDisount: this.fBuilder.control('', [ Validators.required ]),
+
+        totalTax: this.fBuilder.control('', [ Validators.required ]),
+
+        roundOff: this.fBuilder.control('', [ Validators.required ]),
+
+        grandTotal: this.fBuilder.control('', [ Validators.required ]),
+
+        isReceived: this.fBuilder.control('', [ Validators.required ]),
+
         items: this.fBuilder.array([
           this.createSaleItemForm(),
         ])
@@ -89,6 +142,17 @@ export class CreateInvoiceComponent implements OnInit {
         this.formHeader = 'Update Invoices';
 
       }
+      this.unitService.listAll().subscribe((units) => {
+
+        this.units = units;
+
+      });
+
+      this.productService.listAll().subscribe((products) => {
+
+        this.products = products;
+
+      });
       this.customerService.listAll().subscribe((customers) => {
 
         this.customers = customers;
@@ -110,6 +174,24 @@ export class CreateInvoiceComponent implements OnInit {
 
             // });
 
+
+            this.fboForm.setValue({
+              _id: itemC._id,
+              customer: itemC.customer ?? '',
+              invoiceDate: itemC.invoiceDate ?? '',
+              dueDate: itemC.dueDate ?? '',
+              invoiceNumber: itemC.invoiceNumber ?? '',
+
+              totalAmount: itemC.totalAmount ?? '',
+              totalDisount: itemC.totalDisount ?? '',
+              totalTax: itemC.totalTax ?? '',
+              roundOff: itemC.roundOff ?? '',
+              grandTotal: itemC.grandTotal ?? '',
+              isReceived: itemC.isReceived ?? '',
+              items: itemC.items ?? ''
+            });
+
+
             this.loading = false;
 
           });
@@ -122,6 +204,7 @@ export class CreateInvoiceComponent implements OnInit {
 
       });
 
+      this.dynamicRows.push(this.dynamicRows.length);
 
     }
 
@@ -156,6 +239,12 @@ export class CreateInvoiceComponent implements OnInit {
       const itemsFormArray = <FormArray> this.fboForm.get('items');
       const formControl = itemsFormArray.get([ pos ]);
       formControl.get('quantity').setValue(1);
+
+    }
+
+    addNew(event) {
+
+      this.dynamicRows.push(this.dynamicRows.length);
 
     }
 

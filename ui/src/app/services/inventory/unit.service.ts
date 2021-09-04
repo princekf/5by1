@@ -5,7 +5,7 @@ import { delay } from 'rxjs/internal/operators';
 import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 
-import {kgUnit, literUnit, mgUnit, mlUnit} from '../mock-data/unit.data';
+import {kgUnit, literUnit, mgUnit, mlUnit,noUnit} from '../mock-data/unit.data';
 
 const FAKE_TIMEOUT = 1000;
 
@@ -15,7 +15,7 @@ const FAKE_TIMEOUT = 1000;
 export class UnitService {
 
   private items:Array<Unit> = [
-    mgUnit, mlUnit, kgUnit, literUnit
+    mgUnit, mlUnit, kgUnit, literUnit, noUnit
   ]
 
   public listAll():Observable<Array<Unit>> {

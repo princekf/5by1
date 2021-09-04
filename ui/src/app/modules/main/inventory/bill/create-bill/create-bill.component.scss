@@ -1,0 +1,31 @@
+
+
+:host ::ng-deep .form-submit-container {
+  justify-content: end;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  margin-left: 20%;
+  width: 40%;
+}
+:host ::ng-deep .mat-header-row{
+background-color: #0062FF22;
+width: 50%;
+
+}
+
+:host ::ng-deep .fbo-sales-form{
+  width: 40%;
+}
+
+
+:host ::ng-deep  .mat-form-field-infix {
+  display: block;
+  position: relative;
+  flex: auto;
+  min-width: 0;
+  width: 119px;
+}
+:host ::ng-deep .fbo-create-form {
+  width: 22%;
+  margin-left: 10%;
+}

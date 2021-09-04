@@ -9,13 +9,16 @@ export interface PurchaseItem {
     unit: Unit;
     quantity: number;
     discount: number;
-    taxes: Array<Tax>
+    taxes?: Array<Tax>
     totalTax: number;
     totalAmount: number;
     batchNumber?: string;
     expiryDate?: Date;
     mfgDate?: Date;
     mrp: number;
+    // General retail price
+    rrp: number;
+
 }
 
 export interface Bill {
@@ -32,6 +35,6 @@ export interface Bill {
     roundOff: number;
     grandTotal: number;
     notes?: string;
-    items: Array<PurchaseItem>;
+    items?: Array<PurchaseItem>;
     isPaid: boolean;
 }
