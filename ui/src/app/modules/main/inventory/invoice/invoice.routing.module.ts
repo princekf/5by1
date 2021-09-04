@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ListInvoiceComponent } from './list-invoice/list-invoice.component';
 import { CreateInvoiceComponent } from './create-invoice/create-invoice.component';
+import { DeleteInvoiceComponent} from './delete-invoice/delete-invoice.component';
 
 const routes: Routes = [
   {
@@ -16,7 +17,11 @@ const routes: Routes = [
     pathMatch: 'full',
     component: CreateInvoiceComponent
   },
-
+  {
+    path: 'delete',
+    pathMatch: 'full',
+    component: DeleteInvoiceComponent
+  },
 
 ];
 

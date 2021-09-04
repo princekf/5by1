@@ -15,6 +15,12 @@ export class InvoiceService {
 
     private items:Array<Invoice> = [ invoice1, invoice2 ]
 
+    public listAll():Observable<Array<Invoice>> {
+
+      return of(this.items).pipe(delay(FAKE_TIMEOUT));
+
+    }
+
     public list(queryParams:QueryData):Observable<ListQueryRespType<Invoice>> {
 
       const limit = queryParams.limit ?? 10;

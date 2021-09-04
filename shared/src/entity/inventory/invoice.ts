@@ -9,10 +9,15 @@ export interface SaleItem {
     unit: Unit;
     quantity: number;
     discount: number;
-    taxes: Array<Tax>
+    taxes?: Array<Tax>
     totalTax: number;
     totalAmount: number;
-    batchNumber?: string;
+    batchNumber: string;
+    expiryDate: Date;
+    mfgDate: Date;
+    mrp: number;
+    // General retail price
+    rrp: number;
 }
 
 export interface Invoice {
