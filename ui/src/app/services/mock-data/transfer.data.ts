@@ -16,7 +16,7 @@ export const transfer2:Transfer = {
   id: 'tfr-002',
   fromAccount: SBI,
   toAccount: HDFC,
-  transferDate: new Date('2021-24-13'),
+  transferDate: new Date('2021-11-13'),
   amount: 25000,
   description: 'transaction between SBI to HDFC',
 };

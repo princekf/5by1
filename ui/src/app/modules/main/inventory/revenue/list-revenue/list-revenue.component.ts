@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import { Revenue } from '@shared/entity/inventory/revenue';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
+import * as dayjs from 'dayjs';
+import { environment } from '@fboenvironments/environment';
 @Component({
   selector: 'app-list-revenue',
   templateUrl: './list-revenue.component.html',
@@ -36,6 +38,18 @@ export class ListRevenueComponent {
     pageIndex: 0,
     items: []
   };
+
+  columnParsingFn = (element:unknown, column:string): string => {
+
+    switch (column) {
+
+    case 'receivedDate':
+      return dayjs(element[column]).format(environment.dateFormat);
+
+    }
+    return null;
+
+  }
 
   constructor(private activatedRoute : ActivatedRoute,
     private revenueService:RevenueService) { }
