@@ -43,7 +43,7 @@ export class CreateUnitComponent implements OnInit {
   }
 
   fboForm: FormGroup = new FormGroup({
-    _id: new FormControl(null),
+    id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
     code: new FormControl('', [ Validators.required ]),
     baseUnit: new FormControl(''),
@@ -69,7 +69,7 @@ export class CreateUnitComponent implements OnInit {
         this.formHeader = 'Update Units';
         this.unitService.get(tId).subscribe((unitC) => {
 
-          this.fboForm.setValue({_id: unitC._id,
+          this.fboForm.setValue({id: unitC.id,
             name: unitC.name,
             code: unitC.code,
             baseUnit: unitC.baseUnit ?? '',
@@ -101,7 +101,7 @@ export class CreateUnitComponent implements OnInit {
     }
     this.loading = true;
     const unitP = <Unit> this.fboForm.value;
-    (unitP._id ? this.unitService.update(unitP) : this.unitService.save(unitP)).subscribe((unitC) => {
+    (unitP.id ? this.unitService.update(unitP) : this.unitService.save(unitP)).subscribe((unitC) => {
 
       this.toastr.success(`Unit ${unitC.name} is saved successfully`, 'Unit saved');
       this.goToPreviousPage(this.route, this.router);

@@ -4,7 +4,7 @@ import { Vendor } from './vendor';
 
 export interface Payment {
 
-    _id?:string;
+    id?:string;
     paidDate: Date;
     vendor?: Vendor;
     bill?: Bill;

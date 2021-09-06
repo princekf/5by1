@@ -1,7 +1,7 @@
 import { Category } from './category';
 
 export interface Product {
-    _id?: string;
+    id?: string;
     name: string;
     code?: string;
     // Brand like Samsung, Sony etc

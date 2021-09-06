@@ -6,7 +6,7 @@ import { bill1, bill2 } from '../mock-data/bill.data';
 
 export const payment1:Payment = {
 
-  _id: 'pymt-001',
+  id: 'pymt-001',
   paidDate: new Date('2020-04-13'),
   vendor: kamala,
   bill: bill1,
@@ -19,7 +19,7 @@ export const payment1:Payment = {
 
 export const payment2:Payment = {
 
-  _id: 'pymt-002',
+  id: 'pymt-002',
   paidDate: new Date('2020-08-08'),
   vendor: kandk,
   bill: bill2,
@@ -34,7 +34,7 @@ export const payment2:Payment = {
 
 export const payment3:Payment = {
 
-  _id: 'pymt-003',
+  id: 'pymt-003',
   paidDate: new Date('2020-10-16'),
   vendor: kamala,
   bill: bill2,

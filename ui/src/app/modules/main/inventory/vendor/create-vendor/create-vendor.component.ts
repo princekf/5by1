@@ -26,7 +26,7 @@ export class CreateVendorComponent {
   statesOptions: Observable<string[]>;
 
   fboForm: FormGroup = new FormGroup({
-    _id: new FormControl(null),
+    id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
     email: new FormControl(''),
     mobile: new FormControl(''),
@@ -65,7 +65,7 @@ export class CreateVendorComponent {
       this.loading = true;
       this.vendorService.get(tId).subscribe((itemC) => {
 
-        this.fboForm.setValue({_id: itemC._id,
+        this.fboForm.setValue({id: itemC.id,
           name: itemC.name,
           email: itemC.email,
           mobile: itemC.mobile,
@@ -90,7 +90,7 @@ export class CreateVendorComponent {
     }
     this.loading = true;
     const itemP = <Vendor> this.fboForm.value;
-    (itemP._id ? this.vendorService.update(itemP) : this.vendorService.save(itemP)).subscribe((itemC) => {
+    (itemP.id ? this.vendorService.update(itemP) : this.vendorService.save(itemP)).subscribe((itemC) => {
 
       this.toastr.success(`Vendor ${itemC.name} is saved successfully`, 'Vendor saved');
       this.goToPreviousPage(this.route, this.router);

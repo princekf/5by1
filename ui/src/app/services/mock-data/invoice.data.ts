@@ -5,7 +5,7 @@ import { noUnit } from '../mock-data/unit.data';
 import { sgst9, cgst9 } from '../mock-data/tax.data';
 
 export const invoice1:Invoice = {
-  _id: '01231',
+  id: '01231',
   customer: jomon,
   invoiceDate: new Date('2020-04-13'),
   dueDate: new Date('2020-04-13'),
@@ -49,7 +49,7 @@ export const invoice1:Invoice = {
 };
 
 export const invoice2:Invoice = {
-  _id: '01232',
+  id: '01232',
   customer: basha,
   invoiceDate: new Date('2020-04-16'),
   dueDate: new Date('2020-04-16'),

@@ -41,7 +41,7 @@ export class CategoryService {
 
   public listByIds(ids: Array<string>):Observable<Array<Category>> {
 
-    const fItems = this.items.filter((categoryP) => ids.includes(categoryP._id));
+    const fItems = this.items.filter((categoryP) => ids.includes(categoryP.id));
     return of(fItems).pipe(delay(FAKE_TIMEOUT));
 
   }
@@ -51,7 +51,7 @@ export class CategoryService {
     const deletedArray:Array<Category> = [];
     const balanceArray:Array<Category> = [];
     // eslint-disable-next-line max-len
-    this.items.forEach((categoryP) => (ids.includes(categoryP._id) ? deletedArray.push(categoryP) : balanceArray.push(categoryP)));
+    this.items.forEach((categoryP) => (ids.includes(categoryP.id) ? deletedArray.push(categoryP) : balanceArray.push(categoryP)));
     this.items = balanceArray;
     return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
 
@@ -60,7 +60,7 @@ export class CategoryService {
   public save(category:Category):Observable<Category> {
 
     const categoryC = <Category> category;
-    categoryC._id = `auto_id_${this.items.length}`;
+    categoryC.id = `autoid_${this.items.length}`;
     this.items.push(categoryC);
     return of(categoryC).pipe(delay(FAKE_TIMEOUT));
 
@@ -69,7 +69,7 @@ export class CategoryService {
 
   public update(category:Category):Observable<Category> {
 
-    const idx = this.items.findIndex((categoryT) => categoryT._id === category._id);
+    const idx = this.items.findIndex((categoryT) => categoryT.id === category.id);
     this.items[idx] = category;
     return of(category).pipe(delay(FAKE_TIMEOUT));
 
@@ -77,7 +77,7 @@ export class CategoryService {
 
   public get(objId:string):Observable<Category> {
 
-    const categoryC = this.items.find((categoryT) => categoryT._id === objId);
+    const categoryC = this.items.find((categoryT) => categoryT.id === objId);
     return of(categoryC).pipe(delay(FAKE_TIMEOUT));
 
   }

@@ -38,7 +38,7 @@ export class CreatePaymentComponent {
   vendors: Array<Vendor> = [];
 
   form: FormGroup = new FormGroup({
-    _id: new FormControl(null),
+    id: new FormControl(null),
     paidDate: new FormControl('', [ Validators.required ]),
     vendor: new FormControl('', [ Validators.required ]),
     bill: new FormControl('', [ Validators.required ]),
@@ -90,7 +90,7 @@ export class CreatePaymentComponent {
         this.paymentService.get(tId).subscribe((paymentC) => {
 
           this.form.setValue({
-            _id: paymentC._id ?? '',
+            id: paymentC.id ?? '',
             paidDate: paymentC.paidDate ?? '',
             vendor: paymentC.vendor ?? '',
             bill: paymentC.bill ?? '',
@@ -128,7 +128,7 @@ export class CreatePaymentComponent {
 
 
     // eslint-disable-next-line max-len
-    (paymentP._id ? this.paymentService.update(paymentP) : this.paymentService.save(paymentP)).subscribe((paymentC) => {
+    (paymentP.id ? this.paymentService.update(paymentP) : this.paymentService.save(paymentP)).subscribe((paymentC) => {
 
       this.toastr.success(`Payment ${paymentC.paidDate} is saved successfully`, 'Payment saved');
       this.goToPreviousPage(this.route, this.router);

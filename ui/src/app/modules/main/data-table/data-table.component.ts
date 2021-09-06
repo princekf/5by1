@@ -157,7 +157,7 @@ export class DataTableComponent {
   editSelected = (): void => {
 
     const [ selectedTax ] = <Array<Tax>> this.selection.selected;
-    this.router.navigate([ this.editUri ], { queryParams: {id: selectedTax._id,
+    this.router.navigate([ this.editUri ], { queryParams: {id: selectedTax.id,
       burl: this.router.url} });
 
   }
@@ -166,7 +166,7 @@ export class DataTableComponent {
 
     const selectedTaxes = <Array<Tax>> this.selection.selected;
     const ids = [];
-    selectedTaxes.forEach((taxP) => ids.push(taxP._id));
+    selectedTaxes.forEach((taxP) => ids.push(taxP.id));
     this.router.navigate([ this.deleteUri ], { queryParams: {ids: ids.join(),
       burl: this.router.url} });
 

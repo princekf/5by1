@@ -1,5 +1,5 @@
 export interface Customer {
-    _id?: string;
+    id?: string;
     name: string;
     email?: string;
     mobile?: string;

@@ -71,7 +71,7 @@ export class DeleteTaxComponent implements OnInit {
     this.loading = true;
     const taxes = this.dataSource.data;
     const tIds = [];
-    taxes.forEach((taxP) => tIds.push(taxP._id));
+    taxes.forEach((taxP) => tIds.push(taxP.id));
     this.taxService.deleteByIds(tIds).subscribe((taxesP) => {
 
       this.loading = false;

@@ -27,7 +27,7 @@ export class CreateTaxComponent implements OnInit {
 
 
   form: FormGroup = new FormGroup({
-    _id: new FormControl(null),
+    id: new FormControl(null),
     groupName: new FormControl('', [ Validators.required ]),
     name: new FormControl('', [ Validators.required ]),
     rate: new FormControl('', [ Validators.required, Validators.min(0) ]),
@@ -65,7 +65,7 @@ export class CreateTaxComponent implements OnInit {
       this.loading = true;
       this.taxService.get(tId).subscribe((taxC) => {
 
-        this.form.setValue({_id: taxC._id,
+        this.form.setValue({id: taxC.id,
           groupName: taxC.groupName,
           name: taxC.name,
           rate: taxC.rate,
@@ -89,7 +89,7 @@ export class CreateTaxComponent implements OnInit {
     }
     this.loading = true;
     const taxP = <Tax> this.form.value;
-    (taxP._id ? this.taxService.update(taxP) : this.taxService.save(taxP)).subscribe((taxC) => {
+    (taxP.id ? this.taxService.update(taxP) : this.taxService.save(taxP)).subscribe((taxC) => {
 
       this.toastr.success(`Tax ${taxC.name} is saved successfully`, 'Tax saved');
       this.goToPreviousPage(this.route, this.router);

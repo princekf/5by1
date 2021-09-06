@@ -73,7 +73,7 @@ export class DeleteUnitComponent implements OnInit {
     this.loading = true;
     const units = this.dataSource.data;
     const tIds = [];
-    units.forEach((taxP) => tIds.push(taxP._id));
+    units.forEach((taxP) => tIds.push(taxP.id));
     this.unitService.deleteByIds(tIds).subscribe((unitsP) => {
 
       this.loading = false;

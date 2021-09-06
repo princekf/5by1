@@ -33,7 +33,7 @@ export class TaxService {
 
     public listByIds(taxIds: Array<string>):Observable<Array<Tax>> {
 
-      const fItems = this.items.filter((taxP) => taxIds.includes(taxP._id));
+      const fItems = this.items.filter((taxP) => taxIds.includes(taxP.id));
       return of(fItems).pipe(delay(FAKE_TIMEOUT));
 
     }
@@ -42,7 +42,7 @@ export class TaxService {
 
       const deletedArray:Array<Tax> = [];
       const balanceArray:Array<Tax> = [];
-      this.items.forEach((taxP) => (taxIds.includes(taxP._id) ? deletedArray.push(taxP) : balanceArray.push(taxP)));
+      this.items.forEach((taxP) => (taxIds.includes(taxP.id) ? deletedArray.push(taxP) : balanceArray.push(taxP)));
       this.items = balanceArray;
       return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
 
@@ -51,7 +51,7 @@ export class TaxService {
     public save(tax:Tax):Observable<Tax> {
 
       const taxC = <Tax> tax;
-      taxC._id = `auto_id_${this.items.length}`;
+      taxC.id = `autoid_${this.items.length}`;
       this.items.push(taxC);
       return of(taxC).pipe(delay(FAKE_TIMEOUT));
 
@@ -59,7 +59,7 @@ export class TaxService {
 
     public update(tax:Tax):Observable<Tax> {
 
-      const idx = this.items.findIndex((taxT) => taxT._id === tax._id);
+      const idx = this.items.findIndex((taxT) => taxT.id === tax.id);
       this.items[idx] = tax;
       return of(tax).pipe(delay(FAKE_TIMEOUT));
 
@@ -67,7 +67,7 @@ export class TaxService {
 
     public get(taxId:string):Observable<Tax> {
 
-      const taxC = this.items.find((taxT) => taxT._id === taxId);
+      const taxC = this.items.find((taxT) => taxT.id === taxId);
       return of(taxC).pipe(delay(FAKE_TIMEOUT));
 
     }

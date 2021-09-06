@@ -4,7 +4,7 @@ import {invoice1, invoice2} from '../mock-data/invoice.data';
 import { HDFC, ICICI, SBI} from '../mock-data/bank.data';
 
 export const Revenue1:Revenue = {
-  _id: 'rve-001',
+  id: 'rve-001',
   receivedDate: new Date('2020-04-13'),
   customer: basha,
   invoice: invoice1,
@@ -16,7 +16,7 @@ export const Revenue1:Revenue = {
 };
 
 export const Revenue2:Revenue = {
-  _id: 'rve-002',
+  id: 'rve-002',
   receivedDate: new Date('2021-04-23'),
   customer: jomon,
   invoice: invoice2,
@@ -30,7 +30,7 @@ export const Revenue2:Revenue = {
 
 
 export const Revenue3:Revenue = {
-  _id: 'rve-003',
+  id: 'rve-003',
   receivedDate: new Date('2021-08-18'),
   customer: pavithran,
   invoice: invoice2,

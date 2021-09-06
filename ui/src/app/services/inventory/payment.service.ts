@@ -32,7 +32,7 @@ export class PaymentService {
 
     public listByIds(paymentIds: Array<string>):Observable<Array<Payment>> {
 
-      const fItems = this.items.filter((paymentP) => paymentIds.includes(paymentP._id));
+      const fItems = this.items.filter((paymentP) => paymentIds.includes(paymentP.id));
       return of(fItems).pipe(delay(FAKE_TIMEOUT));
 
     }
@@ -42,7 +42,7 @@ export class PaymentService {
       const deletedArray:Array<Payment> = [];
       const balanceArray:Array<Payment> = [];
       // eslint-disable-next-line max-len
-      this.items.forEach((paymentP) => (paymentIds.includes(paymentP._id) ? deletedArray.push(paymentP) : balanceArray.push(paymentP)));
+      this.items.forEach((paymentP) => (paymentIds.includes(paymentP.id) ? deletedArray.push(paymentP) : balanceArray.push(paymentP)));
       this.items = balanceArray;
       return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
 
@@ -51,7 +51,7 @@ export class PaymentService {
     public save(payment:Payment):Observable<Payment> {
 
       const paymentC = <Payment> payment;
-      paymentC._id = `auto_id_${this.items.length}`;
+      paymentC.id = `autoid_${this.items.length}`;
       this.items.push(paymentC);
       return of(paymentC).pipe(delay(FAKE_TIMEOUT));
 
@@ -60,7 +60,7 @@ export class PaymentService {
 
     public update(payment:Payment):Observable<Payment> {
 
-      const idx = this.items.findIndex((paymentT) => paymentT._id === payment._id);
+      const idx = this.items.findIndex((paymentT) => paymentT.id === payment.id);
       this.items[idx] = payment;
       return of(payment).pipe(delay(FAKE_TIMEOUT));
 
@@ -68,7 +68,7 @@ export class PaymentService {
 
     public get(paymentId:string):Observable<Payment> {
 
-      const paymentC = this.items.find((paymentT) => paymentT._id === paymentId);
+      const paymentC = this.items.find((paymentT) => paymentT.id === paymentId);
       return of(paymentC).pipe(delay(FAKE_TIMEOUT));
 
     }

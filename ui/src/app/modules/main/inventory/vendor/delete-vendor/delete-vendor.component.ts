@@ -90,7 +90,7 @@ export class DeleteVendorComponent implements OnInit {
     this.loading = true;
     const units = this.dataSource.data;
     const tIds = [];
-    units.forEach((itemP) => tIds.push(itemP._id));
+    units.forEach((itemP) => tIds.push(itemP.id));
     this.vendorService.deleteByIds(tIds).subscribe((itemsP) => {
 
       this.loading = false;

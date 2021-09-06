@@ -40,7 +40,7 @@ export class BillService {
 
     public listByIds(ids: Array<string>):Observable<Array<Bill>> {
 
-      const fItems = this.items.filter((billP) => ids.includes(billP._id));
+      const fItems = this.items.filter((billP) => ids.includes(billP.id));
       return of(fItems).pipe(delay(FAKE_TIMEOUT));
 
     }
@@ -50,7 +50,7 @@ export class BillService {
       const deletedArray:Array<Bill> = [];
       const balanceArray:Array<Bill> = [];
       // eslint-disable-next-line max-len
-      this.items.forEach((billP) => (ids.includes(billP._id) ? deletedArray.push(billP) : balanceArray.push(billP)));
+      this.items.forEach((billP) => (ids.includes(billP.id) ? deletedArray.push(billP) : balanceArray.push(billP)));
       this.items = balanceArray;
       return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
 
@@ -59,7 +59,7 @@ export class BillService {
     public save(bill:Bill):Observable<Bill> {
 
       const billC = <Bill> bill;
-      billC._id = `auto_id_${this.items.length}`;
+      billC.id = `autoid_${this.items.length}`;
       this.items.push(billC);
       return of(billC).pipe(delay(FAKE_TIMEOUT));
 
@@ -67,7 +67,7 @@ export class BillService {
 
     public update(bill:Bill):Observable<Bill> {
 
-      const idx = this.items.findIndex((billT) => billT._id === bill._id);
+      const idx = this.items.findIndex((billT) => billT.id === bill.id);
       this.items[idx] = bill;
       return of(bill).pipe(delay(FAKE_TIMEOUT));
 
@@ -75,7 +75,7 @@ export class BillService {
 
     public get(objId:string):Observable<Bill> {
 
-      const billC = this.items.find((billT) => billT._id === objId);
+      const billC = this.items.find((billT) => billT.id === objId);
       return of(billC).pipe(delay(FAKE_TIMEOUT));
 
     }

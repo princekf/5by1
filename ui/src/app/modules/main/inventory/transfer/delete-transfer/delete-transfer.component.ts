@@ -74,7 +74,7 @@ export class DeleteTransferComponent implements OnInit {
     this.loading = true;
     const transfers = this.dataSource.data;
     const tIds = [];
-    transfers.forEach((transferP) => tIds.push(transferP._id));
+    transfers.forEach((transferP) => tIds.push(transferP.id));
     this.transferService.deleteByIds(tIds).subscribe((transferP) => {
 
       this.loading = false;
