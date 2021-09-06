@@ -30,7 +30,7 @@ export class CreateTransferComponent implements OnInit {
 
   form: FormGroup = new FormGroup({
 
-    _id: new FormControl(null),
+    id: new FormControl(null),
 
     fromAccount: new FormControl('', [ Validators.required ]),
 
@@ -75,7 +75,7 @@ export class CreateTransferComponent implements OnInit {
         this.transferService.get(tId).subscribe((transferC) => {
 
           this.form.setValue({
-            _id: transferC._id ?? '',
+            id: transferC.id ?? '',
             fromAccount: transferC.fromAccount ?? '',
             toAccount: transferC.toAccount ?? '',
             transferDate: transferC.transferDate ?? '',
@@ -106,7 +106,7 @@ export class CreateTransferComponent implements OnInit {
 
 
     // eslint-disable-next-line max-len
-    (transferP._id ? this.transferService.update(transferP) : this.transferService.save(transferP)).subscribe((transferC) => {
+    (transferP.id ? this.transferService.update(transferP) : this.transferService.save(transferP)).subscribe((transferC) => {
 
       this.toastr.success(`transfer ${transferC.description} is saved successfully`, 'transfer saved');
       this.goToPreviousPage(this.route, this.router);

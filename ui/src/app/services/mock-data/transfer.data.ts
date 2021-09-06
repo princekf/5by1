@@ -3,7 +3,7 @@ import {HDFC, ICICI, SBI } from '../mock-data/bank.data';
 
 export const transfer1:Transfer = {
 
-  _id: 'tfr-001',
+  id: 'tfr-001',
   fromAccount: HDFC,
   toAccount: ICICI,
   transferDate: new Date('2021-04-13'),
@@ -13,7 +13,7 @@ export const transfer1:Transfer = {
 
 export const transfer2:Transfer = {
 
-  _id: 'tfr-002',
+  id: 'tfr-002',
   fromAccount: SBI,
   toAccount: HDFC,
   transferDate: new Date('2021-24-13'),
@@ -24,7 +24,7 @@ export const transfer2:Transfer = {
 
 export const transfer3:Transfer = {
 
-  _id: 'tfr-003',
+  id: 'tfr-003',
   fromAccount: ICICI,
   toAccount: HDFC,
   transferDate: new Date('2020-11-13'),

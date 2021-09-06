@@ -38,7 +38,7 @@ export class CreateRevenueComponent implements OnInit {
 
   form: FormGroup = new FormGroup({
 
-    _id: new FormControl(null),
+    id: new FormControl(null),
 
     receivedDate: new FormControl('', [ Validators.required ]),
 
@@ -104,7 +104,7 @@ export class CreateRevenueComponent implements OnInit {
         this.revenueService.get(tId).subscribe((revenueC) => {
 
           this.form.setValue({
-            _id: revenueC._id ?? '',
+            id: revenueC.id ?? '',
             receivedDate: revenueC.receivedDate ?? '',
             customer: revenueC.customer ?? '',
             invoice: revenueC.invoice ?? '',
@@ -142,7 +142,7 @@ export class CreateRevenueComponent implements OnInit {
 
 
     // eslint-disable-next-line max-len
-    (revenueP._id ? this.revenueService.update(revenueP) : this.revenueService.save(revenueP)).subscribe((revenueC) => {
+    (revenueP.id ? this.revenueService.update(revenueP) : this.revenueService.save(revenueP)).subscribe((revenueC) => {
 
       this.toastr.success(`Revenue ${revenueC.receivedDate} is saved successfully`, 'Revenue saved');
       this.goToPreviousPage(this.route, this.router);

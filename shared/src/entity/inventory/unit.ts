@@ -1,5 +1,5 @@
 export interface Unit {
-    _id?: string;
+    id?: string;
     name: string;
     code: string;
     // Parent unit if any

@@ -22,7 +22,7 @@ export interface PurchaseItem {
 }
 
 export interface Bill {
-    _id?: string;
+    id?: string;
     vendor: Vendor;
     billDate: Date;
     dueDate: Date;

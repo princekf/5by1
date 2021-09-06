@@ -1,7 +1,7 @@
 import { Customer } from '@shared/entity/inventory/customer';
 
 export const jomon:Customer = {
-  _id: 'A001001',
+  id: 'A001001',
   name: 'Jomon Xaviour',
   mobile: '98778987',
   email: 'jomon.xaviour@panachikkal.com',
@@ -10,7 +10,7 @@ export const jomon:Customer = {
   gstNo: 'GST-001'
 };
 export const pavithran:Customer = {
-  _id: 'A001002',
+  id: 'A001002',
   name: 'Pavithran M',
   mobile: '98778985',
   email: 'pavithran.m@manappally.com',
@@ -19,7 +19,7 @@ export const pavithran:Customer = {
   gstNo: 'GST-002'
 };
 export const basha:Customer = {
-  _id: 'A001003',
+  id: 'A001003',
   name: 'Maanik Basha',
   mobile: '98778986',
   email: 'maanik.basha@autokkaran.com',

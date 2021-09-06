@@ -40,7 +40,7 @@ export class BankService {
 
   public listByIds(ids: Array<string>):Observable<Array<Bank>> {
 
-    const fItems = this.items.filter((bankP) => ids.includes(bankP._id));
+    const fItems = this.items.filter((bankP) => ids.includes(bankP.id));
     return of(fItems).pipe(delay(FAKE_TIMEOUT));
 
   }
@@ -51,7 +51,7 @@ export class BankService {
     const deletedArray:Array<Bank> = [];
     const balanceArray:Array<Bank> = [];
     // eslint-disable-next-line max-len
-    this.items.forEach((bankP) => (ids.includes(bankP._id) ? deletedArray.push(bankP) : balanceArray.push(bankP)));
+    this.items.forEach((bankP) => (ids.includes(bankP.id) ? deletedArray.push(bankP) : balanceArray.push(bankP)));
     this.items = balanceArray;
     return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
 
@@ -60,7 +60,7 @@ export class BankService {
   public save(banks:Bank):Observable<Bank> {
 
     const bankC = <Bank> banks;
-    bankC._id = `auto_id_${this.items.length}`;
+    bankC.id = `autoid_${this.items.length}`;
     this.items.push(bankC);
     return of(bankC).pipe(delay(FAKE_TIMEOUT));
 
@@ -68,7 +68,7 @@ export class BankService {
 
   public update(banks:Bank):Observable<Bank> {
 
-    const idx = this.items.findIndex((bankT) => bankT._id === banks._id);
+    const idx = this.items.findIndex((bankT) => bankT.id === banks.id);
     this.items[idx] = banks;
     return of(banks).pipe(delay(FAKE_TIMEOUT));
 
@@ -76,7 +76,7 @@ export class BankService {
 
   public get(objId:string):Observable<Bank> {
 
-    const bankC = this.items.find((bankT) => bankT._id === objId);
+    const bankC = this.items.find((bankT) => bankT.id === objId);
     return of(bankC).pipe(delay(FAKE_TIMEOUT));
 
   }

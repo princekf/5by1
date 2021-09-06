@@ -74,7 +74,7 @@ export class DeleteBankComponent implements OnInit {
     this.loading = true;
     const categories = this.dataSource.data;
     const tIds = [];
-    categories.forEach((bankP) => tIds.push(bankP._id));
+    categories.forEach((bankP) => tIds.push(bankP.id));
     this.bankService.deleteByIds(tIds).subscribe((bankP) => {
 
       this.loading = false;

@@ -77,7 +77,7 @@ export class DeleteInvoiceComponent implements OnInit {
     this.loading = true;
     const invoices = this.dataSource.data;
     const tIds = [];
-    invoices.forEach((invoiceP) => tIds.push(invoiceP._id));
+    invoices.forEach((invoiceP) => tIds.push(invoiceP.id));
     this.invoiceService.deleteByIds(tIds).subscribe((invoiceP) => {
 
       this.loading = false;

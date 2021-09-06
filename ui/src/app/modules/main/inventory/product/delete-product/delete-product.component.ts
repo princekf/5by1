@@ -78,7 +78,7 @@ export class DeleteProductComponent implements OnInit {
     this.loading = true;
     const products = this.dataSource.data;
     const tIds = [];
-    products.forEach((productP) => tIds.push(productP._id));
+    products.forEach((productP) => tIds.push(productP.id));
     this.productService.deleteByIds(tIds).subscribe((productP) => {
 
       this.loading = false;

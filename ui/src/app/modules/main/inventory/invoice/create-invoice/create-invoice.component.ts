@@ -106,7 +106,7 @@ export class CreateInvoiceComponent implements OnInit {
     ngOnInit(): void {
 
       this.fboForm = this.fBuilder.group({
-        _id: new FormControl(null),
+        id: new FormControl(null),
 
         customer: new FormControl('', [ Validators.required ]),
 
@@ -162,7 +162,7 @@ export class CreateInvoiceComponent implements OnInit {
           this.invoiceService.get(tId).subscribe((itemC) => {
 
             /*
-             * This.fboForm.setValue({_id: itemC._id,
+             * This.fboForm.setValue({id: itemC.id,
              *   Customer: itemC.customer ?? ''});
              * ItemC.items?.forEach((item) => {
              */
@@ -176,7 +176,7 @@ export class CreateInvoiceComponent implements OnInit {
 
 
             this.fboForm.setValue({
-              _id: itemC._id,
+              id: itemC.id,
               customer: itemC.customer ?? '',
               invoiceDate: itemC.invoiceDate ?? '',
               dueDate: itemC.dueDate ?? '',
@@ -217,7 +217,7 @@ export class CreateInvoiceComponent implements OnInit {
       }
       this.loading = true;
       const itemP = <Invoice> this.fboForm.value;
-      (itemP._id ? this.invoiceService.update(itemP) : this.invoiceService.save(itemP)).subscribe((itemC) => {
+      (itemP.id ? this.invoiceService.update(itemP) : this.invoiceService.save(itemP)).subscribe((itemC) => {
 
         this.toastr.success(`Invoice ${itemC.invoiceNumber} is saved successfully`, 'Invoice saved');
         this.goToPreviousPage(this.route, this.router);

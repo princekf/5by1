@@ -1,6 +1,6 @@
 import { Bank } from './bank';
 export interface Transfer {
-    _id?: string;
+    id?: string;
     fromAccount: Bank;
     toAccount: Bank;
     transferDate: Date;

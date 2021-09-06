@@ -1,5 +1,5 @@
 export interface Tax {
-    _id?: string;
+    id?: string;
     // Group name like SGST, CGST, IGST etc
     groupName: string;
     // Name like SGST - 9%, CGST - 9% etc
