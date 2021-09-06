@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import { Payment } from '@shared/entity/inventory/payment';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
+import * as dayjs from 'dayjs';
+import { environment } from '@fboenvironments/environment';
 
 @Component({
   selector: 'app-list-payment',
@@ -38,6 +40,20 @@ export class ListPaymentComponent {
     pageIndex: 0,
     items: []
   };
+
+
+  columnParsingFn = (element:unknown, column:string) : string => {
+
+    switch (column) {
+
+    case 'paidDate':
+      return dayjs(element[column]).format(environment.dateFormat);
+
+    }
+    return null;
+
+  }
+
 
   constructor(
     private activatedRoute : ActivatedRoute,

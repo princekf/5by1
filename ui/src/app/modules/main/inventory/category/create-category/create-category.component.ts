@@ -28,7 +28,7 @@ export class CreateCategoryComponent implements OnInit {
 
   form: FormGroup = new FormGroup({
 
-    _id: new FormControl(null),
+    id: new FormControl(null),
 
     parent: new FormControl('', [ Validators.required ]),
 
@@ -72,7 +72,7 @@ export class CreateCategoryComponent implements OnInit {
         this.categoryService.get(tId).subscribe((categoryC) => {
 
           this.form.setValue({
-            _id: categoryC._id ?? '',
+            id: categoryC.id ?? '',
             parent: categoryC.parent ?? '',
             name: categoryC.name ?? '',
             unit: categoryC.unit ?? '',
@@ -109,7 +109,7 @@ export class CreateCategoryComponent implements OnInit {
 
 
     // eslint-disable-next-line max-len
-    (categoryP._id ? this.categoryService.update(categoryP) : this.categoryService.save(categoryP)).subscribe((categoryC) => {
+    (categoryP.id ? this.categoryService.update(categoryP) : this.categoryService.save(categoryP)).subscribe((categoryC) => {
 
       this.toastr.success(`Category ${categoryC.name} is saved successfully`, 'Category saved');
       this.goToPreviousPage(this.route, this.router);

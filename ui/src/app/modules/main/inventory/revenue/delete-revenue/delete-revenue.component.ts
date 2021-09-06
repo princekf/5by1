@@ -77,7 +77,7 @@ export class DeleteRevenueComponent implements OnInit {
     this.loading = true;
     const revenues = this.dataSource.data;
     const tIds = [];
-    revenues.forEach((revenueP) => tIds.push(revenueP._id));
+    revenues.forEach((revenueP) => tIds.push(revenueP.id));
     this.revenueService.deleteByIds(tIds).subscribe((revenueP) => {
 
       this.loading = false;

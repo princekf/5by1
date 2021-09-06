@@ -42,7 +42,7 @@ export class CreateProductComponent implements OnInit {
 
 
   fboForm: FormGroup = new FormGroup({
-    _id: new FormControl(null),
+    id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
     code: new FormControl(''),
     brand: new FormControl(''),
@@ -141,7 +141,7 @@ export class CreateProductComponent implements OnInit {
 
             }
             this.colors = unitC.colors;
-            this.fboForm.setValue({_id: unitC._id,
+            this.fboForm.setValue({id: unitC.id,
               name: unitC.name,
               code: unitC.code ?? '',
               brand: unitC.brand ?? '',
@@ -180,7 +180,7 @@ export class CreateProductComponent implements OnInit {
       }
       this.loading = true;
       const unitP = <Product> this.fboForm.value;
-      (unitP._id ? this.productService.update(unitP) : this.productService.save(unitP)).subscribe((unitC) => {
+      (unitP.id ? this.productService.update(unitP) : this.productService.save(unitP)).subscribe((unitC) => {
 
         this.toastr.success(`Product ${unitC.name} is saved successfully`, 'Product saved');
         this.goToPreviousPage(this.route, this.router);

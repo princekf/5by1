@@ -7,7 +7,7 @@ import { sgst9, cgst9 } from '../mock-data/tax.data';
 
 export const bill1:Bill = {
 
-  _id: 'bil-001',
+  id: 'bil-001',
   vendor: kamala,
   billDate: new Date('2020-04-23'),
   dueDate: new Date('2021-04-13'),
@@ -42,7 +42,7 @@ export const bill1:Bill = {
 
 export const bill2:Bill = {
 
-  _id: 'bil-002',
+  id: 'bil-002',
   vendor: kandk,
   billDate: new Date('2020-04-23'),
   dueDate: new Date('2021-04-13'),

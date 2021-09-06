@@ -24,7 +24,7 @@ export class CreateBankComponent implements OnInit {
 
   form: FormGroup = new FormGroup({
 
-    _id: new FormControl(null),
+    id: new FormControl(null),
 
     type: new FormControl('', [ Validators.required ]),
 
@@ -58,7 +58,7 @@ export class CreateBankComponent implements OnInit {
         this.bankService.get(tId).subscribe((bankC) => {
 
           this.form.setValue({
-            _id: bankC._id ?? '',
+            id: bankC.id ?? '',
             type: bankC.type ?? '',
             name: bankC.name ?? '',
             openingBalance: bankC.openingBalance ?? '',
@@ -92,7 +92,7 @@ export class CreateBankComponent implements OnInit {
 
 
     // eslint-disable-next-line max-len
-    (bankP._id ? this.bankService.update(bankP) : this.bankService.save(bankP)).subscribe((bankC) => {
+    (bankP.id ? this.bankService.update(bankP) : this.bankService.save(bankP)).subscribe((bankC) => {
 
       this.toastr.success(`Category ${bankC.name} is saved successfully`, 'Category saved');
       this.goToPreviousPage(this.route, this.router);

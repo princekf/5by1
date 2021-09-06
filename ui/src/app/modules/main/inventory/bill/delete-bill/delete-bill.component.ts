@@ -81,7 +81,7 @@ export class DeleteBillComponent implements OnInit {
     this.loading = true;
     const categories = this.dataSource.data;
     const tIds = [];
-    categories.forEach((billP) => tIds.push(billP._id));
+    categories.forEach((billP) => tIds.push(billP.id));
     this.billService.deleteByIds(tIds).subscribe((billP) => {
 
       this.loading = false;

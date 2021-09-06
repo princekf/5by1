@@ -41,7 +41,7 @@ export class RevenueService {
 
   public listByIds(ids: Array<string>):Observable<Array<Revenue>> {
 
-    const fItems = this.items.filter((revenueP) => ids.includes(revenueP._id));
+    const fItems = this.items.filter((revenueP) => ids.includes(revenueP.id));
     return of(fItems).pipe(delay(FAKE_TIMEOUT));
 
   }
@@ -51,7 +51,7 @@ export class RevenueService {
     const deletedArray:Array<Revenue> = [];
     const balanceArray:Array<Revenue> = [];
     // eslint-disable-next-line max-len
-    this.items.forEach((revenueP) => (ids.includes(revenueP._id) ? deletedArray.push(revenueP) : balanceArray.push(revenueP)));
+    this.items.forEach((revenueP) => (ids.includes(revenueP.id) ? deletedArray.push(revenueP) : balanceArray.push(revenueP)));
     this.items = balanceArray;
     return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
 
@@ -60,7 +60,7 @@ export class RevenueService {
   public save(revenue:Revenue):Observable<Revenue> {
 
     const revenueC = <Revenue> revenue;
-    revenueC._id = `auto_id_${this.items.length}`;
+    revenueC.id = `autoid_${this.items.length}`;
     this.items.push(revenueC);
     return of(revenueC).pipe(delay(FAKE_TIMEOUT));
 
@@ -69,7 +69,7 @@ export class RevenueService {
 
   public update(revenue:Revenue):Observable<Revenue> {
 
-    const idx = this.items.findIndex((revenueT) => revenueT._id === revenue._id);
+    const idx = this.items.findIndex((revenueT) => revenueT.id === revenue.id);
     this.items[idx] = revenue;
     return of(revenue).pipe(delay(FAKE_TIMEOUT));
 
@@ -77,7 +77,7 @@ export class RevenueService {
 
   public get(objId:string):Observable<Revenue> {
 
-    const revenueC = this.items.find((revenueT) => revenueT._id === objId);
+    const revenueC = this.items.find((revenueT) => revenueT.id === objId);
     return of(revenueC).pipe(delay(FAKE_TIMEOUT));
 
   }

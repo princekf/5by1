@@ -117,7 +117,7 @@ export class CreateBillComponent implements OnInit {
   ngOnInit(): void {
 
     this.fboForm = this.fBuilder.group({
-      _id: new FormControl(null),
+      id: new FormControl(null),
 
       vendor: new FormControl('', [ Validators.required ]),
 
@@ -176,7 +176,7 @@ export class CreateBillComponent implements OnInit {
 
 
           this.fboForm.setValue({
-            _id: itemC._id,
+            id: itemC.id,
             vendor: itemC.vendor ?? '',
             billDate: itemC.billDate ?? '',
             dueDate: itemC.dueDate ?? '',
@@ -219,7 +219,7 @@ export class CreateBillComponent implements OnInit {
     }
     this.loading = true;
     const itemP = <Bill> this.fboForm.value;
-    (itemP._id ? this.billService.update(itemP) : this.billService.save(itemP)).subscribe((itemC) => {
+    (itemP.id ? this.billService.update(itemP) : this.billService.save(itemP)).subscribe((itemC) => {
 
       this.toastr.success(`Bill ${itemC.billNumber} is saved successfully`, 'Bill saved');
       this.goToPreviousPage(this.route, this.router);
@@ -248,8 +248,12 @@ export class CreateBillComponent implements OnInit {
 
 
   addNew(event) {
-
+  
+    const formArray = this.fboForm.get('items') as FormArray;
+    formArray.controls.values = null;
+    this.dataSource = new MatTableDataSource(formArray.controls);
     this.dynamicRows.push(this.dynamicRows.length);
+
 
   }
 

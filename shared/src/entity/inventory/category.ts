@@ -1,7 +1,7 @@
 import { Unit } from './unit';
 
 export interface Category {
-    _id?: string;
+    id?: string;
     name: string;
     hsnNumber?: string;
     unit: Unit;

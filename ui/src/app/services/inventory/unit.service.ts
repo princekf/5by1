@@ -40,7 +40,7 @@ export class UnitService {
 
   public listByIds(ids: Array<string>):Observable<Array<Unit>> {
 
-    const fItems = this.items.filter((unitP) => ids.includes(unitP._id));
+    const fItems = this.items.filter((unitP) => ids.includes(unitP.id));
     return of(fItems).pipe(delay(FAKE_TIMEOUT));
 
   }
@@ -49,7 +49,7 @@ export class UnitService {
 
     const deletedArray:Array<Unit> = [];
     const balanceArray:Array<Unit> = [];
-    this.items.forEach((unitP) => (ids.includes(unitP._id) ? deletedArray.push(unitP) : balanceArray.push(unitP)));
+    this.items.forEach((unitP) => (ids.includes(unitP.id) ? deletedArray.push(unitP) : balanceArray.push(unitP)));
     this.items = balanceArray;
     return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
 
@@ -58,7 +58,7 @@ export class UnitService {
   public save(unit:Unit):Observable<Unit> {
 
     const unitC = <Unit> unit;
-    unitC._id = `auto_id_${this.items.length}`;
+    unitC.id = `autoid_${this.items.length}`;
     this.items.push(unitC);
     return of(unitC).pipe(delay(FAKE_TIMEOUT));
 
@@ -66,7 +66,7 @@ export class UnitService {
 
   public update(unit:Unit):Observable<Unit> {
 
-    const idx = this.items.findIndex((unitT) => unitT._id === unit._id);
+    const idx = this.items.findIndex((unitT) => unitT.id === unit.id);
     this.items[idx] = unit;
     return of(unit).pipe(delay(FAKE_TIMEOUT));
 
@@ -74,7 +74,7 @@ export class UnitService {
 
   public get(objId:string):Observable<Unit> {
 
-    const unitC = this.items.find((uitT) => uitT._id === objId);
+    const unitC = this.items.find((uitT) => uitT.id === objId);
     return of(unitC).pipe(delay(FAKE_TIMEOUT));
 
   }

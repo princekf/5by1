@@ -88,7 +88,7 @@ export class DeleteCategoryComponent implements OnInit {
     this.loading = true;
     const categories = this.dataSource.data;
     const tIds = [];
-    categories.forEach((categoryP) => tIds.push(categoryP._id));
+    categories.forEach((categoryP) => tIds.push(categoryP.id));
     this.categoryService.deleteByIds(tIds).subscribe((categoryP) => {
 
       this.loading = false;

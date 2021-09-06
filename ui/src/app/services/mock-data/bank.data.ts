@@ -2,7 +2,7 @@ import { Bank } from '@shared/entity/inventory/bank';
 
 
 export const SBI:Bank = {
-  _id: 'bk-001',
+  id: 'bk-001',
   type: 'Bank',
   name: 'SBI',
   openingBalance: 3000,
@@ -11,7 +11,7 @@ export const SBI:Bank = {
 
 
 export const HDFC:Bank = {
-  _id: 'bk-002',
+  id: 'bk-002',
   type: 'Cash',
   name: 'HDFC',
   openingBalance: 0,
@@ -20,7 +20,7 @@ export const HDFC:Bank = {
 };
 
 export const ICICI:Bank = {
-  _id: 'bk-003',
+  id: 'bk-003',
   type: 'Other',
   name: 'ICICI',
   openingBalance: 2000,

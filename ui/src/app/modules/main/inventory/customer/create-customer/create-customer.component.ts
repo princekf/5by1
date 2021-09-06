@@ -26,7 +26,7 @@ export class CreateCustomerComponent implements OnInit {
   statesOptions: Observable<string[]>;
 
   fboForm: FormGroup = new FormGroup({
-    _id: new FormControl(null),
+    id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
     email: new FormControl(''),
     mobile: new FormControl(''),
@@ -65,7 +65,7 @@ export class CreateCustomerComponent implements OnInit {
       this.loading = true;
       this.customerService.get(tId).subscribe((itemC) => {
 
-        this.fboForm.setValue({_id: itemC._id,
+        this.fboForm.setValue({id: itemC.id,
           name: itemC.name,
           email: itemC.email,
           mobile: itemC.mobile,
@@ -90,7 +90,7 @@ export class CreateCustomerComponent implements OnInit {
     }
     this.loading = true;
     const itemP = <Customer> this.fboForm.value;
-    (itemP._id ? this.customerService.update(itemP) : this.customerService.save(itemP)).subscribe((itemC) => {
+    (itemP.id ? this.customerService.update(itemP) : this.customerService.save(itemP)).subscribe((itemC) => {
 
       this.toastr.success(`Customer ${itemC.name} is saved successfully`, 'Customer saved');
       this.goToPreviousPage(this.route, this.router);

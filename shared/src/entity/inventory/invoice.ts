@@ -21,7 +21,7 @@ export interface SaleItem {
 }
 
 export interface Invoice {
-    _id?: string;
+    id?: string;
     customer: Customer;
     invoiceDate: Date;
     dueDate: Date;

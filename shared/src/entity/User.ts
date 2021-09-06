@@ -4,5 +4,5 @@ export interface UserS {
     password?: string;
 }
 export interface User extends UserS {
-    _id?: string;
+    id?: string;
 }

@@ -77,7 +77,7 @@ export class DeletePaymentComponent implements OnInit {
     this.loading = true;
     const payments = this.dataSource.data;
     const tIds = [];
-    payments.forEach((paymentP) => tIds.push(paymentP._id));
+    payments.forEach((paymentP) => tIds.push(paymentP.id));
     this.paymentService.deleteByIds(tIds).subscribe((paymentP) => {
 
       this.loading = false;

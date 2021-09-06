@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import { Transfer } from '@shared/entity/inventory/transfer';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
+import * as dayjs from 'dayjs';
+import { environment } from '@fboenvironments/environment';
 @Component({
   selector: 'app-list-transfer',
   templateUrl: './list-transfer.component.html',
@@ -36,6 +38,17 @@ export class ListTransferComponent {
     items: []
   };
 
+  columnParsingFn = (element:unknown, column:string) : string => {
+
+    switch (column) {
+
+    case 'transferDate':
+      return dayjs(element[column]).format(environment.dateFormat);
+
+    }
+    return null;
+
+  }
 
   constructor(private transferService : TransferService,
     private activatedRoute : ActivatedRoute

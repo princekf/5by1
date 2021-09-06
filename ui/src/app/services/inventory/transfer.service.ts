@@ -43,7 +43,7 @@ export class TransferService {
 
     public listByIds(ids: Array<string>):Observable<Array<Transfer>> {
 
-      const fItems = this.items.filter((transferP) => ids.includes(transferP._id));
+      const fItems = this.items.filter((transferP) => ids.includes(transferP.id));
       return of(fItems).pipe(delay(FAKE_TIMEOUT));
 
     }
@@ -53,7 +53,7 @@ export class TransferService {
       const deletedArray:Array<Transfer> = [];
       const balanceArray:Array<Transfer> = [];
       // eslint-disable-next-line max-len
-      this.items.forEach((transferP) => (ids.includes(transferP._id) ? deletedArray.push(transferP) : balanceArray.push(transferP)));
+      this.items.forEach((transferP) => (ids.includes(transferP.id) ? deletedArray.push(transferP) : balanceArray.push(transferP)));
       this.items = balanceArray;
       return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
 
@@ -62,7 +62,7 @@ export class TransferService {
     public save(transfer:Transfer):Observable<Transfer> {
 
       const transferC = <Transfer> transfer;
-      transferC._id = `auto_id_${this.items.length}`;
+      transferC.id = `autoid_${this.items.length}`;
       this.items.push(transferC);
       return of(transferC).pipe(delay(FAKE_TIMEOUT));
 
@@ -71,7 +71,7 @@ export class TransferService {
 
     public update(transfer:Transfer):Observable<Transfer> {
 
-      const idx = this.items.findIndex((transferT) => transferT._id === transfer._id);
+      const idx = this.items.findIndex((transferT) => transferT.id === transfer.id);
       this.items[idx] = transfer;
       return of(transfer).pipe(delay(FAKE_TIMEOUT));
 
@@ -79,7 +79,7 @@ export class TransferService {
 
     public get(objId:string):Observable<Transfer> {
 
-      const transferC = this.items.find((transferT) => transferT._id === objId);
+      const transferC = this.items.find((transferT) => transferT.id === objId);
       return of(transferC).pipe(delay(FAKE_TIMEOUT));
 
     }
