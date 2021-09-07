@@ -54,6 +54,9 @@ export class DeleteInvoiceComponent implements OnInit {
     case 'invoiceDate':
       return dayjs(element[column]).format(environment.dateFormat);
 
+    case 'isReceived':
+      return element[column] ? 'Yes' : 'No';
+
     }
     return null;
 

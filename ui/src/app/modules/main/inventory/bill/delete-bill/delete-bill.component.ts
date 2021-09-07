@@ -58,6 +58,9 @@ export class DeleteBillComponent implements OnInit {
     case 'billDate':
       return dayjs(element[column]).format(environment.dateFormat);
 
+    case 'isPaid':
+      return element[column] ? 'Yes' : 'No';
+
     }
     return null;
 
