@@ -15,12 +15,14 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { TransactionRoutingModule } from './transaction.routing.module';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatIconModule} from '@angular/material/icon';
 @NgModule({
   declarations: [ ListTransactionComponent ],
   imports: [
     CommonModule, TransactionRoutingModule, ToolBarModule, DataTableModule, MatTableModule,
     NgxSkeletonLoaderModule, MatSortModule, MatDatepickerModule, MatNativeDateModule, MatPaginatorModule,
-    MatButtonModule, ReactiveFormsModule, FormsModule, MatInputModule, MatSelectModule, MatFormFieldModule
+    MatButtonModule, ReactiveFormsModule, FormsModule, MatInputModule, MatSelectModule, MatFormFieldModule,
+    MatIconModule
   ]
 })
 export class TransactionModule { }
