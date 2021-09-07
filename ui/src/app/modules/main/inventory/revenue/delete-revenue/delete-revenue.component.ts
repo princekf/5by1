@@ -6,7 +6,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
-
+import * as dayjs from 'dayjs';
+import { environment } from '@fboenvironments/environment';
 @Component({
   selector: 'app-delete-revenue',
   templateUrl: './delete-revenue.component.html',
@@ -46,6 +47,20 @@ export class DeleteRevenueComponent implements OnInit {
     private readonly mainService: MainService,
     private readonly toastr: ToastrService
   ) { }
+
+
+  columnParsingFn = (element:unknown, column:string): string => {
+
+
+    switch (column) {
+
+    case 'receivedDate':
+      return dayjs(element[column]).format(environment.dateFormat);
+
+    }
+    return null;
+
+  }
 
   ngOnInit(): void {
 

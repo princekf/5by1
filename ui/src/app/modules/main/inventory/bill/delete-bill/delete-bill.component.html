@@ -4,12 +4,12 @@
   <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
 </div>
 
-<table [style.display]="loading ? 'none': ''" mat-table [dataSource]="dataSource"  multiTemplateDataRows matSort
+<table [style.display]="loading ? 'none': ''" mat-table [dataSource]="dataSource" multiTemplateDataRows matSort
   class="fiveby1-table">
 
-  <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns" >
-    <th mat-header-cell *matHeaderCellDef mat-sort-header > {{columnHeaders[column]}} </th>
-    <td mat-cell *matCellDef="let element" [columnParnsingFn]="columnParsingFn"> {{findColumnValue(element, column)}} </td>
+  <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{columnHeaders[column]}} </th>
+    <td mat-cell *matCellDef="let element"> {{findColumnValue(element, column, columnParsingFn)}} </td>
   </ng-container>
 
   <!-- Expandable section -->
@@ -25,7 +25,7 @@
     </td>
   </ng-container>
 
- 
+
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns" class="fiveby1-table-header"></tr>
   <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="fiveby1-element-row"
