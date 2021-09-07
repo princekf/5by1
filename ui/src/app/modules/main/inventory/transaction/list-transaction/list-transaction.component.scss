@@ -21,4 +21,37 @@
   padding-bottom: 15px;
 }
 
+
+.main-header{
+  font-weight: 900;
+  margin-top: 0.5rem;
+}
+.header-container{
+  display: flex;
+}
+  
+.add-new-button{
+  background-color:#0062FF;
+  color: #FFFFFF;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 1em;
+  margin-bottom: 1em;
+}
+.tool-bar-button {
+  background-color:#0062FF22;
+  color: #0062FF;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+  margin-left: 1em;
+  margin-bottom: 1em;
+}
+
+.empy-space{
+  flex: 1 1;
+} 
   

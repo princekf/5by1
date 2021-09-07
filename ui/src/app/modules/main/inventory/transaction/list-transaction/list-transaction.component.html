@@ -1,4 +1,19 @@
-<app-tool-bar  mainHeader="Transactions"></app-tool-bar>
+<div class="header-container">
+  <span class="main-header">{{mainHeader}}</span>
+  <div class="empy-space"></div>
+  <button mat-flat-button class="tool-bar-button">
+    <mat-icon>save_alt</mat-icon><span class="tool-bar-button-caption">Import</span>
+  </button>
+  <button mat-flat-button class="tool-bar-button">
+    <mat-icon>ios_share</mat-icon><span class="tool-bar-button-caption">Export</span>
+  </button>
+  <button mat-flat-button class="add-new-button">
+    <mat-icon>add</mat-icon><span class="tool-bar-button-caption" (click)='onPaymentClick()'>Payments</span>
+  </button>
+  <button mat-flat-button class="add-new-button">
+    <mat-icon>add</mat-icon><span class="tool-bar-button-caption" (click)='onRevenueClick()'>Revenues</span>
+  </button>
+</div>
 
 <div>
     <p class="sectionHeader">List of Transactions</p>
@@ -12,7 +27,7 @@ multiTemplateDataRows class="fiveby1-table" >
 
 
   <ng-container matColumnDef="date" >
-    <th mat-header-cell *matHeaderCellDef>Transaction Date</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Transaction Date</th>
     <td mat-cell *matCellDef="let element" [columnParnsingFn]="columnParsingFn" > {{element.paidDate | date: 'dd-MM-yyy'}} {{element.receivedDate | date: 'dd-MM-yyy'}} </td>
   </ng-container> 
 
