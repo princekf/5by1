@@ -6,6 +6,8 @@ import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPr
 import { PaymentService} from '@fboservices/inventory/payment.service';
 import { MainService } from '@fboservices/main.service';
 import { Payment} from '@shared/entity/inventory/payment';
+import * as dayjs from 'dayjs';
+import { environment } from '@fboenvironments/environment';
 @Component({
   selector: 'app-delete-payment',
   templateUrl: './delete-payment.component.html',
@@ -38,6 +40,7 @@ export class DeletePaymentComponent implements OnInit {
 
   loading =true;
 
+
   constructor(
     public readonly router: Router,
     public readonly route: ActivatedRoute,
@@ -45,6 +48,20 @@ export class DeletePaymentComponent implements OnInit {
     private readonly mainService: MainService,
     private readonly toastr: ToastrService
   ) { }
+
+
+  columnParsingFn = (element:unknown, column:string): string => {
+
+
+    switch (column) {
+
+    case 'paidDate':
+      return dayjs(element[column]).format(environment.dateFormat);
+
+    }
+    return null;
+
+  }
 
 
   ngOnInit(): void {

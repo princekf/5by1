@@ -1,1 +1,65 @@
-<p>list-transaction works!</p>
+<app-tool-bar  mainHeader="Transactions"></app-tool-bar>
+
+<div>
+    <p class="sectionHeader">List of Transactions</p>
+</div>
+<div *ngIf="loading">
+    <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+  </div>
+
+<table [style.display]="loading ? 'none': ''" mat-table   [dataSource]="dataSource" matSort
+multiTemplateDataRows class="fiveby1-table" >
+
+
+  <ng-container matColumnDef="date" >
+    <th mat-header-cell *matHeaderCellDef>Transaction Date</th>
+    <td mat-cell *matCellDef="let element" [columnParnsingFn]="columnParsingFn" > {{element.paidDate | date: 'dd-MM-yyy'}} {{element.receivedDate | date: 'dd-MM-yyy'}} </td>
+  </ng-container> 
+
+<ng-container matColumnDef="PartyName">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>Party Name</th>
+  <td mat-cell *matCellDef="let element" >{{!element.customer?.name  ? element.vendor.name : element.customer?.name }} </td>
+</ng-container>
+
+<ng-container matColumnDef="bill/invoiceNumber">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header> bill/invoice #</th>
+  <td mat-cell *matCellDef="let element" >
+   {{!element.invoice?.invoiceNumber ? element.bill.billNumber : element.invoice?.invoiceNumber}}
+  </td>
+</ng-container> 
+
+ <ng-container matColumnDef="bank">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header> Bank </th>
+  <td mat-cell *matCellDef="let element">
+    {{element.bank.name}}
+  </td>
+</ng-container> 
+
+ <ng-container matColumnDef="category">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header> Category </th>
+  <td mat-cell *matCellDef="let element" >
+   {{element.category}}
+  </td>
+</ng-container>
+
+<ng-container matColumnDef="Amount">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+  <td mat-cell *matCellDef="let element" >
+  {{element.amount}}
+  </td>
+</ng-container>
+
+<ng-container matColumnDef="description">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+  <td mat-cell *matCellDef="let element" >
+  {{element.description}}
+  </td>
+</ng-container>
+
+
+<tr mat-header-row *matHeaderRowDef="displayedColumns" class="fiveby1-table-header"></tr>
+<tr mat-row *matRowDef="let row; columns: displayedColumns;" class="fiveby1-element-row"></tr>
+
+</table>
+<mat-paginator [style.display]="loading ? 'none': ''"  [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons></mat-paginator>
+

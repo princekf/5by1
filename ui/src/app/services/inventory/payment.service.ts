@@ -37,6 +37,12 @@ export class PaymentService {
 
     }
 
+    public listAll():Observable<Array<Payment>> {
+
+      return of(this.items).pipe(delay(FAKE_TIMEOUT));
+
+    }
+
     public deleteByIds(paymentIds: Array<string>):Observable<Array<Payment>> {
 
       const deletedArray:Array<Payment> = [];
