@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '@fboservices/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-signup',
@@ -22,7 +23,8 @@ export class SignupComponent {
   });
 
   constructor(private readonly userService:UserService,
-    private readonly router:Router) {}
+    private readonly router:Router,
+    private readonly toastr: ToastrService) {}
 
   submit():void {
 
@@ -30,8 +32,12 @@ export class SignupComponent {
     if (this.form.valid === true) {
 
       this.loading = true;
-      this.userService.signUp(this.form.value).subscribe((message) => {
+      const {name, email, password} = this.form.value as {name:string, email:string, password:string};
+      this.userService.signUp({name,
+        email,
+        password}).subscribe((userR) => {
 
+        this.toastr.info(`Sign up completed for the user ${userR.name}, ${userR.email}`, 'Sign-Up');
         this.loading = false;
         this.router.navigateByUrl('/');
 

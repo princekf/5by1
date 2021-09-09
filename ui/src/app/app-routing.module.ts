@@ -2,13 +2,13 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AppAuthGuard } from './util/app.authguard';
-import { AppNoAuthGuard } from './util/app.noauthguard';
+import { AppAuthGuard } from './util/auth/app.authguard';
+import { AppNoAuthGuard } from './util/auth/app.noauthguard';
 import { HTTPInterceptor } from './util/http.interceptor';
 
 const routes: Routes = [
   {
-    canActivate: [ ],
+    canActivate: [ AppAuthGuard ],
     path: '',
     loadChildren: () => import('./modules/main/main.module').then((mod) => mod.MainModule)
   }

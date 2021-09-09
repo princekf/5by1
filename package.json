@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "engines": {
-    "node": "15.*",
+    "node": "16.*",
     "yarn": "1.*"
   },
   "devDependencies": {
@@ -43,7 +43,7 @@
     "build:ui": "cd ui && yarn build",
     "build:shared": "cd shared && yarn build",
     "start": "concurrently \"yarn start:server\" \"yarn start:ui\"",
-    "start:server": "cd server && yarn start",
+    "start:server": "cd server && yarn start:watch",
     "start:ui": "cd ui && yarn start",
     "lint:server": "cd server && yarn lint",
     "lint:ui": "cd ui && yarn lint",

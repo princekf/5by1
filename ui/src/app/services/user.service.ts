@@ -1,11 +1,10 @@
-
-
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { UserS } from '@shared/entity/User';
-import { BASE_URI, USER_API, SIGNUP_API, LOGIN_API } from '@shared/server-apis';
-import { catchError } from 'rxjs/operators';
+import { User } from '@shared/entity/User';
+import { SIGNUP_API, LOGIN_API } from '@shared/server-apis';
+import { catchError, shareReplay, tap } from 'rxjs/operators';
+import { AuthResponse } from '@shared/util/auth-resp';
 
 
 @Injectable({
@@ -17,19 +16,21 @@ export class UserService {
     private readonly http: HttpClient
   ) { }
 
-  signUp(user: UserS): Observable<unknown> {
+  signUp(user: User): Observable<User> {
 
-    return this.http.post<UserS>(`${BASE_URI}${USER_API}${SIGNUP_API}`, user).pipe(
+    return this.http.post<User>(SIGNUP_API, user).pipe(
       catchError((err) => throwError(err))
     );
 
   }
 
-  login(user: { email: string; password: string; }): Observable<unknown> {
+  login(user: { email: string; password: string; }): Observable<AuthResponse> {
 
-    return this.http.post(`${BASE_URI}${USER_API}${LOGIN_API}`, user).pipe(
-      catchError((err) => throwError(err))
-    );
+    return this.http.post<AuthResponse>(LOGIN_API, user)
+      .pipe(shareReplay())
+      .pipe(
+        catchError((err) => throwError(err))
+      );
 
   }
 

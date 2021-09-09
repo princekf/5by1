@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '@fboservices/user.service';
+import { ACCESS_TOKEN_ID } from '@shared/Constants';
 
 @Component({
   selector: 'app-login',
@@ -34,9 +35,10 @@ export class LoginComponent {
 
       this.loading = true;
       this.error = null;
-      this.userService.login(this.form.value).subscribe((message) => {
+      this.userService.login(this.form.value).subscribe((authResp) => {
 
         this.loading = false;
+        localStorage.setItem(ACCESS_TOKEN_ID, authResp.token);
         this.router.navigateByUrl('/');
 
       }, (error) => {
