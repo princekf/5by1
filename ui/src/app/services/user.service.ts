@@ -3,7 +3,7 @@ import { Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { User } from '@shared/entity/User';
 import { SIGNUP_API, LOGIN_API } from '@shared/server-apis';
-import { catchError, shareReplay, tap } from 'rxjs/operators';
+import { catchError, shareReplay } from 'rxjs/operators';
 import { AuthResponse } from '@shared/util/auth-resp';
 
 

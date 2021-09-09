@@ -13,13 +13,13 @@ import { UnitService } from '@fboservices/inventory/unit.service';
 })
 export class ListUnitComponent {
 
-  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'baseUnit.name', 'times' ];
+  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'parent.name', 'times' ];
 
   columnHeaders = {
     name: 'Name',
     code: 'Code',
     decimalPlaces: 'Decimals',
-    'baseUnit.name': 'Base Unit',
+    'parent.name': 'Base Unit',
     times: 'Times'
   }
 

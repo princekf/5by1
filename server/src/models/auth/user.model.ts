@@ -1,21 +1,9 @@
 import {Entity, model, property, hasOne} from '@loopback/repository';
 import {UserCredentials} from './user-credentials.model';
+import { User as UserInft } from '@shared/entity/auth/user';
 
-@model({
-  settings: {
-    indexes: {
-      uniqueEmail: {
-        keys: {
-          email: 1,
-        },
-        options: {
-          unique: true,
-        },
-      },
-    },
-  },
-})
-export class User extends Entity {
+@model()
+export class User extends Entity implements UserInft {
 
   @property({
     type: 'string',

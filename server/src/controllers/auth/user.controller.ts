@@ -165,7 +165,7 @@ export class UserController {
 
   }
 
-  @post(`${USER_API}`)
+  @post(USER_API)
   @response(200, {
     description: 'User model instance',
     content: {'application/json': {schema: getModelSchemaRef(User)}},
@@ -203,7 +203,7 @@ export class UserController {
 
   }
 
-  @get(`${USER_API}`)
+  @get(USER_API)
   @response(200, {
     description: 'Array of User model instances',
     content: {
@@ -224,7 +224,7 @@ export class UserController {
 
   }
 
-  @patch(`${USER_API}`)
+  @patch(USER_API)
   @response(200, {
     description: 'User PATCH success count',
     content: {'application/json': {schema: CountSchema}},
