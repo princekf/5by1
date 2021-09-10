@@ -17,7 +17,7 @@ export class DeleteUnitComponent implements OnInit {
 
   goToPreviousPage = _goToPreviousPage;
 
-  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'baseUnit.name', 'times', 'description' ];
+  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'parent.name', 'times', 'description' ];
 
   extraColumns: Array<string>;
 
@@ -27,7 +27,7 @@ export class DeleteUnitComponent implements OnInit {
     name: 'Name',
     code: 'Code',
     decimalPlaces: 'Decimals',
-    'baseUnit.name': 'Base Unit',
+    'parent.name': 'Base Unit',
     description: 'Description',
     times: 'Times'
   }

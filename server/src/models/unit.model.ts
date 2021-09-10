@@ -45,11 +45,6 @@ export class Unit extends Entity implements UnitIntf {
   constructor(data?: Partial<Unit>) {
 
     super(data);
-    if (data?.parent && data?.parent.id) {
-
-      this.parentId = data.parent.id;
-
-    }
 
   }
 

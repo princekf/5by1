@@ -76,7 +76,6 @@ export class UnitService {
     });
     let params = new HttpParams();
     params = params.set('where', filterParam);
-
     return this.http['delete']<{count: number}>(UNIT_API_URI, {params}).pipe(
       catchError((err) => throwError(err))
     );

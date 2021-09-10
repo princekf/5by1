@@ -18,6 +18,7 @@ import {
   del,
   requestBody,
   response,
+  HttpErrors,
 } from '@loopback/rest';
 import { basicAuthorization } from '../middlewares/auth.midd';
 import {Unit} from '../models';
@@ -207,6 +208,18 @@ export class UnitController {
   async deleteAll(
     @param.where(Unit) where?: Where<Unit>,
   ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Units ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Units ids are required');
+
+    }
 
     const count = await this.unitRepository.deleteAll(where);
     return count;

@@ -47,7 +47,7 @@ export class CreateUnitComponent implements OnInit {
     name: new FormControl('', [ Validators.required ]),
     code: new FormControl('', [ Validators.required ]),
     parent: new FormControl(''),
-    times: new FormControl('', [ this.timesConditionallyRequiredValidator ]),
+    times: new FormControl(1, [ this.timesConditionallyRequiredValidator ]),
     decimalPlaces: new FormControl('', [ Validators.required, Validators.min(0) ]),
     description: new FormControl(''),
   });
