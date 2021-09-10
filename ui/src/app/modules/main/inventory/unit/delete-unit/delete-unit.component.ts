@@ -17,19 +17,19 @@ export class DeleteUnitComponent implements OnInit {
 
   goToPreviousPage = _goToPreviousPage;
 
-  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'baseUnit.name', 'times', 'description' ];
-
   extraColumns: Array<string>;
 
   dataSource = new MatTableDataSource<Unit>([]);
+
+  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'baseUnit.name', 'times', 'description' ];
 
   columnHeaders = {
     name: 'Name',
     code: 'Code',
     decimalPlaces: 'Decimals',
     'baseUnit.name': 'Base Unit',
+    times: 'Times',
     description: 'Description',
-    times: 'Times'
   }
 
   loading = true;

@@ -22,8 +22,6 @@ const routes: Routes = [
     component: DeleteProductComponent
   },
 
-
-
 ];
 
 @NgModule({

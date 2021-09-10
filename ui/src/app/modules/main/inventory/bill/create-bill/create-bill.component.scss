@@ -17,6 +17,10 @@ width: 50%;
   width: 40%;
 }
 
+.fbo-create-form-table{
+	width: 100%;
+}
+
 
 :host ::ng-deep  .mat-form-field-infix {
   display: block;
@@ -29,3 +33,75 @@ width: 50%;
   width: 22%;
   margin-left: 10%;
 }
+@media screen and (max-width: 960px)
+{
+  table {page-break-after:always}
+  table { page-break-after:auto }
+  tr    { page-break-inside:avoid; page-break-after:auto }
+  td    { page-break-inside:avoid; page-break-after:auto }
+  thead { display:table-header-group }
+  tfoot { display:table-footer-group }
+}
+
+// 
+
+	@media only screen 
+    and (max-width: 760px), (min-device-width: 768px) 
+    and (max-device-width: 1024px)  {
+
+		/* Force table to not be like tables anymore */
+		table, thead, tbody, th, td, tr {
+			display: contents;
+		}
+
+		/* Hide table headers (but not display: none;, for accessibility) */
+		thead tr {
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+
+    tr {
+      margin: 0 0 1rem 0;
+      background-color: transparent;
+    }
+      
+
+    
+		td {
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee;
+			position: relative;
+			padding-left: 50%;
+		}
+
+   .mat-header-row{
+      background-color:transparent;
+      width: 50%;
+      
+      }
+      
+
+		td:before {
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			top: 0;
+			left: 6px;
+			width: 45%;
+			padding-right: 10px;
+			white-space: nowrap;
+		}
+
+  .displayedColumns{
+    display: none;
+  }
+
+  .fbo-create-form-table{
+    width: 98%;
+    margin-left: 1%;
+    margin-right: 1%;
+
+}
+	}
