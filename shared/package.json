@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "engines": {
-    "node": "15.*",
+    "node": "16.*",
     "yarn": "1.*"
   },
   "scripts": {

@@ -17,6 +17,8 @@ export class DeleteUnitComponent implements OnInit {
 
   goToPreviousPage = _goToPreviousPage;
 
+  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'parent.name', 'times', 'description' ];
+
   extraColumns: Array<string>;
 
   dataSource = new MatTableDataSource<Unit>([]);
@@ -28,7 +30,6 @@ export class DeleteUnitComponent implements OnInit {
     code: 'Code',
     decimalPlaces: 'Decimals',
     'parent.name': 'Base Unit',
-    times: 'Times',
     description: 'Description',
   }
 

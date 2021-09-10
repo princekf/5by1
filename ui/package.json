@@ -2,7 +2,7 @@
   "name": "ui",
   "version": "1.0.0",
   "engines": {
-    "node": "15.*",
+    "node": "16.*",
     "yarn": "1.*"
   },
   "scripts": {

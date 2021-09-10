@@ -27,7 +27,7 @@ export class CreateUnitComponent implements OnInit {
       return null;
 
     }
-    if (formControl.parent.get('baseUnit').value) {
+    if (formControl.parent.get('parent').value) {
 
       let errors = Validators.required(formControl);
       if (!errors) {
@@ -46,7 +46,7 @@ export class CreateUnitComponent implements OnInit {
     id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
     code: new FormControl('', [ Validators.required ]),
-    baseUnit: new FormControl(''),
+    parent: new FormControl(''),
     times: new FormControl(1, [ this.timesConditionallyRequiredValidator ]),
     decimalPlaces: new FormControl('', [ Validators.required, Validators.min(0) ]),
     description: new FormControl(''),
@@ -72,7 +72,7 @@ export class CreateUnitComponent implements OnInit {
           this.fboForm.setValue({id: unitC.id,
             name: unitC.name,
             code: unitC.code,
-            baseUnit: unitC.baseUnit ?? '',
+            parent: unitC.parent ?? '',
             times: unitC.times ?? 1,
             decimalPlaces: unitC.decimalPlaces ?? 0,
             description: unitC.description ?? ''});
@@ -101,9 +101,9 @@ export class CreateUnitComponent implements OnInit {
     }
     this.loading = true;
     const unitP = <Unit> this.fboForm.value;
-    (unitP.id ? this.unitService.update(unitP) : this.unitService.save(unitP)).subscribe((unitC) => {
+    (unitP.id ? this.unitService.update(unitP) : this.unitService.save(unitP)).subscribe(() => {
 
-      this.toastr.success(`Unit ${unitC.name} is saved successfully`, 'Unit saved');
+      this.toastr.success(`Unit ${unitP.name} is saved successfully`, 'Unit saved');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {

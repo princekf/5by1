@@ -11,8 +11,8 @@ export const mgUnit:Unit = {id: '01231',
 export const noUnit:Unit = {id: '01230',
   name: 'Number',
   code: 'No',
-  decimalPlaces: 0,
-  baseUnit: mgUnit,
+  parent: mgUnit,
+  decimalPlaces: 0};
 
   times: 1000,
   description: 'noUnit with decimal places 0'};
@@ -37,8 +37,7 @@ export const kgUnit:Unit = {id: '01232',
 export const literUnit:Unit = {id: '01222',
   name: 'Liter',
   code: 'ml',
-  decimalPlaces: 3,
-  baseUnit: kgUnit,
+  parent: mlUnit,
   times: 1000,
  
   description: 'litterUnit with decimal places 3'};

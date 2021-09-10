@@ -1,45 +1,48 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-import * as cluster from 'cluster';
-import * as os from 'os';
+import express from 'express';
+import {ApplicationConfig, FiveByOneApplication} from './application';
+import path from 'path';
+import { once } from 'events';
+import * as http from 'http';
 
-const startApp = async(): Promise<void> => {
+export {ApplicationConfig};
 
-  const {app} = await import('./app');
-  const {lsMango} = await import('@ls-util/db/ls-mongo');
-  await lsMango.init(process.env.MONGODB_URI);
-  app.configApp();
+export class ExpressServer {
 
-  // Start express App
-  app.app.listen(process.env.PORT, () => {
+  public readonly app: express.Application;
 
-    console.warn(`${process.env.MODE} server is running at http://localhost:${process.env.PORT} with process id ${process.pid}`);
+  public readonly lbApp: FiveByOneApplication;
 
-  });
+  private server?: http.Server;
 
-};
+  constructor(options: ApplicationConfig = {}) {
 
-if (cluster.isMaster) {
+    this.app = express();
+    this.lbApp = new FiveByOneApplication(options);
+    this.app.use('/api', this.lbApp.requestHandler);
 
-  const CPUS: Array<os.CpuInfo> = os.cpus();
-  CPUS.forEach(() => cluster.fork());
+    // Intercept requests to return the frontend's static entry point
+    this.app.get('*', (_request, response) => {
 
-  cluster.on('online', (worker) => {
+      response.sendFile(path.resolve('.', 'public', 'index.html'));
 
-    console.warn(`Worker ${worker.process.pid} is online`);
+    });
 
-  });
+  }
 
-  cluster.on('exit', (worker, code, signal) => {
+  public boot = async():Promise<void> => {
 
-    console.warn(`Worker ${worker.process.pid} died with code: ${code}, and signal: ${signal}`);
-    console.warn('Starting a new worker');
-    cluster.fork();
+    await this.lbApp.boot();
 
-  });
+  };
 
-} else {
+  public start = async():Promise<void> => {
 
-  startApp();
+    await this.lbApp.start();
+    const port = this.lbApp.restServer.config.port ?? 3000;
+    const host = this.lbApp.restServer.config.host || '127.0.0.1';
+    this.server = this.app.listen(port, host);
+    await once(this.server, 'listening');
+
+  };
 
 }

@@ -8,7 +8,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './modules/auth/auth.module';
-
+import { httpInterceptorProviders } from '@fboutil/auth';
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,6 +23,7 @@ import { AuthModule } from './modules/auth/auth.module';
     HttpClientModule,
     ToastrModule.forRoot(),
   ],
-  bootstrap: [ AppComponent ]
+  bootstrap: [ AppComponent ],
+  providers: [ httpInterceptorProviders ]
 })
 export class AppModule { }

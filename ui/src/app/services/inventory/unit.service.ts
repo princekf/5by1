@@ -1,81 +1,122 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, throwError } from 'rxjs';
 import { Unit } from '@shared/entity/inventory/unit';
-import { delay } from 'rxjs/internal/operators';
+import { catchError, map} from 'rxjs/internal/operators';
 import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
+import { UNIT_API_URI } from '@shared/server-apis';
 
-import {kgUnit, literUnit, mgUnit, mlUnit,noUnit} from '../mock-data/unit.data';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { DEFAULT_MAX_ROWS } from '@fboutil/constants';
 
-const FAKE_TIMEOUT = 1000;
 
 @Injectable({
   providedIn: 'root'
 })
 export class UnitService {
 
-  private items:Array<Unit> = [
-    mgUnit, mlUnit, kgUnit, literUnit, noUnit
-  ]
+  constructor(
+    private readonly http: HttpClient
+  ) { }
 
   public listAll():Observable<Array<Unit>> {
 
-    return of(this.items).pipe(delay(FAKE_TIMEOUT));
+    return this.http.get<Array<Unit>>(UNIT_API_URI).pipe(
+      catchError((err) => throwError(err))
+    );
 
   }
 
   public list(queryParams:QueryData):Observable<ListQueryRespType<Unit>> {
 
-    const limit = queryParams.limit ?? 10;
-    const start = queryParams.start ?? 0;
-    const pageIndex = Math.ceil(start / limit);
-    const resp:ListQueryRespType<Unit> = {
-      totalItems: this.items.length,
-      items: this.items.slice(start, start + limit),
-      pageIndex
-    };
-    return of(resp).pipe(delay(FAKE_TIMEOUT));
+    const limit = queryParams.limit ?? DEFAULT_MAX_ROWS;
+    const offset = queryParams.start ?? 0;
+    const pageIndex = Math.ceil(offset / limit);
+    const filterParam = JSON.stringify({offset,
+      limit});
+    let params = new HttpParams();
+    params = params.set('filter', filterParam);
+    const itemsR = this.http.get<Array<Unit>>(UNIT_API_URI, {params});
+    const countR = this.http.get<{count: number}>(`${UNIT_API_URI}/count`, {params});
+    return forkJoin([ itemsR, countR ]).pipe(
+      catchError((err) => throwError(err))
+    )
+      .pipe(
+        map((results) => ({items: results[0],
+          totalItems: results[1].count,
+          pageIndex}))
+      );
 
   }
 
   public listByIds(ids: Array<string>):Observable<Array<Unit>> {
 
-    const fItems = this.items.filter((unitP) => ids.includes(unitP.id));
-    return of(fItems).pipe(delay(FAKE_TIMEOUT));
+    const filterParam = JSON.stringify({
+      where: {
+        id: {
+          inq: ids
+        }
+      }
+    });
+    let params = new HttpParams();
+    params = params.set('filter', filterParam);
+
+    return this.http.get<Array<Unit>>(UNIT_API_URI, {params}).pipe(
+      catchError((err) => throwError(err))
+    );
 
   }
 
-  public deleteByIds(ids: Array<string>):Observable<Array<Unit>> {
+  public deleteByIds(ids: Array<string>):Observable<{count: number}> {
 
-    const deletedArray:Array<Unit> = [];
-    const balanceArray:Array<Unit> = [];
-    this.items.forEach((unitP) => (ids.includes(unitP.id) ? deletedArray.push(unitP) : balanceArray.push(unitP)));
-    this.items = balanceArray;
-    return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
-
-  }
-
-  public save(unit:Unit):Observable<Unit> {
-
-    const unitC = <Unit> unit;
-    unitC.id = `autoid_${this.items.length}`;
-    this.items.push(unitC);
-    return of(unitC).pipe(delay(FAKE_TIMEOUT));
+    const filterParam = JSON.stringify({
+      id: {
+        inq: ids
+      }
+    });
+    let params = new HttpParams();
+    params = params.set('where', filterParam);
+    return this.http['delete']<{count: number}>(UNIT_API_URI, {params}).pipe(
+      catchError((err) => throwError(err))
+    );
 
   }
 
-  public update(unit:Unit):Observable<Unit> {
+  public save(unit:Unit):Observable<void> {
 
-    const idx = this.items.findIndex((unitT) => unitT.id === unit.id);
-    this.items[idx] = unit;
-    return of(unit).pipe(delay(FAKE_TIMEOUT));
+    // eslint-disable-next-line no-unused-vars
+    const {id, parent, ...unit2} = unit;
+    if (parent && parent.id) {
+
+      unit2.parentId = parent.id;
+
+    }
+    return this.http.post<void>(UNIT_API_URI, unit2).pipe(
+      catchError((err) => throwError(err))
+    );
+
+  }
+
+  public update(unit:Unit):Observable<void> {
+
+    // eslint-disable-next-line no-unused-vars
+    const {id, parent, ...unit2} = unit;
+    if (parent && parent.id) {
+
+      unit2.parentId = parent.id;
+
+    }
+    return this.http.patch<void>(`${UNIT_API_URI}/${unit.id}`, unit2).pipe(
+      catchError((err) => throwError(err))
+    );
 
   }
 
   public get(objId:string):Observable<Unit> {
 
-    const unitC = this.items.find((uitT) => uitT.id === objId);
-    return of(unitC).pipe(delay(FAKE_TIMEOUT));
+    return this.http.get<Unit>(`${UNIT_API_URI}/${objId}`).pipe(
+      catchError((err) => throwError(err))
+    );
 
   }
 
