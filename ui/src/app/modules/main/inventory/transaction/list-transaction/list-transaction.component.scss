@@ -1,19 +1,4 @@
 
-  :host ::ng-deep .mat-header-row{
-  background-color: #0062FF22;
-  width: 100%;
-  
-  }
-
-  :host ::ng-deep .mat-row{
- 
-    width: 100%;
-    padding-left: 24px;
-    
-    }
-:host ::ng-deep .mat-table {
- width: 100%;
-}
 .sectionHeader{
   font-size: 14px;
   font-weight: 500;
@@ -34,24 +19,52 @@
   background-color:#0062FF;
   color: #FFFFFF;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
+
   margin-left: 1em;
   margin-bottom: 1em;
+  min-width: 39px;
+  padding-left: 0.3em;
 }
 .tool-bar-button {
   background-color:#0062FF22;
   color: #0062FF;
   border-radius: 5px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 400;
   margin-left: 2rem;
   margin-bottom: 1rem;
   margin-left: 1em;
   margin-bottom: 1em;
+  min-width: 35px;
+  padding-left: 0.5em;
+
 }
 
 .empy-space{
   flex: 1 1;
 } 
   
+@media screen and (max-width: 960px) {
+  .tool-bar-button-caption{
+      display: none
+  }
+
+.add-new-button {
+  background-color:#0062FF;
+  color: #FFFFFF;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 500;
+    margin-left: 0.2em;
+    margin-bottom: 1em;
+    min-width: 60px;
+    padding-left: 0.3em;
+}
+.tool-bar-button{
+  margin-left: 0.2em;
+
+}
+  
+}

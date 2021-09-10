@@ -44,7 +44,6 @@ export class CreateInvoiceComponent implements OnInit {
 
  filteredOptions: Observable<Product>;
 
- // Items = this.fboForm.get('items') as FormArray;
 
  // eslint-disable-next-line max-params
  constructor(public readonly router: Router,
@@ -242,7 +241,7 @@ export class CreateInvoiceComponent implements OnInit {
 
     }
 
-    addNew(event) {
+    addNew() :void {
 
       this.dynamicRows.push(this.dynamicRows.length);
 

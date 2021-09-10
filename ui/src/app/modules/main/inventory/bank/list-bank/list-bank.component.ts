@@ -8,11 +8,11 @@ import { QueryData } from '@shared/util/query-data';
 @Component({
   selector: 'app-list-bank',
   templateUrl: './list-bank.component.html',
-  styleUrls: ['./list-bank.component.scss']
+  styleUrls: [ './list-bank.component.scss' ]
 })
 export class ListBankComponent {
 
-  displayedColumns: string[] = ['type', 'name', 'openingBalance', 'description'];
+  displayedColumns: string[] = [ 'type', 'name', 'openingBalance', 'description' ];
 
 
   columnHeaders = {

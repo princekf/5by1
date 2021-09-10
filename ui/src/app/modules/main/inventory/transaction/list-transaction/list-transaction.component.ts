@@ -6,17 +6,34 @@ import { Subscription } from 'rxjs';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
-import { fboTableRowExpandAnimation } from '@fboutil/fbo.util';
+import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
+import { MainService } from '@fboservices/main.service';
+import * as dayjs from 'dayjs';
+import { environment } from '@fboenvironments/environment';
 
 @Component({
   selector: 'app-list-transaction',
   templateUrl: './list-transaction.component.html',
-  styleUrls: [ './list-transaction.component.scss', '../../../../../util/styles/fbo-form-style.scss' ],
+  styleUrls: [ './list-transaction.component.scss', '../../../../../util/styles/fbo-table-style.scss' ],
   animations: fboTableRowExpandAnimation,
 })
 export class ListTransactionComponent {
 
-  displayedColumns: string[] = [ 'date', 'PartyName', 'bill/invoiceNumber', 'bank', 'category', 'Amount', 'description' ];
+  displayedColumns: string[] = [ 'receivedDate', 'customer.name', 'invoice.invoiceNumber', 'bank.name', 'category', 'amount', 'description' ];
+
+  columnHeaders = {
+    receivedDate: 'Transaction Date',
+    'customer.name': 'PartyName',
+    'invoice.invoiceNumber': 'bill-invoice#',
+    'bank.name': 'bank',
+    category: 'category',
+    amount: 'Amount',
+    description: 'Description',
+
+  }
+
+
+  findColumnValue = _findColumnValue;
 
   queryParams:QueryData = { };
 
@@ -50,14 +67,37 @@ export class ListTransactionComponent {
 
   dataSource = new MatTableDataSource<unknown>();
 
+  extraColumns: Array<string>;
+
 
   constructor(private activatedRoute : ActivatedRoute,
     private revenueService:RevenueService,
     private paymentService:PaymentService,
     private readonly router: Router,
     public readonly route: ActivatedRoute,
+    private readonly mainService: MainService,
   ) { }
 
+
+  columnParsingFn = (element:any, column:string): string => {
+
+
+    switch (column) {
+
+    case 'receivedDate':
+      return element?.paidDate && dayjs(element[column]).format(environment.dateFormat)
+         || element?.receivedDate && dayjs(element[column]).format(environment.dateFormat);
+
+    case 'customer.name':
+      return element?.customer?.name || element.vendor.name;
+
+    case 'invoice.invoiceNumber':
+      return element?.invoice?.invoiceNumber || element.bill.billNumber;
+
+    }
+    return null;
+
+  }
 
     private loadData = () => {
 
@@ -107,8 +147,16 @@ export class ListTransactionComponent {
         this.queryParams = { ...value };
         this.loadData();
 
-      });
 
+        if (this.mainService.isMobileView()) {
+
+          const COLUMN_COUNT_MOBILE_VIEW = 3;
+          this.extraColumns = this.displayedColumns;
+          this.displayedColumns = this.extraColumns.splice(0, COLUMN_COUNT_MOBILE_VIEW);
+
+        }
+
+      });
 
     }
 

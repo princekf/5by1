@@ -58,6 +58,13 @@
     display: flex;
     align-items: center;
   }
+
+  .desktopView{
+    display: block;
+  }
+  .mobileView{
+    display: none;
+  }
   @media only screen and (max-width: 768px) {
 
   .w33p{
@@ -68,5 +75,11 @@
   }
   .w100p{
     width: 100%;
+  }
+  .desktopView{
+    display: none;
+  }
+  .mobileView{
+    display: block;
   }
   }
