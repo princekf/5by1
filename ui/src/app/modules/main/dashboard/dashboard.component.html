@@ -1,15 +1,27 @@
 <div class="page-header">
     <h3 class="title">Dashboard</h3>
-    <div>
+    <div class="desktopView">
         <button mat-flat-button (click)="picker.open()" class="dashboard-datepicker">
             <mat-icon class="datepicker-icon">calendar_today</mat-icon>
-            {{range.value.start | date: 'd, MMMM, y' }} - {{range.value.end | date: 'd, MMMM, y' }}
+            {{range.value.start | date: 'dd, MMMM, y' }} - {{range.value.end | date: 'dd, MMMM, y' }}
         </button>
         <mat-date-range-input class="datepicker-input" [formGroup]="range" [rangePicker]="picker">
             <input matStartDate formControlName="start" placeholder="Start date">
             <input matEndDate formControlName="end" placeholder="End date">
         </mat-date-range-input>
         <mat-date-range-picker #picker></mat-date-range-picker>
+    </div>
+
+    <div class="mobileView" >
+        <button mat-flat-button (click)="mobilepicker.open()" class="dashboard-datepicker">
+            <mat-icon class="datepicker-icon">calendar_today</mat-icon>
+            {{range.value.start | date: 'dd-MM-yy' }} - {{range.value.end | date: 'dd-MM-yy' }}
+        </button>
+        <mat-date-range-input class="datepicker-input" [formGroup]="range" [rangePicker]="mobilepicker">
+            <input matStartDate formControlName="start" placeholder="Start date">
+            <input matEndDate formControlName="end" placeholder="End date">
+        </mat-date-range-input>
+        <mat-date-range-picker #mobilepicker></mat-date-range-picker>
     </div>
 </div>
 <div class="page-content">

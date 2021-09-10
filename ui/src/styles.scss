@@ -31,7 +31,8 @@ body { margin: 0; font-family: "Montserrat-Regular"; }
 .form-submit-container {
   width: 100%;
   display: flex;
-  justify-content: right;
+  justify-content: center;
+  padding-bottom: 5%;
 }
 
 .form-submit-container button{
@@ -179,7 +180,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 @media only screen and (max-width: 768px) {
   
   .delete-submit-container button {
-    width: 30%;
+    width: 35%;
     margin-right: 4%;
   }
 

@@ -41,7 +41,6 @@ export class DeleteCategoryComponent implements OnInit {
 
     case 'isPaid':
       return element[column] ? 'Yes' : 'No';
-   
 
     }
     return null;
@@ -64,6 +63,8 @@ export class DeleteCategoryComponent implements OnInit {
     this.categoryService.listByIds(tIdArray).subscribe((categories) => {
 
       this.dataSource.data = categories;
+
+      this.loading = false;
 
 
     });

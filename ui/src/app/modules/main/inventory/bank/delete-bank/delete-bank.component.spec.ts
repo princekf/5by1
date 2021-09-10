@@ -7,10 +7,10 @@ describe('DeleteBankComponent', () => {
   let component: DeleteBankComponent;
   let fixture: ComponentFixture<DeleteBankComponent>;
 
-  beforeEach(async () => {
+  beforeEach(async() => {
 
     await TestBed.configureTestingModule({
-      declarations: [DeleteBankComponent]
+      declarations: [ DeleteBankComponent ]
     })
       .compileComponents();
 

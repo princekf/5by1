@@ -3,24 +3,23 @@
 <div *ngIf="loading">
     <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
 </div>
-<form [style.display]="loading ? 'none': ''" [formGroup]="fboForm" class="fbo-create-form" (ngSubmit)="upsertProduct()">
-    <p>
-        <mat-form-field>
+<form [style.display]="loading ? 'none': ''" [formGroup]="fboForm"  (ngSubmit)="upsertProduct()">
+  
+        <mat-form-field class="fbo-create-form">
             <mat-label>Name</mat-label>
             <input type="text" matInput placeholder="Ex. Lenovo 18'' PC" formControlName="name">
             <mat-error *ngIf="fboForm.controls['name'].hasError('required')">
                 Name is <strong>required</strong>
             </mat-error>
         </mat-form-field>
-    </p>
-    <p>
-        <mat-form-field>
+    
+        <mat-form-field class="fbo-create-form">
             <mat-label>Code</mat-label>
             <input type="text" matInput placeholder="Ex. LNV-18" formControlName="code">
         </mat-form-field>
-    </p>
-    <p>
-        <mat-form-field>
+   
+ 
+        <mat-form-field class="fbo-create-form">
             <mat-label>Category</mat-label>
             <input type="text" matInput placeholder="Ex. Mobile" formControlName="category"
                 [matAutocomplete]="autoCategory">
@@ -31,9 +30,8 @@
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
-    </p>
-    <p>
-        <mat-form-field>
+   
+        <mat-form-field class="fbo-create-form">
             <mat-label>Brand</mat-label>
             <input type="text" matInput placeholder="Ex. Lenova" formControlName="brand" [matAutocomplete]="autoBrand">
             <mat-autocomplete autoActiveFirstOption #autoBrand="matAutocomplete">
@@ -42,9 +40,8 @@
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
-    </p>
-    <p>
-        <mat-form-field>
+  
+        <mat-form-field class="fbo-create-form">
             <mat-label>Location</mat-label>
             <input type="text" matInput placeholder="Ex. Rack-1" formControlName="location"
                 [matAutocomplete]="autoLocation">
@@ -54,21 +51,18 @@
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
-    </p>
-    <p>
-        <mat-form-field>
+ 
+        <mat-form-field class="fbo-create-form">
             <mat-label>Barcode</mat-label>
             <input type="text" matInput placeholder="Ex. 12431299" formControlName="barcode">
         </mat-form-field>
-    </p>
-    <p>
-        <mat-form-field>
+  
+        <mat-form-field class="fbo-create-form">
             <mat-label>Re-Order Level</mat-label>
             <input type="number" matInput placeholder="Ex. LNV-18" formControlName="reorderLevel">
         </mat-form-field>
-    </p>
-    <p>
-        <mat-form-field>
+  
+        <mat-form-field class="fbo-create-form">
             <mat-label>Colors</mat-label>
             <mat-chip-list #colorChipList aria-label="Color selection">
                 <mat-chip *ngFor="let color of colors" [selectable]="true" [removable]="true"
@@ -86,26 +80,27 @@
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
-    </p>
-    <p>
-        <mat-label>Has Batch &nbsp;&nbsp;&nbsp;</mat-label>
-        <mat-slide-toggle formControlName="hasBatch" color="primary"></mat-slide-toggle>
-    </p>
-    <p>
-        <mat-form-field>
+  
+
+
+        <mat-form-field class="fbo-create-form">
             <mat-label>Status</mat-label>
             <mat-select formControlName="status">
                 <mat-option value="Active">Active</mat-option>
                 <mat-option value="Disabled">Disabled</mat-option>
             </mat-select>
         </mat-form-field>
-    </p>
-    <p>
-        <mat-form-field>
+   
+        <mat-form-field class="fbo-create-form">
             <mat-label>Description</mat-label>
             <textarea matInput formControlName="description"></textarea>
         </mat-form-field>
-    </p>
+        <p class="fbo-create-form">
+        
+            <mat-label>Has Batch &nbsp;&nbsp;&nbsp;</mat-label>
+            <mat-slide-toggle formControlName="hasBatch" color="primary"></mat-slide-toggle>
+        </p>
+  
     <p class="form-submit-container">
         <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
         <button type="submit" class="submit-button" mat-button>Save</button>

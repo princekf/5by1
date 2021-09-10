@@ -247,11 +247,8 @@ export class CreateBillComponent implements OnInit {
   }
 
 
-  addNew(event) {
-  
-    const formArray = this.fboForm.get('items') as FormArray;
-    formArray.controls.values = null;
-    this.dataSource = new MatTableDataSource(formArray.controls);
+  addNew():void {
+
     this.dynamicRows.push(this.dynamicRows.length);
 
 

@@ -29,7 +29,6 @@ export class DeleteUnitComponent implements OnInit {
     decimalPlaces: 'Decimals',
     'parent.name': 'Base Unit',
     description: 'Description',
-    times: 'Times'
   }
 
   loading = true;
