@@ -13,7 +13,6 @@ import { goToPreviousPage as _goToPreviousPage, fboTableRowExpandAnimation } fro
 import { UnitService } from '@fboservices/inventory/unit.service';
 import { Unit } from '@shared/entity/inventory/unit';
 import { Observable } from 'rxjs';
-import { style } from '@angular/animations';
 
 
 @Component({
@@ -250,11 +249,7 @@ export class CreateBillComponent implements OnInit {
 
   addNew():void {
 
-    const formArray = this.fboForm.get('items') as FormArray;
-    formArray.controls.values = null;
-    this.dataSource = new MatTableDataSource(formArray.controls);
     this.dynamicRows.push(this.dynamicRows.length);
-
 
 
   }

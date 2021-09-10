@@ -21,13 +21,13 @@ export class DeleteUnitComponent implements OnInit {
 
   dataSource = new MatTableDataSource<Unit>([]);
 
-  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'baseUnit.name', 'times', 'description' ];
+  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'parent.name', 'times', 'description' ];
 
   columnHeaders = {
     name: 'Name',
     code: 'Code',
     decimalPlaces: 'Decimals',
-    'baseUnit.name': 'Base Unit',
+    'parent.name': 'Base Unit',
     times: 'Times',
     description: 'Description',
   }
