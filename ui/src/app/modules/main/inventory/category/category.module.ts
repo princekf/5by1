@@ -15,6 +15,7 @@ import { DeleteCategoryComponent } from './delete-category/delete-category.compo
 import {MatTableModule} from '@angular/material/table';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 @NgModule({
   declarations: [ CreateCategoryComponent, ListCategoryComponent, DeleteCategoryComponent ],
   imports: [
@@ -23,7 +24,7 @@ import {MatSortModule} from '@angular/material/sort';
     DataTableModule,
     CategoryRoutingModule, MatSelectModule, MatFormFieldModule, ReactiveFormsModule,
     FormsModule, MatInputModule, MatButtonModule, MatTableModule, MatSortModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule, MatAutocompleteModule
   ]
 })
 export class CategoryModule { }

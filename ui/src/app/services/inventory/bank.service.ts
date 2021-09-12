@@ -21,7 +21,7 @@ export class BankService {
   public list(queryParams:QueryData):Observable<ListQueryRespType<Bank>> {
 
     const limit = queryParams.limit ?? 10;
-    const start = queryParams.start ?? 0;
+    const start = queryParams.offset ?? 0;
     const pageIndex = Math.ceil(start / limit);
     const resp:ListQueryRespType<Bank> = {
       totalItems: this.items.length,

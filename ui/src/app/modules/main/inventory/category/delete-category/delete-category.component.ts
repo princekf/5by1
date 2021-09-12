@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
+import { QueryData } from '@shared/util/query-data';
 @Component({
   selector: 'app-delete-category',
   templateUrl: './delete-category.component.html',
@@ -58,21 +59,6 @@ export class DeleteCategoryComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const tIds = this.route.snapshot.queryParamMap.get('ids');
-    const tIdArray = tIds.split(',');
-    this.categoryService.listByIds(tIdArray).subscribe((categories) => {
-
-      this.dataSource.data = categories;
-
-      this.loading = false;
-
-
-    });
-
-  }
-
-  ngAfterViewInit():void {
-
     if (this.mainService.isMobileView()) {
 
       const COLUMN_COUNT_MOBILE_VIEW = 3;
@@ -80,6 +66,30 @@ export class DeleteCategoryComponent implements OnInit {
       this.displayedColumns = this.extraColumns.splice(0, COLUMN_COUNT_MOBILE_VIEW);
 
     }
+    const tIds = this.route.snapshot.queryParamMap.get('ids');
+    const tIdArray = tIds.split(',');
+    const queryData:QueryData = {
+      where: {
+        id: {
+          inq: tIdArray
+        }
+      },
+      include: [
+        {relation: 'parent'}, {relation: 'unit'}
+      ]
+    };
+    this.categoryService.search(queryData).subscribe((categories) => {
+
+      this.dataSource.data = categories;
+      this.loading = false;
+
+    });
+
+  }
+
+  ngAfterViewInit():void {
+
+    
 
   }
 
@@ -90,10 +100,13 @@ export class DeleteCategoryComponent implements OnInit {
     const categories = this.dataSource.data;
     const tIds = [];
     categories.forEach((categoryP) => tIds.push(categoryP.id));
-    this.categoryService.deleteByIds(tIds).subscribe((categoryP) => {
+    const where = {id: {
+      inq: tIds
+    }};
+    this.categoryService['delete'](where).subscribe((count) => {
 
       this.loading = false;
-      this.toastr.success('Categories are deleted successfully', 'Categories deleted');
+      this.toastr.success(`${count.count} categories are deleted successfully`, 'Categories deleted');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {

@@ -1,84 +1,48 @@
-
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Category } from '@shared/entity/inventory/category';
 import { delay } from 'rxjs/internal/operators';
-import { QueryData } from '@shared/util/query-data';
 import { mobilePhones, television, computer, laptop } from '../mock-data/category.data';
-import { ListQueryRespType } from '@fboutil/types/list.query.resp';
+import { BaseHTTPService } from '../base-http.service';
+import { CATEGORY_API_URI } from '@shared/server-apis';
 const FAKE_TIMEOUT = 1000;
 
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService {
+export class CategoryService extends BaseHTTPService<Category> {
 
+
+  public API_URI = CATEGORY_API_URI;
 
   private items:Array<Category> = [ television, mobilePhones, computer, laptop ]
 
-  constructor() { }
+  public upsert(category:Category):Observable<void> {
 
+    const {id, parent, unit, ...category2} = category;
+    if (parent && parent.id) {
 
-  public list(queryParams:QueryData):Observable<ListQueryRespType<Category>> {
+      category2.parentId = parent.id;
 
-    const limit = queryParams.limit ?? 10;
-    const start = queryParams.start ?? 0;
-    const pageIndex = Math.ceil(start / limit);
-    const resp:ListQueryRespType<Category> = {
-      totalItems: this.items.length,
-      items: this.items.slice(start, start + limit),
-      pageIndex
-    };
-    return of(resp).pipe(delay(FAKE_TIMEOUT));
+    }
+    if (unit && unit.id) {
+
+      category2.unitId = unit.id;
+
+    }
+    if (id) {
+
+      return super.update({id,
+        ...category2});
+
+    }
+    return super.save(category2);
 
   }
 
   public listAll():Observable<Array<Category>> {
 
     return of(this.items).pipe(delay(FAKE_TIMEOUT));
-
-  }
-
-  public listByIds(ids: Array<string>):Observable<Array<Category>> {
-
-    const fItems = this.items.filter((categoryP) => ids.includes(categoryP.id));
-    return of(fItems).pipe(delay(FAKE_TIMEOUT));
-
-  }
-
-  public deleteByIds(ids: Array<string>):Observable<Array<Category>> {
-
-    const deletedArray:Array<Category> = [];
-    const balanceArray:Array<Category> = [];
-    // eslint-disable-next-line max-len
-    this.items.forEach((categoryP) => (ids.includes(categoryP.id) ? deletedArray.push(categoryP) : balanceArray.push(categoryP)));
-    this.items = balanceArray;
-    return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
-
-  }
-
-  public save(category:Category):Observable<Category> {
-
-    const categoryC = <Category> category;
-    categoryC.id = `autoid_${this.items.length}`;
-    this.items.push(categoryC);
-    return of(categoryC).pipe(delay(FAKE_TIMEOUT));
-
-  }
-
-
-  public update(category:Category):Observable<Category> {
-
-    const idx = this.items.findIndex((categoryT) => categoryT.id === category.id);
-    this.items[idx] = category;
-    return of(category).pipe(delay(FAKE_TIMEOUT));
-
-  }
-
-  public get(objId:string):Observable<Category> {
-
-    const categoryC = this.items.find((categoryT) => categoryT.id === objId);
-    return of(categoryC).pipe(delay(FAKE_TIMEOUT));
 
   }
 

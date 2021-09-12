@@ -64,7 +64,8 @@ export class ListCategoryComponent {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
-        this.queryParams = { ...value };
+        this.queryParams = { ...value,
+          include: [ {relation: 'parent'}, {relation: 'unit'} ] };
         this.loadData();
 
       });

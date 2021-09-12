@@ -25,9 +25,6 @@ export class Category extends Entity implements CategoryIntf {
 
   unit: Unit;
 
-  @property({
-    type: 'string',
-  })
   parent?: Category;
 
   @property({
@@ -37,6 +34,9 @@ export class Category extends Entity implements CategoryIntf {
 
   @belongsTo(() => Unit)
   unitId: string;
+
+  @belongsTo(() => Category)
+  parentId: string;
 
   constructor(data?: Partial<Category>) {
 

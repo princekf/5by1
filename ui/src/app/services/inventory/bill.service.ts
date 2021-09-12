@@ -27,7 +27,7 @@ export class BillService {
     public list(queryParams:QueryData):Observable<ListQueryRespType<Bill>> {
 
       const limit = queryParams.limit ?? 10;
-      const start = queryParams.start ?? 0;
+      const start = queryParams.offset ?? 0;
       const pageIndex = Math.ceil(start / limit);
       const resp:ListQueryRespType<Bill> = {
         totalItems: this.items.length,

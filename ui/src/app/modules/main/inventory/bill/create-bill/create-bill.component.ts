@@ -80,7 +80,8 @@ export class CreateBillComponent implements OnInit {
     const product = this.fBuilder.control('');
     product.valueChanges.subscribe((value) => {
 
-      this.productService.list({ qrs: value }).subscribe((productsP) => (this.productsFiltered = productsP.items));
+      this.productService.list({ where: {name: {like: value,
+        options: 'i'}} }).subscribe((productsP) => (this.productsFiltered = productsP.items));
 
     });
     return this.fBuilder.group({
@@ -247,8 +248,11 @@ export class CreateBillComponent implements OnInit {
   }
 
 
-  addNew():void {
+  addNew(event) {
 
+    const formArray = this.fboForm.get('items') as FormArray;
+    formArray.controls.values = null;
+    this.dataSource = new MatTableDataSource(formArray.controls);
     this.dynamicRows.push(this.dynamicRows.length);
 
 

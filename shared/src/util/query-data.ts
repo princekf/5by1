@@ -1,7 +1,9 @@
 export interface QueryData {
-    start?: number;
+    offset?: number;
     limit?: number;
-    sortc?: string;
-    sortd?: 'asc' | 'desc' | '';
-    qrs?: string;
+    skip?: number;
+    order?: Array<string>;
+    fields?: Record<string, boolean>;
+    where?: Record<string, unknown>;
+    include?: Array<Record<'relation', string>>;
 }

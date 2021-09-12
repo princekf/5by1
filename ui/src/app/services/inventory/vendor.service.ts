@@ -20,7 +20,7 @@ export class VendorService {
     public list(queryParams:QueryData):Observable<ListQueryRespType<Vendor>> {
 
       const limit = queryParams.limit ?? 10;
-      const start = queryParams.start ?? 0;
+      const start = queryParams.offset ?? 0;
       const pageIndex = Math.ceil(start / limit);
       const resp:ListQueryRespType<Vendor> = {
         totalItems: this.items.length,

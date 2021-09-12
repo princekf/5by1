@@ -140,14 +140,13 @@ export class DataTableComponent {
     this.paginator.page.subscribe((evt: PageEvent) => {
 
       this.queryParams.limit = evt.pageSize;
-      this.queryParams.start = evt.pageIndex * evt.pageSize;
+      this.queryParams.offset = evt.pageIndex * evt.pageSize;
       this.router.navigate([], { queryParams: this.queryParams });
 
     });
     this.sort.sortChange.subscribe((cSort:Sort) => {
 
-      this.queryParams.sortc = cSort.active;
-      this.queryParams.sortd = cSort.direction;
+      this.queryParams.order = [ `${cSort.active} ${cSort.direction}` ];
       this.router.navigate([], { queryParams: this.queryParams });
 
     });

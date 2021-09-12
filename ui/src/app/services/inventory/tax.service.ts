@@ -20,7 +20,7 @@ export class TaxService {
     public list(queryParams:QueryData):Observable<ListQueryRespType<Tax>> {
 
       const limit = queryParams.limit ?? 10;
-      const start = queryParams.start ?? 0;
+      const start = queryParams.offset ?? 0;
       const pageIndex = Math.ceil(start / limit);
       const resp:ListQueryRespType<Tax> = {
         totalItems: this.items.length,
