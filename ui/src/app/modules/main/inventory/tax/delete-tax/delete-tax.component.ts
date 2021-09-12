@@ -6,6 +6,7 @@ import { Tax } from '@shared/entity/inventory/tax';
 import { MainService } from '@fboservices/main.service';
 import { ToastrService } from 'ngx-toastr';
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
+import { QueryData } from '@shared/util/query-data';
 
 @Component({
   selector: 'app-delete-tax',
@@ -43,19 +44,6 @@ export class DeleteTaxComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const tIds = this.route.snapshot.queryParamMap.get('ids');
-    const tIdArray = tIds.split(',');
-    this.taxService.listByIds(tIdArray).subscribe((taxes) => {
-
-      this.dataSource.data = taxes;
-      this.loading = false;
-
-    });
-
-  }
-
-  ngAfterViewInit():void {
-
     if (this.mainService.isMobileView()) {
 
       const COLUMN_COUNT_MOBILE_VIEW = 3;
@@ -63,6 +51,22 @@ export class DeleteTaxComponent implements OnInit {
       this.displayedColumns = this.extraColumns.splice(0, COLUMN_COUNT_MOBILE_VIEW);
 
     }
+
+    const tIds = this.route.snapshot.queryParamMap.get('ids');
+    const tIdArray = tIds.split(',');
+    const queryData:QueryData = {
+      where: {
+        id: {
+          inq: tIdArray
+        }
+      }
+    };
+    this.taxService.search(queryData).subscribe((units) => {
+
+      this.dataSource.data = units;
+      this.loading = false;
+
+    });
 
   }
 
@@ -72,10 +76,13 @@ export class DeleteTaxComponent implements OnInit {
     const taxes = this.dataSource.data;
     const tIds = [];
     taxes.forEach((taxP) => tIds.push(taxP.id));
-    this.taxService.deleteByIds(tIds).subscribe((taxesP) => {
+    const where = {id: {
+      inq: tIds
+    }};
+    this.taxService['delete'](where).subscribe((count) => {
 
       this.loading = false;
-      this.toastr.success('Taxes are deleted successfully', 'Tax deleted');
+      this.toastr.success(`${count.count} taxes are deleted successfully`, 'Tax deleted');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {

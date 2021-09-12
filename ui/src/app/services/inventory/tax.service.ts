@@ -2,32 +2,33 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Tax } from '@shared/entity/inventory/tax';
 import { delay } from 'rxjs/internal/operators';
-import { QueryData } from '@shared/util/query-data';
-import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { cgst2P5, cgst5, cgst6, cgst9, igst10, igst12, igst18, igst5, sgst2P5, sgst5, sgst6, sgst9 } from '../mock-data/tax.data';
+import { BaseHTTPService } from '@fboservices/base-http.service';
+import { TAX_API_URI } from '@shared/server-apis';
 
 const FAKE_TIMEOUT = 1000;
 
 @Injectable({
   providedIn: 'root'
 })
-export class TaxService {
+export class TaxService extends BaseHTTPService<Tax> {
+
+  public API_URI = TAX_API_URI;
 
     private items:Array<Tax> = [
       igst5, igst10, igst12, igst18, sgst2P5, sgst5, sgst6, sgst9, cgst2P5, cgst5, cgst6, cgst9
     ]
 
-    public list(queryParams:QueryData):Observable<ListQueryRespType<Tax>> {
+    public upsert(tax:Tax):Observable<void> {
 
-      const limit = queryParams.limit ?? 10;
-      const start = queryParams.offset ?? 0;
-      const pageIndex = Math.ceil(start / limit);
-      const resp:ListQueryRespType<Tax> = {
-        totalItems: this.items.length,
-        items: this.items.slice(start, start + limit),
-        pageIndex
-      };
-      return of(resp).pipe(delay(FAKE_TIMEOUT));
+      const {id, ...tax2} = tax;
+      if (id) {
+
+        return super.update({id,
+          ...tax2});
+
+      }
+      return super.save(tax2);
 
     }
 
@@ -48,29 +49,6 @@ export class TaxService {
 
     }
 
-    public save(tax:Tax):Observable<Tax> {
-
-      const taxC = <Tax> tax;
-      taxC.id = `autoid_${this.items.length}`;
-      this.items.push(taxC);
-      return of(taxC).pipe(delay(FAKE_TIMEOUT));
-
-    }
-
-    public update(tax:Tax):Observable<Tax> {
-
-      const idx = this.items.findIndex((taxT) => taxT.id === tax.id);
-      this.items[idx] = tax;
-      return of(tax).pipe(delay(FAKE_TIMEOUT));
-
-    }
-
-    public get(taxId:string):Observable<Tax> {
-
-      const taxC = this.items.find((taxT) => taxT.id === taxId);
-      return of(taxC).pipe(delay(FAKE_TIMEOUT));
-
-    }
 
     public getGroupNames():Observable<Array<string>> {
 

@@ -4,10 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TaxService } from '@fboservices/inventory/tax.service';
 import { Tax } from '@shared/entity/inventory/tax';
 import { Observable } from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import { flatMap, map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 const MAX_RATE = 100;
+
 @Component({
   selector: 'app-create-tax',
   templateUrl: './create-tax.component.html',
@@ -25,13 +26,12 @@ export class CreateTaxComponent implements OnInit {
 
   groupNameOptions: Observable<string[]>;
 
-
   form: FormGroup = new FormGroup({
     id: new FormControl(null),
     groupName: new FormControl('', [ Validators.required ]),
     name: new FormControl('', [ Validators.required ]),
-    rate: new FormControl('', [ Validators.required, Validators.min(0) ]),
-    appliedTo: new FormControl('100', [ Validators.required, Validators.min(0), Validators.max(MAX_RATE) ]),
+    rate: new FormControl(0, [ Validators.required, Validators.min(0) ]),
+    appliedTo: new FormControl(MAX_RATE, [ Validators.required, Validators.min(0), Validators.max(MAX_RATE) ]),
     description: new FormControl(''),
   });
 
@@ -49,21 +49,18 @@ export class CreateTaxComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.groupNameOptions = this.form.controls.groupName.valueChanges.pipe(
-      startWith(''), map((value) => this._filter(value))
-    );
-    this.taxService.getGroupNames().subscribe((groupNames) => {
+    this.groupNameOptions = this.form.controls.groupName.valueChanges
+      .pipe(flatMap((nameQ) => this.taxService.distinct('groupName', { where: {groupName: {like: nameQ,
+        options: 'i'}}})))
+      .pipe(map((groupNameResp) => groupNameResp.data));
 
-      this.groupNames = groupNames;
-
-    });
 
     const tId = this.route.snapshot.queryParamMap.get('id');
     if (tId) {
 
       this.formHeader = 'Update Taxes';
       this.loading = true;
-      this.taxService.get(tId).subscribe((taxC) => {
+      this.taxService.get(tId, {}).subscribe((taxC) => {
 
         this.form.setValue({id: taxC.id,
           groupName: taxC.groupName,
@@ -89,9 +86,9 @@ export class CreateTaxComponent implements OnInit {
     }
     this.loading = true;
     const taxP = <Tax> this.form.value;
-    (taxP.id ? this.taxService.update(taxP) : this.taxService.save(taxP)).subscribe((taxC) => {
+    this.taxService.upsert(taxP).subscribe(() => {
 
-      this.toastr.success(`Tax ${taxC.name} is saved successfully`, 'Tax saved');
+      this.toastr.success(`Tax ${taxP.name} is saved successfully`, 'Tax saved');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {

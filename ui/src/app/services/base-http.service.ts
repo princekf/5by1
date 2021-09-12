@@ -27,6 +27,16 @@ export class BaseHTTPService<T> {
 
     }
 
+
+    public distinct(columnName: string, queryParams:QueryData):Observable<{data:Array<string>}> {
+
+      const filterParam = JSON.stringify(queryParams);
+      let params = new HttpParams();
+      params = params.set('filter', filterParam);
+      return this.http.get<{data:Array<string>}>(`${this.API_URI}/distinct/${columnName}`, {params});
+
+    }
+
     public list(queryParams:QueryData):Observable<ListQueryRespType<T>> {
 
       const limit = queryParams.limit ?? DEFAULT_MAX_ROWS;

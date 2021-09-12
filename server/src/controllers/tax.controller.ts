@@ -1,8 +1,10 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, } from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, } from '@loopback/rest';
 import {Tax} from '../models';
 import {TaxRepository} from '../repositories';
 import { TAX_API } from '@shared/server-apis';
+import { ArrayReponse } from '../models/util/array-resp.model';
+import { ArrayReponse as ArrayReponseInft } from '@shared/util/array-resp';
 
 export class TaxController {
 
@@ -32,6 +34,52 @@ export class TaxController {
 
     const taxR = await this.taxRepository.create(tax);
     return taxR;
+
+  }
+
+  @get(`${TAX_API}/distinct/{column}`)
+  @response(200, {
+    description: 'Tax model group names',
+    content: {'application/json': {schema: ArrayReponse}},
+  })
+  async distinct(
+    @param.path.string('column') column: string,
+    @param.filter(Tax) filter?: Filter<Tax>,
+  ): Promise<ArrayReponseInft> {
+
+    const aggregates: Array<Record<string, unknown>> = [];
+    const match:Record<string, unknown> = { };
+
+    if (filter && filter.where) {
+
+      const where2 = filter.where as any;
+      const keys = Object.keys(where2);
+      for (const columnName of keys) {
+
+        const details = where2[columnName];
+        const conditions:Record<string, string> = {};
+        if (!details.like) {
+
+          return {data: []};
+
+        }
+        conditions.$regex = details.like;
+        if (details.options) {
+
+          conditions.$options = details.options;
+
+        }
+        match[columnName] = conditions;
+
+      }
+
+    }
+    aggregates.push({$match: match});
+    aggregates.push({ $group: { _id: `$${column}` } });
+    const gnamesP = await this.taxRepository.execute('Tax', 'aggregate', aggregates);
+    const gnames:[{_id: string}] = await gnamesP.toArray();
+    const data = gnames.map((gname) => gname._id);
+    return {data};
 
   }
 
@@ -151,6 +199,32 @@ export class TaxController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.taxRepository.deleteById(id);
+
+  }
+
+  @del(TAX_API)
+  @response(204, {
+    description: 'Taxes DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(Tax) where?: Where<Tax>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Tax ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Tax ids are required');
+
+    }
+
+    const count = await this.taxRepository.deleteAll(where);
+    return count;
 
   }
 

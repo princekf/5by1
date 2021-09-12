@@ -8,8 +8,8 @@
     <mat-form-field>
       <mat-label>Group name</mat-label>
       <input type="text" matInput placeholder="Ex. CGST, SGST etc" formControlName="groupName"
-      [matAutocomplete]="auto">
-      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      [matAutocomplete]="autoGroupName">
+      <mat-autocomplete autoActiveFirstOption #autoGroupName="matAutocomplete">
         <mat-option *ngFor="let option of groupNameOptions | async" [value]="option">
           {{option}}
         </mat-option>
