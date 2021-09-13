@@ -7,6 +7,7 @@ import { MainService } from '@fboservices/main.service';
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { ToastrService } from 'ngx-toastr';
 import { VendorService } from '@fboservices/inventory/vendor.service';
+import { QueryData } from '@shared/util/query-data';
 
 @Component({
   selector: 'app-delete-vendor',
@@ -47,7 +48,14 @@ export class DeleteVendorComponent implements OnInit {
 
     const tIds = this.route.snapshot.queryParamMap.get('ids');
     const tIdArray = tIds.split(',');
-    this.vendorService.listByIds(tIdArray).subscribe((items) => {
+    const queryData:QueryData = {
+      where: {
+        id: {
+          inq: tIdArray
+        }
+      }
+    };
+    this.vendorService.search(queryData).subscribe((items) => {
 
       this.dataSource.data = items;
       this.loading = false;
@@ -91,10 +99,13 @@ export class DeleteVendorComponent implements OnInit {
     const units = this.dataSource.data;
     const tIds = [];
     units.forEach((itemP) => tIds.push(itemP.id));
-    this.vendorService.deleteByIds(tIds).subscribe((itemsP) => {
+    const where = {id: {
+      inq: tIds
+    }};
+    this.vendorService['delete'](where).subscribe((count) => {
 
       this.loading = false;
-      this.toastr.success('Vendors are deleted successfully', 'Vendor deleted');
+      this.toastr.success(`${count.count} vendors are deleted successfully`, 'Vendor deleted');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {

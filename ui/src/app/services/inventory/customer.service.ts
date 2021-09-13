@@ -23,16 +23,16 @@ export class CustomerService extends BaseHTTPService<Customer> {
 
     }
 
-    public upsert(product:Customer):Observable<void> {
+    public upsert(customer:Customer):Observable<void> {
 
-      const {id, ...product2} = product;
+      const {id, ...customer2} = customer;
       if (id) {
 
         return super.update({id,
-          ...product2});
+          ...customer2});
 
       }
-      return super.save(product2);
+      return super.save(customer2);
 
     }
 
