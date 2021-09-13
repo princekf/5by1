@@ -55,7 +55,7 @@ export class CreateBankComponent implements OnInit {
 
         this.formHeader = 'Update Banks';
         this.loading = true;
-        this.bankService.get(tId).subscribe((bankC) => {
+        this.bankService.get(tId, {}).subscribe((bankC) => {
 
           this.form.setValue({
             id: bankC.id ?? '',
@@ -91,10 +91,9 @@ export class CreateBankComponent implements OnInit {
     const bankP = <Bank> this.form.value;
 
 
-    // eslint-disable-next-line max-len
-    (bankP.id ? this.bankService.update(bankP) : this.bankService.save(bankP)).subscribe((bankC) => {
+    this.bankService.upsert(bankP).subscribe(() => {
 
-      this.toastr.success(`Category ${bankC.name} is saved successfully`, 'Category saved');
+      this.toastr.success(`Category ${bankP.name} is saved successfully`, 'Category saved');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
