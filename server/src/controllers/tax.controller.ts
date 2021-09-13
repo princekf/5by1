@@ -47,39 +47,8 @@ export class TaxController {
     @param.filter(Tax) filter?: Filter<Tax>,
   ): Promise<ArrayReponseInft> {
 
-    const aggregates: Array<Record<string, unknown>> = [];
-    const match:Record<string, unknown> = { };
-
-    if (filter && filter.where) {
-
-      const where2 = filter.where as any;
-      const keys = Object.keys(where2);
-      for (const columnName of keys) {
-
-        const details = where2[columnName];
-        const conditions:Record<string, string> = {};
-        if (!details.like) {
-
-          return {data: []};
-
-        }
-        conditions.$regex = details.like;
-        if (details.options) {
-
-          conditions.$options = details.options;
-
-        }
-        match[columnName] = conditions;
-
-      }
-
-    }
-    aggregates.push({$match: match});
-    aggregates.push({ $group: { _id: `$${column}` } });
-    const gnamesP = await this.taxRepository.execute('Tax', 'aggregate', aggregates);
-    const gnames:[{_id: string}] = await gnamesP.toArray();
-    const data = gnames.map((gname) => gname._id);
-    return {data};
+    const resp = await this.taxRepository.distinct(column, filter);
+    return resp;
 
   }
 

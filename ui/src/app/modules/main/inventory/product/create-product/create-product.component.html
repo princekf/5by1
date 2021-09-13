@@ -25,7 +25,7 @@
                 [matAutocomplete]="autoCategory">
             <mat-autocomplete autoActiveFirstOption #autoCategory="matAutocomplete"
                 [displayWith]="extractNameOfCategory">
-                <mat-option *ngFor="let categoryS of categoriesFiltered" [value]="categoryS">
+                <mat-option *ngFor="let categoryS of categoryOptions | async" [value]="categoryS">
                     {{categoryS.name}}
                 </mat-option>
             </mat-autocomplete>
@@ -35,7 +35,7 @@
             <mat-label>Brand</mat-label>
             <input type="text" matInput placeholder="Ex. Lenova" formControlName="brand" [matAutocomplete]="autoBrand">
             <mat-autocomplete autoActiveFirstOption #autoBrand="matAutocomplete">
-                <mat-option *ngFor="let brandS of brandsFiltered" [value]="brandS">
+                <mat-option *ngFor="let brandS of brandOptions | async" [value]="brandS">
                     {{brandS}}
                 </mat-option>
             </mat-autocomplete>
@@ -46,7 +46,7 @@
             <input type="text" matInput placeholder="Ex. Rack-1" formControlName="location"
                 [matAutocomplete]="autoLocation">
             <mat-autocomplete autoActiveFirstOption #autoLocation="matAutocomplete">
-                <mat-option *ngFor="let locationsS of locationsFiltered" [value]="locationsS">
+                <mat-option *ngFor="let locationsS of locationOptions | async" [value]="locationsS">
                     {{locationsS}}
                 </mat-option>
             </mat-autocomplete>
@@ -75,7 +75,7 @@
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addColor($event)">
             </mat-chip-list>
             <mat-autocomplete #autoColor="matAutocomplete" (optionSelected)="onColorSelected($event)">
-                <mat-option *ngFor="let color of colorsFiltered" [value]="color">
+                <mat-option *ngFor="let color of colorOptions | async" [value]="color">
                     {{color}}
                 </mat-option>
             </mat-autocomplete>

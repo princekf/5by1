@@ -45,6 +45,9 @@ export class ListProductComponent {
     private loadData = () => {
 
       this.loading = true;
+      this.queryParams.include = [
+        {relation: 'category'}
+      ];
       this.productService.list(this.queryParams).subscribe((rawDatas) => {
 
         this.rawDatas = rawDatas;

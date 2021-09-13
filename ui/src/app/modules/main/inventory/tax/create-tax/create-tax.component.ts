@@ -22,8 +22,6 @@ export class CreateTaxComponent implements OnInit {
 
   loading = false;
 
-  private groupNames: string[] = [];
-
   groupNameOptions: Observable<string[]>;
 
   form: FormGroup = new FormGroup({
@@ -39,13 +37,6 @@ export class CreateTaxComponent implements OnInit {
     public readonly route: ActivatedRoute,
     private readonly taxService:TaxService,
     private readonly toastr: ToastrService) { }
-
-  private _filter(value: string): string[] {
-
-    const filterValue = value.toLowerCase();
-    return this.groupNames.filter((option) => option.toLowerCase().includes(filterValue));
-
-  }
 
   ngOnInit(): void {
 

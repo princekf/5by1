@@ -16,4 +16,5 @@ export interface Product {
     status: 'Active' | 'Disabled' | 'Deleted';
     description?: string;
     category?:Category;
+    categoryId?: string;
 }
