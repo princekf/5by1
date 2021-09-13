@@ -1,9 +1,11 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
 import { post,
-  param, get, getModelSchemaRef, patch, put, del, requestBody, response, } from '@loopback/rest';
+  param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, } from '@loopback/rest';
 import {Customer} from '../models';
 import {CustomerRepository} from '../repositories';
 import { CUSTOMER_API } from '@shared/server-apis';
+import { ArrayReponse } from '../models/util/array-resp.model';
+import { ArrayReponse as ArrayReponseInft } from '@shared/util/array-resp';
 
 export class CustomerController {
 
@@ -33,6 +35,21 @@ export class CustomerController {
 
     const customerR = await this.customerRepository.create(customer);
     return customerR;
+
+  }
+
+  @get(`${CUSTOMER_API}/distinct/{column}`)
+  @response(200, {
+    description: 'Tax model group names',
+    content: {'application/json': {schema: ArrayReponse}},
+  })
+  async distinct(
+    @param.path.string('column') column: string,
+    @param.filter(Customer) filter?: Filter<Customer>,
+  ): Promise<ArrayReponseInft> {
+
+    const resp = await this.customerRepository.distinct(column, filter);
+    return resp;
 
   }
 
@@ -152,6 +169,32 @@ export class CustomerController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.customerRepository.deleteById(id);
+
+  }
+
+  @del(CUSTOMER_API)
+  @response(204, {
+    description: 'Customers DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(Customer) where?: Where<Customer>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Customer ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Customer ids are required');
+
+    }
+
+    const count = await this.customerRepository.deleteAll(where);
+    return count;
 
   }
 

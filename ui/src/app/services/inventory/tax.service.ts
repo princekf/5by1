@@ -32,38 +32,4 @@ export class TaxService extends BaseHTTPService<Tax> {
 
     }
 
-    public listByIds(taxIds: Array<string>):Observable<Array<Tax>> {
-
-      const fItems = this.items.filter((taxP) => taxIds.includes(taxP.id));
-      return of(fItems).pipe(delay(FAKE_TIMEOUT));
-
-    }
-
-    public deleteByIds(taxIds: Array<string>):Observable<Array<Tax>> {
-
-      const deletedArray:Array<Tax> = [];
-      const balanceArray:Array<Tax> = [];
-      this.items.forEach((taxP) => (taxIds.includes(taxP.id) ? deletedArray.push(taxP) : balanceArray.push(taxP)));
-      this.items = balanceArray;
-      return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
-
-    }
-
-
-    public getGroupNames():Observable<Array<string>> {
-
-      const groupNames:Array<string> = [];
-      for (const taxP of this.items) {
-
-        if (!groupNames.includes(taxP.groupName)) {
-
-          groupNames.push(taxP.groupName);
-
-        }
-
-      }
-      return of(groupNames).pipe(delay(FAKE_TIMEOUT));
-
-    }
-
 }
