@@ -5,6 +5,7 @@ import { CustomerService } from '@fboservices/inventory/customer.service';
 import { MainService } from '@fboservices/main.service';
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { Customer } from '@shared/entity/inventory/customer';
+import { QueryData } from '@shared/util/query-data';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -46,7 +47,14 @@ export class DeleteCustomerComponent implements OnInit {
 
     const tIds = this.route.snapshot.queryParamMap.get('ids');
     const tIdArray = tIds.split(',');
-    this.customerService.listByIds(tIdArray).subscribe((items) => {
+    const queryData:QueryData = {
+      where: {
+        id: {
+          inq: tIdArray
+        }
+      }
+    };
+    this.customerService.search(queryData).subscribe((items) => {
 
       this.dataSource.data = items;
       this.loading = false;
@@ -74,10 +82,13 @@ export class DeleteCustomerComponent implements OnInit {
     const units = this.dataSource.data;
     const tIds = [];
     units.forEach((itemP) => tIds.push(itemP.id));
-    this.customerService.deleteByIds(tIds).subscribe((itemsP) => {
+    const where = {id: {
+      inq: tIds
+    }};
+    this.customerService['delete'](where).subscribe((count) => {
 
       this.loading = false;
-      this.toastr.success('Customers are deleted successfully', 'Customer deleted');
+      this.toastr.success(`${count.count} customers are deleted successfully`, 'Customer deleted');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {

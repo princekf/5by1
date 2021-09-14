@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
+import { QueryData } from '@shared/util/query-data';
 @Component({
   selector: 'app-delete-product',
   templateUrl: './delete-product.component.html',
@@ -51,9 +52,19 @@ export class DeleteProductComponent implements OnInit {
 
     const tIds = this.route.snapshot.queryParamMap.get('ids');
     const tIdArray = tIds.split(',');
-    this.productService.listByIds(tIdArray).subscribe((products) => {
+    const queryData:QueryData = {
+      include: [
+        {relation: 'category'}
+      ],
+      where: {
+        id: {
+          inq: tIdArray
+        }
+      }
+    };
+    this.productService.search(queryData).subscribe((units) => {
 
-      this.dataSource.data = products;
+      this.dataSource.data = units;
       this.loading = false;
 
     });
@@ -79,10 +90,13 @@ export class DeleteProductComponent implements OnInit {
     const products = this.dataSource.data;
     const tIds = [];
     products.forEach((productP) => tIds.push(productP.id));
-    this.productService.deleteByIds(tIds).subscribe((productP) => {
+    const where = {id: {
+      inq: tIds
+    }};
+    this.productService['delete'](where).subscribe((count) => {
 
       this.loading = false;
-      this.toastr.success('Products are deleted successfully', 'Products deleted');
+      this.toastr.success(`${count} products are deleted successfully`, 'Products deleted');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {

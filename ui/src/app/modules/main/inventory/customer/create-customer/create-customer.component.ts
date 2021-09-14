@@ -5,7 +5,7 @@ import { CustomerService } from '@fboservices/inventory/customer.service';
 import { Customer } from '@shared/entity/inventory/customer';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { flatMap, map } from 'rxjs/operators';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 @Component({
   selector: 'app-create-customer',
@@ -21,8 +21,6 @@ export class CreateCustomerComponent implements OnInit {
 
   loading = false;
 
-  states: Array<string> = [];
-
   statesOptions: Observable<string[]>;
 
   fboForm: FormGroup = new FormGroup({
@@ -35,13 +33,6 @@ export class CreateCustomerComponent implements OnInit {
     gstNo: new FormControl(''),
   });
 
-  private _filter(value: string): string[] {
-
-    const filterValue = value.toLowerCase();
-    return this.states.filter((option) => option.toLowerCase().includes(filterValue));
-
-  }
-
   constructor(public readonly router: Router,
     public readonly route: ActivatedRoute,
     private readonly customerService:CustomerService,
@@ -49,21 +40,17 @@ export class CreateCustomerComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.statesOptions = this.fboForm.controls.state.valueChanges.pipe(
-      startWith(''), map((value) => this._filter(value))
-    );
-    this.customerService.getStates().subscribe((states) => {
-
-      this.states = states;
-
-    });
+    this.statesOptions = this.fboForm.controls.state.valueChanges
+      .pipe(flatMap((nameQ) => this.customerService.distinct('state', { where: {state: {like: nameQ,
+        options: 'i'}}})))
+      .pipe(map((distinctResp) => distinctResp.data));
 
     const tId = this.route.snapshot.queryParamMap.get('id');
     if (tId) {
 
       this.formHeader = 'Update Customers';
       this.loading = true;
-      this.customerService.get(tId).subscribe((itemC) => {
+      this.customerService.get(tId, {}).subscribe((itemC) => {
 
         this.fboForm.setValue({id: itemC.id,
           name: itemC.name,
@@ -90,9 +77,9 @@ export class CreateCustomerComponent implements OnInit {
     }
     this.loading = true;
     const itemP = <Customer> this.fboForm.value;
-    (itemP.id ? this.customerService.update(itemP) : this.customerService.save(itemP)).subscribe((itemC) => {
+    this.customerService.upsert(itemP).subscribe(() => {
 
-      this.toastr.success(`Customer ${itemC.name} is saved successfully`, 'Customer saved');
+      this.toastr.success(`Customer ${itemP.name} is saved successfully`, 'Customer saved');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {

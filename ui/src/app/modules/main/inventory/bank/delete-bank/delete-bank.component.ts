@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
+import { QueryData } from '@shared/util/query-data';
 
 @Component({
   selector: 'app-delete-bank',
@@ -48,7 +49,14 @@ export class DeleteBankComponent implements OnInit {
 
     const tIds = this.route.snapshot.queryParamMap.get('ids');
     const tIdArray = tIds.split(',');
-    this.bankService.listByIds(tIdArray).subscribe((banks) => {
+    const queryData:QueryData = {
+      where: {
+        id: {
+          inq: tIdArray
+        }
+      }
+    };
+    this.bankService.search(queryData).subscribe((banks) => {
 
       this.dataSource.data = banks;
       this.loading = false;
@@ -75,10 +83,13 @@ export class DeleteBankComponent implements OnInit {
     const categories = this.dataSource.data;
     const tIds = [];
     categories.forEach((bankP) => tIds.push(bankP.id));
-    this.bankService.deleteByIds(tIds).subscribe((bankP) => {
+    const where = {id: {
+      inq: tIds
+    }};
+    this.bankService['delete'](where).subscribe((count) => {
 
       this.loading = false;
-      this.toastr.success('Banks are deleted successfully', 'Banks deleted');
+      this.toastr.success(`${count.count} banks are deleted successfully`, 'Banks deleted');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {

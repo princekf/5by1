@@ -24,7 +24,7 @@ export class InvoiceService {
     public list(queryParams:QueryData):Observable<ListQueryRespType<Invoice>> {
 
       const limit = queryParams.limit ?? 10;
-      const start = queryParams.start ?? 0;
+      const start = queryParams.offset ?? 0;
       const pageIndex = Math.ceil(start / limit);
       const resp:ListQueryRespType<Invoice> = {
         totalItems: this.items.length,

@@ -1,6 +1,6 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
 import { post,
-  param, get, getModelSchemaRef, patch, put, del, requestBody, response, } from '@loopback/rest';
+  param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, } from '@loopback/rest';
 import {Bank} from '../models';
 import {BankRepository} from '../repositories';
 import { BANK_API } from '@shared/server-apis';
@@ -152,6 +152,32 @@ export class BankController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.bankRepository.deleteById(id);
+
+  }
+
+  @del(BANK_API)
+  @response(204, {
+    description: 'Banks DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(Bank) where?: Where<Bank>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Bank ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Bank ids are required');
+
+    }
+
+    const count = await this.bankRepository.deleteAll(where);
+    return count;
 
   }
 

@@ -7,9 +7,14 @@
   <p>
     <mat-form-field>
       <mat-label>Parent Name</mat-label>
-      <mat-select placeholder="Enter Parent Name" formControlName="parent">
-        <mat-option *ngFor="let category of categories" [value]="category">{{category.name}}</mat-option>
-      </mat-select>
+      <input type="text" matInput placeholder="Enter Parent Name Ex. Mobile" formControlName="parent"
+                [matAutocomplete]="autoCategory">
+            <mat-autocomplete autoActiveFirstOption #autoCategory="matAutocomplete"
+                [displayWith]="extractNameOfObject">
+                <mat-option *ngFor="let categoryS of categoriesFiltered" [value]="categoryS">
+                    {{categoryS.name}}
+                </mat-option>
+            </mat-autocomplete>
     </mat-form-field>
   </p>
 
@@ -24,9 +29,14 @@
   <p>
     <mat-form-field>
       <mat-label>Unit</mat-label>
-      <mat-select placeholder="Enter Unit Name" formControlName="unit">
-        <mat-option *ngFor="let unit of units" [value]="unit">{{unit.name}}</mat-option>
-      </mat-select>
+      <input type="text" matInput placeholder="Enter Unit Name Ex. Kilogram" formControlName="unit"
+                [matAutocomplete]="autoUnit">
+            <mat-autocomplete autoActiveFirstOption #autoUnit="matAutocomplete"
+                [displayWith]="extractNameOfObject">
+                <mat-option *ngFor="let unitS of unitsFiltered" [value]="unitS">
+                    {{unitS.name}}
+                </mat-option>
+            </mat-autocomplete>
     </mat-form-field>
   </p>
 

@@ -69,7 +69,8 @@ export class CreateInvoiceComponent implements OnInit {
       const product = this.fBuilder.control('');
       product.valueChanges.subscribe((value) => {
 
-        this.productService.list({qrs: value}).subscribe((productsP) => (this.productsFiltered = productsP.items));
+        this.productService.list({ where: {name: {like: value,
+          options: 'i'}} }).subscribe((productsP) => (this.productsFiltered = productsP.items));
 
       });
       return this.fBuilder.group({

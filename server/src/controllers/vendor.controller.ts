@@ -1,8 +1,10 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, } from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, } from '@loopback/rest';
 import {Vendor} from '../models';
 import {VendorRepository} from '../repositories';
 import { VENDOR_API } from '@shared/server-apis';
+import { ArrayReponse } from '../models/util/array-resp.model';
+import { ArrayReponse as ArrayReponseInft } from '@shared/util/array-resp';
 
 export class VendorController {
 
@@ -32,6 +34,21 @@ export class VendorController {
 
     const vendorR = await this.vendorRepository.create(vendor);
     return vendorR;
+
+  }
+
+  @get(`${VENDOR_API}/distinct/{column}`)
+  @response(200, {
+    description: 'Tax model group names',
+    content: {'application/json': {schema: ArrayReponse}},
+  })
+  async distinct(
+    @param.path.string('column') column: string,
+    @param.filter(Vendor) filter?: Filter<Vendor>,
+  ): Promise<ArrayReponseInft> {
+
+    const resp = await this.vendorRepository.distinct(column, filter);
+    return resp;
 
   }
 
@@ -151,6 +168,32 @@ export class VendorController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.vendorRepository.deleteById(id);
+
+  }
+
+  @del(VENDOR_API)
+  @response(204, {
+    description: 'Vendors DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(Vendor) where?: Where<Vendor>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Vendor ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Vendor ids are required');
+
+    }
+
+    const count = await this.vendorRepository.deleteAll(where);
+    return count;
 
   }
 

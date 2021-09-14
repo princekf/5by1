@@ -1,7 +1,7 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, } from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, } from '@loopback/rest';
 import {Category} from '../models';
-import {CategoryRepository} from '../repositories';
+import {CategoryRepository, UnitRepository} from '../repositories';
 import { CATEGORY_API } from '@shared/server-apis';
 
 export class CategoryController {
@@ -9,6 +9,8 @@ export class CategoryController {
   constructor(
     @repository(CategoryRepository)
     public categoryRepository : CategoryRepository,
+    @repository(UnitRepository)
+    public unitRepository : UnitRepository,
   ) {}
 
   @post(CATEGORY_API)
@@ -151,6 +153,33 @@ export class CategoryController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.categoryRepository.deleteById(id);
+
+  }
+
+
+  @del(CATEGORY_API)
+  @response(204, {
+    description: 'Category DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(Category) where?: Where<Category>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Category ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Category ids are required');
+
+    }
+
+    const count = await this.categoryRepository.deleteAll(where);
+    return count;
 
   }
 

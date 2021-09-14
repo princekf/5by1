@@ -10,6 +10,9 @@ import { Product } from '@shared/entity/inventory/product';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Observable, of } from 'rxjs';
+import { flatMap, map } from 'rxjs/operators';
+import { QueryData } from '@shared/util/query-data';
 
 @Component({
   selector: 'app-create-product',
@@ -24,19 +27,17 @@ export class CreateProductComponent implements OnInit {
 
   loading = false;
 
-  categories: Array<Category> = [];
+  categoryOptions: Observable<Array<Category>>;
 
-  brandsFiltered: string[];
+  brandOptions: Observable<Array<string>>;
 
-  locationsFiltered: string[];
+  locationOptions: Observable<Array<string>>;
 
-  separatorKeysCodes: number[] = [ ENTER, COMMA ];
+  colorOptions: Observable<Array<string>>;
 
   colors: Array<string> = [];
 
-  colorsFiltered: Array<string>;
-
-  categoriesFiltered: Array<Category>;
+  separatorKeysCodes: number[] = [ ENTER, COMMA ];
 
   @ViewChild('colorInput') colorInput: ElementRef<HTMLInputElement>;
 
@@ -49,10 +50,10 @@ export class CreateProductComponent implements OnInit {
     location: new FormControl(''),
     barcode: new FormControl(''),
     description: new FormControl(''),
-    reorderLevel: new FormControl(''),
+    reorderLevel: new FormControl(0),
     colors: new FormControl(''),
-    hasBatch: new FormControl(''),
-    status: new FormControl(''),
+    hasBatch: new FormControl(false),
+    status: new FormControl('Active'),
     category: new FormControl(''),
   });
 
@@ -64,56 +65,33 @@ export class CreateProductComponent implements OnInit {
 
     private initValueChanges = () => {
 
+      this.brandOptions = this.fboForm.controls.brand.valueChanges
+        .pipe(flatMap((nameQ) => this.productService.distinct('brand', { where: {brand: {like: nameQ,
+          options: 'i'}}})))
+        .pipe(map((distinctResp) => distinctResp.data));
 
-      this.fboForm.controls.brand.valueChanges.subscribe((brandQ:string) => {
+      this.locationOptions = this.fboForm.controls.location.valueChanges
+        .pipe(flatMap((nameQ) => this.productService.distinct('location', { where: {location: {like: nameQ,
+          options: 'i'}}})))
+        .pipe(map((distinctResp) => distinctResp.data));
 
-        if (!brandQ || !brandQ.length) {
+      this.colorOptions = this.fboForm.controls.colors.valueChanges
+        .pipe(flatMap((nameQ) => this.productService.distinct('colors', { where: {colors: {like: nameQ,
+          options: 'i'}}})))
+        .pipe(map((distinctResp) => distinctResp.data));
 
-          this.brandsFiltered?.splice(0, this.brandsFiltered.length);
-          return;
+      this.categoryOptions = this.fboForm.controls.category.valueChanges
+        .pipe(flatMap((nameQ) => {
 
-        }
+          if (!nameQ || typeof nameQ !== 'string') {
 
-        this.productService.searchBrands(brandQ).subscribe((brands) => (this.brandsFiltered = brands));
+            return of([]);
 
-      });
-      this.fboForm.controls.location.valueChanges.subscribe((locationQ:string) => {
+          }
+          return this.categoryService.search({ where: {name: {like: nameQ,
+            options: 'i'}} });
 
-        if (!locationQ || !locationQ.length) {
-
-          this.brandsFiltered?.splice(0, this.brandsFiltered.length);
-          return;
-
-        }
-
-        this.productService.searchLocations(locationQ).subscribe((locations) => (this.locationsFiltered = locations));
-
-      });
-      this.fboForm.controls.colors.valueChanges.subscribe((colorQ:string) => {
-
-        if (!colorQ || !colorQ.length) {
-
-          this.colorsFiltered?.splice(0, this.colorsFiltered.length);
-          return;
-
-        }
-
-        this.productService.searchColors(colorQ).subscribe((colors) => (this.colorsFiltered = colors));
-
-      });
-      this.fboForm.controls.category.valueChanges.subscribe((categoryQ:string) => {
-
-        if (!categoryQ || !categoryQ.length) {
-
-          this.colorsFiltered?.splice(0, this.colorsFiltered.length);
-          return;
-
-        }
-
-        this.productService.searchCategories(categoryQ)
-          .subscribe((categories) => (this.categoriesFiltered = categories));
-
-      });
+        }));
 
     }
 
@@ -128,44 +106,43 @@ export class CreateProductComponent implements OnInit {
 
       }
       this.loading = true;
-      this.categoryService.listAll().subscribe((categories) => {
+      if (tId) {
 
-        this.categories = categories;
-        if (tId) {
+        const queryParam:QueryData = {
+          include: [
+            {relation: 'category'}
+          ]
+        };
+        this.productService.get(tId, queryParam).subscribe((productC) => {
 
-          this.productService.get(tId).subscribe((unitC) => {
+          if (!productC) {
 
-            if (!unitC) {
+            return;
 
-              return;
-
-            }
-            this.colors = unitC.colors;
-            this.fboForm.setValue({id: unitC.id,
-              name: unitC.name,
-              code: unitC.code ?? '',
-              brand: unitC.brand ?? '',
-              location: unitC.location ?? '',
-              barcode: unitC.barcode ?? '',
-              description: unitC.description ?? '',
-              reorderLevel: unitC.reorderLevel ?? 0,
-              hasBatch: unitC.hasBatch ?? false,
-              status: unitC.status ?? 'Active',
-              category: unitC.category ?? '',
-              colors: unitC.colors ?? ''});
-
-            this.loading = false;
-
-          });
-
-        } else {
+          }
+          this.colors = productC.colors;
+          this.fboForm.setValue({id: productC.id,
+            name: productC.name,
+            code: productC.code ?? '',
+            brand: productC.brand ?? '',
+            location: productC.location ?? '',
+            barcode: productC.barcode ?? '',
+            description: productC.description ?? '',
+            reorderLevel: productC.reorderLevel ?? 0,
+            hasBatch: productC.hasBatch ?? false,
+            status: productC.status ?? 'Active',
+            category: productC.category ?? '',
+            colors: productC.colors ?? ''});
 
           this.loading = false;
 
-        }
+        });
 
-      });
+      } else {
 
+        this.loading = false;
+
+      }
 
     }
 
@@ -179,16 +156,17 @@ export class CreateProductComponent implements OnInit {
 
       }
       this.loading = true;
-      const unitP = <Product> this.fboForm.value;
-      (unitP.id ? this.productService.update(unitP) : this.productService.save(unitP)).subscribe((unitC) => {
+      const productP = <Product> this.fboForm.value;
+      productP.colors = this.colors;
+      this.productService.upsert(productP).subscribe(() => {
 
-        this.toastr.success(`Product ${unitC.name} is saved successfully`, 'Product saved');
+        this.toastr.success(`Product ${productP.name} is saved successfully`, 'Product saved');
         this.goToPreviousPage(this.route, this.router);
 
       }, (error) => {
 
         this.loading = false;
-        this.toastr.error(`Error in saving product ${unitP.name}`, 'Product not saved');
+        this.toastr.error(`Error in saving product ${productP.name}`, 'Product not saved');
         console.error(error);
 
       });

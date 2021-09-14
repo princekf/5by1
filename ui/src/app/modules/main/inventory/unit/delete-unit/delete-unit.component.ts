@@ -6,6 +6,7 @@ import { MainService } from '@fboservices/main.service';
 import { Unit } from '@shared/entity/inventory/unit';
 import { ToastrService } from 'ngx-toastr';
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
+import { QueryData } from '@shared/util/query-data';
 
 @Component({
   selector: 'app-delete-unit',
@@ -45,7 +46,14 @@ export class DeleteUnitComponent implements OnInit {
 
     const tIds = this.route.snapshot.queryParamMap.get('ids');
     const tIdArray = tIds.split(',');
-    this.unitService.listByIds(tIdArray).subscribe((units) => {
+    const queryData:QueryData = {
+      where: {
+        id: {
+          inq: tIdArray
+        }
+      }
+    };
+    this.unitService.search(queryData).subscribe((units) => {
 
       this.dataSource.data = units;
       this.loading = false;
@@ -73,10 +81,14 @@ export class DeleteUnitComponent implements OnInit {
     const units = this.dataSource.data;
     const tIds = [];
     units.forEach((taxP) => tIds.push(taxP.id));
-    this.unitService.deleteByIds(tIds).subscribe((unitsP) => {
+
+    const where = {id: {
+      inq: tIds
+    }};
+    this.unitService['delete'](where).subscribe((count) => {
 
       this.loading = false;
-      this.toastr.success('Units are deleted successfully', 'Unit deleted');
+      this.toastr.success(`${count.count} units are deleted successfully`, 'Unit deleted');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {

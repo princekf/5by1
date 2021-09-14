@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UnitService } from '@fboservices/inventory/unit.service';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
+import { QueryData } from '@shared/util/query-data';
 @Component({
   selector: 'app-create-category',
   templateUrl: './create-category.component.html',
@@ -20,25 +21,23 @@ export class CreateCategoryComponent implements OnInit {
 
   formHeader = 'Create Categories';
 
-  private name: string[] = [];
+  unitsFiltered: Array<Unit>;
 
-  categories: Array<Category> = [];
-
-  units: Array<Unit> = [];
+  categoriesFiltered: Array<Category>;
 
   form: FormGroup = new FormGroup({
 
     id: new FormControl(null),
 
-    parent: new FormControl('', [ Validators.required ]),
+    parent: new FormControl(''),
 
     name: new FormControl('', [ Validators.required ]),
 
     unit: new FormControl('', [ Validators.required ]),
 
-    hsnNumber: new FormControl('', [ Validators.required ]),
+    hsnNumber: new FormControl(''),
 
-    description: new FormControl('', [ Validators.required ]),
+    description: new FormControl(''),
 
   });
 
@@ -49,27 +48,53 @@ export class CreateCategoryComponent implements OnInit {
     private readonly unitService: UnitService,
     private readonly toastr: ToastrService) { }
 
+    private initValueChanges = () => {
 
-  ngOnInit(): void {
+      this.form.controls.unit.valueChanges.subscribe((unitQ:unknown) => {
 
+        if (typeof unitQ !== 'string') {
 
-    const tId = this.route.snapshot.queryParamMap.get('id');
+          return;
 
-    this.unitService.listAll().subscribe((units) => {
+        }
+        this.unitService.search({ where: {name: {like: unitQ,
+          options: 'i'}} })
+          .subscribe((units) => (this.unitsFiltered = units));
 
-      this.units = units;
+      });
 
-    });
-    this.categoryService.listAll().subscribe((categories) => {
+      this.form.controls.parent.valueChanges.subscribe((categoryQ:unknown) => {
 
-      this.categories = categories;
-      this.loading = false;
+        if (typeof categoryQ !== 'string') {
+
+          return;
+
+        }
+        this.categoryService.search({ where: {name: {like: categoryQ,
+          options: 'i'}} })
+          .subscribe((categories) => (this.categoriesFiltered = categories));
+
+      });
+
+    };
+
+    ngOnInit(): void {
+
+      this.initValueChanges();
+
+      const tId = this.route.snapshot.queryParamMap.get('id');
+
       if (tId) {
 
 
         this.formHeader = 'Update Categories';
         this.loading = true;
-        this.categoryService.get(tId).subscribe((categoryC) => {
+        const queryParam:QueryData = {
+          include: [
+            {relation: 'parent'}, {relation: 'unit'}
+          ]
+        };
+        this.categoryService.get(tId, queryParam).subscribe((categoryC) => {
 
           this.form.setValue({
             id: categoryC.id ?? '',
@@ -90,38 +115,35 @@ export class CreateCategoryComponent implements OnInit {
 
       }
 
-    });
-
-
-  }
-
-
-  upsertCategory(): void {
-
-
-    if (!this.form.valid) {
-
-      return;
 
     }
-    this.loading = true;
-    const categoryP = <Category> this.form.value;
+
+    extractNameOfObject = (obj: {name: string}): string => obj.name;
+
+    upsertCategory(): void {
 
 
-    // eslint-disable-next-line max-len
-    (categoryP.id ? this.categoryService.update(categoryP) : this.categoryService.save(categoryP)).subscribe((categoryC) => {
+      if (!this.form.valid) {
 
-      this.toastr.success(`Category ${categoryC.name} is saved successfully`, 'Category saved');
-      this.goToPreviousPage(this.route, this.router);
+        return;
 
-    }, (error) => {
+      }
+      this.loading = true;
+      const categoryP = <Category> this.form.value;
 
-      this.loading = false;
-      this.toastr.error(`Error in saving Category ${categoryP.name}`, 'Category not saved');
-      console.error(error);
+      this.categoryService.upsert(categoryP).subscribe(() => {
 
-    });
+        this.toastr.success(`Category ${categoryP.name} is saved successfully`, 'Category saved');
+        this.goToPreviousPage(this.route, this.router);
 
-  }
+      }, (error) => {
+
+        this.loading = false;
+        this.toastr.error(`Error in saving Category ${categoryP.name}`, 'Category not saved');
+        console.error(error);
+
+      });
+
+    }
 
 }

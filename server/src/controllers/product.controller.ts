@@ -1,8 +1,10 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, } from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, } from '@loopback/rest';
 import {Product} from '../models';
 import {ProductRepository} from '../repositories';
 import { PRODUCT_API } from '@shared/server-apis';
+import { ArrayReponse } from '../models/util/array-resp.model';
+import { ArrayReponse as ArrayReponseInft } from '@shared/util/array-resp';
 
 export class ProductController {
 
@@ -32,6 +34,21 @@ export class ProductController {
 
     const productR = await this.productRepository.create(product);
     return productR;
+
+  }
+
+  @get(`${PRODUCT_API}/distinct/{column}`)
+  @response(200, {
+    description: 'Tax model group names',
+    content: {'application/json': {schema: ArrayReponse}},
+  })
+  async distinct(
+    @param.path.string('column') column: string,
+    @param.filter(Product) filter?: Filter<Product>,
+  ): Promise<ArrayReponseInft> {
+
+    const resp = await this.productRepository.distinct(column, filter);
+    return resp;
 
   }
 
@@ -151,6 +168,32 @@ export class ProductController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.productRepository.deleteById(id);
+
+  }
+
+  @del(PRODUCT_API)
+  @response(204, {
+    description: 'Products DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(Product) where?: Where<Product>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Product ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Product ids are required');
+
+    }
+
+    const count = await this.productRepository.deleteAll(where);
+    return count;
 
   }
 

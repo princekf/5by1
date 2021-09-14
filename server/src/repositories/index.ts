@@ -1,3 +1,4 @@
+export * from './fbo-base.repository';
 export * from './user-credentials.repository';
 export * from './user.repository';
 export * from './unit.repository';

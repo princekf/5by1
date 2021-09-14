@@ -5,6 +5,7 @@ import { UnitService } from '@fboservices/inventory/unit.service';
 import { ToastrService } from 'ngx-toastr';
 import { Unit } from '@shared/entity/inventory/unit';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
+import { QueryData } from '@shared/util/query-data';
 @Component({
   selector: 'app-create-unit',
   templateUrl: './create-unit.component.html',
@@ -67,7 +68,12 @@ export class CreateUnitComponent implements OnInit {
       if (tId) {
 
         this.formHeader = 'Update Units';
-        this.unitService.get(tId).subscribe((unitC) => {
+        const queryParam:QueryData = {
+          include: [
+            {relation: 'parent'}
+          ]
+        };
+        this.unitService.get(tId, queryParam).subscribe((unitC) => {
 
           this.fboForm.setValue({id: unitC.id,
             name: unitC.name,

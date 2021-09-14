@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { VendorService } from '@fboservices/inventory/vendor.service';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { flatMap, map } from 'rxjs/operators';
 import { Vendor } from '@shared/entity/inventory/vendor';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 
@@ -21,8 +21,6 @@ export class CreateVendorComponent {
 
   loading = false;
 
-  states: Array<string> = [];
-
   statesOptions: Observable<string[]>;
 
   fboForm: FormGroup = new FormGroup({
@@ -35,13 +33,6 @@ export class CreateVendorComponent {
     gstNo: new FormControl(''),
   });
 
-  private _filter(value: string): string[] {
-
-    const filterValue = value.toLowerCase();
-    return this.states.filter((option) => option.toLowerCase().includes(filterValue));
-
-  }
-
   constructor(public readonly router: Router,
     public readonly route: ActivatedRoute,
     private readonly vendorService:VendorService,
@@ -49,21 +40,17 @@ export class CreateVendorComponent {
 
   ngOnInit(): void {
 
-    this.statesOptions = this.fboForm.controls.state.valueChanges.pipe(
-      startWith(''), map((value) => this._filter(value))
-    );
-    this.vendorService.getStates().subscribe((states) => {
-
-      this.states = states;
-
-    });
+    this.statesOptions = this.fboForm.controls.state.valueChanges
+      .pipe(flatMap((nameQ) => this.vendorService.distinct('state', { where: {state: {like: nameQ,
+        options: 'i'}}})))
+      .pipe(map((distinctResp) => distinctResp.data));
 
     const tId = this.route.snapshot.queryParamMap.get('id');
     if (tId) {
 
       this.formHeader = 'Update Vendors';
       this.loading = true;
-      this.vendorService.get(tId).subscribe((itemC) => {
+      this.vendorService.get(tId, {}).subscribe((itemC) => {
 
         this.fboForm.setValue({id: itemC.id,
           name: itemC.name,
@@ -90,9 +77,9 @@ export class CreateVendorComponent {
     }
     this.loading = true;
     const itemP = <Vendor> this.fboForm.value;
-    (itemP.id ? this.vendorService.update(itemP) : this.vendorService.save(itemP)).subscribe((itemC) => {
+    this.vendorService.upsert(itemP).subscribe(() => {
 
-      this.toastr.success(`Vendor ${itemC.name} is saved successfully`, 'Vendor saved');
+      this.toastr.success(`Vendor ${itemP.name} is saved successfully`, 'Vendor saved');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
