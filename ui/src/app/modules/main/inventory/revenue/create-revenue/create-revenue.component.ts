@@ -69,14 +69,14 @@ export class CreateRevenueComponent implements OnInit {
 
     const tId = this.route.snapshot.queryParamMap.get('id');
 
-    this.bankService.listAll().subscribe((banks) => {
+    this.bankService.search({}).subscribe((banks) => {
 
       this.banks = banks;
 
 
     });
 
-    this.customerService.listAll().subscribe((customers) => {
+    this.customerService.search({}).subscribe((customers) => {
 
       this.customers = customers;
 

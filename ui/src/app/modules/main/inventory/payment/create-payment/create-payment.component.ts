@@ -62,12 +62,12 @@ export class CreatePaymentComponent {
 
     const tId = this.route.snapshot.queryParamMap.get('id');
 
-    this.bankService.listAll().subscribe((banks) => {
+    this.bankService.search({}).subscribe((banks) => {
 
       this.banks = banks;
 
     });
-    this.vendorService.listAll().subscribe((vendors) => {
+    this.vendorService.search({}).subscribe((vendors) => {
 
       this.vendors = vendors;
 

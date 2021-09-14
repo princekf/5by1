@@ -8,7 +8,9 @@
     <mat-form-field>
       <mat-label>Type</mat-label>
       <mat-select placeholder="Enter Parent Name" formControlName="type">
-        <mat-option [value]="bank.type" *ngFor="let bank of banks">{{bank.type}}</mat-option>
+        <mat-option value="Bank">Bank</mat-option>
+        <mat-option value="Cash">Cash</mat-option>
+        <mat-option value="Other">Other</mat-option>
       </mat-select>
     </mat-form-field>
   </p>

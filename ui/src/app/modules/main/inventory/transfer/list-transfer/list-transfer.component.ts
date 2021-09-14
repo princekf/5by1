@@ -58,6 +58,10 @@ export class ListTransferComponent {
   private loadData = () => {
 
     this.loading = true;
+    this.queryParams.include = [
+      {relation: 'fromAccount'},
+      {relation: 'toAccount'}
+    ];
     this.transferService.list(this.queryParams).subscribe((transfers) => {
 
       this.transfers = transfers;

@@ -10,3 +10,5 @@ export * from './category.controller';
 export * from './product.controller';
 export * from './vendor.controller';
 export * from './category-category.controller';
+export * from './transfer-bank.controller';
+export * from './transfer.controller';

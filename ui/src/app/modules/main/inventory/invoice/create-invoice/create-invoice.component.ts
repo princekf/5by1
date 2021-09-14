@@ -142,18 +142,18 @@ export class CreateInvoiceComponent implements OnInit {
         this.formHeader = 'Update Invoices';
 
       }
-      this.unitService.listAll().subscribe((units) => {
+      this.unitService.search({}).subscribe((units) => {
 
         this.units = units;
 
       });
 
-      this.productService.listAll().subscribe((products) => {
+      this.productService.search({}).subscribe((products) => {
 
         this.products = products;
 
       });
-      this.customerService.listAll().subscribe((customers) => {
+      this.customerService.search({}).subscribe((customers) => {
 
         this.customers = customers;
         if (tId) {

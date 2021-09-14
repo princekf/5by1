@@ -62,7 +62,7 @@ export class CreateUnitComponent implements OnInit {
 
     const tId = this.route.snapshot.queryParamMap.get('id');
     this.loading = true;
-    this.unitService.listAll().subscribe((units) => {
+    this.unitService.search({}).subscribe((units) => {
 
       this.units = units;
       if (tId) {
@@ -107,7 +107,7 @@ export class CreateUnitComponent implements OnInit {
     }
     this.loading = true;
     const unitP = <Unit> this.fboForm.value;
-    (unitP.id ? this.unitService.update(unitP) : this.unitService.save(unitP)).subscribe(() => {
+    this.unitService.upsert(unitP).subscribe(() => {
 
       this.toastr.success(`Unit ${unitP.name} is saved successfully`, 'Unit saved');
       this.goToPreviousPage(this.route, this.router);
