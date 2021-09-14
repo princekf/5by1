@@ -1,13 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Vendor } from '@shared/entity/inventory/vendor';
-import { delay } from 'rxjs/internal/operators';
-import { kamala, kandk } from '../mock-data/vendor.data';
 import { BaseHTTPService } from '@fboservices/base-http.service';
 import { VENDOR_API_URI } from '@shared/server-apis';
-
-
-const FAKE_TIMEOUT = 1000;
 
 @Injectable({
   providedIn: 'root'
@@ -15,15 +10,6 @@ const FAKE_TIMEOUT = 1000;
 export class VendorService extends BaseHTTPService<Vendor> {
 
     public API_URI = VENDOR_API_URI;
-
-    private items:Array<Vendor> = [ kamala, kandk ];
-
-
-    public listAll():Observable<Array<Vendor>> {
-
-      return of(this.items).pipe(delay(FAKE_TIMEOUT));
-
-    }
 
     public upsert(vendor:Vendor):Observable<void> {
 

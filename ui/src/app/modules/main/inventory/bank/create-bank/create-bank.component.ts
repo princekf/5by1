@@ -19,20 +19,17 @@ export class CreateBankComponent implements OnInit {
 
   formHeader = 'Create Banks';
 
-  banks: Array<Bank> = [];
-
-
   form: FormGroup = new FormGroup({
 
     id: new FormControl(null),
 
-    type: new FormControl('', [ Validators.required ]),
+    type: new FormControl('Bank', [ Validators.required ]),
 
     name: new FormControl('', [ Validators.required ]),
 
-    openingBalance: new FormControl('', [ Validators.required ]),
+    openingBalance: new FormControl(0, [ Validators.required ]),
 
-    description: new FormControl('', [ Validators.required ]),
+    description: new FormControl(''),
 
   });
 
@@ -45,37 +42,28 @@ export class CreateBankComponent implements OnInit {
 
     const tId = this.route.snapshot.queryParamMap.get('id');
 
-    this.bankService.listAll().subscribe((banks) => {
+    if (tId) {
 
-      this.banks = banks;
+      this.formHeader = 'Update Banks';
+      this.bankService.get(tId, {}).subscribe((bankC) => {
 
-      this.loading = false;
-      if (tId) {
-
-
-        this.formHeader = 'Update Banks';
-        this.loading = true;
-        this.bankService.get(tId, {}).subscribe((bankC) => {
-
-          this.form.setValue({
-            id: bankC.id ?? '',
-            type: bankC.type ?? '',
-            name: bankC.name ?? '',
-            openingBalance: bankC.openingBalance ?? '',
-            description: bankC.description ?? ''
-          });
-
-          this.loading = false;
-
+        this.form.setValue({
+          id: bankC.id ?? '',
+          type: bankC.type ?? '',
+          name: bankC.name ?? '',
+          openingBalance: bankC.openingBalance ?? '',
+          description: bankC.description ?? ''
         });
-
-      } else {
 
         this.loading = false;
 
-      }
+      });
 
-    });
+    } else {
+
+      this.loading = false;
+
+    }
 
   }
 

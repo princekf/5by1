@@ -78,7 +78,7 @@ export class ListBillComponent {
       this.loading = false;
 
     });
-    this.productService.listAll().subscribe((products) => {
+    this.productService.search({}).subscribe((products) => {
 
       this.products = products;
 

@@ -157,17 +157,17 @@ export class CreateBillComponent implements OnInit {
       this.formHeader = 'Update Bills';
 
     }
-    this.unitService.listAll().subscribe((units) => {
+    this.unitService.search({}).subscribe((units) => {
 
       this.units = units;
 
     });
-    this.productService.listAll().subscribe((products) => {
+    this.productService.search({}).subscribe((products) => {
 
       this.products = products;
 
     });
-    this.vendorService.listAll().subscribe((vendors) => {
+    this.vendorService.search({}).subscribe((vendors) => {
 
       this.vendors = vendors;
       if (tId) {

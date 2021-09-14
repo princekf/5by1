@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
+import { QueryData } from '@shared/util/query-data';
 @Component({
   selector: 'app-create-transfer',
   templateUrl: './create-transfer.component.html',
@@ -26,8 +27,6 @@ export class CreateTransferComponent implements OnInit {
 
   banks: Array<Bank> = [];
 
-  transfers: Array<Transfer> = [];
-
   form: FormGroup = new FormGroup({
 
     id: new FormControl(null),
@@ -36,11 +35,11 @@ export class CreateTransferComponent implements OnInit {
 
     toAccount: new FormControl('', [ Validators.required ]),
 
-    transferDate: new FormControl('', [ Validators.required ]),
+    transferDate: new FormControl(new Date(), [ Validators.required ]),
 
-    amount: new FormControl('', [ Validators.required ]),
+    amount: new FormControl(0, [ Validators.required ]),
 
-    description: new FormControl('', [ Validators.required ]),
+    description: new FormControl(''),
 
   });
 
@@ -57,35 +56,38 @@ export class CreateTransferComponent implements OnInit {
 
 
     const tId = this.route.snapshot.queryParamMap.get('id');
-
-    this.bankService.listAll().subscribe((banks) => {
+    this.loading = true;
+    this.bankService.search({}).subscribe((banks) => {
 
       this.banks = banks;
-
-    });
-    this.transferService.listAll().subscribe((transfers) => {
-
-      this.transfers = transfers;
-      this.loading = false;
       if (tId) {
 
 
         this.formHeader = 'Update Transfer';
-        this.loading = true;
-        this.transferService.get(tId).subscribe((transferC) => {
+
+        const queryParam:QueryData = {
+          include: [
+            {relation: 'fromAccount'},
+            {relation: 'toAccount'}
+          ]
+        };
+        this.transferService.get(tId, queryParam).subscribe((transferC) => {
 
           this.form.setValue({
             id: transferC.id ?? '',
-            fromAccount: transferC.fromAccount ?? '',
-            toAccount: transferC.toAccount ?? '',
+            fromAccount: transferC.fromAccount ? this.banks.find((bnk) => bnk.id === transferC.fromAccount.id) : '',
+            toAccount: transferC.toAccount ? this.banks.find((bnk) => bnk.id === transferC.toAccount.id) : '',
             transferDate: transferC.transferDate ?? '',
             amount: transferC.amount ?? '',
             description: transferC.description ?? ''
           });
-
           this.loading = false;
 
         });
+
+      } else {
+
+        this.loading = false;
 
       }
 
@@ -105,10 +107,9 @@ export class CreateTransferComponent implements OnInit {
     const transferP = <Transfer> this.form.value;
 
 
-    // eslint-disable-next-line max-len
-    (transferP.id ? this.transferService.update(transferP) : this.transferService.save(transferP)).subscribe((transferC) => {
+    this.transferService.upsert(transferP).subscribe(() => {
 
-      this.toastr.success(`transfer ${transferC.description} is saved successfully`, 'transfer saved');
+      this.toastr.success(`transfer ${transferP.description} is saved successfully`, 'transfer saved');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
