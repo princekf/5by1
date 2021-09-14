@@ -26,6 +26,9 @@ export class CreateInvoiceComponent implements OnInit {
 
   loading = true;
 
+
+  fboFForm: FormGroup;
+
   customers: Array<Customer> = [];
 
   units: Array<Unit> = [];
@@ -39,6 +42,8 @@ export class CreateInvoiceComponent implements OnInit {
   displayedColumns: string[] = [ 'product', 'quantity', 'unitPrice', 'unit', 'discount', 'totalAmount', 'totalTax', 'batchNumber', 'expiryDate', 'mfgDate', 'mrp', 'rrp' ];
 
  dataSource = new MatTableDataSource<AbstractControl>();
+
+ DataSource = new MatTableDataSource<AbstractControl>();
 
  productsFiltered: Array<Product>;
 
@@ -132,9 +137,17 @@ export class CreateInvoiceComponent implements OnInit {
           this.createSaleItemForm(),
         ])
       });
+      this.fboFForm = this.fBuilder.group({
+        items: this.fBuilder.array([
+          this.createSaleItemForm(),
+        ])
+      });
 
       const formArray = this.fboForm.get('items') as FormArray;
       this.dataSource = new MatTableDataSource(formArray.controls);
+
+      const formAArray = this.fboFForm.get('items') as FormArray;
+      this.DataSource = new MatTableDataSource(formAArray.controls);
 
       const tId = this.route.snapshot.queryParamMap.get('id');
       if (tId) {
@@ -204,7 +217,7 @@ export class CreateInvoiceComponent implements OnInit {
 
       });
 
-      this.dynamicRows.push(this.dynamicRows.length);
+ 
 
     }
 

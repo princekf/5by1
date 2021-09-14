@@ -38,6 +38,8 @@ export class CreateBillComponent implements OnInit {
   products: Array<Product> = [];
 
 
+  fboFForm: FormGroup;
+
   fboForm: FormGroup;
 
   dynamicRows: number[] = [];
@@ -46,6 +48,8 @@ export class CreateBillComponent implements OnInit {
 
 
   dataSource = new MatTableDataSource<AbstractControl>();
+
+  DataSource = new MatTableDataSource<AbstractControl>();
 
 
   myControl = new FormControl();
@@ -147,9 +151,16 @@ export class CreateBillComponent implements OnInit {
       ])
     });
 
+    this.fboFForm = this.fBuilder.group({
+      items: this.fBuilder.array([
+        this.createSaleItemForm(),
+      ])
+    });
+
     const formArray = this.fboForm.get('items') as FormArray;
     this.dataSource = new MatTableDataSource(formArray.controls);
-
+    const formAArray = this.fboFForm.get('items') as FormArray;
+    this.DataSource = new MatTableDataSource(formAArray.controls);
 
     const tId = this.route.snapshot.queryParamMap.get('id');
     if (tId) {
@@ -161,10 +172,12 @@ export class CreateBillComponent implements OnInit {
 
       this.units = units;
 
+
     });
     this.productService.search({}).subscribe((products) => {
 
       this.products = products;
+
 
     });
     this.vendorService.search({}).subscribe((vendors) => {
@@ -206,8 +219,6 @@ export class CreateBillComponent implements OnInit {
     });
 
 
-    this.dynamicRows.push(this.dynamicRows.length);
-
   }
 
   upsertBill(): void {
@@ -248,11 +259,9 @@ export class CreateBillComponent implements OnInit {
   }
 
 
-  addNew(event) {
+  addNew():void {
 
-    const formArray = this.fboForm.get('items') as FormArray;
-    formArray.controls.values = null;
-    this.dataSource = new MatTableDataSource(formArray.controls);
+
     this.dynamicRows.push(this.dynamicRows.length);
 
 
