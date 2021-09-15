@@ -24,6 +24,7 @@ export class CreateTransferComponent implements OnInit {
 
   formHeader = 'Create Transfer';
 
+  bankFiltered: Array<Bank>;
 
   banks: Array<Bank> = [];
 
@@ -51,6 +52,37 @@ export class CreateTransferComponent implements OnInit {
     private readonly bankService: BankService,
     private readonly toastr: ToastrService
   ) { }
+
+  private initValueChanges = () => {
+
+    this.form.controls.fromAccount.valueChanges.subscribe((categoryQ:unknown) => {
+
+      if (typeof categoryQ !== 'string') {
+
+        return;
+
+      }
+      this.bankService.search({ where: {name: {like: categoryQ,
+        options: 'i'}} })
+        .subscribe((banks) => (this.bankFiltered = banks));
+
+    });
+
+    this.form.controls.toAccount.valueChanges.subscribe((categoryQ:unknown) => {
+
+      if (typeof categoryQ !== 'string') {
+
+        return;
+
+      }
+      this.bankService.search({ where: {name: {like: categoryQ,
+        options: 'i'}} })
+        .subscribe((banks) => (this.bankFiltered = banks));
+
+    });
+
+
+  };
 
   ngOnInit(): void {
 
@@ -94,6 +126,14 @@ export class CreateTransferComponent implements OnInit {
     });
 
   }
+
+  ngAfterViewInit():void {
+
+    this.initValueChanges();
+
+  }
+
+  extractNameOfObject = (obj: {name: string}): string => obj.name;
 
   upsertTransfer(): void {
 

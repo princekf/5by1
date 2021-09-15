@@ -29,7 +29,7 @@ export class CreateCategoryComponent implements OnInit {
 
     id: new FormControl(null),
 
-    parent: new FormControl(''),
+    parent: new FormControl('', [ Validators.required ]),
 
     name: new FormControl('', [ Validators.required ]),
 
@@ -77,6 +77,7 @@ export class CreateCategoryComponent implements OnInit {
       });
 
     };
+
 
     ngOnInit(): void {
 

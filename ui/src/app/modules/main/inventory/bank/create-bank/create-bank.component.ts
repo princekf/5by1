@@ -81,13 +81,13 @@ export class CreateBankComponent implements OnInit {
 
     this.bankService.upsert(bankP).subscribe(() => {
 
-      this.toastr.success(`Category ${bankP.name} is saved successfully`, 'Category saved');
+      this.toastr.success(`Bank ${bankP.name} is saved successfully`, 'Bank saved');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error(`Error in saving Category ${bankP.name}`, 'Category not saved');
+      this.toastr.error(`Error in saving Bank ${bankP.name}`, 'Bank not saved');
       console.error(error);
 
     });

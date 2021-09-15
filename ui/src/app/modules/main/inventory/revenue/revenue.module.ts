@@ -16,6 +16,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 @NgModule({
   declarations: [ ListRevenueComponent, CreateRevenueComponent, DeleteRevenueComponent ],
   imports: [
@@ -23,7 +24,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule,
     FormsModule, MatInputModule, MatButtonModule, MatTableModule, MatSortModule,
     NgxSkeletonLoaderModule, ToolBarModule, MatDatepickerModule, MatNativeDateModule,
-    DataTableModule,
+    DataTableModule, MatAutocompleteModule
   ]
 })
 export class RevenueModule { }

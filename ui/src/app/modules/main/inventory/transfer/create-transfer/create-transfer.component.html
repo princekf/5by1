@@ -7,26 +7,37 @@
   <p>
     <mat-form-field>
       <mat-label>From Account</mat-label>
-      <mat-select placeholder="Enter From Account" formControlName="fromAccount">
-        <mat-option *ngFor="let bank of banks" [value]="bank">{{bank.name}}</mat-option>
-      </mat-select>
+
+      <input type="text" matInput placeholder="Enter bank Name  Ex. KVB.." formControlName="fromAccount"
+        [matAutocomplete]="autoCategoryfrombank">
+      <mat-autocomplete autoActiveFirstOption #autoCategoryfrombank="matAutocomplete"
+        [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let bankS of bankFiltered" [value]="bankS">
+          {{bankS.name}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </p>
 
   <p>
     <mat-form-field>
       <mat-label>To Account</mat-label>
-      <mat-select placeholder="Enter To Account" formControlName="toAccount">
-        <mat-option *ngFor="let bank of banks" [value]="bank">{{bank.name}}</mat-option>
-      </mat-select>
+
+      <input type="text" matInput placeholder="Enter bank Name  Ex. KVB.." formControlName="toAccount"
+        [matAutocomplete]="autoCategorybank">
+      <mat-autocomplete autoActiveFirstOption #autoCategorybank="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let bankS of bankFiltered" [value]="bankS">
+          {{bankS.name}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </p>
 
   <p>
-    
-    <mat-form-field >
+
+    <mat-form-field>
       <mat-label>Choose a Transfer date</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="transferDate" >
+      <input matInput [matDatepicker]="picker" formControlName="transferDate">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
       <mat-error *ngIf="form.controls['transferDate'].hasError('required')">Please Enter Transfer Date</mat-error>
@@ -40,7 +51,7 @@
     </mat-form-field>
   </p>
 
-  <p> 
+  <p>
     <mat-form-field>
       <mat-label>Description</mat-label>
       <input formControlName="description" type="text" matInput placeholder="Enter description">

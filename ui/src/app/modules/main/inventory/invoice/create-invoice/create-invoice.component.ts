@@ -47,6 +47,11 @@ export class CreateInvoiceComponent implements OnInit {
 
  productsFiltered: Array<Product>;
 
+
+ customerFiltered: Array<Customer>;
+
+ 
+
  filteredOptions: Observable<Product>;
 
 
@@ -106,6 +111,24 @@ export class CreateInvoiceComponent implements OnInit {
       });
 
     }
+
+    private initValueChanges = () => {
+
+      this.fboForm.controls.customer.valueChanges.subscribe((categoryQ:unknown) => {
+
+        if (typeof categoryQ !== 'string') {
+
+          return;
+
+        }
+        this.customerService.search({ where: {name: {like: categoryQ,
+          options: 'i'}} })
+          .subscribe((customers) => (this.customerFiltered = customers));
+
+      });
+
+
+    };
 
     // eslint-disable-next-line max-lines-per-function
     ngOnInit(): void {
@@ -174,19 +197,6 @@ export class CreateInvoiceComponent implements OnInit {
           this.loading = true;
           this.invoiceService.get(tId).subscribe((itemC) => {
 
-            /*
-             * This.fboForm.setValue({id: itemC.id,
-             *   Customer: itemC.customer ?? ''});
-             * ItemC.items?.forEach((item) => {
-             */
-
-            /*
-             *   Const control = new FormControl('', Validators.required);
-             *   This.items.push(control);
-             */
-
-            // });
-
 
             this.fboForm.setValue({
               id: itemC.id,
@@ -217,7 +227,12 @@ export class CreateInvoiceComponent implements OnInit {
 
       });
 
- 
+
+    }
+
+    ngAfterViewInit():void {
+
+      this.initValueChanges();
 
     }
 
@@ -245,6 +260,8 @@ export class CreateInvoiceComponent implements OnInit {
 
     }
 
+    extractNameOfObject = (obj: {name: string}): string => obj.name;
+
     extractNameOfProduct = (prod: Product): string => prod.name;
 
     handleProductSelect = (prod: Product, pos: number): void => {
@@ -258,6 +275,15 @@ export class CreateInvoiceComponent implements OnInit {
     addNew() :void {
 
       this.dynamicRows.push(this.dynamicRows.length);
+
+    }
+
+    filterProducts(categoryQ: string) :void {
+
+
+      this.productService.search({ where: {name: {like: categoryQ,
+        options: 'i'}} })
+        .subscribe((products) => (this.productsFiltered = products));
 
     }
 

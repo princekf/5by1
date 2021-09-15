@@ -15,10 +15,10 @@ import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 
 export class ListCategoryComponent {
 
-  displayedColumns: string[] = [ 'parent.name', 'name', 'unit.name', 'hsnNumber', 'description' ];
+  displayedColumns: string[] = [ 'parent', 'name', 'unit.name', 'hsnNumber', 'description' ];
 
   columnHeaders = {
-    'parent.name': 'Parent',
+    parent: 'Parent',
     name: 'Name',
     'unit.name': 'Unit',
     hsnNumber: 'hsnNumber',
@@ -47,6 +47,7 @@ export class ListCategoryComponent {
       this.categoryService.list(this.queryParams).subscribe((categories) => {
 
         this.categories = categories;
+
 
         this.loading = false;
 

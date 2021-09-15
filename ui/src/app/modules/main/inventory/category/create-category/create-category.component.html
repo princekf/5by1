@@ -7,14 +7,8 @@
   <p>
     <mat-form-field>
       <mat-label>Parent Name</mat-label>
-      <input type="text" matInput placeholder="Enter Parent Name Ex. Mobile" formControlName="parent"
-                [matAutocomplete]="autoCategory">
-            <mat-autocomplete autoActiveFirstOption #autoCategory="matAutocomplete"
-                [displayWith]="extractNameOfObject">
-                <mat-option *ngFor="let categoryS of categoriesFiltered" [value]="categoryS">
-                    {{categoryS.name}}
-                </mat-option>
-            </mat-autocomplete>
+      <input type="text" matInput placeholder="Enter Parent Name Ex. Mobile,laptop" formControlName="parent">
+      <mat-error *ngIf="form.controls['parent'].hasError('required')">Please Enter Name</mat-error>
     </mat-form-field>
   </p>
 
@@ -30,13 +24,12 @@
     <mat-form-field>
       <mat-label>Unit</mat-label>
       <input type="text" matInput placeholder="Enter Unit Name Ex. Kilogram" formControlName="unit"
-                [matAutocomplete]="autoUnit">
-            <mat-autocomplete autoActiveFirstOption #autoUnit="matAutocomplete"
-                [displayWith]="extractNameOfObject">
-                <mat-option *ngFor="let unitS of unitsFiltered" [value]="unitS">
-                    {{unitS.name}}
-                </mat-option>
-            </mat-autocomplete>
+        [matAutocomplete]="autoUnit">
+      <mat-autocomplete autoActiveFirstOption #autoUnit="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let unitS of unitsFiltered" [value]="unitS">
+          {{unitS.name}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </p>
 
