@@ -6,9 +6,9 @@
 <form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertRevenue()">
   <p>
 
-    <mat-form-field >
+    <mat-form-field>
       <mat-label>Choose a ReceivedDate </mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="receivedDate" >
+      <input matInput [matDatepicker]="picker" formControlName="receivedDate">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
       <mat-error *ngIf="form.controls['receivedDate'].hasError('required')">Please Enter Paid Date</mat-error>
@@ -18,9 +18,13 @@
   <p>
     <mat-form-field>
       <mat-label>Customer Name</mat-label>
-      <mat-select placeholder="Enter Customer name" formControlName="customer">
-        <mat-option *ngFor="let customer of customers" [value]="customer">{{customer.name}}</mat-option>
-      </mat-select>
+      <input type="text" matInput placeholder="Enter vendor Name Name Ex. Xpeditions.." formControlName="customer"
+        [matAutocomplete]="autoCategory">
+      <mat-autocomplete autoActiveFirstOption #autoCategory="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let customerS of customerFiltered" [value]="customerS">
+          {{customerS.name}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </p>
 
@@ -37,9 +41,13 @@
   <p>
     <mat-form-field>
       <mat-label>Bank Number</mat-label>
-      <mat-select placeholder="Enter Bank Name" formControlName="bank">
-        <mat-option *ngFor="let bank of banks" [value]="bank">{{bank.name}}</mat-option>
-      </mat-select>
+      <input type="text" matInput placeholder="Enter vendor Name Name Ex. Xpeditions.." formControlName="bank"
+        [matAutocomplete]="autoCategorybank">
+      <mat-autocomplete autoActiveFirstOption #autoCategorybank="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let bankS of banksFiltered" [value]="bankS">
+          {{bankS.name}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </p>
   <p>

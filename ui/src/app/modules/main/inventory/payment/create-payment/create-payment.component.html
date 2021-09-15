@@ -5,10 +5,10 @@
 </div>
 <form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertPayment()">
   <p>
-  
-    <mat-form-field >
+
+    <mat-form-field>
       <mat-label>Choose a Paid date</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="paidDate" >
+      <input matInput [matDatepicker]="picker" formControlName="paidDate">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
       <mat-error *ngIf="form.controls['paidDate'].hasError('required')">Please Enter Paid Date</mat-error>
@@ -16,10 +16,13 @@
   </p>
   <p>
     <mat-form-field>
-      <mat-label>Vendor</mat-label>
-      <mat-select placeholder="Enter Vendor name" formControlName="vendor">
-        <mat-option *ngFor="let vendor of vendors" [value]=vendor>{{vendor.name}}</mat-option>
-      </mat-select>
+      <input type="text" matInput placeholder="Enter vendor Name  Ex. Xpeditions.." formControlName="vendor"
+        [matAutocomplete]="autoCategory">
+      <mat-autocomplete autoActiveFirstOption #autoCategory="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let vendorS of vendorFiltered" [value]="vendorS">
+          {{vendorS.name}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </p>
   <p>
@@ -34,9 +37,13 @@
     <mat-form-field>
       <mat-label> Bank</mat-label>
 
-      <mat-select placeholder="Enter Bank name" formControlName="bank">
-        <mat-option *ngFor="let bank of banks" [value]=bank>{{bank.name}}</mat-option>
-      </mat-select>
+      <input type="text" matInput placeholder="Enter bank Name  Ex. KVB.." formControlName="bank"
+        [matAutocomplete]="autoCategorybank">
+      <mat-autocomplete autoActiveFirstOption #autoCategorybank="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let bankS of bankFiltered" [value]="bankS">
+          {{bankS.name}}
+        </mat-option>
+      </mat-autocomplete>
 
     </mat-form-field>
   </p>
@@ -44,7 +51,7 @@
   <p>
     <mat-form-field>
       <mat-label>Category</mat-label>
-      <input type="text" placeholder="Enter Category Name" matInput formControlName="category">
+      <input type="text" placeholder="Ex.Purchase,Donation" matInput formControlName="category">
       <mat-error *ngIf="form.controls['category'].hasError('required')"> Category is required</mat-error>
     </mat-form-field>
   </p>

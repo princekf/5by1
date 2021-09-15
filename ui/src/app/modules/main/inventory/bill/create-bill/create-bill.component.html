@@ -8,9 +8,15 @@
 
   <mat-form-field class="fbo-create-form">
     <mat-label>Vendor</mat-label>
-    <mat-select placeholder="Select a customer" formControlName="vendor">
-      <mat-option *ngFor="let vendor of vendors" [value]="vendor">{{vendor.name}}</mat-option>
-    </mat-select>
+
+    <input type="text" matInput placeholder="Enter vendor Name Name Ex. Xpeditions.." formControlName="vendor"
+      [matAutocomplete]="autoCategory">
+    <mat-autocomplete autoActiveFirstOption #autoCategory="matAutocomplete" [displayWith]="extractNameOfObject">
+      <mat-option *ngFor="let vendorS of vendorFiltered" [value]="vendorS">
+        {{vendorS.name}}
+      </mat-option>
+    </mat-autocomplete>
+
     <mat-error *ngIf="fboForm.controls['vendor'].hasError('required')"> Vendor is required</mat-error>
   </mat-form-field>
 
@@ -103,10 +109,14 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Product </th>
       <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
         <mat-form-field class="fbo-create-form-table">
-          <mat-select placeholder="Choose a Product" formControlName="product">
-            <mat-option *ngFor="let product of products" [value]="product">
-              {{product.name}}</mat-option>
-          </mat-select>
+          <input type="text" matInput placeholder="Enter vendor Name Name Ex. Xpeditions.." formControlName="product"
+            [matAutocomplete]="autoCategory" (input)="filterProducts($event.target.value)">
+          <mat-autocomplete autoActiveFirstOption #autoCategory="matAutocomplete" [displayWith]="extractNameOfObject">
+            <mat-option *ngFor="let vendorS of productsFiltered" [value]="vendorS">
+              {{vendorS.name}}
+            </mat-option>
+          </mat-autocomplete>
+
         </mat-form-field>
       </td>
     </ng-container>
@@ -126,7 +136,7 @@
       <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
         <mat-form-field class="fbo-create-form-table">
           <mat-select placeholder="Enter unit Name" formControlName="unit">
-            <mat-option [value]="unit" *ngFor="let unit of units">{{unit}}</mat-option>
+            <mat-option [value]="unit" *ngFor="let unit of units">{{unit.name}}</mat-option>
           </mat-select>
         </mat-form-field>
       </td>
@@ -238,10 +248,13 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Product </th>
       <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
         <mat-form-field class="fbo-create-form-table">
-          <mat-select placeholder="Choose a Product" formControlName="product">
-            <mat-option *ngFor="let product of products" [value]="product">
-              {{product.name}}</mat-option>
-          </mat-select>
+          <input type="text" matInput placeholder="Enter vendor Name Name Ex. Xpeditions.." formControlName="product"
+            [matAutocomplete]="autoCategory" (input)="filterProducts($event.target.value)">
+          <mat-autocomplete autoActiveFirstOption #autoCategory="matAutocomplete" [displayWith]="extractNameOfObject">
+            <mat-option *ngFor="let vendorS of productsFiltered" [value]="vendorS">
+              {{vendorS.name}}
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
       </td>
     </ng-container>
@@ -357,7 +370,6 @@
 
 
 
-    <!-- <tr mat-header-row *matHeaderRowDef="displayedColumns" class="displayedColumns" class="fiveby1-table-header"></tr> -->
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="fiveby1-element-row"></tr>
 
 

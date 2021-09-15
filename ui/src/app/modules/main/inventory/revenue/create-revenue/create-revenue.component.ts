@@ -32,7 +32,13 @@ export class CreateRevenueComponent implements OnInit {
 
   banks: Array<Bank> = [];
 
+  banksFiltered: Array<Bank> = [];
+
   customers: Array<Customer> =[];
+
+  customerFiltered: Array<Customer> =[];
+
+  invoiceFiltered: Array<Invoice> =[];
 
   invoices: Array<Invoice> =[];
 
@@ -64,6 +70,38 @@ export class CreateRevenueComponent implements OnInit {
     private readonly customerService: CustomerService,
     private readonly invoiceService: InvoiceService,
   ) { }
+
+  private initValueChanges = () => {
+
+    this.form.controls.customer.valueChanges.subscribe((categoryQ:unknown) => {
+
+      if (typeof categoryQ !== 'string') {
+
+        return;
+
+      }
+      this.customerService.search({ where: {name: {like: categoryQ,
+        options: 'i'}} })
+        .subscribe((customers) => (this.customerFiltered = customers));
+
+    });
+
+    this.form.controls.bank.valueChanges.subscribe((categoryQ:unknown) => {
+
+      if (typeof categoryQ !== 'string') {
+
+        return;
+
+      }
+      this.bankService.search({ where: {name: {like: categoryQ,
+        options: 'i'}} })
+        .subscribe((banks) => (this.banksFiltered = banks));
+
+    });
+
+
+
+  };
 
   ngOnInit(): void {
 
@@ -128,6 +166,13 @@ export class CreateRevenueComponent implements OnInit {
 
   }
 
+  ngAfterViewInit():void {
+
+    this.initValueChanges();
+
+  }
+
+  extractNameOfObject = (obj: {name: string}): string => obj.name;
 
   upsertRevenue(): void {
 

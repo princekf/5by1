@@ -33,9 +33,16 @@ export class CreatePaymentComponent {
 
   banks: Array<Bank> = [];
 
+  bankFiltered: Array<Bank>;
+
   bills:Array<Bill> = [];
 
+  billFiltered: Array<Bill>;
+
   vendors: Array<Vendor> = [];
+
+
+  vendorFiltered: Array<Vendor>;
 
   form: FormGroup = new FormGroup({
     id: new FormControl(null),
@@ -57,6 +64,40 @@ export class CreatePaymentComponent {
     private readonly billService:BillService,
     private readonly toastr: ToastrService
   ) { }
+
+  private initValueChanges = () => {
+
+    this.form.controls.vendor.valueChanges.subscribe((categoryQ:unknown) => {
+
+      if (typeof categoryQ !== 'string') {
+
+        return;
+
+      }
+      this.vendorService.search({ where: {name: {like: categoryQ,
+        options: 'i'}} })
+        .subscribe((vendors) => (this.vendorFiltered = vendors));
+
+    });
+
+    this.form.controls.bank.valueChanges.subscribe((categoryQ:unknown) => {
+
+      if (typeof categoryQ !== 'string') {
+
+        return;
+
+      }
+      this.bankService.search({ where: {name: {like: categoryQ,
+        options: 'i'}} })
+        .subscribe((banks) => (this.bankFiltered = banks));
+
+    });
+
+
+  };
+
+  extractNameOfObject = (obj: {name: string}): string => obj.name;
+
 
   ngOnInit(): void {
 
@@ -111,6 +152,12 @@ export class CreatePaymentComponent {
       }
 
     });
+
+  }
+
+  ngAfterViewInit():void {
+
+    this.initValueChanges();
 
   }
 
