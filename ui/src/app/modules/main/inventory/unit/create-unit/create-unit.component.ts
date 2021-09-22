@@ -106,8 +106,10 @@ export class CreateUnitComponent implements OnInit {
 
     }
     this.loading = true;
-    const unitP = <Unit> this.fboForm.value;
-    this.unitService.upsert(unitP).subscribe(() => {
+    const unitV = <Unit> this.fboForm.value;
+    const {parent, ...unitP} = unitV;
+
+    this.unitService.upsert(parent ? unitV : unitP).subscribe(() => {
 
       this.toastr.success(`Unit ${unitP.name} is saved successfully`, 'Unit saved');
       this.goToPreviousPage(this.route, this.router);

@@ -16,14 +16,14 @@ import { Product } from '@shared/entity/inventory/product';
 })
 export class ListBillComponent {
 
-  displayedColumns: string[] = [ 'vendor.name', 'billDate', 'billNumber', 'totalAmount', 'totalDisount', 'totalTax', 'grandTotal', 'isPaid' ];
+  displayedColumns: string[] = [ 'vendor.name', 'billDate', 'billNumber', 'totalAmount', 'totalDiscount', 'totalTax', 'grandTotal', 'isPaid' ];
 
   columnHeaders = {
     'vendor.name': 'Vendor',
     billDate: 'Bill Date',
     billNumber: 'bill Number #',
     totalAmount: 'Amount',
-    totalDisount: 'Discount',
+    totalDiscount: 'Discount',
     totalTax: 'Tax',
     grandTotal: 'Grand Total',
     isPaid: 'Paid'
@@ -91,7 +91,8 @@ export class ListBillComponent {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
-      this.queryParams = { ...value };
+      this.queryParams = { ...value,
+        include: [ {relation: 'vendor'} ] };
       this.loadData();
 
     });

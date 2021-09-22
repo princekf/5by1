@@ -1,10 +1,10 @@
-import {bill1, bill2} from '../mock-data/bill.data';
-import { Bill } from '@shared/entity/inventory/bill';
+import {bill1, bill2 as bill21} from '../mock-data/bill.data';
+import { Bill, PurchaseItem } from '@shared/entity/inventory/bill';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/internal/operators';
 import { Injectable } from '@angular/core';
-import { QueryData } from '@shared/util/query-data';
-import { ListQueryRespType } from '@fboutil/types/list.query.resp';
+import { BaseHTTPService } from '@fboservices/base-http.service';
+import { BILL_API_URI } from '@shared/server-apis';
 const FAKE_TIMEOUT = 1000;
 
 @Injectable({
@@ -12,11 +12,10 @@ const FAKE_TIMEOUT = 1000;
 })
 
 
-export class BillService {
+export class BillService extends BaseHTTPService<Bill> {
 
-  constructor() {}
 
-    private items:Array<Bill> = [ bill1, bill2 ]
+    private items:Array<Bill> = [ bill1, bill21 ]
 
     public listAll():Observable<Array<Bill>> {
 
@@ -24,60 +23,64 @@ export class BillService {
 
     }
 
-    public list(queryParams:QueryData):Observable<ListQueryRespType<Bill>> {
 
-      const limit = queryParams.limit ?? 10;
-      const start = queryParams.offset ?? 0;
-      const pageIndex = Math.ceil(start / limit);
-      const resp:ListQueryRespType<Bill> = {
-        totalItems: this.items.length,
-        items: this.items.slice(start, start + limit),
-        pageIndex
-      };
-      return of(resp).pipe(delay(FAKE_TIMEOUT));
+  public API_URI = BILL_API_URI;
 
-    }
 
-    public listByIds(ids: Array<string>):Observable<Array<Bill>> {
+  private formatPurchaseItems = (bill:Bill, purchaseItems:Array<PurchaseItem>):void => {
 
-      const fItems = this.items.filter((billP) => ids.includes(billP.id));
-      return of(fItems).pipe(delay(FAKE_TIMEOUT));
+    for (const pItem of purchaseItems) {
 
-    }
+      const {product, unit, ...pItem2} = pItem;
+      pItem.productId = product.id;
+      pItem.unitId = unit.id;
+      if (!pItem2.expiryDate) {
 
-    public deleteByIds(ids: Array<string>):Observable<Array<Bill>> {
+        delete pItem2.expiryDate;
 
-      const deletedArray:Array<Bill> = [];
-      const balanceArray:Array<Bill> = [];
-      // eslint-disable-next-line max-len
-      this.items.forEach((billP) => (ids.includes(billP.id) ? deletedArray.push(billP) : balanceArray.push(billP)));
-      this.items = balanceArray;
-      return of(deletedArray).pipe(delay(FAKE_TIMEOUT));
+      }
+      if (!pItem2.mfgDate) {
+
+        delete pItem2.mfgDate;
+
+      }
+      bill.purchaseItems.push(pItem2);
 
     }
 
-    public save(bill:Bill):Observable<Bill> {
+  }
 
-      const billC = <Bill> bill;
-      billC.id = `autoid_${this.items.length}`;
-      this.items.push(billC);
-      return of(billC).pipe(delay(FAKE_TIMEOUT));
+  public upsert = (bill:Bill):Observable<void> => {
 
-    }
+    const {id, vendor, dueDate, orderDate, purchaseItems, ...bill2} = bill;
+    if (vendor && vendor.id) {
 
-    public update(bill:Bill):Observable<Bill> {
-
-      const idx = this.items.findIndex((billT) => billT.id === bill.id);
-      this.items[idx] = bill;
-      return of(bill).pipe(delay(FAKE_TIMEOUT));
+      bill2.vendorId = vendor.id;
 
     }
+    let billDup:Bill = {...bill2};
+    if (dueDate) {
 
-    public get(objId:string):Observable<Bill> {
-
-      const billC = this.items.find((billT) => billT.id === objId);
-      return of(billC).pipe(delay(FAKE_TIMEOUT));
+      billDup = {dueDate,
+        ...billDup};
 
     }
+    if (orderDate) {
+
+      billDup = {orderDate,
+        ...billDup};
+
+    }
+    billDup.purchaseItems = [];
+    this.formatPurchaseItems(billDup, purchaseItems);
+    if (id) {
+
+      return super.update({id,
+        ...billDup});
+
+    }
+    return super.save(billDup);
+
+  };
 
 }
