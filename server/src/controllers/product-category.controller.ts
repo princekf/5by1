@@ -12,6 +12,15 @@ import {
 } from '../models';
 import {ProductRepository} from '../repositories';
 
+import { authenticate } from '@loopback/authentication';
+import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
+import { basicAuthorization } from '../middlewares/auth.midd';
+
+@authenticate('jwt')
+@authorize({
+  allowedRoles: [ 'admin', 'user' ],
+  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
+})
 export class ProductCategoryController {
   constructor(
     @repository(ProductRepository)

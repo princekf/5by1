@@ -11,92 +11,94 @@ import { DEFAULT_MAX_ROWS } from '@fboutil/constants';
 })
 export class BaseHTTPService<T> {
 
-    public declare API_URI:string;
+  public declare API_URI: string;
 
-    constructor(
-        protected readonly http: HttpClient
-    ) { }
-
-
-    public search(queryParams:QueryData):Observable<Array<T>> {
-
-      const filterParam = JSON.stringify(queryParams);
-      let params = new HttpParams();
-      params = params.set('filter', filterParam);
-      return this.http.get<Array<T>>(this.API_URI, {params});
-
-    }
+  constructor(
+    protected readonly http: HttpClient
+  ) { }
 
 
-    public distinct(columnName: string, queryParams:QueryData):Observable<{data:Array<string>}> {
+  public search(queryParams: QueryData): Observable<Array<T>> {
 
-      const filterParam = JSON.stringify(queryParams);
-      let params = new HttpParams();
-      params = params.set('filter', filterParam);
-      return this.http.get<{data:Array<string>}>(`${this.API_URI}/distinct/${columnName}`, {params});
+    const filterParam = JSON.stringify(queryParams);
+    let params = new HttpParams();
+    params = params.set('filter', filterParam);
+    return this.http.get<Array<T>>(this.API_URI, { params });
 
-    }
+  }
 
-    public list(queryParams:QueryData):Observable<ListQueryRespType<T>> {
 
-      const limit = queryParams.limit ?? DEFAULT_MAX_ROWS;
-      const offset = queryParams.offset ?? 0;
-      const pageIndex = Math.ceil(offset / limit);
-      const filterParam = JSON.stringify(queryParams);
-      let params = new HttpParams();
-      params = params.set('filter', filterParam);
-      const itemsR = this.http.get<Array<T>>(this.API_URI, {params});
-      const countR = this.http.get<{count: number}>(`${this.API_URI}/count`, {params});
-      return forkJoin([ itemsR, countR ]).pipe(
-        catchError((err) => throwError(err))
-      )
-        .pipe(
-          map((results) => ({items: results[0],
-            totalItems: results[1].count,
-            pageIndex}))
-        );
+  public distinct(columnName: string, queryParams: QueryData): Observable<{ data: Array<string> }> {
 
-    }
+    const filterParam = JSON.stringify(queryParams);
+    let params = new HttpParams();
+    params = params.set('filter', filterParam);
+    return this.http.get<{ data: Array<string> }>(`${this.API_URI}/distinct/${columnName}`, { params });
 
-    public save(item:T):Observable<void> {
+  }
 
-      return this.http.post<void>(this.API_URI, item).pipe(
-        catchError((err) => throwError(err))
+  public list(queryParams: QueryData): Observable<ListQueryRespType<T>> {
+
+    const limit = queryParams.limit ?? DEFAULT_MAX_ROWS;
+    const offset = queryParams.offset ?? 0;
+    const pageIndex = Math.ceil(offset / limit);
+    const filterParam = JSON.stringify(queryParams);
+    let params = new HttpParams();
+    params = params.set('filter', filterParam);
+    const itemsR$ = this.http.get<Array<T>>(this.API_URI, { params });
+    const countR$ = this.http.get<{ count: number }>(`${this.API_URI}/count`, { params });
+    return forkJoin([ itemsR$, countR$ ]).pipe(
+      catchError((err) => throwError(err))
+    )
+      .pipe(
+        map(([ items, count ]) => ({
+          items,
+          totalItems: count.count,
+          pageIndex
+        }))
       );
 
-    }
+  }
+
+  public save(item: T): Observable<void> {
+
+    return this.http.post<void>(this.API_URI, item).pipe(
+      catchError((err) => throwError(() => err))
+    );
+
+  }
 
 
-    public update(item:T):Observable<void> {
+  public update(item: T): Observable<void> {
 
-      const cObj = item as unknown as {id: string};
-      return this.http.patch<void>(`${this.API_URI}/${cObj.id}`, item).pipe(
-        catchError((err) => throwError(err))
-      );
+    const cObj = item as unknown as { id: string };
+    return this.http.patch<void>(`${this.API_URI}/${cObj.id}`, item).pipe(
+      catchError((err) => throwError(() => err))
+    );
 
-    }
+  }
 
 
-    public get(objId:string, queryParams:QueryData):Observable<T> {
+  public get(objId: string, queryParams: QueryData): Observable<T> {
 
-      const filterParam = JSON.stringify(queryParams);
-      let params = new HttpParams();
-      params = params.set('filter', filterParam);
-      return this.http.get<T>(`${this.API_URI}/${objId}`, {params}).pipe(
-        catchError((err) => throwError(err))
-      );
+    const filterParam = JSON.stringify(queryParams);
+    let params = new HttpParams();
+    params = params.set('filter', filterParam);
+    return this.http.get<T>(`${this.API_URI}/${objId}`, { params }).pipe(
+      catchError((err) => throwError(() => err))
+    );
 
-    }
+  }
 
-    public delete(where: Record<string, unknown>):Observable<{count: number}> {
+  public delete(where: Record<string, unknown>): Observable<{ count: number }> {
 
-      const filterParam = JSON.stringify(where);
-      let params = new HttpParams();
-      params = params.set('where', filterParam);
-      return this.http['delete']<{count: number}>(this.API_URI, {params}).pipe(
-        catchError((err) => throwError(err))
-      );
+    const filterParam = JSON.stringify(where);
+    let params = new HttpParams();
+    params = params.set('where', filterParam);
+    return this.http['delete']<{ count: number }>(this.API_URI, { params }).pipe(
+      catchError((err) => throwError(() => err))
+    );
 
-    }
+  }
 
 }

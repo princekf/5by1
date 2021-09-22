@@ -27,7 +27,7 @@
     "@angular/router": "11.0.5",
     "@shared": "link:../shared/dist",
     "@swimlane/ngx-charts": "18.0.1",
-    "dayjs": "^1.10.6",
+    "dayjs": "1.10.6",
     "ngx-skeleton-loader": "2.10.1",
     "ngx-toastr": "14.1.0",
     "rxjs": "6.5.5",

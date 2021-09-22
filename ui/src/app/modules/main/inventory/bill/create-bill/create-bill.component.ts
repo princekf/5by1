@@ -3,7 +3,7 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Valida
 import { ActivatedRoute, Router } from '@angular/router';
 import { BillService } from '@fboservices/inventory/bill.service';
 import { ToastrService } from 'ngx-toastr';
-import { Bill } from '@shared/entity/inventory/bill';
+import { Bill, PurchaseItem } from '@shared/entity/inventory/bill';
 import { Vendor } from '@shared/entity/inventory/vendor';
 import { VendorService } from '@fboservices/inventory/vendor.service';
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,7 +12,8 @@ import { ProductService } from '@fboservices/inventory/product.service';
 import { goToPreviousPage as _goToPreviousPage, fboTableRowExpandAnimation } from '@fboutil/fbo.util';
 import { UnitService } from '@fboservices/inventory/unit.service';
 import { Unit } from '@shared/entity/inventory/unit';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/internal/operators';
 import { CategoryService } from '@fboservices/inventory/category.service';
 import { QueryData } from '@shared/util/query-data';
 
@@ -79,39 +80,17 @@ export class CreateBillComponent implements OnInit {
 
     };
 
-  private createSalteItemFormGroup = (): FormGroup => {
+  private createSalteItemFormGroup = (pItem?: PurchaseItem): FormGroup => {
 
-    const product = this.fBuilder.control('', [ Validators.required ]);
-    const unitPrice = this.fBuilder.control(0, [ Validators.required ]);
-    const unit = this.fBuilder.control('', [ Validators.required ]);
-    const quantity = this.fBuilder.control(1, [ Validators.required ]);
-    const discount = this.fBuilder.control(0, [ Validators.required ]);
-    const totalAmount = this.fBuilder.control(0, [ Validators.required ]);
-    const mrp = this.fBuilder.control(0, [ Validators.required ]);
-    const rrp = this.fBuilder.control(0, [ Validators.required ]);
+    const product = this.fBuilder.control(pItem?.product ?? '', [ Validators.required ]);
+    const unitPrice = this.fBuilder.control(pItem?.unitPrice ?? 0, [ Validators.required ]);
+    const unit = this.fBuilder.control(pItem?.unit ?? '', [ Validators.required ]);
+    const quantity = this.fBuilder.control(pItem?.quantity ?? 1, [ Validators.required ]);
+    const discount = this.fBuilder.control(pItem?.discount ?? 0, [ Validators.required ]);
+    const totalAmount = this.fBuilder.control(pItem?.totalAmount ?? 0, [ Validators.required ]);
+    const mrp = this.fBuilder.control(pItem?.mrp ?? 0, [ Validators.required ]);
+    const rrp = this.fBuilder.control(pItem?.rrp ?? 0, [ Validators.required ]);
 
-    return this.fBuilder.group({
-      product,
-      unitPrice,
-      unit,
-      quantity,
-      discount,
-      totalTax: this.fBuilder.control(0, [ Validators.required ]),
-      totalAmount,
-      batchNumber: this.fBuilder.control(''),
-      expiryDate: this.fBuilder.control(''),
-      mfgDate: this.fBuilder.control(''),
-      mrp,
-      rrp,
-    });
-
-  };
-
-  private createSaleItemForm = (): FormGroup => {
-
-
-    const fGrp = this.createSalteItemFormGroup();
-    const {product, quantity, discount, unitPrice, totalAmount, unit, mrp, rrp} = fGrp.controls;
     const updateValueChanges = () => {
 
       const qty:number = quantity.value;
@@ -138,27 +117,39 @@ export class CreateBillComponent implements OnInit {
       this.fboForm.get('grandTotal').setValue(pGTotal);
 
     };
+    unitPrice.valueChanges.subscribe(updateValueChanges);
+    quantity.valueChanges.subscribe(updateValueChanges);
+    discount.valueChanges.subscribe(updateValueChanges);
+    mrp.valueChanges.subscribe((mrpV) => rrp.setValue(mrpV));
+
+    return this.fBuilder.group({
+      product,
+      unitPrice,
+      unit,
+      quantity,
+      discount,
+      totalTax: this.fBuilder.control(pItem?.totalTax ?? 0, [ Validators.required ]),
+      totalAmount,
+      batchNumber: this.fBuilder.control(pItem?.batchNumber ?? ''),
+      expiryDate: this.fBuilder.control(pItem?.expiryDate ?? ''),
+      mfgDate: this.fBuilder.control(pItem?.mfgDate ?? ''),
+      mrp,
+      rrp,
+    });
+
+  };
+
+  private createSaleItemForm = (purchaseItem?: PurchaseItem): FormGroup => {
+
+
+    const fGrp = this.createSalteItemFormGroup(purchaseItem);
+    const {product, unit} = fGrp.controls;
     product.valueChanges.subscribe((value) => {
 
       if (typeof value === 'object') {
 
         const sProduct = value as Product;
-        this.categoryService.get(sProduct.categoryId, {include: [ {relation: 'unit'} ]}).subscribe((categoryS) => {
-
-          unit.setValue(categoryS.unit);
-
-        });
-
-        unitPrice.valueChanges.subscribe(updateValueChanges);
-        quantity.valueChanges.subscribe(updateValueChanges);
-        discount.valueChanges.subscribe(updateValueChanges);
-
-        mrp.valueChanges.subscribe((mrpV) => {
-
-          rrp.setValue(mrpV);
-
-        });
-
+        this.categoryService.get(sProduct.categoryId, {include: [ {relation: 'unit'} ]}).subscribe((categoryS) => unit.setValue(categoryS.unit));
         const formArray = this.fboForm.get('purchaseItems') as FormArray;
         const lastFormGroup = formArray.get([ formArray.length - 1 ]) as FormGroup;
         if (lastFormGroup.controls.product.value) {
@@ -204,16 +195,95 @@ export class CreateBillComponent implements OnInit {
 
   };
 
+  private setBillFormValues(itemC: Bill, formArray: FormArray) {
+
+    this.fboForm.controls.id.setValue(itemC.id ?? '');
+    this.fboForm.controls.vendor.setValue(itemC.vendor ?? '');
+    this.fboForm.controls.billDate.setValue(itemC.billDate ?? new Date());
+    this.fboForm.controls.dueDate.setValue(itemC.dueDate ?? '');
+    this.fboForm.controls.billNumber.setValue(itemC.billNumber ?? '');
+    this.fboForm.controls.orderNumber.setValue(itemC.orderNumber ?? '');
+    this.fboForm.controls.orderDate.setValue(itemC.orderDate ?? '');
+    this.fboForm.controls.totalAmount.setValue(itemC.totalAmount ?? 0);
+    this.fboForm.controls.totalDiscount.setValue(itemC.totalDiscount ?? 0);
+    this.fboForm.controls.totalTax.setValue(itemC.totalTax ?? 0);
+    this.fboForm.controls.grandTotal.setValue(itemC.grandTotal ?? 0);
+    this.fboForm.controls.isPaid.setValue(itemC.isPaid ?? true);
+
+    formArray.removeAt(0);
+    for (const pItem of itemC.purchaseItems) {
+
+      formArray.push(this.createSaleItemForm(pItem));
+
+    }
+    formArray.push(this.createSaleItemForm());
+
+  }
+
+  private fillProductAndUnit(itemC: Bill):void {
+
+    const pIds:Array<string> = [];
+    const uIds:Array<string> = [];
+    for (const pItem of itemC.purchaseItems) {
+
+      pIds.push(pItem.productId);
+      uIds.push(pItem.unitId);
+
+    }
+    const queryDataP:QueryData = {
+      where: {
+        id: {
+          inq: pIds
+        }
+      }
+    };
+    const findProductsP$ = this.productService.search(queryDataP);
+    const queryDataU:QueryData = {
+      where: {
+        id: {
+          inq: uIds
+        }
+      }
+    };
+    const findUnitsU$ = this.unitService.search(queryDataU);
+    forkJoin([ findProductsP$, findUnitsU$ ]).pipe(
+      catchError((err) => throwError(err))
+    )
+      .pipe(
+        map(([ productsP, unitsP ]) => {
+
+          const products:Record<string, Product> = {};
+          const units:Record<string, Unit> = {};
+          productsP.forEach((prod) => (products[prod.id] = prod));
+          unitsP.forEach((unt) => (units[unt.id] = unt));
+          return {products,
+            units};
+
+        })
+      )
+      .subscribe((res) => {
+
+        itemC.purchaseItems.forEach((pItemT) => {
+
+          pItemT.product = res.products[pItemT.productId];
+          pItemT.unit = res.units[pItemT.unitId];
+
+        });
+        const formArray = this.fboForm.get('purchaseItems') as FormArray;
+        this.setBillFormValues(itemC, formArray);
+        this.dataSource = new MatTableDataSource(formArray.controls);
+        this.loading = false;
+
+      });
+
+  }
+
   ngOnInit(): void {
 
     this.initFboForm();
-
     this.initValueChanges();
-
     const formArray = this.fboForm.get('purchaseItems') as FormArray;
     this.dataSource = new MatTableDataSource(formArray.controls);
-
-
     const tId = this.route.snapshot.queryParamMap.get('id');
     if (tId) {
 
@@ -225,32 +295,10 @@ export class CreateBillComponent implements OnInit {
       this.loading = true;
       const queryParam:QueryData = {
         include: [
-          {relation: 'vendor'}, {relation: 'purchaseItems.product'}
+          {relation: 'vendor'}
         ]
       };
-      this.billService.get(tId, queryParam).subscribe((itemC) => {
-
-
-        this.fboForm.setValue({
-          id: itemC.id,
-          vendor: itemC.vendor ?? '',
-          billDate: itemC.billDate ?? '',
-          dueDate: itemC.dueDate ?? '',
-          billNumber: itemC.billNumber ?? '',
-          orderNumber: itemC.orderNumber ?? '',
-          orderDate: itemC.orderDate ?? '',
-          totalAmount: itemC.totalAmount ?? '',
-          totalDiscount: itemC.totalDiscount ?? '',
-          totalTax: itemC.totalTax ?? '',
-          grandTotal: itemC.grandTotal ?? '',
-          isPaid: itemC.isPaid ?? false,
-          puchaseItems: itemC.purchaseItems ?? ''
-        });
-
-
-        this.loading = false;
-
-      });
+      this.billService.get(tId, queryParam).subscribe((itemC) => this.fillProductAndUnit(itemC));
 
     } else {
 

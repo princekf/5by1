@@ -4,7 +4,15 @@ import { post,
 import {Bank} from '../models';
 import {BankRepository} from '../repositories';
 import { BANK_API } from '@shared/server-apis';
+import { authenticate } from '@loopback/authentication';
+import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
+import { basicAuthorization } from '../middlewares/auth.midd';
 
+@authenticate('jwt')
+@authorize({
+  allowedRoles: [ 'admin', 'user' ],
+  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
+})
 export class BankController {
 
   constructor(

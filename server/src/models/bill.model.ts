@@ -1,4 +1,4 @@
-import { Entity, model, property, belongsTo, hasMany } from '@loopback/repository';
+import { Entity, model, property, belongsTo } from '@loopback/repository';
 import { Bill as BillInft } from '@shared/entity/inventory/bill';
 import { PurchaseItem } from './purchase-item.model';
 import { Vendor } from './vendor.model';
@@ -15,6 +15,9 @@ export class Bill extends Entity implements BillInft {
   id: string;
 
   vendor: Vendor;
+
+  @belongsTo(() => Vendor)
+  vendorId: string;
 
   @property({
     type: 'date',
@@ -77,9 +80,6 @@ export class Bill extends Entity implements BillInft {
     type: 'boolean',
   })
   isPaid: boolean;
-
-  @belongsTo(() => Vendor)
-  vendorId: string;
 
   @property.array(PurchaseItem)
   purchaseItems: PurchaseItem[];
