@@ -9,3 +9,6 @@ export * from './customer.repository';
 export * from './vendor.repository';
 export * from './product.repository';
 export * from './transfer.repository';
+export * from './bill.repository';
+export * from './purchase-item.repository';
+export * from './purchase-item-tax.repository';

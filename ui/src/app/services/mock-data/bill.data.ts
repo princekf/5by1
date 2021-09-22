@@ -2,7 +2,6 @@ import {Bill } from '@shared/entity/inventory/bill';
 import { kamala, kandk } from '../mock-data/vendor.data';
 import { lnvDesktop1, hpDesktop1 } from '../mock-data/product.data';
 import { noUnit, kgUnit } from '../mock-data/unit.data';
-import { sgst9, cgst9 } from '../mock-data/tax.data';
 
 
 export const bill1:Bill = {
@@ -15,12 +14,12 @@ export const bill1:Bill = {
   orderNumber: 'order-098',
   orderDate: new Date('2020-01-03'),
   totalAmount: 20,
-  totalDisount: 5,
+  totalDiscount: 5,
   totalTax: 3,
   roundOff: 1158,
   grandTotal: 18,
   notes: 'bill for vendor Kamala',
-  items: [ {
+  purchaseItems: [ {
     product: lnvDesktop1,
     unit: noUnit,
     unitPrice: 20000,
@@ -50,12 +49,12 @@ export const bill2:Bill = {
   orderNumber: 'order-098',
   orderDate: new Date('2020-01-03'),
   totalAmount: 20,
-  totalDisount: 5,
+  totalDiscount: 5,
   totalTax: 3,
   roundOff: 1158,
   grandTotal: 18,
   notes: 'bill for vendor Kamala',
-  items: [ {
+  purchaseItems: [ {
     product: hpDesktop1,
     unit: kgUnit,
     unitPrice: 20000,

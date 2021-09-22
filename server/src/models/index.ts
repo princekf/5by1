@@ -9,3 +9,6 @@ export * from './bank.model';
 export * from './category.model';
 export * from './product.model';
 export * from './transfer.model';
+export * from './bill.model';
+export * from './purchase-item.model';
+export * from './purchase-item-tax.model';

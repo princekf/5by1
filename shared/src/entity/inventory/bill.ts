@@ -4,11 +4,13 @@ import { Unit } from './unit';
 import { Vendor } from './vendor';
 
 export interface PurchaseItem {
-    product: Product;
+    product?: Product;
+    productId?: string;
     unitPrice: number;
-    unit: Unit;
+    unit?: Unit;
+    unitId?: string;
     quantity: number;
-    discount: number;
+    discount?: number;
     taxes?: Array<Tax>
     totalTax: number;
     totalAmount: number;
@@ -23,18 +25,19 @@ export interface PurchaseItem {
 
 export interface Bill {
     id?: string;
-    vendor: Vendor;
+    vendor?: Vendor;
+    vendorId?: string;
     billDate: Date;
-    dueDate: Date;
+    dueDate?: Date;
     billNumber: string;
     orderNumber?: string;
     orderDate?: Date;
     totalAmount: number;
-    totalDisount: number;
+    totalDiscount?: number;
     totalTax: number;
-    roundOff: number;
+    roundOff?: number;
     grandTotal: number;
     notes?: string;
-    items?: Array<PurchaseItem>;
+    purchaseItems?: Array<PurchaseItem>;
     isPaid: boolean;
 }
