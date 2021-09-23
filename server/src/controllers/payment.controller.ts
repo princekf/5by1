@@ -3,7 +3,15 @@ import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, resp
 import {Payment} from '../models';
 import {PaymentRepository} from '../repositories/payment.repository';
 import { PAYMENT_API } from '@shared/server-apis';
+import { authenticate } from '@loopback/authentication';
+import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
+import { basicAuthorization } from '../middlewares/auth.midd';
 
+@authenticate('jwt')
+@authorize({
+  allowedRoles: [ 'admin', 'user' ],
+  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
+})
 export class PaymentController {
 
   constructor(

@@ -16,21 +16,9 @@ export class PaymentService extends BaseHTTPService<Payment> {
   public upsert(payment:Payment):Observable<void> {
 
     const {id, vendor, bill, bank, ...payment2} = payment;
-    if (vendor && vendor.id) {
-
-      payment2.vendorId = vendor.id;
-
-    }
-    if (bill && bill.id) {
-
-      payment2.billId = bill.id;
-
-    }
-    if (bank && bank.id) {
-
-      payment2.bankId = bank.id;
-
-    }
+    payment2.vendorId = vendor?.id ?? '';
+    payment2.billId = bill?.id ?? '';
+    payment2.bankId = bank?.id ?? '';
     if (id) {
 
       return super.update({id,

@@ -18,3 +18,8 @@ export * from './payment-vendor.controller';
 export * from './payment-bank.controller';
 export * from './payment-bill.controller';
 export * from './payment.controller';
+export * from './sale-item-product.controller';
+export * from './sale-item-unit.controller';
+export * from './invoice.controller';
+export * from './invoice-customer.controller';
+export * from './stock.controller';

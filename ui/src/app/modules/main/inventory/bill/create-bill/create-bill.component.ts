@@ -12,7 +12,7 @@ import { ProductService } from '@fboservices/inventory/product.service';
 import { goToPreviousPage as _goToPreviousPage, fboTableRowExpandAnimation } from '@fboutil/fbo.util';
 import { UnitService } from '@fboservices/inventory/unit.service';
 import { Unit } from '@shared/entity/inventory/unit';
-import { forkJoin, Observable, throwError } from 'rxjs';
+import { forkJoin, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/internal/operators';
 import { CategoryService } from '@fboservices/inventory/category.service';
 import { QueryData } from '@shared/util/query-data';
@@ -32,12 +32,6 @@ export class CreateBillComponent implements OnInit {
 
   loading = true;
 
-  ismatch = true;
-
-  units: Array<Unit> = [];
-
-  products: Array<Product> = [];
-
   vendorsFiltered: Array<Vendor> = [];
 
   productsFiltered: Array<Product> = [];
@@ -47,10 +41,6 @@ export class CreateBillComponent implements OnInit {
   displayedColumns: string[] = [ 'product', 'unitPrice', 'quantity', 'discount', 'totalAmount', 'batchNumber', 'expiryDate', 'mfgDate', 'mrp', 'rrp' ];
 
   dataSource = new MatTableDataSource<AbstractControl>();
-
-  myControl = new FormControl();
-
-  filteredOptions: Observable<Product>;
 
   constructor(public readonly router: Router,
     public readonly route: ActivatedRoute,
@@ -80,7 +70,7 @@ export class CreateBillComponent implements OnInit {
 
     };
 
-  private createSalteItemFormGroup = (pItem?: PurchaseItem): FormGroup => {
+  private createPurchaseItemFormGroup = (pItem?: PurchaseItem): FormGroup => {
 
     const product = this.fBuilder.control(pItem?.product ?? '', [ Validators.required ]);
     const unitPrice = this.fBuilder.control(pItem?.unitPrice ?? 0, [ Validators.required ]);
@@ -139,10 +129,10 @@ export class CreateBillComponent implements OnInit {
 
   };
 
-  private createSaleItemForm = (purchaseItem?: PurchaseItem): FormGroup => {
+  private createPurchaseItemForm = (purchaseItem?: PurchaseItem): FormGroup => {
 
 
-    const fGrp = this.createSalteItemFormGroup(purchaseItem);
+    const fGrp = this.createPurchaseItemFormGroup(purchaseItem);
     const {product, unit} = fGrp.controls;
     product.valueChanges.subscribe((value) => {
 
@@ -154,7 +144,7 @@ export class CreateBillComponent implements OnInit {
         const lastFormGroup = formArray.get([ formArray.length - 1 ]) as FormGroup;
         if (lastFormGroup.controls.product.value) {
 
-          formArray.push(this.createSaleItemForm());
+          formArray.push(this.createPurchaseItemForm());
           this.dataSource = new MatTableDataSource(formArray.controls);
 
         }
@@ -189,7 +179,7 @@ export class CreateBillComponent implements OnInit {
       grandTotal: this.fBuilder.control(0, [ Validators.required ]),
       isPaid: this.fBuilder.control(true),
       purchaseItems: this.fBuilder.array([
-        this.createSaleItemForm(),
+        this.createPurchaseItemForm(),
       ])
     });
 
@@ -213,10 +203,10 @@ export class CreateBillComponent implements OnInit {
     formArray.removeAt(0);
     for (const pItem of itemC.purchaseItems) {
 
-      formArray.push(this.createSaleItemForm(pItem));
+      formArray.push(this.createPurchaseItemForm(pItem));
 
     }
-    formArray.push(this.createSaleItemForm());
+    formArray.push(this.createPurchaseItemForm());
 
   }
 

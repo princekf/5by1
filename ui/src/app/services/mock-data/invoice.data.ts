@@ -2,7 +2,6 @@ import { Invoice } from '@shared/entity/inventory/invoice';
 import { basha, jomon } from '../mock-data/customer.data';
 import { lnvDesktop1, hpDesktop1 } from '../mock-data/product.data';
 import { noUnit } from '../mock-data/unit.data';
-import { sgst9, cgst9 } from '../mock-data/tax.data';
 
 export const invoice1:Invoice = {
   id: '01231',
@@ -16,7 +15,7 @@ export const invoice1:Invoice = {
   roundOff: 0,
   grandTotal: 70800,
   isReceived: true,
-  items: [ {
+  saleItems: [ {
     product: lnvDesktop1,
     unit: noUnit,
     unitPrice: 20000,
@@ -26,10 +25,7 @@ export const invoice1:Invoice = {
     totalTax: 7200,
     totalAmount: 47200,
     batchNumber: 'batchnumber',
-    expiryDate: new Date('2020-04-23'),
-    mfgDate: new Date('2019-04-23'),
     mrp: 1300,
-    rrp: 1200,
   },
   {
     product: hpDesktop1,
@@ -41,10 +37,7 @@ export const invoice1:Invoice = {
     totalTax: 3600,
     totalAmount: 23600,
     batchNumber: 'batchnumber',
-    expiryDate: new Date('2020-04-23'),
-    mfgDate: new Date('2019-04-23'),
     mrp: 1300,
-    rrp: 1200,
   } ]
 };
 
@@ -60,7 +53,7 @@ export const invoice2:Invoice = {
   roundOff: 0,
   grandTotal: 47200,
   isReceived: false,
-  items: [ {
+  saleItems: [ {
     product: lnvDesktop1,
     unit: noUnit,
     unitPrice: 20000,
@@ -70,10 +63,7 @@ export const invoice2:Invoice = {
     totalTax: 3600,
     totalAmount: 23600,
     batchNumber: 'batchnumber',
-    expiryDate: new Date('2020-04-23'),
-    mfgDate: new Date('2019-04-23'),
     mrp: 1300,
-    rrp: 1200,
   },
   {
     product: hpDesktop1,
@@ -85,9 +75,6 @@ export const invoice2:Invoice = {
     totalTax: 3600,
     totalAmount: 23600,
     batchNumber: 'batchnumber',
-    expiryDate: new Date('2020-04-23'),
-    mfgDate: new Date('2019-04-23'),
     mrp: 1300,
-    rrp: 1200,
   } ]
 };

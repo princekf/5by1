@@ -162,8 +162,6 @@ export class BillController {
 
   }
 
-
-
   @del(BILL_API)
   @response(204, {
     description: 'Bills DELETE success count',

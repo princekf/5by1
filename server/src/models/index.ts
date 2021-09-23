@@ -13,3 +13,5 @@ export * from './bill.model';
 export * from './purchase-item.model';
 export * from './purchase-item-tax.model';
 export * from './payment.model';
+export * from './invoice.model';
+export * from './sale-item.model';

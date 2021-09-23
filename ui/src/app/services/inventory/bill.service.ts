@@ -32,8 +32,8 @@ export class BillService extends BaseHTTPService<Bill> {
     for (const pItem of purchaseItems) {
 
       const {product, unit, ...pItem2} = pItem;
-      pItem.productId = product.id;
-      pItem.unitId = unit.id;
+      pItem2.productId = product.id;
+      pItem2.unitId = unit.id;
       if (!pItem2.expiryDate) {
 
         delete pItem2.expiryDate;
@@ -53,11 +53,7 @@ export class BillService extends BaseHTTPService<Bill> {
   public upsert = (bill:Bill):Observable<void> => {
 
     const {id, vendor, dueDate, orderDate, purchaseItems, ...bill2} = bill;
-    if (vendor && vendor.id) {
-
-      bill2.vendorId = vendor.id;
-
-    }
+    bill2.vendorId = vendor?.id ?? '';
     let billDup:Bill = {...bill2};
     if (dueDate) {
 

@@ -8,10 +8,12 @@
 
   <mat-form-field class="fbo-create-form">
     <mat-label>Customer</mat-label>
-    <mat-select placeholder="Select a customer" formControlName="customer">
-      <mat-option></mat-option>
-      <mat-option *ngFor="let customer of customers" [value]="customer">{{customer.name}}</mat-option>
-    </mat-select>
+    <input type="text" matInput placeholder="Select a customer" formControlName="customer" [matAutocomplete]="autoCustomer">
+    <mat-autocomplete autoActiveFirstOption #autoCustomer="matAutocomplete" [displayWith]="extractNameOfObject">
+      <mat-option *ngFor="let customerS of customers$ | async" [value]="customerS">
+        {{customerS.name}}
+      </mat-option>
+    </mat-autocomplete>
     <mat-error *ngIf="fboForm.controls['customer'].hasError('required')"> Customer is required </mat-error>
   </mat-form-field>
 
@@ -76,109 +78,19 @@
     <mat-error *ngIf="fboForm.controls['isReceived'].hasError('required')">Received is required </mat-error>
   </mat-form-field>
 
-
-  <h2 class="form-header">Add Sales Items</h2>
-
-  <table [style.display]="loading ? 'none': ''" formArrayName="items" mat-table [dataSource]="dataSource" matSort
-  multiTemplateDataRows class="fiveby1-table" *ngFor="let row of dynamicRows; let i = index" class="fbo-create-form-table">
-
-
-    <ng-container matColumnDef="product">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Product </th>
-      <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-        <mat-form-field  class="fbo-create-form-table" >
-          <mat-select placeholder="Choose a Product" formControlName="product">
-            <mat-option *ngFor="let product of products" [value]="product" (click)="$event.preventDefault();addNew($event.target.value)">
-              {{product.name}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </td>
-    </ng-container>
-
-  <ng-container matColumnDef="unitPrice">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Unit Price </th>
+  <table [style.display]="loading ? 'none': ''" formArrayName="saleItems" mat-table [dataSource]="dataSource" matSort
+  multiTemplateDataRows class="fbo-create-form-table">
+  <ng-container matColumnDef="product">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Product </th>
     <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-      <mat-form-field class="fbo-create-form-table" >
-        <input matInput type="number" formControlName="unitPrice" placeholder="Enter Unit Price">
-
-      </mat-form-field>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="unit">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Unit</th>
-    <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-      <mat-form-field  class="fbo-create-form-table" >
-        <mat-select placeholder="Enter unit Name" formControlName="unit">
-          <mat-option [value]="unit.name" *ngFor="let unit of units">{{unit.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="quantity">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Quantity </th>
-    <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-      <mat-form-field  class="fbo-create-form-table" >
-        <input matInput type="number" formControlName="quantity" placeholder="Enter quantity">
-      </mat-form-field>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="discount">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Discount </th>
-    <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-      <mat-form-field  class="fbo-create-form-table">
-        <input matInput type="number" formControlName="discount" placeholder="Enter discount Amount">
-      </mat-form-field>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="totalAmount">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Total Amount</th>
-    <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-      <mat-form-field  class="fbo-create-form-table">
-        <input matInput type="number" formControlName="totalAmount" placeholder="Enter Toatal Amount">
-      </mat-form-field>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="totalTax">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Total Tax </th>
-    <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-      <mat-form-field  class="fbo-create-form-table">
-        <input matInput type="number" formControlName="totalTax" placeholder="Enter Total Tax">
-      </mat-form-field>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="batchNumber">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Batch Number </th>
-    <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-      <mat-form-field  class="fbo-create-form-table">
-        <input matInput type="text" formControlName="batchNumber" placeholder="Enter Batch Number">
-      </mat-form-field>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="expiryDate">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Expiry Date </th>
-    <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-      <mat-form-field  class="fbo-create-form-table">
-        <input matInput [matDatepicker]="picker" formControlName="expiryDate" placeholder="Enter Expiry Date">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="mfgDate">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns">Manufacturing Date</th>
-    <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-      <mat-form-field  class="fbo-create-form-table">
-        <input matInput [matDatepicker]="picker" formControlName="mfgDate" placeholder="Enter Manufacturing Date">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+      <mat-form-field class="fbo-create-form-table">
+        <input type="text" matInput formControlName="product" [matAutocomplete]="autoProduct"
+        >
+        <mat-autocomplete autoActiveFirstOption #autoProduct="matAutocomplete" [displayWith]="extractNameOfObject">
+          <mat-option *ngFor="let productS of productsFiltered" [value]="productS">
+            {{productS.name}}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
     </td>
   </ng-container>
@@ -187,30 +99,62 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns">MRP</th>
     <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
       <mat-form-field  class="fbo-create-form-table">
-        <input matInput type="number" formControlName="mrp" placeholder="Enter MRP">
-
+        <input matInput type="number" formControlName="mrp">
       </mat-form-field>
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="rrp">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns">RRP</th>
+  <ng-container matColumnDef="unitPrice">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns">Price</th>
     <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
       <mat-form-field  class="fbo-create-form-table">
-        <input matInput type="number" formControlName="rrp" placeholder="Enter Recommanded Retail Price">
-
+        <input matInput type="number" formControlName="unitPrice">
       </mat-form-field>
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="quantity">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Qty </th>
+    <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+      <mat-form-field class="fbo-create-form-table" >
+        <input matInput type="number" formControlName="quantity">
+        <span matSuffix>{{findUnitCode(element)}}</span>
+        
+      </mat-form-field>
+    </td>
+  </ng-container>
 
+  <ng-container matColumnDef="discount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns">Disc</th>
+    <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+      <mat-form-field  class="fbo-create-form-table">
+        <input matInput type="number" formControlName="discount">
+      </mat-form-field>
+    </td>
+  </ng-container>
 
+  <ng-container matColumnDef="totalAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns">Total</th>
+    <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+      <mat-form-field  class="fbo-create-form-table">
+        <input matInput type="number" formControlName="totalAmount">
+      </mat-form-field>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="batchNumber">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns">Batch</th>
+    <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+      <mat-form-field  class="fbo-create-form-table">
+        <input matInput type="text" formControlName="batchNumber">
+      </mat-form-field>
+    </td>
+  </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns" class="displayedColumns" class="fiveby1-table-header"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="fiveby1-element-row"></tr>
-
-
-</table>
+  
+  </table>
 
   <p class="form-submit-container">
     <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
