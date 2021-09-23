@@ -16,31 +16,37 @@
   </p>
   <p>
     <mat-form-field>
-      <input type="text" matInput placeholder="Enter vendor Name  Ex. Xpeditions.." formControlName="vendor"
-        [matAutocomplete]="autoCategory">
-      <mat-autocomplete autoActiveFirstOption #autoCategory="matAutocomplete" [displayWith]="extractNameOfObject">
-        <mat-option *ngFor="let vendorS of vendorFiltered" [value]="vendorS">
+      <mat-label>Vendor</mat-label>
+
+      <input type="text" matInput placeholder="Type vendor name" formControlName="vendor"
+        [matAutocomplete]="autoVendor">
+      <mat-autocomplete autoActiveFirstOption #autoVendor="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let vendorS of vendors$ | async" [value]="vendorS">
           {{vendorS.name}}
+        </mat-option>
+      </mat-autocomplete>
+
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Bill</mat-label>
+
+      <input type="text" matInput placeholder="Type bill number" formControlName="bill" [matAutocomplete]="autoBill">
+      <mat-autocomplete autoActiveFirstOption #autoBill="matAutocomplete" [displayWith]="extractBillNumber">
+        <mat-option *ngFor="let billS of bills$ | async" [value]="billS">
+          {{billS.billNumber}}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
   </p>
   <p>
     <mat-form-field>
-      <mat-label>Bill</mat-label>
-      <mat-select matInput placeholder="Enter Bill Name" formControlName="bill">
-        <mat-option *ngFor="let bill of bills" [value]=bill>{{bill.billNumber}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </p>
-  <p>
-    <mat-form-field>
       <mat-label> Bank</mat-label>
 
-      <input type="text" matInput placeholder="Enter bank Name  Ex. KVB.." formControlName="bank"
-        [matAutocomplete]="autoCategorybank">
-      <mat-autocomplete autoActiveFirstOption #autoCategorybank="matAutocomplete" [displayWith]="extractNameOfObject">
-        <mat-option *ngFor="let bankS of bankFiltered" [value]="bankS">
+      <input type="text" matInput placeholder="Type bank name" formControlName="bank" [matAutocomplete]="autoBank">
+      <mat-autocomplete autoActiveFirstOption #autoBank="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let bankS of banks$ | async" [value]="bankS">
           {{bankS.name}}
         </mat-option>
       </mat-autocomplete>

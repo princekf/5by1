@@ -1,9 +1,8 @@
-import { Entity, model, property, belongsTo, hasMany} from '@loopback/repository';
+import { Entity, model, property, belongsTo} from '@loopback/repository';
 import { PurchaseItem as PurchaseItemIntf } from '@shared/entity/inventory/bill';
 import { Unit } from './unit.model';
 import { Product } from './product.model';
 import { Tax } from './tax.model';
-import {PurchaseItemTax} from './purchase-item-tax.model';
 
 @model()
 export class PurchaseItem extends Entity implements PurchaseItemIntf {

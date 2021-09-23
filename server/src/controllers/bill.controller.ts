@@ -1,9 +1,17 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, } from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, } from '@loopback/rest';
 import {Bill} from '../models';
 import {BillRepository} from '../repositories';
 import { BILL_API } from '@shared/server-apis';
+import { authenticate } from '@loopback/authentication';
+import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
+import { basicAuthorization } from '../middlewares/auth.midd';
 
+@authenticate('jwt')
+@authorize({
+  allowedRoles: [ 'admin', 'user' ],
+  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
+})
 export class BillController {
 
   constructor(
@@ -151,6 +159,34 @@ export class BillController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.billRepository.deleteById(id);
+
+  }
+
+
+
+  @del(BILL_API)
+  @response(204, {
+    description: 'Bills DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(Bill) where?: Where<Bill>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Bill ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Bill ids are required');
+
+    }
+
+    const count = await this.billRepository.deleteAll(where);
+    return count;
 
   }
 

@@ -2,16 +2,18 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentService } from '@fboservices/inventory/payment.service';
-import { BankService } from '@fboservices/inventory/bank.service';
-import { BillService } from '@fboservices/inventory/bill.service';
-import { VendorService } from '@fboservices/inventory/vendor.service';
 import { ToastrService } from 'ngx-toastr';
 import { Payment } from '@shared/entity/inventory/payment';
-import { Bank } from '@shared/entity/inventory/bank';
-import { Bill } from '@shared/entity/inventory/bill';
-import { Vendor } from '@shared/entity/inventory/vendor';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { QueryData } from '@shared/util/query-data';
+import { Observable } from 'rxjs';
+import { Vendor } from '@shared/entity/inventory/vendor';
+import { flatMap } from 'rxjs/operators';
+import { VendorService } from '@fboservices/inventory/vendor.service';
+import { Bill } from '@shared/entity/inventory/bill';
+import { Bank } from '@shared/entity/inventory/bank';
+import { BillService } from '@fboservices/inventory/bill.service';
+import { BankService } from '@fboservices/inventory/bank.service';
 
 @Component({
   selector: 'app-create-payment',
@@ -29,138 +31,127 @@ export class CreatePaymentComponent {
 
   queryParams:QueryData = { };
 
-  payments: Array<Payment> = [];
+  vendors$: Observable<Array<Vendor>>;
 
-  banks: Array<Bank> = [];
+  bills$: Observable<Array<Bill>>;
 
-  bankFiltered: Array<Bank>;
+  banks$: Observable<Array<Bank>>;
 
-  bills:Array<Bill> = [];
-
-  billFiltered: Array<Bill>;
-
-  vendors: Array<Vendor> = [];
 
 
   vendorFiltered: Array<Vendor>;
 
   form: FormGroup = new FormGroup({
     id: new FormControl(null),
-    paidDate: new FormControl('', [ Validators.required ]),
-    vendor: new FormControl('', [ Validators.required ]),
-    bill: new FormControl('', [ Validators.required ]),
+    paidDate: new FormControl(new Date(), [ Validators.required ]),
+    vendor: new FormControl(''),
+    bill: new FormControl(''),
     bank: new FormControl('', [ Validators.required ]),
-    category: new FormControl('', [ Validators.required ]),
+    category: new FormControl(''),
     amount: new FormControl('', [ Validators.required ]),
-    description: new FormControl('', [ Validators.required ]),
+    description: new FormControl(''),
   });
 
   constructor(
     public readonly router: Router,
     public readonly route: ActivatedRoute,
     private readonly paymentService:PaymentService,
-    private readonly bankService:BankService,
-    private readonly vendorService:VendorService,
-    private readonly billService:BillService,
+    private readonly vendorService: VendorService,
+    private readonly billService: BillService,
+    private readonly bankService: BankService,
     private readonly toastr: ToastrService
   ) { }
 
   private initValueChanges = () => {
 
-    this.form.controls.vendor.valueChanges.subscribe((categoryQ:unknown) => {
+    this.vendors$ = this.form.controls.vendor.valueChanges
+      .pipe(flatMap((vendorQ) => {
 
-      if (typeof categoryQ !== 'string') {
+        if (typeof vendorQ !== 'string') {
 
-        return;
+          return [];
 
-      }
-      this.vendorService.search({ where: {name: {like: categoryQ,
-        options: 'i'}} })
-        .subscribe((vendors) => (this.vendorFiltered = vendors));
+        }
+        return this.vendorService.search({ where: {name: {like: vendorQ,
+          options: 'i'}} });
 
-    });
+      }));
 
-    this.form.controls.bank.valueChanges.subscribe((categoryQ:unknown) => {
+    this.bills$ = this.form.controls.bill.valueChanges
+      .pipe(flatMap((billQ) => {
 
-      if (typeof categoryQ !== 'string') {
+        if (typeof billQ !== 'string') {
 
-        return;
+          return [];
 
-      }
-      this.bankService.search({ where: {name: {like: categoryQ,
-        options: 'i'}} })
-        .subscribe((banks) => (this.bankFiltered = banks));
+        }
+        return this.billService.search({ where: {billNumber: {like: billQ,
+          options: 'i'}} });
 
-    });
+      }));
 
+    this.banks$ = this.form.controls.bank.valueChanges
+      .pipe(flatMap((bankQ) => {
 
-  };
+        if (typeof bankQ !== 'string') {
 
-  extractNameOfObject = (obj: {name: string}): string => obj.name;
+          return [];
 
+        }
+        return this.bankService.search({ where: {name: {like: bankQ,
+          options: 'i'}} });
+
+      }));
+
+  }
 
   ngOnInit(): void {
 
+    this.initValueChanges();
+
     const tId = this.route.snapshot.queryParamMap.get('id');
 
-    this.bankService.search({}).subscribe((banks) => {
 
-      this.banks = banks;
-
-    });
-    this.vendorService.search({}).subscribe((vendors) => {
-
-      this.vendors = vendors;
-
-    });
-    this.billService.listAll().subscribe((bills) => {
-
-      this.bills = bills;
-
-    });
-
-    this.paymentService.list(this.queryParams).subscribe((payments) => {
-
-      this.payments = payments.items;
-      this.loading = false;
-      if (tId) {
+    this.loading = false;
+    if (tId) {
 
 
-        this.formHeader = 'Update Payments';
-        this.loading = true;
-        this.paymentService.get(tId).subscribe((paymentC) => {
+      this.formHeader = 'Update Payments';
+      this.loading = true;
+      const queryParam:QueryData = {
+        include: [
+          {relation: 'vendor'}, {relation: 'bill'}, {relation: 'bank'}
+        ]
+      };
+      this.paymentService.get(tId, queryParam).subscribe((paymentC) => {
 
-          this.form.setValue({
-            id: paymentC.id ?? '',
-            paidDate: paymentC.paidDate ?? '',
-            vendor: paymentC.vendor ?? '',
-            bill: paymentC.bill ?? '',
-            bank: paymentC.bank ?? '',
-            category: paymentC.category ?? '',
-            amount: paymentC.amount ?? '',
-            description: paymentC.description ?? ''
-          });
-
-          this.loading = false;
-
+        this.form.setValue({
+          id: paymentC.id ?? '',
+          paidDate: paymentC.paidDate ?? new Date(),
+          vendor: paymentC.vendor ?? '',
+          bill: paymentC.bill ?? '',
+          bank: paymentC.bank ?? '',
+          category: paymentC.category ?? '',
+          amount: paymentC.amount ?? '',
+          description: paymentC.description ?? ''
         });
-
-      } else {
 
         this.loading = false;
 
-      }
+      });
 
-    });
+    } else {
+
+      this.loading = false;
+
+    }
+
 
   }
 
-  ngAfterViewInit():void {
+  extractNameOfObject = (obj: {name: string}): string => obj.name;
 
-    this.initValueChanges();
-
-  }
-
+  extractBillNumber = (obj: Bill): string => obj.billNumber;
 
   upsertPayment(): void {
 
@@ -173,17 +164,15 @@ export class CreatePaymentComponent {
     this.loading = true;
     const paymentP = <Payment> this.form.value;
 
+    this.paymentService.upsert(paymentP).subscribe(() => {
 
-    // eslint-disable-next-line max-len
-    (paymentP.id ? this.paymentService.update(paymentP) : this.paymentService.save(paymentP)).subscribe((paymentC) => {
-
-      this.toastr.success(`Payment ${paymentC.paidDate} is saved successfully`, 'Payment saved');
+      this.toastr.success(`Payment ${paymentP.amount} is saved successfully`, 'Payment saved');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error(`Error in saving Payment ${paymentP.paidDate}`, 'Payment not saved');
+      this.toastr.error(`Error in saving Payment ${paymentP.amount}`, 'Payment not saved');
       console.error(error);
 
     });

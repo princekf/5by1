@@ -3,7 +3,6 @@ import {DefaultCrudRepository, repository, BelongsToAccessor, HasManyRepositoryF
 import {FbomongoDataSource} from '../datasources';
 import {Bill, BillRelations, Vendor, PurchaseItem} from '../models';
 import {VendorRepository} from './vendor.repository';
-import {PurchaseItemRepository} from './purchase-item.repository';
 
 export class BillRepository extends DefaultCrudRepository<
   Bill,
@@ -16,7 +15,8 @@ export class BillRepository extends DefaultCrudRepository<
   public readonly purchaseItems: HasManyRepositoryFactory<PurchaseItem, typeof Bill.prototype.id>;
 
   constructor(
-    @inject('datasources.fbomongo') dataSource: FbomongoDataSource, @repository.getter('VendorRepository') protected vendorRepositoryGetter: Getter<VendorRepository>, @repository.getter('PurchaseItemRepository') protected purchaseItemRepositoryGetter: Getter<PurchaseItemRepository>,
+    @inject('datasources.fbomongo') dataSource: FbomongoDataSource,
+    @repository.getter('VendorRepository') protected vendorRepositoryGetter: Getter<VendorRepository>,
   ) {
 
     super(Bill, dataSource);

@@ -23,7 +23,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     CommonModule, PaymentRoutingModule, MatSelectModule, MatFormFieldModule, ReactiveFormsModule,
     FormsModule, MatInputModule, MatButtonModule, MatTableModule, MatSortModule,
     NgxSkeletonLoaderModule, ToolBarModule, MatDatepickerModule, MatNativeDateModule,
-    DataTableModule, MatAutocompleteModule
+    DataTableModule, MatAutocompleteModule,
   ]
 })
 export class PaymentModule { }

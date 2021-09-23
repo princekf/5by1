@@ -12,7 +12,17 @@ import {
 } from '../models';
 import {BillRepository} from '../repositories';
 
+import { authenticate } from '@loopback/authentication';
+import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
+import { basicAuthorization } from '../middlewares/auth.midd';
+
+@authenticate('jwt')
+@authorize({
+  allowedRoles: [ 'admin', 'user' ],
+  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
+})
 export class BillVendorController {
+
   constructor(
     @repository(BillRepository)
     public billRepository: BillRepository,
@@ -24,7 +34,8 @@ export class BillVendorController {
         description: 'Vendor belonging to Bill',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(Vendor)},
+            schema: {type: 'array',
+              items: getModelSchemaRef(Vendor)},
           },
         },
       },
@@ -33,6 +44,9 @@ export class BillVendorController {
   async getVendor(
     @param.path.string('id') id: typeof Bill.prototype.id,
   ): Promise<Vendor> {
+
     return this.billRepository.vendor(id);
+
   }
+
 }
