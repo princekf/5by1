@@ -7,10 +7,13 @@ export interface Payment {
     id?:string;
     paidDate: Date;
     vendor?: Vendor;
+    vendorId?: string;
     bill?: Bill;
-    bank: Bank;
+    billId?: string;
+    bank?: Bank;
+    bankId?: string;
     // Category like Purchase, Donation etc
     category?: string;
     amount: number;
-    description: string;
+    description?: string;
 }

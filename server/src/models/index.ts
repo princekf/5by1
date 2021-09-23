@@ -12,3 +12,4 @@ export * from './transfer.model';
 export * from './bill.model';
 export * from './purchase-item.model';
 export * from './purchase-item-tax.model';
+export * from './payment.model';

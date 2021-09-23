@@ -10,3 +10,4 @@ export * from './vendor.repository';
 export * from './product.repository';
 export * from './transfer.repository';
 export * from './bill.repository';
+export * from './payment.repository';

@@ -8,6 +8,7 @@ import { MainService } from '@fboservices/main.service';
 import { Payment} from '@shared/entity/inventory/payment';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
+import { QueryData } from '@shared/util/query-data';
 @Component({
   selector: 'app-delete-payment',
   templateUrl: './delete-payment.component.html',
@@ -68,7 +69,17 @@ export class DeletePaymentComponent implements OnInit {
 
     const tIds = this.route.snapshot.queryParamMap.get('ids');
     const tIdArray = tIds.split(',');
-    this.paymentService.listByIds(tIdArray).subscribe((payments) => {
+    const queryData:QueryData = {
+      include: [
+        {relation: 'vendor'}, {relation: 'bill'}, {relation: 'bank'}
+      ],
+      where: {
+        id: {
+          inq: tIdArray
+        }
+      }
+    };
+    this.paymentService.search(queryData).subscribe((payments) => {
 
       this.dataSource.data = payments;
       this.loading = false;
@@ -95,10 +106,13 @@ export class DeletePaymentComponent implements OnInit {
     const payments = this.dataSource.data;
     const tIds = [];
     payments.forEach((paymentP) => tIds.push(paymentP.id));
-    this.paymentService.deleteByIds(tIds).subscribe((paymentP) => {
+    const where = {id: {
+      inq: tIds
+    }};
+    this.paymentService['delete'](where).subscribe((count) => {
 
       this.loading = false;
-      this.toastr.success('Payments are deleted successfully', 'Payments deleted');
+      this.toastr.success(`${count.count} payments are deleted successfully`, 'Payments deleted');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {

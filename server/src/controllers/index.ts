@@ -14,3 +14,7 @@ export * from './transfer-bank.controller';
 export * from './transfer.controller';
 export * from './bill-vendor.controller';
 export * from './bill.controller';
+export * from './payment-vendor.controller';
+export * from './payment-bank.controller';
+export * from './payment-bill.controller';
+export * from './payment.controller';
