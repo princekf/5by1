@@ -1,4 +1,4 @@
-export interface ArrayReponse {
+export interface ArrayResponse {
 
     data: Array<string>;
 

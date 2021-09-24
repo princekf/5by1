@@ -4,7 +4,7 @@ import {Tax} from '../models';
 import {TaxRepository} from '../repositories';
 import { TAX_API } from '@shared/server-apis';
 import { ArrayReponse } from '../models/util/array-resp.model';
-import { ArrayReponse as ArrayReponseInft } from '@shared/util/array-resp';
+import { ArrayResponse as ArrayReponseInft } from '@shared/util/array-resp';
 
 import { authenticate } from '@loopback/authentication';
 import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
