@@ -38,7 +38,7 @@ export class CreateBillComponent implements OnInit {
 
   fboForm: FormGroup;
 
-  displayedColumns: string[] = [ 'product', 'unitPrice', 'quantity', 'discount', 'totalAmount', 'batchNumber', 'expiryDate', 'mfgDate', 'mrp', 'rrp' ];
+  displayedColumns: string[] = [ 'product', 'unitPrice', 'quantity', 'discount', 'totalAmount', 'batchNumber', 'expiryDate', 'mfgDate', 'mrp', 'rrp', 'action' ];
 
   dataSource = new MatTableDataSource<AbstractControl>();
 
