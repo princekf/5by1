@@ -19,6 +19,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
 import { DataTableModule } from '../../data-table/data-table.module';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [ ListBillComponent, CreateBillComponent, DeleteBillComponent ],
@@ -27,7 +28,7 @@ import { DataTableModule } from '../../data-table/data-table.module';
     MatSelectModule,
     ReactiveFormsModule, FormsModule, MatInputModule, MatDatepickerModule, MatNativeDateModule,
     MatAutocompleteModule, DataTableModule, ToolBarModule, MatFormFieldModule, MatButtonToggleModule,
-    MatSlideToggleModule
+    MatSlideToggleModule, MatIconModule
   ]
 })
 export class BillModule { }

@@ -21,6 +21,8 @@ input[type=number] {
 :host ::ng-deep .mat-header-row{
 background-color: #0062FF22;
 width: 50%;
+height: 40px;
+
 
 }
 
@@ -28,41 +30,163 @@ width: 50%;
   width: 40%;
 }
 
-.fbo-create-form-table{
+.create-form-table{
 	width: 100%;
+}
+th{
+  border-left: 0.5px solid  #0062FF22;
+}
+
+td{
+  border-left: 0.5px solid  #0062FF22;
+  
+  height: 40px;
+  width: 2%;
+}
+.paidlabel{
+  margin-right: 3%;
 }
 
 
+:host ::ng-deep .mat-slide-toggle.mat-primary.mat-checked .mat-slide-toggle-bar {
+  background-color: #0062FF;
+  width: 36px;
+  height: 20px;
+}
+:host ::ng-deep .mat-slide-toggle.mat-primary.mat-checked .mat-slide-toggle-thumb {
+  background-color: white;
+  margin-top: 2.5px;
+}
+:host ::ng-deep .mat-slide-toggle-bar {
+  position: relative;
+  width: 37px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 8px;
+}
+:host ::ng-deep .mat-slide-toggle-thumb {
+  height: 20px;
+  width: 20px;
+  margin-top: 2px;
+
+  border-radius: 50%;
+}
 :host ::ng-deep  .mat-form-field-infix {
   display: block;
   position: relative;
   flex: auto;
   min-width: 0;
-  width: 119px;
+  // width: 119px;
 }
-:host ::ng-deep .fbo-create-form {
-  width: 22%;
-  margin-left: 10%;
-}
-@media screen and (max-width: 960px)
-{
-  table {page-break-after:always}
-  table { page-break-after:auto }
-  tr    { page-break-inside:avoid; page-break-after:auto }
-  td    { page-break-inside:avoid; page-break-after:auto }
-  thead { display:table-header-group }
-  tfoot { display:table-footer-group }
+:host ::ng-deep td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+  padding-right: 0px !important;
+  border-right: 0.5px solid #0062FF22;
+  width: 1%;
+  //   max-width: 2px;
 }
 
-// 
+:host ::ng-deep th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+  padding-right: 0px;
+  // width: 1%;
+  // max-width: 1px;
+}
+
+:host ::ng-deep  td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+  padding-left: 0px;
+}
+
+:host ::ng-deep .mat-row.ng-star-inserted { 
+  height: 35px !important; 
+} 
+
+
+:host ::ng-deep #search-form{
+   .mat-form-field-underline {
+  display: none;
+  position: absolute;
+  width: 100%;
+  pointer-events: none;
+  transform: scale3d(1, 1.0001, 1);
+}
+ 
+ .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+  padding-bottom: 0em; 
+}
+.mat-sort-header{
+  padding-left:3%;
+
+}
+
+.fbo-create-form-first{
+  min-width: 210px;
+ 
+  width: 100%;
+
+}
+.fbo-create-form-numbermrp{
+  max-width: 70px;
+  text-align: right;
+ 
+  width: 100%;
+
+}
+.fbo-create-form-number{
+max-width:  117px;
+  text-align: right;
+
+ 
+  width: 100%;
+
+}
+.fbo-create-form-numberTwo{
+  max-width:  117px;
+    text-align: right;
+  
+   
+    width: 100%;
+  
+  }
+.fbo-create-form-numberd{
+
+  max-width:  117px;
+  text-align: right;
+
+ 
+  width: 100%;
+
+}
+.fbo-create-form-numberdelete{ 
+  max-width: 20px;
+}
+
+
+.mat-form-field-infix  {
+  display: block;
+  position: relative;
+  flex: auto;
+width: 100%;
+padding-left: 3%;
+padding-right: 3%;
+
+}
+
+.mobile-label {
+ display: none;
+      
+}
+}
 
 	@media only screen 
-    and (max-width: 760px), (min-device-width: 768px) 
+    and (max-width: 860px), (min-device-width: 768px) 
     and (max-device-width: 1024px)  {
+
+
+
+      
 
 		/* Force table to not be like tables anymore */
 		table, thead, tbody, th, td, tr {
-			display: contents;
+			display: initial;
 		}
 
 		/* Hide table headers (but not display: none;, for accessibility) */
@@ -71,48 +195,96 @@ width: 50%;
 			top: -9999px;
 			left: -9999px;
 		}
-
-    tr {
-      margin: 0 0 1rem 0;
-      background-color: transparent;
-    }
-      
-
-    
+  
 		td {
 			/* Behave  like a "row" */
-			border: none;
-			border-bottom: 1px solid #eee;
-			position: relative;
-			padding-left: 50%;
+      position: relative;
+      background-color: transparent;
+      border-bottom: none;
+      padding-top: 25px;
+border-left-color: transparent;
+    
 		}
-
-   .mat-header-row{
-      background-color:transparent;
-      width: 50%;
-      
-      }
-      
+    td.mat-cell, td.mat-footer-cell {
+      padding: 0;
+      border-bottom-width: 1px;
+      border-bottom-style: groove;
+  }
 
 		td:before {
 			/* Now like a table header */
 			position: absolute;
 			/* Top/left values mimic padding */
-			top: 0;
-			left: 6px;
-			width: 45%;
-			padding-right: 10px;
-			white-space: nowrap;
+      padding-top: 15px;
+      left: 6px;
+      width: 45%; 
+      padding-right: 10px; 
+      white-space: nowrap;
+      font-size: 15px;
+      font-weight: 500;
+    
+
 		}
 
-  .displayedColumns{
-    display: none;
-  }
+    .mat-header-row {
+      display: none;
+    }
 
-  .fbo-create-form-table{
-    width: 98%;
-    margin-left: 1%;
-    margin-right: 1%;
 
-}
-	}
+    :host ::ng-deep #search-form{
+      .mat-form-field-underline {
+     display: none;
+     position: absolute;
+     width: 100%;
+     pointer-events: none;
+     transform: scale3d(1, 1.0001, 1);
+   } 
+   .mat-form-field-infix  {
+  
+    margin-top: 3%;
+    
+     }
+  
+     .fbo-create-form-number{
+ 
+      text-align: left;
+      max-width: 100%;
+      padding-left: 0px;
+      width: 100%;
+    
+    }
+    .fbo-create-form-numbermrp{
+ 
+      text-align: left;
+      max-width: 100%;
+      padding-left: 0px;
+      width: 100%;
+    
+    }
+    :host ::ng-deep td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+      padding-right: 0px !important;
+      border-right: 0.5px solid #0062FF22;
+      width: 1%;
+      //   max-width: 2px;
+    }
+    
+    :host ::ng-deep th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+      padding-right: 0px;
+      // width: 1%;
+      // max-width: 1px;
+    }
+    .fbo-create-form-numberdelete{ 
+     display: block;
+     padding-left: 40%;
+    }
+    
+    .mobile-label {
+      display: contents;
+      font-size: 14px;
+      font-weight: 500;
+  
+          
+    }
+   }
+ 
+    }
