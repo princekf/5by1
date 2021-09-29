@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '@fboservices/user.service';
 import { ACCESS_TOKEN_ID } from '@shared/Constants';
+import { goToPreviousPage } from '@fboutil/fbo.util';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +28,8 @@ export class LoginComponent {
   });
 
   constructor(private readonly userService: UserService,
-    private readonly router: Router) { }
+    private readonly router: Router,
+    private readonly route: ActivatedRoute) { }
 
   submit(): void {
 
@@ -39,7 +41,7 @@ export class LoginComponent {
 
         this.loading = false;
         localStorage.setItem(ACCESS_TOKEN_ID, authResp.token);
-        this.router.navigateByUrl('/');
+        goToPreviousPage(this.route, this.router);
 
       }, (error) => {
 

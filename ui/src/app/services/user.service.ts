@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { User } from '@shared/entity/auth/user';
-import { SIGNUP_API, LOGIN_API } from '@shared/server-apis';
+import { SIGNUP_API, LOGIN_API, ME_API } from '@shared/server-apis';
 import { catchError, shareReplay } from 'rxjs/operators';
 import { AuthResponse } from '@shared/util/auth-resp';
 
@@ -27,6 +27,16 @@ export class UserService {
   login(user: { email: string; password: string; }): Observable<AuthResponse> {
 
     return this.http.post<AuthResponse>(LOGIN_API, user)
+      .pipe(shareReplay())
+      .pipe(
+        catchError((err) => throwError(() => err))
+      );
+
+  }
+
+  findMe(): Observable<User> {
+
+    return this.http.get<User>(ME_API)
       .pipe(shareReplay())
       .pipe(
         catchError((err) => throwError(() => err))

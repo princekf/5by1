@@ -34,8 +34,8 @@
         <mat-icon class="mat-5by1-white">more_horiz</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <button type="button" mat-menu-item>
-          logout
+        <button type="button" mat-menu-item (click)="doLogout()">
+          Logout
         </button>
       </mat-menu>
     </div>
