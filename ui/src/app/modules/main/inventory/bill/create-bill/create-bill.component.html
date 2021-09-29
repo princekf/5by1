@@ -5,7 +5,7 @@
 </div>
 <form [style.display]="loading ? 'none': ''" [formGroup]="fboForm" (ngSubmit)="upsertBill()">
 
-  <mat-form-field class="fbo-create-form">
+  <mat-form-field class="fbo-create-formTwo">
     <mat-label>Vendor</mat-label>
     <input type="text" matInput placeholder="Select a vendor" formControlName="vendor" [matAutocomplete]="autoVendor">
     <mat-autocomplete autoActiveFirstOption #autoVendor="matAutocomplete" [displayWith]="extractNameOfObject">
@@ -17,16 +17,16 @@
     <mat-error *ngIf="fboForm.controls['vendor'].hasError('required')"> Vendor is required</mat-error>
   </mat-form-field>
 
-  <mat-form-field class="fbo-create-form">
+  <mat-form-field class="fbo-create-formTwo">
     <mat-label>Bill date</mat-label>
-    <input matInput [matDatepicker]="billpicker" formControlName="billDate">
+    <input matInput [matDatepicker]="billpicker" formControlName="billDate" >
     <mat-datepicker-toggle matSuffix [for]="billpicker"></mat-datepicker-toggle>
-    <mat-datepicker #billpicker></mat-datepicker>
+    <mat-datepicker #billpicker ></mat-datepicker>
     <mat-error *ngIf="fboForm.controls['billDate'].hasError('required')"> Bill date is required </mat-error>
   </mat-form-field>
 
 
-  <mat-form-field class="fbo-create-form">
+  <mat-form-field class="fbo-create-formTwo">
     <mat-label>Due date</mat-label>
     <input matInput [matDatepicker]="picker" formControlName="dueDate">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -34,21 +34,21 @@
     <mat-error *ngIf="fboForm.controls['dueDate'].hasError('required')"> Due date is required </mat-error>
   </mat-form-field>
 
-  <mat-form-field class="fbo-create-form">
+  <mat-form-field class="fbo-create-formTwo">
     <mat-label>Bill Number</mat-label>
     <input matInput formControlName="billNumber" type="text">
     <mat-error *ngIf="fboForm.controls['billNumber'].hasError('required')"> Bill Number is required</mat-error>
   </mat-form-field>
 
 
-  <mat-form-field class="fbo-create-form">
+  <mat-form-field class="fbo-create-formTwo">
     <mat-label>Order Number</mat-label>
     <input matInput formControlName="orderNumber" type="text">
     <mat-error *ngIf="fboForm.controls['orderNumber'].hasError('required')"> Order Number is required</mat-error>
   </mat-form-field>
 
 
-  <mat-form-field class="fbo-create-form">
+  <mat-form-field class="fbo-create-formTwo">
     <mat-label>Order date</mat-label>
     <input matInput [matDatepicker]="orderpicker" formControlName="orderDate">
     <mat-datepicker-toggle matSuffix [for]="orderpicker"></mat-datepicker-toggle>
@@ -57,47 +57,16 @@
   </mat-form-field>
 
 
-  <mat-form-field class="fbo-create-form">
-    <mat-label>Amount</mat-label>
-    <input matInput formControlName="totalAmount" type="number" readonly>
-    <mat-error *ngIf="fboForm.controls['totalAmount'].hasError('required')"> Amount is required </mat-error>
-  </mat-form-field>
-
-
-  <mat-form-field class="fbo-create-form">
-    <mat-label>Discount</mat-label>
-    <input matInput formControlName="totalDiscount" type="number" readonly>
-    <mat-error *ngIf="fboForm.controls['totalDiscount'].hasError('required')">Discount is required </mat-error>
-  </mat-form-field>
-
-
-  <mat-form-field class="fbo-create-form">
-    <mat-label>Tax</mat-label>
-    <input matInput formControlName="totalTax" type="number" readonly>
-    <mat-error *ngIf="fboForm.controls['totalTax'].hasError('required')">Tax is required </mat-error>
-  </mat-form-field>
-
-  <mat-form-field class="fbo-create-form">
-    <mat-label>Grand Total</mat-label>
-    <input matInput formControlName="grandTotal" type="number" readonly>
-    <mat-error *ngIf="fboForm.controls['grandTotal'].hasError('required')">Grand Total is required </mat-error>
-  </mat-form-field>
-
-  <p class="fbo-create-form">
-    <mat-label class="paidlabel">Paid</mat-label>
-    <mat-slide-toggle formControlName="isPaid" color="primary"></mat-slide-toggle>
-  </p>
-
-  <h2 class="form-header">Add Purchase Items</h2>
+ 
   <table [style.display]="loading ? 'none': ''" formArrayName="purchaseItems" mat-table [dataSource]="dataSource"
-    matSort multiTemplateDataRows  class="create-form-table"  id="search-form">
+    matSort multiTemplateDataRows  class="create-form-table"  id="search-form" >
 
     <ng-container matColumnDef="product">
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Product </th>
       <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
         <span class="mobile-label">Product</span>
         <mat-form-field class="fbo-create-form-first">
-          <input type="text" matInput formControlName="product" [matAutocomplete]="autoProduct" >
+          <input type="text" matInput formControlName="product" [matAutocomplete]="autoProduct">
           <mat-autocomplete autoActiveFirstOption #autoProduct="matAutocomplete" [displayWith]="extractNameOfObject">
             <mat-option *ngFor="let productS of productsFiltered" [value]="productS">
               {{productS.name}}
@@ -166,7 +135,7 @@
       <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
         <span class="mobile-label">Expiry</span>
         <mat-form-field  class="fbo-create-form-number" >
-          <input matInput [matDatepicker]="picker" formControlName="expiryDate">
+          <input matInput [matDatepicker]="picker" formControlName="expiryDate" data-date-format='dd:mm:yyyy'>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
@@ -178,7 +147,7 @@
       <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
         <span class="mobile-label">MFG</span>
         <mat-form-field  class="fbo-create-form-number" >
-          <input matInput [matDatepicker]="picker" formControlName="mfgDate">
+          <input matInput [matDatepicker]="picker" formControlName="mfgDate" data-date-format='dd:mm:yyyy'>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
@@ -220,6 +189,47 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="fiveby1-element-row"></tr>
 
   </table>
+
+<p id="fbo-create-formThree">
+  <mat-label>Total Amount&nbsp;</mat-label>
+  <mat-form-field class="fbo-create-formTotal">
+    <input matInput formControlName="totalAmount" type="number" readonly>
+    <mat-error *ngIf="fboForm.controls['totalAmount'].hasError('required')"> Amount is required </mat-error>
+  </mat-form-field>
+</p>
+
+<p id="fbo-create-formThree">
+  <mat-label>Total Discount</mat-label>
+  <mat-form-field class="fbo-create-formTotal"> 
+    <input matInput formControlName="totalDiscount" type="number" readonly>
+    <mat-error *ngIf="fboForm.controls['totalDiscount'].hasError('required')">Discount is required </mat-error>
+  </mat-form-field>
+  </p>
+
+<p id="fbo-create-formThree">
+  <mat-label>Total Tax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</mat-label>
+  <mat-form-field class="fbo-create-formTotal">
+    <input matInput formControlName="totalTax" type="number" readonly>
+    <mat-error *ngIf="fboForm.controls['totalTax'].hasError('required')">Tax is required </mat-error>
+  </mat-form-field>
+  </p>
+
+<p id="fbo-create-formThreeFinal">
+  <mat-label>Grand Total&nbsp;&nbsp;&nbsp;</mat-label>
+  <mat-form-field class="fbo-create-formTotal" >
+    <input matInput formControlName="grandTotal" type="number" readonly>
+    <mat-error *ngIf="fboForm.controls['grandTotal'].hasError('required')">Grand Total is required </mat-error>
+  </mat-form-field>
+  </p>
+
+  <p id="fbo-create-formThree">
+    <mat-label class="paidlabel">Paid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </mat-label>
+    <span class="fbo-create-formTotal">
+    <mat-slide-toggle formControlName="isPaid" color="primary"></mat-slide-toggle>
+    </span>
+  </p>
+
+
 
   <p class="form-submit-container">
     <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
