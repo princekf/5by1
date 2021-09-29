@@ -32,6 +32,8 @@ export class CreateBillComponent implements OnInit {
 
   loading = true;
 
+  iserror = false;
+
   vendorsFiltered: Array<Vendor> = [];
 
   productsFiltered: Array<Product> = [];
@@ -72,7 +74,7 @@ export class CreateBillComponent implements OnInit {
 
   private createPurchaseItemFormGroup = (pItem?: PurchaseItem): FormGroup => {
 
-    const product = this.fBuilder.control(pItem?.product ?? '', [ Validators.required ]);
+    const product = this.fBuilder.control(pItem?.product ?? '', [ Validators.required, ]);
     const unitPrice = this.fBuilder.control(pItem?.unitPrice ?? 0, [ Validators.required ]);
     const unit = this.fBuilder.control(pItem?.unit ?? '', [ Validators.required ]);
     const quantity = this.fBuilder.control(pItem?.quantity ?? 1, [ Validators.required ]);
@@ -83,30 +85,35 @@ export class CreateBillComponent implements OnInit {
 
     const updateValueChanges = () => {
 
-      const qty:number = quantity.value;
-      const dct:number = discount.value;
-      const uPrice:number = unitPrice.value;
-      const totalAmt = uPrice * qty - dct;
-      totalAmount.setValue(totalAmt);
+      if (typeof product.value === 'object') {
 
-      const formArray = this.fboForm.get('purchaseItems') as FormArray;
-      let pAmount = 0;
-      let pDiscount = 0;
-      let pGTotal = 0;
-      for (let idx = 0; idx < formArray.length; idx++) {
+        const qty:number = quantity.value;
+        const dct:number = discount.value;
+        const uPrice:number = unitPrice.value;
+        const totalAmt = uPrice * qty - dct;
+        totalAmount.setValue(totalAmt);
 
-        const curFormGroup = formArray.get([ idx ]) as FormGroup;
-        pAmount += curFormGroup.controls.quantity.value * curFormGroup.controls.unitPrice.value;
-        pDiscount += curFormGroup.controls.discount.value;
-        pGTotal += curFormGroup.controls.totalAmount.value;
+        const formArray = this.fboForm.get('purchaseItems') as FormArray;
+        let pAmount = 0;
+        let pDiscount = 0;
+        let pGTotal = 0;
+        for (let idx = 0; idx < formArray.length; idx++) {
+
+          const curFormGroup = formArray.get([ idx ]) as FormGroup;
+          pAmount += curFormGroup.controls.quantity.value * curFormGroup.controls.unitPrice.value;
+          pDiscount += curFormGroup.controls.discount.value;
+          pGTotal += curFormGroup.controls.totalAmount.value;
+
+        }
+        this.fboForm.get('totalAmount').setValue(pAmount);
+        this.fboForm.get('totalDiscount').setValue(pDiscount);
+        this.fboForm.get('grandTotal').setValue(pGTotal);
 
       }
 
-      this.fboForm.get('totalAmount').setValue(pAmount);
-      this.fboForm.get('totalDiscount').setValue(pDiscount);
-      this.fboForm.get('grandTotal').setValue(pGTotal);
-
     };
+
+
     unitPrice.valueChanges.subscribe(updateValueChanges);
     quantity.valueChanges.subscribe(updateValueChanges);
     discount.valueChanges.subscribe(updateValueChanges);
@@ -138,6 +145,7 @@ export class CreateBillComponent implements OnInit {
 
       if (typeof value === 'object') {
 
+
         const sProduct = value as Product;
         this.categoryService.get(sProduct.categoryId, {include: [ {relation: 'unit'} ]}).subscribe((categoryS) => unit.setValue(categoryS.unit));
         const formArray = this.fboForm.get('purchaseItems') as FormArray;
@@ -146,8 +154,10 @@ export class CreateBillComponent implements OnInit {
 
           formArray.push(this.createPurchaseItemForm());
           this.dataSource = new MatTableDataSource(formArray.controls);
+          this.createPurchaseItemFormGroup().reset();
 
         }
+        this.iserror = true;
         return;
 
       }
@@ -337,5 +347,41 @@ export class CreateBillComponent implements OnInit {
   }
 
  findUnitCode = (elm:FormGroup):string => elm.controls?.unit?.value?.code;
+
+
+ removeAt= (idx:number): void => {
+
+
+   const itemsFormArray = <FormArray> this.fboForm.get('purchaseItems');
+
+
+   const curFgr = itemsFormArray.get([ idx ]) as FormGroup;
+
+   if (curFgr.controls.product.value) {
+
+     if (typeof curFgr.controls.product.value !== 'object') {
+
+       curFgr.get('product').setValue('');
+
+       this.createPurchaseItemFormGroup().reset();
+       this.createPurchaseItemForm();
+
+     } else {
+
+       const {data} = this.dataSource;
+       data.splice(idx, 1);
+       this.dataSource.data = data;
+
+       itemsFormArray.updateValueAndValidity();
+       this.fboForm.updateValueAndValidity();
+
+       this.createPurchaseItemFormGroup().reset();
+
+     }
+
+   }
+
+ }
+
 
 }
