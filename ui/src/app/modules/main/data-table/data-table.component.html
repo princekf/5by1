@@ -9,9 +9,14 @@
   (click)="editSelected()">
     <mat-icon>edit</mat-icon>
   </button>
-  <button mat-flat-button class="filter-button">
+  <button mat-flat-button class="filter-button" [matMenuTriggerFor]="menu">
     <mat-icon>filter_alt</mat-icon>
   </button>
+  <mat-menu #menu="matMenu">
+    <div (click) = "$event.stopPropagation()">
+      <ng-template filterHost ></ng-template>
+    </div>
+  </mat-menu>
 </div>
 <div *ngIf="loading">
   <ngx-skeleton-loader count="5"></ngx-skeleton-loader>

@@ -18,9 +18,11 @@ import { UnitRoutingModule } from './unit.routing.module';
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
 import { DataTableModule } from '../../data-table/data-table.module';
 
+import { FilterUnitComponent } from './filter-unit/filter-unit.component';
+
 
 @NgModule({
-  declarations: [ ListUnitComponent, CreateUnitComponent, DeleteUnitComponent ],
+  declarations: [ ListUnitComponent, CreateUnitComponent, DeleteUnitComponent, FilterUnitComponent ],
   imports: [
     CommonModule,
     UnitRoutingModule, ToolBarModule, DataTableModule, MatInputModule, MatFormFieldModule,

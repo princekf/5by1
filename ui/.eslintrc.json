@@ -7,7 +7,7 @@
         "angular"
     ],
     "rules": {
-        "new-cap": ["error", { "newIsCap": true, "capIsNewExceptionPattern" : "Injectable|Component|NgModule|ViewChild|Inject|Input|Output"}],
+        "new-cap": ["error", { "newIsCap": true, "capIsNewExceptionPattern" : "Injectable|Component|NgModule|ViewChild|Inject|Input|Output|Directive"}],
         "max-params": ["error", 7]
     }
 }
