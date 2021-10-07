@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import { Unit } from '@shared/entity/inventory/unit';
 import { ActivatedRoute } from '@angular/router';
 import { UnitService } from '@fboservices/inventory/unit.service';
+import { FilterItem } from '../../../directives/table-filter/filter-item';
+import { FilterUnitComponent } from '../filter-unit/filter-unit.component';
 
 @Component({
   selector: 'app-list-unit',
@@ -35,6 +37,8 @@ export class ListUnitComponent {
     items: []
   };
 
+  filterItem: FilterItem;
+
   constructor(
     private activatedRoute : ActivatedRoute,
     private readonly unitService:UnitService) { }
@@ -55,6 +59,12 @@ export class ListUnitComponent {
       });
 
     };
+
+    ngOnInit(): void {
+
+      this.filterItem = new FilterItem(FilterUnitComponent, {});
+
+    }
 
     ngAfterViewInit():void {
 

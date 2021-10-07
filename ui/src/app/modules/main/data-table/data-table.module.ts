@@ -8,9 +8,12 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatTableModule} from '@angular/material/table';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatMenuModule} from '@angular/material/menu';
+
+import { TableFilterDirective } from '../directives/table-filter/table-filter.directive';
 
 @NgModule({
-  declarations: [ DataTableComponent ],
+  declarations: [ DataTableComponent, TableFilterDirective, ],
   imports: [
     CommonModule,
     MatIconModule,
@@ -19,7 +22,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatPaginatorModule,
     NgxSkeletonLoaderModule,
     MatTableModule,
-    MatCheckboxModule
+    MatCheckboxModule, MatMenuModule,
   ],
   exports: [ DataTableComponent ]
 })
