@@ -21,12 +21,14 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatRadioModule} from '@angular/material/radio';
+import { FilterProductComponent } from './filter-product/filter-product.component';
 
 @NgModule({
   declarations: [
     ListProductComponent,
     CreateProductComponent,
     DeleteProductComponent,
+    FilterProductComponent,
   ],
   imports: [
     CommonModule, ToolBarModule, DataTableModule, ProductRoutingModule, MatTableModule,

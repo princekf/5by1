@@ -11,10 +11,9 @@ export class FilterUnitComponent {
 
   selectedtwo = 'one';
 
-  selectedthree = 'two';
+  selectedthree = 'one';
 
-  selectedfour = 'three';
+  selectedfour = 'one';
 
-value = null;
 
 }

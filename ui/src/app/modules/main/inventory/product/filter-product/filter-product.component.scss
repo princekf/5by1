@@ -2,9 +2,9 @@
     text-align: start !important; 
     font-size: small;
     width: 80%;
-}
-
-:host ::ng-deep  .mat-form-field-infix {
+  }
+  
+  :host ::ng-deep  .mat-form-field-infix {
     display: block;
     position: relative;
     flex: auto;
@@ -14,17 +14,17 @@
     border-radius: 3px; 
   font-size: small;
   }
-:host ::ng-deep .mat-form-field-underline {
+  :host ::ng-deep .mat-form-field-underline {
     display: none;
     position: absolute;
     width: 100%;
     pointer-events: none;
     transform: scale3d(1, 1.0001, 1);
   }
-:host ::ng-deep   .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+  :host ::ng-deep   .mat-form-field-appearance-legacy .mat-form-field-wrapper {
     padding-bottom: 0em; 
     }
-:host ::ng-deep.mat-form-field-appearance-legacy .mat-form-field-infix {
+  :host ::ng-deep.mat-form-field-appearance-legacy .mat-form-field-infix {
     padding: 3px 5px;
     
-}
+  }
