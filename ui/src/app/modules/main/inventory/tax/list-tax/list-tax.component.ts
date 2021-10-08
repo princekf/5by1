@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { TaxService } from '@fboservices/inventory/tax.service';
 import { Tax } from '@shared/entity/inventory/tax';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
+import { FilterItem } from '../../../directives/table-filter/filter-item';
+import { FilterTaxComponent } from '../filter-tax/filter-tax.component';
 @Component({
   selector: 'app-list-tax',
   templateUrl: './list-tax.component.html',
@@ -34,6 +36,8 @@ export class ListTaxComponent {
     items: []
   };
 
+  filterItem: FilterItem;
+
   constructor(
     private activatedRoute : ActivatedRoute,
     private readonly taxService:TaxService) { }
@@ -54,6 +58,12 @@ export class ListTaxComponent {
     });
 
   };
+
+  ngOnInit(): void {
+
+    this.filterItem = new FilterItem(FilterTaxComponent, {});
+
+  }
 
   ngAfterViewInit():void {
 

@@ -3,7 +3,16 @@
     font-size: small;
     width: 80%;
 }
-
+.lable{
+    min-width: 80px;
+    
+    overflow: hidden;
+}
+.select{
+    max-width: 88px;
+    padding-right: 5px;
+   
+}
 :host ::ng-deep  .mat-form-field-infix {
     display: block;
     position: relative;
@@ -28,3 +37,29 @@
     padding: 3px 5px;
     
 }
+
+.filtercancelbutton{
+    background-color: rgba(0,98,255, .3);
+    color: #0062FF;
+  
+  }
+  .filtersavebutton{
+    background-color: #0062FF;
+    color: #FFFFFF;
+    margin-left: 30px !important;
+  
+  }
+  .filter-item-card{
+  
+    padding:20px;
+  }
+  .filter-actions-container{
+    text-align: center;
+  }
+  .filter-content-div{
+  display: flex;
+    margin-bottom: 40px;
+    align-items: flex-end;
+    font: -webkit-small-control !important;
+  
+  }

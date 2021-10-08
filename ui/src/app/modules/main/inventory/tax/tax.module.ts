@@ -11,20 +11,21 @@ import {MatButtonModule} from '@angular/material/button';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
-
+import {MatSelectModule} from '@angular/material/select';
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
 import { DataTableModule } from '../../data-table/data-table.module';
 import { DeleteTaxComponent } from './delete-tax/delete-tax.component';
+import { FilterTaxComponent } from './filter-tax/filter-tax.component';
 
 @NgModule({
-  declarations: [ CreateTaxComponent, ListTaxComponent, DeleteTaxComponent ],
+  declarations: [ CreateTaxComponent, ListTaxComponent, DeleteTaxComponent, FilterTaxComponent ],
   imports: [
     CommonModule,
     TaxRoutingModule,
     ToolBarModule,
     DataTableModule,
     MatFormFieldModule, ReactiveFormsModule, FormsModule, MatAutocompleteModule,
-    MatInputModule, MatButtonModule,
+    MatInputModule, MatButtonModule, MatSelectModule,
     NgxSkeletonLoaderModule, MatSortModule, MatTableModule,
   ]
 })
