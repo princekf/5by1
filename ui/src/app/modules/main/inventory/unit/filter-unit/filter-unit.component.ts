@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, } from '@angular/core';
 
 @Component({
   selector: 'app-filter-unit',
@@ -7,5 +7,14 @@ import { Component } from '@angular/core';
 })
 export class FilterUnitComponent {
 
+  selectedone = 'one';
+
+  selectedtwo = 'one';
+
+  selectedthree = 'two';
+
+  selectedfour = 'three';
+
+value = null;
 
 }
