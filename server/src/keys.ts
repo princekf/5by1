@@ -4,11 +4,6 @@ import {User} from './models';
 import {Credentials} from './repositories';
 import {PasswordHasher} from './services';
 
-export namespace TokenServiceConstants {
-  export const TOKEN_SECRET_VALUE = 'myjwts3cr3t';
-  export const TOKEN_EXPIRES_IN_VALUE = '36000';
-}
-
 export namespace TokenServiceBindings {
   export const TOKEN_SECRET = BindingKey.create<string>(
     'authentication.jwt.secret',

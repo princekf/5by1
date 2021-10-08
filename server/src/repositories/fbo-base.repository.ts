@@ -1,5 +1,5 @@
 import {DefaultCrudRepository, Entity, Filter} from '@loopback/repository';
-import { ArrayReponse as ArrayReponseInft } from '@shared/util/array-resp';
+import { ArrayResponse as ArrayReponseInft } from '@shared/util/array-resp';
 
 export class FBOBaseRepository<T extends Entity, ID, Relations extends Record<never, unknown>>
   extends DefaultCrudRepository<

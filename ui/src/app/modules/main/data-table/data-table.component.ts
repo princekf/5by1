@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, Input, Type, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,6 +10,9 @@ import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Tax } from '@shared/entity/inventory/tax';
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
+import { TableFilterDirective } from '../directives/table-filter/table-filter.directive';
+import { FilterItem } from '../directives/table-filter/filter-item';
+import { FilterComponent } from '../directives/table-filter/filter-component';
 
 @Component({
   selector: 'app-data-table',
@@ -89,8 +92,13 @@ export class DataTableComponent {
 
   displayedColumnsS: Array<string>;
 
+  @Input() filterItem: FilterItem;
+
+  @ViewChild(TableFilterDirective, {static: true}) filterHost!: TableFilterDirective;
+
   constructor(private router:Router,
-    private readonly mainService: MainService) { }
+    private readonly mainService: MainService,
+    private componentFactoryResolver: ComponentFactoryResolver) { }
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected(): boolean {
@@ -115,7 +123,22 @@ export class DataTableComponent {
 
   }
 
+  private loadComponent = () => {
+
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.filterItem.component);
+
+    const {viewContainerRef} = this.filterHost;
+    viewContainerRef.clear();
+
+    const componentRef = viewContainerRef.createComponent<FilterComponent>(componentFactory);
+    componentRef.instance.data = this.filterItem.data;
+
+  };
+
   ngOnInit():void {
+
+    this.loadComponent();
+
 
     if (this.mainService.isMobileView()) {
 
@@ -124,6 +147,7 @@ export class DataTableComponent {
       this.displayedColumns = this.extraColumns.splice(0, COLUMN_COUNT_MOBILE_VIEW);
 
     }
+
 
   }
 

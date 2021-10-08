@@ -1,6 +1,7 @@
 const BASE_URI = '/api';
 export const USER_API = '/auth/users';
 export const LOGIN_API = `${BASE_URI}${USER_API}/login`;
+export const ME_API = `${BASE_URI}${USER_API}/me`;
 export const SIGNUP_API = `${BASE_URI}${USER_API}/signup`;
 
 export const VENDOR_API = '/inv/vendors';
@@ -38,3 +39,6 @@ export const BANK_API_URI = `${BASE_URI}${BANK_API}`;
 
 export const UNIT_API = '/inv/units';
 export const UNIT_API_URI = `${BASE_URI}${UNIT_API}`;
+
+export const STOCK_API = '/inv/stock';
+export const STOCK_API_URI = `${BASE_URI}${STOCK_API}`;

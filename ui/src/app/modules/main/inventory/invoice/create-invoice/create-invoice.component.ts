@@ -3,15 +3,14 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Valida
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvoiceService } from '@fboservices/inventory/invoice.service';
 import { ToastrService } from 'ngx-toastr';
-import { Invoice, SaleItem } from '@shared/entity/inventory/invoice';
+import { SaleItem } from '@shared/entity/inventory/invoice';
 import { Customer } from '@shared/entity/inventory/customer';
 import { CustomerService } from '@fboservices/inventory/customer.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { Product } from '@shared/entity/inventory/product';
 import { ProductService } from '@fboservices/inventory/product.service';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
-import { UnitService } from '@fboservices/inventory/unit.service';
-import { Unit } from '@shared/entity/inventory/unit';
+import { StockService } from '@fboservices/inventory/stock.service';
 import { Observable } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { CategoryService } from '@fboservices/inventory/category.service';
@@ -30,7 +29,7 @@ export class CreateInvoiceComponent implements OnInit {
 
   fboForm: FormGroup;
 
-  displayedColumns: string[] = [ 'product', 'quantity', 'unitPrice', 'discount', 'totalAmount', 'batchNumber', 'mrp' ];
+  displayedColumns: string[] = [ 'product', 'mrp', 'quantity', 'unitPrice', 'discount', 'totalAmount', 'batchNumber' ];
 
  dataSource = new MatTableDataSource<AbstractControl>();
 
@@ -46,7 +45,7 @@ export class CreateInvoiceComponent implements OnInit {
     private readonly productService:ProductService,
     private readonly categoryService:CategoryService,
     private readonly customerService:CustomerService,
-    private readonly unitService: UnitService,
+    private readonly stockService: StockService,
     private readonly toastr: ToastrService,
     private fb: FormBuilder) { }
 
@@ -94,13 +93,26 @@ export class CreateInvoiceComponent implements OnInit {
     private createSaleItemForm = (saleItem?: SaleItem): FormGroup => {
 
       const fGrp = this.createSaleItemFormGroup(saleItem);
-      const {product, unit} = fGrp.controls;
+      const {product, unit, unitPrice, mrp, batchNumber} = fGrp.controls;
       product.valueChanges.subscribe((value) => {
 
         if (typeof value === 'object') {
 
           const sProduct = value as Product;
           this.categoryService.get(sProduct.categoryId, {include: [ {relation: 'unit'} ]}).subscribe((categoryS) => unit.setValue(categoryS.unit));
+          this.stockService.stockSummary(sProduct.id).subscribe((stockSummarys) => {
+
+            if (stockSummarys.length < 1) {
+
+              return;
+
+            }
+            const [ stockSummary ] = stockSummarys;
+            unitPrice.setValue(stockSummary.rrp);
+            mrp.setValue(stockSummary.mrp);
+            batchNumber.setValue(stockSummary.batchNumber);
+
+          });
           const formArray = this.fboForm.get('saleItems') as FormArray;
           const lastFormGroup = formArray.get([ formArray.length - 1 ]) as FormGroup;
           if (lastFormGroup.controls.product.value) {

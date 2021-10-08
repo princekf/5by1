@@ -2,24 +2,45 @@ import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree, Rout
 import { Observable } from 'rxjs';
 import { ACCESS_TOKEN_ID } from '@shared/Constants';
 import { Injectable } from '@angular/core';
+import { UserService } from '@fboservices/user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppAuthGuard implements CanActivate {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+    private userService: UserService) { }
 
-  canActivate = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
-   boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> => {
+  private createUrlTree = (state: RouterStateSnapshot):UrlTree => {
 
-    if (localStorage.getItem(ACCESS_TOKEN_ID)) {
+    const urlTree = this.router.parseUrl('/login');
+    urlTree.queryParams = {burl: state.url};
+    return urlTree;
 
-      return true;
+  }
+
+  canActivate = async(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Promise<boolean | UrlTree> => {
+
+    if (!localStorage.getItem(ACCESS_TOKEN_ID)) {
+
+      return this.createUrlTree(state);
 
     }
-    this.router.navigate([ '/login' ]);
-    return false;
+    try {
+
+      const user = await this.userService.findMe().toPromise();
+      if (user && user.id) {
+
+        return true;
+
+      }
+
+    } catch (error) {
+
+    }
+
+    return this.createUrlTree(state);
 
   }
 
