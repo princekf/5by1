@@ -5,6 +5,8 @@ import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
 import { Customer } from '@shared/entity/inventory/customer';
 import { VendorService } from '@fboservices/inventory/vendor.service';
+import { FilterItem } from '../../../directives/table-filter/filter-item';
+import { FilterVendorComponent } from '../filter-vendor/filter-vendor.component';
 
 @Component({
   selector: 'app-list-vendor',
@@ -36,6 +38,8 @@ export class ListVendorComponent {
     items: []
   };
 
+  filterItem: FilterItem;
+
   constructor(
     private activatedRoute : ActivatedRoute,
     private readonly vendorService:VendorService) { }
@@ -56,6 +60,13 @@ export class ListVendorComponent {
       });
 
     };
+
+    ngOnInit(): void {
+
+      this.filterItem = new FilterItem(FilterVendorComponent, {});
+
+    }
+
 
     ngAfterViewInit():void {
 
