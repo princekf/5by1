@@ -16,9 +16,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
 import { DataTableModule } from '../../data-table/data-table.module';
+import { FilterInvoiceComponent } from './filter-invoice/filter-invoice.component';
+
 
 @NgModule({
-  declarations: [ ListInvoiceComponent, CreateInvoiceComponent, DeleteInvoiceComponent ],
+  declarations: [ ListInvoiceComponent, CreateInvoiceComponent, DeleteInvoiceComponent, FilterInvoiceComponent ],
   imports: [
     CommonModule, InvoiceRoutingModule, ToolBarModule, DataTableModule,
     MatButtonModule, NgxSkeletonLoaderModule, MatSortModule, MatTableModule, MatSelectModule,

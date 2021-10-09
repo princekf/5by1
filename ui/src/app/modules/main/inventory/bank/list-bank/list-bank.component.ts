@@ -5,6 +5,8 @@ import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
+import { FilterItem } from '../../../directives/table-filter/filter-item';
+import { FilterBankComponent } from '../filter-bank/filter-bank.component';
 @Component({
   selector: 'app-list-bank',
   templateUrl: './list-bank.component.html',
@@ -34,6 +36,9 @@ export class ListBankComponent {
     pageIndex: 0,
     items: []
   };
+
+
+  filterItem: FilterItem;
 
   constructor(private activatedRoute: ActivatedRoute,
     private bankService: BankService) { }
@@ -69,6 +74,14 @@ export class ListBankComponent {
     });
 
   };
+
+
+  ngOnInit(): void {
+
+    this.filterItem = new FilterItem(FilterBankComponent, {});
+
+  }
+
 
 
 }

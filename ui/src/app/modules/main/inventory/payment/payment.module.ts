@@ -17,8 +17,9 @@ import {MatSortModule} from '@angular/material/sort';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { FilterPaymentComponent } from './filter-payment/filter-payment.component';
 @NgModule({
-  declarations: [ CreatePaymentComponent, ListPaymentComponent, DeletePaymentComponent ],
+  declarations: [ CreatePaymentComponent, ListPaymentComponent, DeletePaymentComponent, FilterPaymentComponent ],
   imports: [
     CommonModule, PaymentRoutingModule, MatSelectModule, MatFormFieldModule, ReactiveFormsModule,
     FormsModule, MatInputModule, MatButtonModule, MatTableModule, MatSortModule,

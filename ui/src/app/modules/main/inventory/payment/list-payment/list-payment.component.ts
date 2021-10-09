@@ -7,6 +7,8 @@ import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
+import { FilterItem } from '../../../directives/table-filter/filter-item';
+import { FilterPaymentComponent } from '../filter-payment/filter-payment.component';
 
 @Component({
   selector: 'app-list-payment',
@@ -40,6 +42,8 @@ export class ListPaymentComponent {
     pageIndex: 0,
     items: []
   };
+
+  filterItem: FilterItem;
 
 
   columnParsingFn = (element:unknown, column:string) : string => {
@@ -82,6 +86,12 @@ export class ListPaymentComponent {
     });
 
   };
+
+  ngOnInit(): void {
+
+    this.filterItem = new FilterItem(FilterPaymentComponent, {});
+
+  }
 
   ngAfterViewInit():void {
 

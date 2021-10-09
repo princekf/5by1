@@ -7,6 +7,8 @@ import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
+import { FilterItem } from '../../../directives/table-filter/filter-item';
+import { FilterRevenueComponent } from '../filter-revenue/filter-revenue.component';
 @Component({
   selector: 'app-list-revenue',
   templateUrl: './list-revenue.component.html',
@@ -38,6 +40,8 @@ export class ListRevenueComponent {
     pageIndex: 0,
     items: []
   };
+
+  filterItem: FilterItem;
 
   columnParsingFn = (element:unknown, column:string): string => {
 
@@ -73,6 +77,13 @@ export class ListRevenueComponent {
       });
 
     };
+
+    ngOnInit(): void {
+
+      this.filterItem = new FilterItem(FilterRevenueComponent, {});
+
+    }
+
 
     ngAfterViewInit():void {
 

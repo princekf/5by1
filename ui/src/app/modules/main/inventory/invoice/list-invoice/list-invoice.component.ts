@@ -7,6 +7,8 @@ import { Invoice } from '@shared/entity/inventory/invoice';
 import { ActivatedRoute } from '@angular/router';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
+import { FilterItem } from '../../../directives/table-filter/filter-item';
+import { FilterInvoiceComponent } from '../filter-invoice/filter-invoice.component';
 
 @Component({
   selector: 'app-list-invoice',
@@ -40,6 +42,9 @@ export class ListInvoiceComponent {
     items: []
   };
 
+
+  filterItem: FilterItem;
+  
   columnParsingFn = (element:unknown, column:string): string => {
 
     switch (column) {
@@ -74,6 +79,12 @@ export class ListInvoiceComponent {
       });
 
     };
+
+    ngOnInit(): void {
+
+      this.filterItem = new FilterItem(FilterInvoiceComponent, {});
+
+    }
 
     ngAfterViewInit():void {
 
