@@ -13,15 +13,16 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-
+import {MatSelectModule} from '@angular/material/select';
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
 import { DataTableModule } from '../../data-table/data-table.module';
+import { FilterVendorComponent } from './filter-vendor/filter-vendor.component';
 
 @NgModule({
-  declarations: [ CreateVendorComponent, ListVendorComponent, DeleteVendorComponent ],
+  declarations: [ CreateVendorComponent, ListVendorComponent, DeleteVendorComponent, FilterVendorComponent ],
   imports: [
     ToolBarModule, DataTableModule,
-    CommonModule, VendorRoutingModule, MatFormFieldModule, ReactiveFormsModule, FormsModule,
+    CommonModule, VendorRoutingModule, MatFormFieldModule, ReactiveFormsModule, FormsModule, MatSelectModule,
     MatInputModule, MatButtonModule, NgxSkeletonLoaderModule, MatSortModule, MatTableModule, MatAutocompleteModule,
   ]
 })

@@ -9,6 +9,8 @@ import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
 import { ProductService } from '@fboservices/inventory/product.service';
 import { Product } from '@shared/entity/inventory/product';
+import { FilterItem } from '../../../directives/table-filter/filter-item';
+import { FilterBillComponent } from '../filter-bill/filter-bill.component';
 @Component({
   selector: 'app-list-bill',
   templateUrl: './list-bill.component.html',
@@ -42,6 +44,8 @@ export class ListBillComponent {
   };
 
   products: Array<Product> =[];
+
+  filterItem: FilterItem;
 
 
   columnParsingFn = (element:unknown, column:string): string => {
@@ -86,6 +90,13 @@ export class ListBillComponent {
     });
 
   };
+
+
+  ngOnInit(): void {
+
+    this.filterItem = new FilterItem(FilterBillComponent, {});
+
+  }
 
   ngAfterViewInit():void {
 

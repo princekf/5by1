@@ -20,9 +20,10 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
 import { DataTableModule } from '../../data-table/data-table.module';
 import {MatIconModule} from '@angular/material/icon';
+import { FilterBillComponent } from './filter-bill/filter-bill.component';
 
 @NgModule({
-  declarations: [ ListBillComponent, CreateBillComponent, DeleteBillComponent ],
+  declarations: [ ListBillComponent, CreateBillComponent, DeleteBillComponent, FilterBillComponent ],
   imports: [
     CommonModule, BillRoutingModule, MatButtonModule, NgxSkeletonLoaderModule, MatSortModule, MatTableModule, 
     MatSelectModule,

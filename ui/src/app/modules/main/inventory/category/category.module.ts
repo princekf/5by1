@@ -16,8 +16,9 @@ import {MatTableModule} from '@angular/material/table';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { FilterCategoryComponent } from './filter-category/filter-category.component';
 @NgModule({
-  declarations: [ CreateCategoryComponent, ListCategoryComponent, DeleteCategoryComponent ],
+  declarations: [ CreateCategoryComponent, ListCategoryComponent, DeleteCategoryComponent, FilterCategoryComponent ],
   imports: [
     CommonModule,
     ToolBarModule,

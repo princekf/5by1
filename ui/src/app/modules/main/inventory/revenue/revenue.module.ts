@@ -16,8 +16,9 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { FilterRevenueComponent } from './filter-revenue/filter-revenue.component';
 @NgModule({
-  declarations: [ ListRevenueComponent, CreateRevenueComponent, DeleteRevenueComponent ],
+  declarations: [ ListRevenueComponent, CreateRevenueComponent, DeleteRevenueComponent, FilterRevenueComponent ],
   imports: [
     CommonModule, RevenueRoutingModule,
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule,

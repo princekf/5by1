@@ -16,9 +16,10 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { FilterTransferComponent } from './filter-transfer/filter-transfer.component';
 
 @NgModule({
-  declarations: [ ListTransferComponent, CreateTransferComponent, DeleteTransferComponent ],
+  declarations: [ ListTransferComponent, CreateTransferComponent, DeleteTransferComponent, FilterTransferComponent ],
   imports: [
     CommonModule, TransferRoutingModule, MatSelectModule, MatFormFieldModule, ReactiveFormsModule,
     FormsModule, MatInputModule, MatButtonModule, MatTableModule, MatSortModule,

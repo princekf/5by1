@@ -7,6 +7,8 @@ import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
+import { FilterItem } from '../../../directives/table-filter/filter-item';
+import { FilterTransferComponent } from '../filter-transfer/filter-transfer.component';
 @Component({
   selector: 'app-list-transfer',
   templateUrl: './list-transfer.component.html',
@@ -38,6 +40,9 @@ export class ListTransferComponent {
     items: []
   };
 
+
+  filterItem: FilterItem;
+  
   columnParsingFn = (element:unknown, column:string) : string => {
 
     switch (column) {
@@ -77,6 +82,12 @@ export class ListTransferComponent {
     });
 
   };
+
+  ngOnInit(): void {
+
+    this.filterItem = new FilterItem(FilterTransferComponent, {});
+
+  }
 
   ngAfterViewInit():void {
 

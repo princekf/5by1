@@ -14,8 +14,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
+import { FilterBankComponent } from './filter-bank/filter-bank.component';
 @NgModule({
-  declarations: [ ListBankComponent, CreateBankComponent, DeleteBankComponent ],
+  declarations: [ ListBankComponent, CreateBankComponent, DeleteBankComponent, FilterBankComponent ],
   imports: [
     CommonModule, BankRoutingModule, DataTableModule, MatTableModule, NgxSkeletonLoaderModule,
     MatSortModule, ToolBarModule, MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule,

@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
+import { FilterItem } from '../../../directives/table-filter/filter-item';
+import { FilterProductComponent } from '../filter-product/filter-product.component';
 
 @Component({
   selector: 'app-list-item',
@@ -38,6 +40,8 @@ export class ListProductComponent {
     items: []
   };
 
+  filterItem: FilterItem;
+
   constructor(
     private activatedRoute : ActivatedRoute,
     private readonly productService:ProductService) { }
@@ -61,6 +65,12 @@ export class ListProductComponent {
       });
 
     };
+
+    ngOnInit(): void {
+
+      this.filterItem = new FilterItem(FilterProductComponent, {});
+
+    }
 
     ngAfterViewInit():void {
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, } from '@angular/core';
 
 @Component({
   selector: 'app-filter-unit',
@@ -6,6 +6,14 @@ import { Component } from '@angular/core';
   styleUrls: [ './filter-unit.component.scss' ]
 })
 export class FilterUnitComponent {
+
+  selectedone = 'one';
+
+  selectedtwo = 'one';
+
+  selectedthree = 'one';
+
+  selectedfour = 'one';
 
 
 }

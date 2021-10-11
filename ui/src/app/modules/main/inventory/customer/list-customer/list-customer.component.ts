@@ -5,6 +5,8 @@ import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { Subscription } from 'rxjs';
 import { Customer } from '@shared/entity/inventory/customer';
 import { QueryData } from '@shared/util/query-data';
+import { FilterItem } from '../../../directives/table-filter/filter-item';
+import { FilterCustomerComponent } from '../filter-customer/filter-customer.component';
 
 @Component({
   selector: 'app-list-customer',
@@ -37,6 +39,8 @@ export class ListCustomerComponent {
     items: []
   };
 
+  filterItem: FilterItem;
+  
   constructor(
     private activatedRoute : ActivatedRoute,
     private readonly customerService:CustomerService) { }
@@ -57,6 +61,12 @@ export class ListCustomerComponent {
       });
 
     };
+
+    ngOnInit(): void {
+
+      this.filterItem = new FilterItem(FilterCustomerComponent, {});
+
+    }
 
     ngAfterViewInit():void {
 
