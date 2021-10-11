@@ -17,8 +17,9 @@ import { TransactionRoutingModule } from './transaction.routing.module';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
+import { FilterTransactionComponent } from './filter-transaction/filter-transaction.component';
 @NgModule({
-  declarations: [ ListTransactionComponent ],
+  declarations: [ ListTransactionComponent, FilterTransactionComponent ],
   imports: [
     CommonModule, TransactionRoutingModule, ToolBarModule, DataTableModule, MatTableModule,
     NgxSkeletonLoaderModule, MatSortModule, MatDatepickerModule, MatNativeDateModule, MatPaginatorModule,
