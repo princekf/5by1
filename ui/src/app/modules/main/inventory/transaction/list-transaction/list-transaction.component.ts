@@ -1,4 +1,4 @@
-import { Component, Input} from '@angular/core';
+import { Component} from '@angular/core';
 import { RevenueService } from '@fboservices/inventory/revenue.service';
 import { PaymentService } from '@fboservices/inventory/payment.service';
 import { QueryData } from '@shared/util/query-data';
@@ -10,6 +10,8 @@ import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from 
 import { MainService } from '@fboservices/main.service';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
+import { FilterItem } from '../../../directives/table-filter/filter-item';
+import { FilterTransactionComponent } from '../filter-transaction/filter-transaction.component';
 
 @Component({
   selector: 'app-list-transaction',
@@ -43,6 +45,8 @@ export class ListTransactionComponent {
 
   mainHeader= 'Transaction';
 
+  tableHeader = 'List of Transactions'
+
   revenues:ListQueryRespType<unknown> = {
     totalItems: 0,
     pageIndex: 0,
@@ -56,14 +60,13 @@ export class ListTransactionComponent {
   };
 
 
-  transaction:ListQueryRespType<unknown> = {
+  transactions:ListQueryRespType<unknown> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
   };
 
-
-  @Input() createUri: string;
+  filterItem: FilterItem;
 
   dataSource = new MatTableDataSource<unknown>();
 
@@ -89,10 +92,10 @@ export class ListTransactionComponent {
          || element?.receivedDate && dayjs(element[column]).format(environment.dateFormat);
 
     case 'customer.name':
-      return element?.customer?.name || element.vendor.name;
+      return element?.customer?.name || element?.vendor?.name;
 
     case 'invoice.invoiceNumber':
-      return element?.invoice?.invoiceNumber || element.bill.billNumber;
+      return element?.invoice?.invoiceNumber || element?.bill?.billNumber;
 
     }
     return null;
@@ -107,6 +110,9 @@ export class ListTransactionComponent {
       this.revenueService.list(this.queryParams).subscribe((revenues) => {
 
         this.revenues = revenues;
+        this.queryParams.include = [
+          {relation: 'vendor'}, {relation: 'bill'}, {relation: 'bank'}
+        ];
         this.paymentService.list(this.queryParams).subscribe((payments) => {
 
           this.payments = payments;
@@ -120,7 +126,7 @@ export class ListTransactionComponent {
           }
 
 
-          this.transaction = revenues;
+          this.transactions = revenues;
 
           this.dataSource = new MatTableDataSource<unknown>(revenues.items);
 
@@ -137,6 +143,12 @@ export class ListTransactionComponent {
 
       });
 
+
+    }
+
+    ngOnInit(): void {
+
+      this.filterItem = new FilterItem(FilterTransactionComponent, {});
 
     }
 
