@@ -2,6 +2,7 @@ import { Component, } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryData } from '@shared/util/query-data';
+import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from '@fboutil/filter.util';
 
 @Component({
   selector: 'app-filter-unit',
@@ -28,11 +29,18 @@ export class FilterUnitComponent {
   });
 
 
-
   constructor(private router:Router,
-    private activatedRoute : ActivatedRoute) { }
+    private activatedRoute : ActivatedRoute,) { }
+
+  ngOnInit():void {
+
+    const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
+    fillFilterForm(this.filterForm, whereS);
+
+  }
 
   ngAfterViewInit():void {
+
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -45,48 +53,14 @@ export class FilterUnitComponent {
   filterItems = ():void => {
 
 
-    const whereAnds:Array<unknown> = [];
-
-    if (this.filterForm.controls.name.value) {
-
-      whereAnds.push(
-        {name: {like: `${this.filterForm.controls.nameType.value}${this.filterForm.controls.name.value}`,
-          options: 'i'}}
-      );
-
-    }
-
-    if (this.filterForm.controls.code.value) {
-
-      whereAnds.push(
-        {code: {like: `${this.filterForm.controls.codeType.value}${this.filterForm.controls.code.value}`,
-          options: 'i'}}
-      );
-
-    }
-
-    if (this.filterForm.controls.decimalPlaces.value) {
-
-
-      const whereDecimal = {};
-      whereDecimal[this.filterForm.controls.decimalPlacesType.value] = this.filterForm.controls.decimalPlaces.value;
-
-      whereAnds.push({decimalPlaces: whereDecimal});
-
-    }
-
-    if (this.filterForm.controls.times.value) {
-
-
-      const whereTimes = {};
-      whereTimes[this.filterForm.controls.timesType.value] = this.filterForm.controls.times.value;
-
-      whereAnds.push({times: whereTimes});
-
-    }
-
-
-    this.router.navigate([], { queryParams: {whereS: JSON.stringify({and: whereAnds})} });
+    const formFields: Array<FilterFormField> = [ {name: 'name',
+      type: 'string'}, {name: 'code',
+      type: 'string'},
+    {name: 'decimalPlaces',
+      type: 'number'}, {name: 'times',
+      type: 'number'} ];
+    const whereS = createQueryStringFromFilterForm(this.filterForm, formFields);
+    this.router.navigate([], { queryParams: {whereS} });
 
   };
 
