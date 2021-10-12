@@ -26,27 +26,27 @@
 
             <div class="filter-content-div">
                 <mat-label class="lable">Decimals</mat-label>
-                <mat-select [(value)]="selectedthree" class="select">
-                    <mat-option value="one">Equal to</mat-option>
-                    <mat-option value="two">lesser than</mat-option>
-                    <mat-option value="three">greater than</mat-option>
+                <mat-select  formControlName="decimalPlacesType"  class="select">
+                    <mat-option value="eq">Equal to</mat-option>
+                    <mat-option value="lt">Lesser than</mat-option>
+                    <mat-option value="gt">Greater than</mat-option>
                 </mat-select>
                 <mat-form-field class="forminput">
 
-                    <input matInput type="number">
+                    <input matInput type="number" formControlName="decimalPlaces">
                 </mat-form-field>
             </div>
 
             <div class="filter-content-div">
                 <mat-label class="lable">Times</mat-label>
-                <mat-select [(value)]="selectedfour" class="select">
-                    <mat-option value="one">Equal to</mat-option>
-                    <mat-option value="two">lesser than</mat-option>
-                    <mat-option value="three">greater than</mat-option>
+                <mat-select formControlName="timesType" class="select">
+                    <mat-option value="eq">Equal to</mat-option>
+                    <mat-option value="lt">Lesser than</mat-option>
+                    <mat-option value="gt">Greater than</mat-option>
                 </mat-select>
-                <mat-form-field class="forminput">
 
-                    <input matInput type="number">
+                <mat-form-field class="forminput">
+                    <input matInput type="number"  formControlName="times">
                 </mat-form-field>
             </div>
         </div>
