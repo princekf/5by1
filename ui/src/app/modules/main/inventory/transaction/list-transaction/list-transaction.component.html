@@ -15,41 +15,11 @@
   </button>
 </div>
 
-<div>
-    <p class="sectionHeader">List of Transactions</p>
-</div>
-<div *ngIf="loading">
-    <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
-  </div>
-
-
-<table [style.display]="loading ? 'none': ''" mat-table [dataSource]="dataSource" multiTemplateDataRows matSort
-  class="fiveby1-table">
-
-  <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> {{columnHeaders[column]}} </th>
-    <td mat-cell *matCellDef="let element"> {{findColumnValue(element, column,  columnParsingFn) }} </td>
-  </ng-container>
-
-  <!-- Expandable section -->
-  <ng-container matColumnDef="expandedDetail">
-    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-      <div class="fiveby1-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-        <div *ngFor="let column of extraColumns" class="extra-row">
-          <span>{{columnHeaders[column]}}</span>
-          <span>{{findColumnValue(element, column)}}</span>
-        </div>
-      </div>
-    </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns" class="fiveby1-table-header"></tr>
-  <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="fiveby1-element-row"
-    [class.fiveby1-expanded-row]="expandedElement === element"
-    (click)="expandedElement = expandedElement === element ? null : element"></tr>
-
-  <tr mat-row *matRowDef="let element; columns: ['expandedDetail']" class="fiveby1-detail-row"></tr>
-</table>
-
-<mat-paginator [style.display]="loading ? 'none': ''"  [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons></mat-paginator>
-
+<app-data-table tableHeader="List of Transaction"
+[displayedColumns]="displayedColumns"
+[columnHeaders]="columnHeaders"
+[loading]="loading"
+[tableData]="transactions"
+[columnParnsingFn]="columnParsingFn"
+[filterItem]="filterItem"
+></app-data-table>
