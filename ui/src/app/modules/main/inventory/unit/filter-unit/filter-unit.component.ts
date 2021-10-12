@@ -10,8 +10,6 @@ import { QueryData } from '@shared/util/query-data';
 })
 export class FilterUnitComponent {
 
-  selectedtwo = 'one';
-
   selectedthree = 'one';
 
   selectedfour = 'one';
@@ -23,7 +21,13 @@ export class FilterUnitComponent {
     nameType: new FormControl('^'),
     code: new FormControl(''),
     codeType: new FormControl('^'),
+    decimalPlaces: new FormControl(''),
+    decimalPlacesType: new FormControl('eq'),
+    times: new FormControl(''),
+    timesType: new FormControl('eq'),
   });
+
+
 
   constructor(private router:Router,
     private activatedRoute : ActivatedRoute) { }
@@ -40,7 +44,9 @@ export class FilterUnitComponent {
 
   filterItems = ():void => {
 
+
     const whereAnds:Array<unknown> = [];
+
     if (this.filterForm.controls.name.value) {
 
       whereAnds.push(
@@ -49,6 +55,7 @@ export class FilterUnitComponent {
       );
 
     }
+
     if (this.filterForm.controls.code.value) {
 
       whereAnds.push(
@@ -57,6 +64,28 @@ export class FilterUnitComponent {
       );
 
     }
+
+    if (this.filterForm.controls.decimalPlaces.value) {
+
+
+      const whereDecimal = {};
+      whereDecimal[this.filterForm.controls.decimalPlacesType.value] = this.filterForm.controls.decimalPlaces.value;
+
+      whereAnds.push({decimalPlaces: whereDecimal});
+
+    }
+
+    if (this.filterForm.controls.times.value) {
+
+
+      const whereTimes = {};
+      whereTimes[this.filterForm.controls.timesType.value] = this.filterForm.controls.times.value;
+
+      whereAnds.push({times: whereTimes});
+
+    }
+
+
     this.router.navigate([], { queryParams: {whereS: JSON.stringify({and: whereAnds})} });
 
   };
