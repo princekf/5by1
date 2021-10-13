@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 export interface SingleCondition {
     name: string;
     operator: string;
-    value: string;
+    value: string | Array<number>;
 }
 
 export interface FilterFormField {
@@ -24,14 +24,14 @@ export const extractCondition = (name: string, condition: Record<string, unknown
     };
 
   }
-  for (const oper of [ 'eq', 'lt', 'gt' ]) {
+  for (const oper of [ 'eq', 'lt', 'gt', 'between' ]) {
 
     if (condition[oper]) {
 
       return {
         name,
         operator: oper,
-        value: condition[oper] as string,
+        value: condition[oper] as string | Array<number>,
 
       };
 
@@ -49,13 +49,21 @@ export const fillFilterForm = (filterForm: FormGroup, whereS: string):void => {
     return;
 
   }
-
   const where:Record<string, Record<string, unknown>> = JSON.parse(whereS);
   for (const [ whereName, whereCond ] of Object.entries(where)) {
 
     const condExtract = extractCondition(whereName, whereCond);
-    filterForm.controls[condExtract.name]?.setValue(condExtract.value);
     filterForm.controls[`${condExtract.name}Type`]?.setValue(condExtract.operator);
+    if (condExtract.operator === 'between') {
+
+      filterForm.controls[`${condExtract.name}Start`]?.setValue(condExtract.value[0]);
+      filterForm.controls[`${condExtract.name}End`]?.setValue(condExtract.value[1]);
+
+    } else {
+
+      filterForm.controls[condExtract.name]?.setValue(condExtract.value);
+
+    }
 
   }
 
@@ -84,6 +92,15 @@ export const createQueryStringFromFilterForm =
         break;
 
       }
+
+    }
+    // Hanlding between operators.
+    const cType = filterForm.controls[typeName]?.value;
+    if (cType === 'between') {
+
+      const start = filterForm.controls[`${fieldName}Start`]?.value;
+      const end = filterForm.controls[`${fieldName}End`]?.value;
+      where[fieldName] = {between: [ start, end ]};
 
     }
 

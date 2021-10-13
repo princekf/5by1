@@ -19,18 +19,14 @@ export class FilterUnitComponent {
     code: new FormControl(''),
     codeType: new FormControl('^'),
     decimalPlaces: new FormControl(''),
-    decimalPlacesPrimary: new FormControl(''),
-    decimalPlacesSecondary: new FormControl(''),
+    decimalPlacesStart: new FormControl(''),
+    decimalPlacesEnd: new FormControl(''),
     decimalPlacesType: new FormControl('eq'),
     times: new FormControl(''),
     timesType: new FormControl('eq'),
-    timesPrimary: new FormControl(''),
-    timesSecondary: new FormControl(''),
+    timesStart: new FormControl(''),
+    timesEnd: new FormControl(''),
   });
-
-  decimalInput = true;
-
-  timesInput = true;
 
   constructor(private router:Router,
     private activatedRoute : ActivatedRoute,) { }
@@ -70,36 +66,5 @@ export class FilterUnitComponent {
     this.router.navigate([], { queryParams: {whereS} });
 
   };
-
-  toggleDecimalInput = (value:string):void => {
-
-
-    if (value === 'between') {
-
-      this.decimalInput = false;
-
-    } else {
-
-      this.decimalInput = true;
-
-    }
-
-  }
-
-  toggleTimesInput = (value:string):void => {
-
-
-    if (value === 'between') {
-
-      this.timesInput = false;
-
-    } else {
-
-      this.timesInput = true;
-
-    }
-
-  }
-
 
 }
