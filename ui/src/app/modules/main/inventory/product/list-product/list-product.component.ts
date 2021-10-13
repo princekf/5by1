@@ -76,8 +76,16 @@ export class ListProductComponent {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
-        this.queryParams = { ...value };
+        const {whereS, ...qParam} = value;
+        this.queryParams = qParam;
+        if (whereS) {
+
+          this.queryParams.where = JSON.parse(whereS);
+
+        }
+
         this.loadData();
+
 
       });
 

@@ -1,6 +1,6 @@
 <div class="filter-item-card">
     <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
-        <div (click)="$event.stopPropagation()">
+        <div (click)="$event.stopPropagation();$event.preventDefault()">
 
             <div class="filter-content-div">
                 <mat-label class="lable">Name</mat-label>
@@ -21,33 +21,40 @@
                     <mat-option value="">Contains</mat-option>
                     <mat-option value="eq">Equal to</mat-option>
                 </mat-select>
-                <mat-form-field >
+                <mat-form-field>
                     <input matInput formControlName="code">
                 </mat-form-field>
             </div>
 
             <div class="filter-content-div">
                 <mat-label class="lable">Decimals</mat-label>
-                <mat-select  formControlName="decimalPlacesType"  class="select">
+                <mat-select formControlName="decimalPlacesType" class="select">
                     <mat-option value="eq">Equal to</mat-option>
                     <mat-option value="lt">Lesser than</mat-option>
                     <mat-option value="gt">Greater than</mat-option>
                     <mat-option value="between">Between</mat-option>
                 </mat-select>
-         
-                <mat-form-field *ngIf="filterForm.controls.decimalPlacesType.value !== 'between'" class="forminput">
-                    <input matInput type="number" formControlName="decimalPlaces">
-                </mat-form-field>
-              <div class="betweenKeyInputs" *ngIf="filterForm.controls.decimalPlacesType.value === 'between'">
-                <mat-form-field class="inputPrimary">
-                    <input matInput type="number" formControlName="decimalPlacesStart">
-                </mat-form-field>
-                <mat-label class="betweenlable">&</mat-label>
-                <mat-form-field class="inputPrimary" >
-                    <input matInput type="number" formControlName="decimalPlacesEnd">
-                </mat-form-field>
-              
-             </div>
+
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.decimalPlacesType.value !== 'between'">
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="decimalPlaces">
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" readonly>
+                    </mat-form-field>
+                </div>
+
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.decimalPlacesType.value === 'between'">
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="decimalPlacesStart">
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="decimalPlacesEnd">
+                    </mat-form-field>
+
+                </div>
 
             </div>
 
@@ -60,19 +67,26 @@
                     <mat-option value="between">Between</mat-option>
                 </mat-select>
 
-                <mat-form-field class="forminput" *ngIf="filterForm.controls.timesType.value !== 'between'" >
-                    <input matInput type="number"  formControlName="times">
-                </mat-form-field>
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.timesType.value !== 'between'">
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="times">
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" readonly>
+                    </mat-form-field>
+                </div>
+
                 <div class="betweenKeyInputs" *ngIf="filterForm.controls.timesType.value === 'between'">
                     <mat-form-field class="inputPrimary">
                         <input matInput type="number" formControlName="timesStart">
                     </mat-form-field>
-                    <mat-label class="betweenlable">&</mat-label>
-                    <mat-form-field class="inputPrimary" >
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
                         <input matInput type="number" formControlName="timesEnd">
                     </mat-form-field>
-                  
-                 </div>
+
+                </div>
             </div>
         </div>
 
