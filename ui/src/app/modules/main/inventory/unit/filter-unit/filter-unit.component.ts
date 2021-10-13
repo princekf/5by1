@@ -11,10 +11,6 @@ import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from
 })
 export class FilterUnitComponent {
 
-  selectedthree = 'one';
-
-  selectedfour = 'one';
-
   queryParams:QueryData = { };
 
   filterForm: FormGroup = new FormGroup({
@@ -23,11 +19,18 @@ export class FilterUnitComponent {
     code: new FormControl(''),
     codeType: new FormControl('^'),
     decimalPlaces: new FormControl(''),
+    decimalPlacesPrimary: new FormControl(''),
+    decimalPlacesSecondary: new FormControl(''),
     decimalPlacesType: new FormControl('eq'),
     times: new FormControl(''),
     timesType: new FormControl('eq'),
+    timesPrimary: new FormControl(''),
+    timesSecondary: new FormControl(''),
   });
 
+  decimalInput = true;
+
+  timesInput = true;
 
   constructor(private router:Router,
     private activatedRoute : ActivatedRoute,) { }
@@ -53,15 +56,50 @@ export class FilterUnitComponent {
   filterItems = ():void => {
 
 
-    const formFields: Array<FilterFormField> = [ {name: 'name',
-      type: 'string'}, {name: 'code',
-      type: 'string'},
-    {name: 'decimalPlaces',
-      type: 'number'}, {name: 'times',
-      type: 'number'} ];
+    const formFields: Array<FilterFormField> = [
+      {name: 'name',
+        type: 'string'},
+      {name: 'code',
+        type: 'string'},
+      {name: 'decimalPlaces',
+        type: 'number'},
+      {name: 'times',
+        type: 'number'}
+    ];
     const whereS = createQueryStringFromFilterForm(this.filterForm, formFields);
     this.router.navigate([], { queryParams: {whereS} });
 
   };
+
+  toggleDecimalInput = (value:string):void => {
+
+
+    if (value === 'between') {
+
+      this.decimalInput = false;
+
+    } else {
+
+      this.decimalInput = true;
+
+    }
+
+  }
+
+  toggleTimesInput = (value:string):void => {
+
+
+    if (value === 'between') {
+
+      this.timesInput = false;
+
+    } else {
+
+      this.timesInput = true;
+
+    }
+
+  }
+
 
 }
