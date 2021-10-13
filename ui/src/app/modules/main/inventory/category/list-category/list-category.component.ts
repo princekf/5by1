@@ -48,9 +48,11 @@ export class ListCategoryComponent {
     private loadData = () => {
 
       this.loading = true;
+
       this.categoryService.list(this.queryParams).subscribe((categories) => {
 
         this.categories = categories;
+
 
         this.loading = false;
 
@@ -75,8 +77,17 @@ export class ListCategoryComponent {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
-        this.queryParams = { ...value,
+
+        const {whereS, ...qParam} = value;
+
+        this.queryParams = {...qParam,
           include: [ {relation: 'parent'}, {relation: 'unit'} ] };
+        if (whereS) {
+
+          this.queryParams.where = JSON.parse(whereS);
+
+        }
+
         this.loadData();
 
       });

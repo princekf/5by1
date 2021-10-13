@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryData } from '@shared/util/query-data';
 import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from '@fboutil/filter.util';
+import { OverlayContainer } from 'ngx-toastr';
 
 @Component({
   selector: 'app-filter-unit',
@@ -29,7 +30,8 @@ export class FilterUnitComponent {
   });
 
   constructor(private router:Router,
-    private activatedRoute : ActivatedRoute,) { }
+    private activatedRoute : ActivatedRoute,
+    private overlayContainer: OverlayContainer) { }
 
   ngOnInit():void {
 
@@ -66,5 +68,6 @@ export class FilterUnitComponent {
     this.router.navigate([], { queryParams: {whereS} });
 
   };
+
 
 }

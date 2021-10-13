@@ -45,6 +45,7 @@ export class ListTaxComponent {
   private loadData = () => {
 
     this.loading = true;
+
     this.taxService.list(this.queryParams).subscribe((taxes) => {
 
       this.taxes = taxes;
@@ -69,10 +70,19 @@ export class ListTaxComponent {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
-      this.queryParams = { ...value };
+      const {whereS, ...qParam} = value;
+      this.queryParams = qParam;
+      if (whereS) {
+
+        this.queryParams.where = JSON.parse(whereS);
+
+      }
+
       this.loadData();
 
+
     });
+
 
   }
 
