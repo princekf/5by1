@@ -44,6 +44,12 @@ export const extractCondition = (name: string, condition: Record<string, unknown
 
 export const fillFilterForm = (filterForm: FormGroup, whereS: string):void => {
 
+  if (!whereS) {
+
+    return;
+
+  }
+
   const where:Record<string, Record<string, unknown>> = JSON.parse(whereS);
   for (const [ whereName, whereCond ] of Object.entries(where)) {
 
