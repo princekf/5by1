@@ -1,15 +1,21 @@
 :host ::ng-deep .mat-select-value{
   text-align: start !important; 
   font-size: small;
-  width: 80%;
+  width: 80% !important;
+}
+:host ::ng-deep .mat-select {
+  display: inline-block;
+  width: 0;
+  outline: none;
 }
 
 :host ::ng-deep  .mat-form-field-infix {
-  display: block;
+  display: block; 
   position: relative;
   flex: auto;
   min-width: 0;
   width: 100%;
+ 
   border: 1px solid  #E3E3E3 !important;
   border-radius: 3px; 
 font-size: small;
@@ -25,6 +31,19 @@ font-size: small;
   padding-bottom: 0em; 
   }
 :host ::ng-deep.mat-form-field-appearance-legacy .mat-form-field-infix {
-  padding: 3px 5px;
+  padding: 4px 5px;
   
+}
+.betweenKeyInputs{
+  display: flex;
+  align-items: flex-end;
+  font: -webkit-small-control !important;
+ 
+}
+.inputPrimary{
+  width: 78px;
+
+}
+.betweenlable{
+  margin: 0 5px;
 }
