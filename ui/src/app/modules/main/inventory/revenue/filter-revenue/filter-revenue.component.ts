@@ -1,4 +1,8 @@
 import { Component} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { QueryData } from '@shared/util/query-data';
+import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from '@fboutil/filter.util';
 
 @Component({
   selector: 'app-filter-revenue',
@@ -7,16 +11,76 @@ import { Component} from '@angular/core';
 })
 export class FilterRevenueComponent {
 
-  selectedone = 'one';
 
-  selectedtwo = 'one';
+  queryParams:QueryData = { };
 
-  selectedthree = 'one';
+  filterForm: FormGroup = new FormGroup({
+    receivedDate: new FormControl(''),
+    receivedDateType: new FormControl('eq'),
+    receivedDateStart: new FormControl(''),
+    receivedDateEnd: new FormControl(''),
 
-  selectedfour = 'one';
+    customer: new FormControl(''),
+    customerType: new FormControl('^'),
 
-  selectedfive = 'one';
+    invoice: new FormControl(''),
+    invoiceType: new FormControl('^'),
 
-  selectedsix = 'one';
+    bank: new FormControl(''),
+    bankType: new FormControl('^'),
+
+    Category: new FormControl(''),
+    CategoryType: new FormControl('^'),
+
+    amount: new FormControl(''),
+    amountType: new FormControl('eq'),
+    amountStart: new FormControl(''),
+    amountEnd: new FormControl(''),
+  });
+
+
+  constructor(private router:Router,
+    private activatedRoute : ActivatedRoute,) { }
+
+  ngOnInit():void {
+
+    const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
+    fillFilterForm(this.filterForm, whereS);
+
+  }
+
+  ngAfterViewInit():void {
+
+
+    this.activatedRoute.queryParams.subscribe((value) => {
+
+      this.queryParams = { ...value };
+
+    });
+
+  }
+
+  filterItems = ():void => {
+
+
+    const formFields: Array<FilterFormField> = [
+      {name: 'receivedDate',
+        type: 'Date'},
+      {name: 'customer',
+        type: 'string'},
+      {name: 'invoice',
+        type: 'string'},
+      {name: 'bank',
+        type: 'string'},
+      {name: 'Category',
+        type: 'string'},
+      {name: 'amount',
+        type: 'number'}
+    ];
+    const whereS = createQueryStringFromFilterForm(this.filterForm, formFields);
+    this.router.navigate([], { queryParams: {whereS} });
+
+  };
+
 
 }
