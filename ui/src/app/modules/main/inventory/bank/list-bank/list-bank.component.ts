@@ -44,18 +44,6 @@ export class ListBankComponent {
     private bankService: BankService) { }
 
 
-  ngAfterViewInit(): void {
-
-    this.activatedRoute.queryParams.subscribe((value) => {
-
-      this.queryParams = { ...value };
-      this.loadData();
-
-    });
-
-
-  }
-
   private loadData = () => {
 
     this.loading = true;
@@ -82,6 +70,24 @@ export class ListBankComponent {
 
   }
 
+  ngAfterViewInit():void {
+
+    this.activatedRoute.queryParams.subscribe((value) => {
+
+      const {whereS, ...qParam} = value;
+      this.queryParams = qParam;
+      if (whereS) {
+
+        this.queryParams.where = JSON.parse(whereS);
+
+      }
+
+      this.loadData();
+
+
+    });
+
+  }
 
 
 }
