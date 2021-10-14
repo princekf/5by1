@@ -40,7 +40,7 @@ export class ListCustomerComponent {
   };
 
   filterItem: FilterItem;
-  
+
   constructor(
     private activatedRoute : ActivatedRoute,
     private readonly customerService:CustomerService) { }
@@ -72,8 +72,16 @@ export class ListCustomerComponent {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
-        this.queryParams = { ...value };
+        const {whereS, ...qParam} = value;
+        this.queryParams = qParam;
+        if (whereS) {
+
+          this.queryParams.where = JSON.parse(whereS);
+
+        }
+
         this.loadData();
+
 
       });
 
