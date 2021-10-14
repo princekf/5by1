@@ -1,61 +1,106 @@
-<div class="filter-item-card" id="filter-dialog">
-    <div (click)="$event.stopPropagation()">
+<div class="filter-item-card">
+    <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
+        <div (click)="$event.stopPropagation()">
 
-        <div class="filter-content-div">
-            <mat-label class="lable">From Account</mat-label>
-            <mat-select [(value)]="selectedone" class="select">
-                <mat-option value="one"> Starts with</mat-option>
-                <mat-option value="two">Contains</mat-option>
-            </mat-select>
-            <mat-form-field class="forminput">
 
-                <input matInput>
-            </mat-form-field>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">From Account</mat-label>
+                <mat-select formControlName="fromAccountType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="fromAccount">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">To Account</mat-label>
+                <mat-select formControlName="toAccountType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="toAccount">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Transfer Date</mat-label>
+                <mat-select formControlName="transferDateType" class="select">
+                    <mat-option value="eq">Equal to</mat-option>
+                    <mat-option value="lt">Lesser than</mat-option>
+                    <mat-option value="gt">Greater than</mat-option>
+                    <mat-option value="between">Between</mat-option>
+                </mat-select>
+
+
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.transferDateType.value !== 'between'">
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="transferDate">
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" readonly>
+                    </mat-form-field>
+                </div>
+
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.transferDateType.value === 'between'">
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="transferDateStart">
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="transferDateEnd">
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Amount</mat-label>
+                <mat-select formControlName="amountType" class="select">
+                    <mat-option value="eq">Equal to</mat-option>
+                    <mat-option value="lt">Lesser than</mat-option>
+                    <mat-option value="gt">Greater than</mat-option>
+                    <mat-option value="between">Between</mat-option>
+                </mat-select>
+
+
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.amountType.value !== 'between'">
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="amount">
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" readonly>
+                    </mat-form-field>
+                </div>
+
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.amountType.value === 'between'">
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="amountStart">
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="amountEnd">
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+
+
+       
         </div>
 
-        <div class="filter-content-div">
-            <mat-label class="lable">To Account</mat-label>
-            <mat-select [(value)]="selectedtwo" class="select">
-                <mat-option value="one">Starts with</mat-option>
-                <mat-option value="two">Contains</mat-option>
-            </mat-select>
-            <mat-form-field class="forminput">
-                <input matInput>
-            </mat-form-field>
+        <div class='filter-actions-container'>
+            <button mat-button type="button" class="filtercancelbutton">Cancel</button>
+            <button mat-button type="submit" class="filtersavebutton">Submit</button>
         </div>
-
-        <div class="filter-content-div">
-            <mat-label class="lable">Transfer Date</mat-label>
-            <mat-select [(value)]="selectedtwo" class="select">
-                <mat-option value="one">Equal to</mat-option>
-                <mat-option value="two">Before</mat-option>
-                <mat-option value="two">After</mat-option>
-            </mat-select>
-         
-            <mat-form-field class="forminput">
-                <input matInput [matDatepicker]="Picker">
-                <mat-datepicker-toggle matSuffix [for]="Picker"></mat-datepicker-toggle>
-                <mat-datepicker #Picker></mat-datepicker>
-            </mat-form-field>
-        </div>
-
-        <div class="filter-content-div">
-            <mat-label class="lable">Amount</mat-label>
-            <mat-select [(value)]="selectedfour" class="select">
-                <mat-option value="one">Equal to</mat-option>
-                <mat-option value="two">Lesser than</mat-option>
-                <mat-option value="three">greater than</mat-option>
-            </mat-select>
-            <mat-form-field class="forminput">
-
-                <input matInput type="number">
-            </mat-form-field>
-        </div>
-    </div>
-
-    <div class='filter-actions-container'>
-        <button mat-button class="filtercancelbutton">Cancel</button>
-        <button mat-button class="filtersavebutton">Submit</button>
-
-    </div>
+    </form>
 </div>
