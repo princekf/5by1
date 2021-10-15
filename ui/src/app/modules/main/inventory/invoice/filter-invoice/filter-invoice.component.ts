@@ -1,4 +1,8 @@
 import { Component} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { QueryData } from '@shared/util/query-data';
+import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from '@fboutil/filter.util';
 
 @Component({
   selector: 'app-filter-invoice',
@@ -8,20 +12,95 @@ import { Component} from '@angular/core';
 export class FilterInvoiceComponent {
 
 
-  selectedone = 'one';
+  queryParams:QueryData = { };
 
-  selectedtwo = 'one';
+  filterForm: FormGroup = new FormGroup({
 
-  selectedthree = 'one';
+    customer: new FormControl(''),
+    customerType: new FormControl('^'),
 
-  selectedfour = 'one';
+    invoiceDate: new FormControl(''),
+    invoiceDateType: new FormControl('eq'),
+    invoiceDateStart: new FormControl(''),
+    invoiceDateEnd: new FormControl(''),
 
-  selectedfive = 'one';
+    invoiceNumber: new FormControl(''),
+    invoiceNumberType: new FormControl('^'),
 
-  selectedsix = 'one';
+    totalAmount: new FormControl(''),
+    totalAmountType: new FormControl('eq'),
+    totalAmountStart: new FormControl(''),
+    totalAmountEnd: new FormControl(''),
 
-  selectedseven = 'one';
 
-  selectedeight = 'one';
+    totalDisount: new FormControl(''),
+    totalDisountType: new FormControl('eq'),
+    totalDisountStart: new FormControl(''),
+    totalDisountEnd: new FormControl(''),
+
+    totalTax: new FormControl(''),
+    totalTaxType: new FormControl('eq'),
+    totalTaxStart: new FormControl(''),
+    totalTaxEnd: new FormControl(''),
+
+    grandTotal: new FormControl(''),
+    grandTotalType: new FormControl('eq'),
+    grandTotalStart: new FormControl(''),
+    grandTotalEnd: new FormControl(''),
+
+    isReceived: new FormControl(''),
+    isReceivedType: new FormControl('^'),
+
+
+  });
+
+
+  constructor(private router:Router,
+    private activatedRoute : ActivatedRoute,) { }
+
+  ngOnInit():void {
+
+    const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
+    fillFilterForm(this.filterForm, whereS);
+
+  }
+
+  ngAfterViewInit():void {
+
+
+    this.activatedRoute.queryParams.subscribe((value) => {
+
+      this.queryParams = { ...value };
+
+    });
+
+  }
+
+  filterItems = ():void => {
+
+
+    const formFields: Array<FilterFormField> = [
+
+      {name: 'customer',
+        type: 'string'},
+      {name: 'invoiceDate',
+        type: 'Date'},
+      {name: 'invoiceNumber',
+        type: 'string'},
+      {name: 'totalAmount',
+        type: 'number'},
+      {name: 'totalDisount',
+        type: 'number'},
+      {name: 'totalTax',
+        type: 'number'},
+      {name: 'grandTotal',
+        type: 'number'},
+      {name: 'isReceived',
+        type: 'string'}
+    ];
+    const whereS = createQueryStringFromFilterForm(this.filterForm, formFields);
+    this.router.navigate([], { queryParams: {whereS} });
+
+  };
 
 }

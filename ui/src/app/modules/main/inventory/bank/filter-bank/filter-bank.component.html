@@ -1,48 +1,73 @@
-<div class="filter-item-card" id="filter-dialog">
-    <div (click)="$event.stopPropagation()">
+<div class="filter-item-card">
+    <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
+        <div (click)="$event.stopPropagation()">
 
-        <div class="filter-content-div">
-            <mat-label class="lable">Type</mat-label>
-            <mat-select [(value)]="selectedone" class="select">
-                <mat-option value="one"> Starts with</mat-option>
-                <mat-option value="two">Contains</mat-option>
-            </mat-select>
-            <mat-form-field class="forminput">
 
-                <input matInput>
-            </mat-form-field>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Type</mat-label>
+                <mat-select formControlName="typeType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="type">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Name</mat-label>
+                <mat-select formControlName="nameType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="name">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Opening Bal.</mat-label>
+                <mat-select formControlName="openingBalanceType" class="select">
+                    <mat-option value="eq">Equal to</mat-option>
+                    <mat-option value="lt">Lesser than</mat-option>
+                    <mat-option value="gt">Greater than</mat-option>
+                    <mat-option value="between">Between</mat-option>
+                </mat-select>
+
+
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.openingBalanceType.value !== 'between'">
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="openingBalance">
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" readonly>
+                    </mat-form-field>
+                </div>
+
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.openingBalanceType.value === 'between'">
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="openingBalanceStart">
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="openingBalanceEnd">
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+
+
+       
         </div>
-
-        <div class="filter-content-div">
-            <mat-label class="lable">Name</mat-label>
-            <mat-select [(value)]="selectedtwo" class="select">
-                <mat-option value="one">Starts with</mat-option>
-                <mat-option value="two">Contains</mat-option>
-            </mat-select>
-            <mat-form-field class="forminput">
-                <input matInput>
-            </mat-form-field>
-        </div>
-
-        <div class="filter-content-div">
-            <mat-label class="lable">Opening Balance</mat-label>
-            <mat-select [(value)]="selectedthree" class="select">
-                <mat-option value="one">Equal to </mat-option>
-                <mat-option value="two">Lesser than</mat-option>
-                <mat-option value="two">greater than</mat-option>
-            </mat-select>
-            <mat-form-field class="forminput">
-
-                <input matInput type="number">
-            </mat-form-field>
-        </div>
-
-
-
 
         <div class='filter-actions-container'>
-            <button mat-button class="filtercancelbutton">Cancel</button>
-            <button mat-button class="filtersavebutton">Submit</button>
-
+            <button mat-button type="button" class="filtercancelbutton">Cancel</button>
+            <button mat-button type="submit" class="filtersavebutton">Submit</button>
         </div>
-    </div>
+    </form>
+</div>

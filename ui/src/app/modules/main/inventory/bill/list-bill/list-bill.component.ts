@@ -102,9 +102,16 @@ export class ListBillComponent {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
-      this.queryParams = { ...value,
-        include: [ {relation: 'vendor'} ] };
+      const {whereS, ...qParam} = value;
+      this.queryParams = qParam;
+      if (whereS) {
+
+        this.queryParams.where = JSON.parse(whereS);
+
+      }
+
       this.loadData();
+
 
     });
 

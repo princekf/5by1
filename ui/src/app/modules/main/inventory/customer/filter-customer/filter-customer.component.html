@@ -1,81 +1,85 @@
-<div class="filter-item-card" id="filter-dialog">
-    <div (click)="$event.stopPropagation()">
+<div class="filter-item-card">
+    <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
+        <div (click)="$event.stopPropagation()">
 
-        <div class="filter-content-div">
-            <mat-label class="lable">Name</mat-label>
-            <mat-select [(value)]="selectedone" class="select">
-                <mat-option value="one"> Starts with</mat-option>
-                <mat-option value="two">Contains</mat-option>
-            </mat-select>
-            <mat-form-field class="forminput">
 
-                <input matInput>
-            </mat-form-field>
+            <div class="filter-content-div">
+                <mat-label class="lable">Name</mat-label>
+                <mat-select formControlName="nameType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="name">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">E-mail</mat-label>
+                <mat-select formControlName="emailType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="email">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Mobile</mat-label>
+                <mat-select formControlName="mobileType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="mobile">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">State</mat-label>
+                <mat-select formControlName="stateType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="state">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Address</mat-label>
+                <mat-select formControlName="addressType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="address">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">GST No</mat-label>
+                <mat-select formControlName="gstNoType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="gstNo">
+                </mat-form-field>
+            </div>
+
         </div>
 
-        <div class="filter-content-div">
-            <mat-label class="lable">E-Mail</mat-label>
-            <mat-select [(value)]="selectedtwo" class="select">
-                <mat-option value="one">Starts with</mat-option>
-                <mat-option value="two">Contains</mat-option>
-            </mat-select>
-            <mat-form-field class="forminput">
-                <input matInput>
-            </mat-form-field>
+        <div class='filter-actions-container'>
+            <button mat-button type="button" class="filtercancelbutton">Cancel</button>
+            <button mat-button type="submit" class="filtersavebutton">Submit</button>
         </div>
-
-        <div class="filter-content-div">
-            <mat-label class="lable">Mobile</mat-label>
-            <mat-select [(value)]="selectedthree" class="select">
-                <mat-option value="one">Starts with</mat-option>
-                <mat-option value="two">Contains</mat-option>
-            </mat-select>
-            <mat-form-field class="forminput">
-
-                <input matInput type="tetx">
-            </mat-form-field>
-        </div>
-
-        <div class="filter-content-div">
-            <mat-label class="lable">State</mat-label>
-            <mat-select [(value)]="selectedfour" class="select">
-                <mat-option value="one">Starts with</mat-option>
-                <mat-option value="two">Contains</mat-option>
-            </mat-select>
-            <mat-form-field class="forminput">
-
-                <input matInput type="text">
-            </mat-form-field>
-        </div>
-        <div class="filter-content-div">
-            <mat-label class="lable">Address</mat-label>
-            <mat-select [(value)]="selectedfive" class="select">
-                <mat-option value="one">Starts with</mat-option>
-                <mat-option value="two">Contains</mat-option>
-            </mat-select>
-            <mat-form-field class="forminput">
-
-                <input matInput type="text">
-            </mat-form-field>
-        </div>
-
-        <div class="filter-content-div">
-            <mat-label class="lable">GST No</mat-label>
-            <mat-select [(value)]="selectedsix" class="select">
-                <mat-option value="one">Starts with</mat-option>
-                <mat-option value="two">Contains</mat-option>
-            </mat-select>
-            <mat-form-field class="forminput">
-
-                <input matInput type="text">
-            </mat-form-field>
-        </div>
-
-    </div>
-
-    <div class='filter-actions-container'>
-        <button mat-button class="filtercancelbutton">Cancel</button>
-        <button mat-button class="filtersavebutton">Submit</button>
-
-    </div>
+    </form>
 </div>
