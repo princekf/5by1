@@ -38,16 +38,11 @@
                 </mat-select>
 
 
-                <div class="betweenKeyInputs" *ngIf="filterForm.controls.openingBalanceType.value !== 'between'">
-                    <mat-form-field class="inputPrimary">
+      
+                    <mat-form-field *ngIf="filterForm.controls.openingBalanceType.value !== 'between'">
                         <input matInput type="number" formControlName="openingBalance">
                     </mat-form-field>
-                    <mat-label class="betweenlable">and</mat-label>
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" readonly>
-                    </mat-form-field>
-                </div>
-
+               
                 <div class="betweenKeyInputs" *ngIf="filterForm.controls.openingBalanceType.value === 'between'">
                     <mat-form-field class="inputPrimary">
                         <input matInput type="number" formControlName="openingBalanceStart">

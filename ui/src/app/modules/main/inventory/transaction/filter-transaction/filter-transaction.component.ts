@@ -70,7 +70,7 @@ export class FilterTransactionComponent {
     const formFields: Array<FilterFormField> = [
 
       {name: 'transactionDate',
-        type: 'Date'},
+        type: 'number'},
       {name: 'partyName',
         type: 'string'},
       {name: 'billinvoiceNumber',

@@ -38,23 +38,28 @@
                 </mat-select>
 
 
-                <div class="betweenKeyInputs" *ngIf="filterForm.controls.transferDateType.value !== 'between'">
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" formControlName="transferDate">
+       
+                    <mat-form-field *ngIf="filterForm.controls.transferDateType.value !== 'between'">
+                        
+                        <input matInput [matDatepicker]="picker" formControlName="transferDate" >
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
-                    <mat-label class="betweenlable">and</mat-label>
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" readonly>
-                    </mat-form-field>
-                </div>
+              
 
                 <div class="betweenKeyInputs" *ngIf="filterForm.controls.transferDateType.value === 'between'">
                     <mat-form-field class="inputPrimary">
-                        <input matInput type="number" formControlName="transferDateStart">
+                    
+                        <input matInput [matDatepicker]="pickerStart" formControlName="transferDateStart" >
+                        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerStart></mat-datepicker>
                     </mat-form-field>
                     <mat-label class="betweenlable">and</mat-label>
                     <mat-form-field class="inputPrimary">
-                        <input matInput type="number" formControlName="transferDateEnd">
+                       
+                        <input matInput [matDatepicker]="pickerEnd" formControlName="transferDateEnd" >
+                        <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerEnd></mat-datepicker>
                     </mat-form-field>
 
                 </div>
@@ -71,15 +76,10 @@
                 </mat-select>
 
 
-                <div class="betweenKeyInputs" *ngIf="filterForm.controls.amountType.value !== 'between'">
-                    <mat-form-field class="inputPrimary">
+                    <mat-form-field *ngIf="filterForm.controls.amountType.value !== 'between'">
                         <input matInput type="number" formControlName="amount">
                     </mat-form-field>
-                    <mat-label class="betweenlable">and</mat-label>
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" readonly>
-                    </mat-form-field>
-                </div>
+           
 
                 <div class="betweenKeyInputs" *ngIf="filterForm.controls.amountType.value === 'between'">
                     <mat-form-field class="inputPrimary">
