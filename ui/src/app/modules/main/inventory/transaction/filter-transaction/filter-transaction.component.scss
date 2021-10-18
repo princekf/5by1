@@ -8,14 +8,20 @@
   width: 0;
   outline: none;
 }
-
+:host ::ng-deep .mat-form-field {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  border: 1px solid  #E3E3E3 !important;
+ border-radius: 3px; 
+ width: 100%;
+  }
 :host ::ng-deep  .mat-form-field-infix {
   display: block; 
   position: relative;
   flex: auto;
   min-width: 0;
-  border: 1px solid  #E3E3E3 !important;
-  border-radius: 3px; 
+width: none !important ;
 font-size: small;
 }
 :host ::ng-deep .mat-form-field-underline {
@@ -29,7 +35,7 @@ font-size: small;
   padding-bottom: 0em; 
   }
 :host ::ng-deep.mat-form-field-appearance-legacy .mat-form-field-infix {
-  padding: 4px 5px;
+  padding: 0px 0px;
   
 }
 .betweenKeyInputs{
@@ -39,11 +45,11 @@ font-size: small;
  
 }
 .inputPrimary{
-  width: 80px;
+  width: 88px;
 
 }
 .betweenlable{
-  margin: 0 5px;
+  margin:0px;
 }
 .lable {
   min-width: 95px;

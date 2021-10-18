@@ -3,7 +3,7 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Valida
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvoiceService } from '@fboservices/inventory/invoice.service';
 import { ToastrService } from 'ngx-toastr';
-import { SaleItem } from '@shared/entity/inventory/invoice';
+import { Invoice, SaleItem } from '@shared/entity/inventory/invoice';
 import { Customer } from '@shared/entity/inventory/customer';
 import { CustomerService } from '@fboservices/inventory/customer.service';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,9 +11,13 @@ import { Product } from '@shared/entity/inventory/product';
 import { ProductService } from '@fboservices/inventory/product.service';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { StockService } from '@fboservices/inventory/stock.service';
-import { Observable } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { forkJoin, Observable, throwError } from 'rxjs';
+import { UnitService } from '@fboservices/inventory/unit.service';
 import { CategoryService } from '@fboservices/inventory/category.service';
+import { QueryData } from '@shared/util/query-data';
+
+import { map, catchError } from 'rxjs/internal/operators';
+import { Unit } from '@shared/entity/inventory/unit';
 @Component({
   selector: 'app-create-invoice',
   templateUrl: './create-invoice.component.html',
@@ -27,15 +31,18 @@ export class CreateInvoiceComponent implements OnInit {
 
   loading = true;
 
+  iserror = false;
+
+  productsFiltered: Array<Product> = [];
+
   fboForm: FormGroup;
 
-  displayedColumns: string[] = [ 'product', 'mrp', 'quantity', 'unitPrice', 'discount', 'totalAmount', 'batchNumber' ];
+  displayedColumns: string[] = [ 'product', 'unitPrice', 'quantity', 'discount', 'totalAmount', 'batchNumber', 'expiryDate', 'mfgDate', 'mrp', 'rrp', 'action' ];
 
- dataSource = new MatTableDataSource<AbstractControl>();
+  dataSource = new MatTableDataSource<AbstractControl>();
 
- customers$: Observable<Array<Customer>>;
 
- productsFiltered: Array<Product> = [];
+ customerFiltered: Array<Customer> = [];
 
 
  constructor(public readonly router: Router,
@@ -47,22 +54,23 @@ export class CreateInvoiceComponent implements OnInit {
     private readonly customerService:CustomerService,
     private readonly stockService: StockService,
     private readonly toastr: ToastrService,
+    private readonly unitService: UnitService,
     private fb: FormBuilder) { }
 
     private initValueChanges = () => {
 
-      this.customers$ = this.fboForm.controls.customer.valueChanges
-        .pipe(flatMap((customerQ) => {
+      this.fboForm.controls.customer.valueChanges.subscribe((customerQ:unknown) => {
 
-          if (typeof customerQ !== 'string') {
+        if (typeof customerQ !== 'string') {
 
-            return [];
+          return;
 
-          }
-          return this.customerService.search({ where: {name: {like: customerQ,
-            options: 'i'}} });
+        }
+        this.customerService.search({ where: {name: {like: customerQ,
+          options: 'i'}} })
+          .subscribe((customers) => (this.customerFiltered = customers));
 
-        }));
+      });
 
     };
 
@@ -75,7 +83,44 @@ export class CreateInvoiceComponent implements OnInit {
       const discount = this.fBuilder.control(sItem?.discount ?? 0, [ Validators.required ]);
       const totalAmount = this.fBuilder.control(sItem?.totalAmount ?? 0, [ Validators.required ]);
       const mrp = this.fBuilder.control(sItem?.mrp ?? 0, [ Validators.required ]);
-      // TODO here
+      const rrp = this.fBuilder.control(sItem?.rrp ?? 0, [ Validators.required ]);
+
+      const updateValueChanges = () => {
+
+        if (typeof product.value === 'object') {
+
+          const qty:number = quantity.value;
+          const dct:number = discount.value;
+          const uPrice:number = unitPrice.value;
+          const totalAmt = uPrice * qty - dct;
+          totalAmount.setValue(totalAmt);
+
+          const formArray = this.fboForm.get('saleItems') as FormArray;
+          let pAmount = 0;
+          let pDiscount = 0;
+          let pGTotal = 0;
+          for (let idx = 0; idx < formArray.length; idx++) {
+
+            const curFormGroup = formArray.get([ idx ]) as FormGroup;
+            pAmount += curFormGroup.controls.quantity.value * curFormGroup.controls.unitPrice.value;
+            pDiscount += curFormGroup.controls.discount.value;
+            pGTotal += curFormGroup.controls.totalAmount.value;
+
+          }
+          this.fboForm.get('totalAmount').setValue(pAmount);
+          this.fboForm.get('totalDiscount').setValue(pDiscount);
+          this.fboForm.get('grandTotal').setValue(pGTotal);
+
+        }
+
+      };
+
+
+      unitPrice.valueChanges.subscribe(updateValueChanges);
+      quantity.valueChanges.subscribe(updateValueChanges);
+      discount.valueChanges.subscribe(updateValueChanges);
+      mrp.valueChanges.subscribe((mrpV) => rrp.setValue(mrpV));
+
       return this.fBuilder.group({
         product,
         unitPrice,
@@ -85,7 +130,10 @@ export class CreateInvoiceComponent implements OnInit {
         totalTax: this.fBuilder.control(sItem?.totalTax ?? 0, [ Validators.required ]),
         totalAmount,
         batchNumber: this.fBuilder.control(sItem?.batchNumber ?? ''),
+        expiryDate: this.fBuilder.control(sItem?.expiryDate ?? ''),
+        mfgDate: this.fBuilder.control(sItem?.mfgDate ?? ''),
         mrp,
+        rrp
       });
 
     }
@@ -119,8 +167,10 @@ export class CreateInvoiceComponent implements OnInit {
 
             formArray.push(this.createSaleItemForm());
             this.dataSource = new MatTableDataSource(formArray.controls);
+            this.createSaleItemFormGroup().reset();
 
           }
+          this.iserror = true;
           return;
 
         }
@@ -144,7 +194,7 @@ export class CreateInvoiceComponent implements OnInit {
         dueDate: this.fBuilder.control(''),
         invoiceNumber: this.fBuilder.control('', [ Validators.required ]),
         totalAmount: this.fBuilder.control('', [ Validators.required ]),
-        totalDisount: this.fBuilder.control(''),
+        totalDiscount: this.fBuilder.control(''),
         totalTax: this.fBuilder.control(''),
         roundOff: this.fBuilder.control(''),
         grandTotal: this.fBuilder.control('', [ Validators.required ]),
@@ -156,6 +206,90 @@ export class CreateInvoiceComponent implements OnInit {
 
     };
 
+
+    private setBillFormValues(itemC: Invoice, formArray: FormArray) {
+
+      this.fboForm.controls.id.setValue(itemC.id ?? '');
+      this.fboForm.controls.customer.setValue(itemC.customer ?? '');
+      this.fboForm.controls.invoiceDate.setValue(itemC.invoiceDate ?? new Date());
+      this.fboForm.controls.dueDate.setValue(itemC.dueDate ?? '');
+      this.fboForm.controls.invoiceNumber.setValue(itemC.invoiceNumber ?? '');
+      this.fboForm.controls.totalAmount.setValue(itemC.totalAmount ?? 0);
+      this.fboForm.controls.totalDiscount.setValue(itemC.totalDiscount ?? 0);
+      this.fboForm.controls.totalTax.setValue(itemC.totalTax ?? 0);
+      this.fboForm.controls.grandTotal.setValue(itemC.grandTotal ?? 0);
+      this.fboForm.controls.roundOff.setValue(itemC.roundOff ?? 0);
+      this.fboForm.controls.isReceived.setValue(itemC.isReceived ?? true);
+
+      formArray.removeAt(0);
+      for (const pItem of itemC.saleItems) {
+
+        formArray.push(this.createSaleItemForm(pItem));
+
+      }
+      formArray.push(this.createSaleItemForm());
+
+    }
+
+    private fillProductAndUnit(itemC: Invoice):void {
+
+      const pIds:Array<string> = [];
+      const uIds:Array<string> = [];
+      for (const pItem of itemC.saleItems) {
+
+        pIds.push(pItem.productId);
+        uIds.push(pItem.unitId);
+
+      }
+      const queryDataP:QueryData = {
+        where: {
+          id: {
+            inq: pIds
+          }
+        }
+      };
+      const findProductsP$ = this.productService.search(queryDataP);
+      const queryDataU:QueryData = {
+        where: {
+          id: {
+            inq: uIds
+          }
+        }
+      };
+      const findUnitsU$ = this.unitService.search(queryDataU);
+      forkJoin([ findProductsP$, findUnitsU$ ]).pipe(
+        catchError((err) => throwError(err))
+      )
+        .pipe(
+          map(([ productsP, unitsP ]) => {
+
+            const products:Record<string, Product> = {};
+            const units:Record<string, Unit> = {};
+            productsP.forEach((prod) => (products[prod.id] = prod));
+            unitsP.forEach((unt) => (units[unt.id] = unt));
+            return {products,
+              units};
+
+          })
+        )
+        .subscribe((res) => {
+
+          itemC.saleItems.forEach((pItemT) => {
+
+            pItemT.product = res.products[pItemT.productId];
+            pItemT.unit = res.units[pItemT.unitId];
+
+          });
+          const formArray = this.fboForm.get('saleItems') as FormArray;
+          this.setBillFormValues(itemC, formArray);
+          this.dataSource = new MatTableDataSource(formArray.controls);
+          this.loading = false;
+
+        });
+
+    }
+
+
     ngOnInit(): void {
 
       this.initFboForm();
@@ -163,7 +297,28 @@ export class CreateInvoiceComponent implements OnInit {
       const formArray = this.fboForm.get('saleItems') as FormArray;
       this.dataSource = new MatTableDataSource(formArray.controls);
 
-      this.loading = false;
+      const tId = this.route.snapshot.queryParamMap.get('id');
+      if (tId) {
+
+        this.formHeader = 'Update Invoices';
+
+      }
+      if (tId) {
+
+        this.loading = true;
+        const queryParam:QueryData = {
+          include: [
+            {relation: 'customer'}
+          ]
+        };
+        this.invoiceService.get(tId, queryParam).subscribe((itemC) => this.fillProductAndUnit(itemC));
+
+      } else {
+
+        this.loading = false;
+
+      }
+
 
     }
 
@@ -172,6 +327,73 @@ export class CreateInvoiceComponent implements OnInit {
     findUnitCode = (elm:FormGroup):string => elm.controls?.unit?.value?.code;
 
     upsertInvoice(): void {
+
+      const itemsFormArray = <FormArray> this.fboForm.get('saleItems');
+      for (let idx = itemsFormArray.length - 1; idx >= 0; idx--) {
+
+        const curFgr = itemsFormArray.get([ idx ]) as FormGroup;
+        if (!curFgr.controls.product.value) {
+
+          itemsFormArray.removeAt(idx);
+
+        }
+
+      }
+      if (!this.fboForm.valid) {
+
+        return;
+
+
+      }
+      this.loading = true;
+      const invoiceP = <Invoice> this.fboForm.value;
+ 
+      this.invoiceService.upsert(invoiceP).subscribe(() => {
+
+        this.toastr.success(`Invoice ${invoiceP.invoiceNumber} is saved successfully`, 'Invoice saved');
+        this.goToPreviousPage(this.route, this.router);
+
+      }, (error) => {
+
+        this.loading = false;
+        this.toastr.error(`Error in saving Invoice ${invoiceP.invoiceNumber}`, 'Invoice not saved');
+        console.error(error);
+
+      });
+
+    }
+
+    removeAt= (idx:number): void => {
+
+
+      const itemsFormArray = <FormArray> this.fboForm.get('saleItems');
+
+
+      const curFgr = itemsFormArray.get([ idx ]) as FormGroup;
+
+      if (curFgr.controls.product.value) {
+
+        if (typeof curFgr.controls.product.value !== 'object') {
+
+          curFgr.get('product').setValue('');
+
+          this.createSaleItemFormGroup().reset();
+          this.createSaleItemForm();
+
+        } else {
+
+          const {data} = this.dataSource;
+          data.splice(idx, 1);
+          this.dataSource.data = data;
+
+          itemsFormArray.updateValueAndValidity();
+          this.fboForm.updateValueAndValidity();
+
+          this.createSaleItemFormGroup().reset();
+
+        }
+
+      }
 
     }
 

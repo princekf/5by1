@@ -84,7 +84,7 @@ export class FilterInvoiceComponent {
       {name: 'customer',
         type: 'string'},
       {name: 'invoiceDate',
-        type: 'Date'},
+        type: 'number'},
       {name: 'invoiceNumber',
         type: 'string'},
       {name: 'totalAmount',

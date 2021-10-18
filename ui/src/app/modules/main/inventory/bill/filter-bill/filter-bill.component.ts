@@ -83,7 +83,7 @@ export class FilterBillComponent {
       {name: 'vendor',
         type: 'string'},
       {name: 'billDate',
-        type: 'Date'},
+        type: 'number'},
       {name: 'billNumber',
         type: 'string'},
       {name: 'totalAmount',

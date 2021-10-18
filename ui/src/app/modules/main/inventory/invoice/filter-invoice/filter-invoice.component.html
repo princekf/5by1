@@ -25,23 +25,28 @@
                 </mat-select>
 
 
-                <div class="betweenKeyInputs" *ngIf="filterForm.controls.invoiceDateType.value !== 'between'">
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" formControlName="invoiceDate">
+              
+                    <mat-form-field *ngIf="filterForm.controls.invoiceDateType.value !== 'between'">
+       
+                        <input matInput [matDatepicker]="picker" formControlName="invoiceDate" >
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
-                    <mat-label class="betweenlable">and</mat-label>
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" readonly>
-                    </mat-form-field>
-                </div>
+                   
 
                 <div class="betweenKeyInputs" *ngIf="filterForm.controls.invoiceDateType.value === 'between'">
                     <mat-form-field class="inputPrimary">
-                        <input matInput type="number" formControlName="invoiceDateStart">
+
+                        <input matInput [matDatepicker]="pickerStart" formControlName="invoiceDateStart" >
+                        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerStart></mat-datepicker>
                     </mat-form-field>
                     <mat-label class="betweenlable">and</mat-label>
                     <mat-form-field class="inputPrimary">
-                        <input matInput type="number" formControlName="invoiceDateEnd">
+                       
+                        <input matInput [matDatepicker]="pickerEnd" formControlName="invoiceDateEnd" >
+                        <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerEnd></mat-datepicker>
                     </mat-form-field>
 
                 </div>
@@ -70,15 +75,11 @@
                 </mat-select>
 
 
-                <div class="betweenKeyInputs" *ngIf="filterForm.controls.totalAmountType.value !== 'between'">
-                    <mat-form-field class="inputPrimary">
+              
+                    <mat-form-field  *ngIf="filterForm.controls.totalAmountType.value !== 'between'">
                         <input matInput type="number" formControlName="totalAmount">
                     </mat-form-field>
-                    <mat-label class="betweenlable">and</mat-label>
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" readonly>
-                    </mat-form-field>
-                </div>
+             
 
                 <div class="betweenKeyInputs" *ngIf="filterForm.controls.totalAmountType.value === 'between'">
                     <mat-form-field class="inputPrimary">
@@ -104,26 +105,14 @@
                 </mat-select>
 
 
-                <div class="betweenKeyInputs" *ngIf="filterForm.controls.totalDisountType.value !== 'between'">
-                    <mat-form-field class="inputPrimary">
+                    <mat-form-field *ngIf="filterForm.controls.totalDisountType.value !== 'between'">
                         <input matInput type="number" formControlName="totalDisount">
                     </mat-form-field>
-                    <mat-label class="betweenlable">and</mat-label>
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" readonly>
-                    </mat-form-field>
-                </div>
-
-                <div class="betweenKeyInputs" *ngIf="filterForm.controls.totalDisountType.value === 'between'">
-                    <mat-form-field class="inputPrimary">
+              
+                    <mat-form-field  *ngIf="filterForm.controls.totalDisountType.value === 'between'">
                         <input matInput type="number" formControlName="totalDisountStart">
                     </mat-form-field>
-                    <mat-label class="betweenlable">and</mat-label>
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" formControlName="totalDisountEnd">
-                    </mat-form-field>
 
-                </div>
             </div>
 
             <div class="filter-content-div">
@@ -136,16 +125,11 @@
                 </mat-select>
 
 
-                <div class="betweenKeyInputs" *ngIf="filterForm.controls.totalTaxType.value !== 'between'">
-                    <mat-form-field class="inputPrimary">
+                
+                    <mat-form-field *ngIf="filterForm.controls.totalTaxType.value !== 'between'">
                         <input matInput type="number" formControlName="totalTax">
                     </mat-form-field>
-                    <mat-label class="betweenlable">and</mat-label>
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" readonly>
-                    </mat-form-field>
-                </div>
-
+           
                 <div class="betweenKeyInputs" *ngIf="filterForm.controls.totalTaxType.value === 'between'">
                     <mat-form-field class="inputPrimary">
                         <input matInput type="number" formControlName="totalTaxStart">
@@ -168,15 +152,10 @@
                 </mat-select>
 
 
-                <div class="betweenKeyInputs" *ngIf="filterForm.controls.grandTotalType.value !== 'between'">
-                    <mat-form-field class="inputPrimary">
+                    <mat-form-field *ngIf="filterForm.controls.grandTotalType.value !== 'between'">
                         <input matInput type="number" formControlName="grandTotal">
                     </mat-form-field>
-                    <mat-label class="betweenlable">and</mat-label>
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" readonly>
-                    </mat-form-field>
-                </div>
+               
 
                 <div class="betweenKeyInputs" *ngIf="filterForm.controls.grandTotalType.value === 'between'">
                     <mat-form-field class="inputPrimary">

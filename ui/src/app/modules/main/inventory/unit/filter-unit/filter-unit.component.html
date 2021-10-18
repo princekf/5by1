@@ -35,15 +35,11 @@
                     <mat-option value="between">Between</mat-option>
                 </mat-select>
 
-                <div class="betweenKeyInputs" *ngIf="filterForm.controls.decimalPlacesType.value !== 'between'">
-                    <mat-form-field class="inputPrimary">
+                    <mat-form-field  *ngIf="filterForm.controls.decimalPlacesType.value !== 'between'">
                         <input matInput type="number" formControlName="decimalPlaces">
                     </mat-form-field>
-                    <mat-label class="betweenlable">and</mat-label>
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" readonly>
-                    </mat-form-field>
-                </div>
+
+                   
 
                 <div class="betweenKeyInputs" *ngIf="filterForm.controls.decimalPlacesType.value === 'between'">
                     <mat-form-field class="inputPrimary">
@@ -67,15 +63,10 @@
                     <mat-option value="between">Between</mat-option>
                 </mat-select>
 
-                <div class="betweenKeyInputs" *ngIf="filterForm.controls.timesType.value !== 'between'">
-                    <mat-form-field class="inputPrimary">
+                    <mat-form-field *ngIf="filterForm.controls.timesType.value !== 'between'">
                         <input matInput type="number" formControlName="times">
                     </mat-form-field>
-                    <mat-label class="betweenlable">and</mat-label>
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" readonly>
-                    </mat-form-field>
-                </div>
+
 
                 <div class="betweenKeyInputs" *ngIf="filterForm.controls.timesType.value === 'between'">
                     <mat-form-field class="inputPrimary">
