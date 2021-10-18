@@ -17,7 +17,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
 import { DataTableModule } from '../../data-table/data-table.module';
 import { FilterInvoiceComponent } from './filter-invoice/filter-invoice.component';
-
+import {MatIconModule} from '@angular/material/icon';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [ ListInvoiceComponent, CreateInvoiceComponent, DeleteInvoiceComponent, FilterInvoiceComponent ],
@@ -25,7 +26,7 @@ import { FilterInvoiceComponent } from './filter-invoice/filter-invoice.componen
     CommonModule, InvoiceRoutingModule, ToolBarModule, DataTableModule,
     MatButtonModule, NgxSkeletonLoaderModule, MatSortModule, MatTableModule, MatSelectModule,
     ReactiveFormsModule, FormsModule, MatInputModule, MatDatepickerModule, MatNativeDateModule,
-    MatAutocompleteModule,
+    MatAutocompleteModule, MatIconModule, MatSlideToggleModule
   ]
 })
 export class InvoiceModule { }
