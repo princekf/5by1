@@ -13,7 +13,7 @@ input[type=number] {
 
 :host ::ng-deep .form-submit-container {
   justify-content: end;
-  padding-top: 25px;
+  padding-top: 50px;
   padding-bottom: 25px;
   margin-left: 20%;
   width: 40%;
@@ -28,33 +28,31 @@ height: 35px;
 
 .fbo-create-formTwo{
   width: 20%;
+  margin-top: 10px;
   margin-left: 10%;
 }
-:host ::ng-deep   #fbo-create-formThree{
+#fbo-create-formThree{
 
-  display: block;
-  margin-left: 81%;
-  margin-bottom: 0px;
-
-}
-#fbo-create-formThreeFinal{
-  display: block;
-  margin-left: 81%;
-  margin-bottom: 0px;
-  font-weight: 500;
-  font-size: 15px;
+  display: grid;
+  margin-right: 5%;
 
 }
+
 .fbo-create-formTotal{
-  width: 35%;
-  margin-left: 8%;
+
   text-align: right;
+  border: 1px solid  #E3E3E3 ;
+  border-radius: 3px;
+  font-size: 16px;
+  margin-top: 5px;
 
 }
+
 .create-form-table{
 	  width: 100%;
     padding-left: 10%;
     margin-top: 3%;
+    margin-bottom: 3%;
 
 }
 th{
@@ -63,24 +61,28 @@ th{
 
 td{
   border-left: 0.5px solid  #0062FF22;
-  
   height: 35px;
   width: 2%;
 }
-.paidlabel{
-  margin-right: 3%;
-}
 
+.bottom-form{
+  display: flex;
+  margin-left: 10%;
+
+
+}
 
 :host ::ng-deep .mat-slide-toggle.mat-primary.mat-checked .mat-slide-toggle-bar {
   background-color: #0062FF;
   width: 36px;
   height: 20px;
+  top: 5px;
 
 }
 :host ::ng-deep .mat-slide-toggle.mat-primary.mat-checked .mat-slide-toggle-thumb {
   background-color: white;
   margin-top: 2.5px;
+  top: 5px;
 
 }
 :host ::ng-deep .mat-slide-toggle-bar {
@@ -89,12 +91,13 @@ td{
   height: 20px;
   flex-shrink: 0;
   border-radius: 8px;
+  top: 5px;
 
 }
 :host ::ng-deep .mat-slide-toggle-thumb {
   height: 20px;
   width: 20px;
- 
+  top: 5px;
   margin-top: 2px;
 
   border-radius: 50%;
@@ -104,7 +107,7 @@ td{
   position: relative;
   flex: auto;
   min-width: 0;
-  // width: 119px;
+  
 }
 
 :host ::ng-deep td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
@@ -170,8 +173,7 @@ max-width:  117px;
 .fbo-create-form-numberTwo{
   max-width:  117px;
     text-align: right;
-  
-   
+
     width: 100%;
   
   }
@@ -194,8 +196,7 @@ max-width:  117px;
   position: relative;
   flex: auto;
 width: 100%;
-padding-left: 3%;
-padding-right: 3%;
+padding: 0 3%;
 
 }
 
@@ -204,6 +205,8 @@ padding-right: 3%;
       
 }
 }
+
+
 
 	@media only screen 
     and (max-width: 860px), (min-device-width: 768px) 
@@ -294,13 +297,12 @@ border-left-color: transparent;
       padding-right: 0px !important;
       border-right: 0.5px solid #0062FF22;
       width: 1%;
-      //   max-width: 2px;
+  
     }
     
     :host ::ng-deep th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
       padding-right: 0px;
-      // width: 1%;
-      // max-width: 1px;
+  
     }
     .fbo-create-form-numberdelete{ 
      display: block;
