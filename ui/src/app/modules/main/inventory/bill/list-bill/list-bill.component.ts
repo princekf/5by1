@@ -72,6 +72,9 @@ export class ListBillComponent {
   private loadData = () => {
 
     this.loading = true;
+    this.queryParams.include = [
+      {relation: 'vendor'}
+    ];
     this.billService.list(this.queryParams).subscribe((bills) => {
 
       this.bills = bills;

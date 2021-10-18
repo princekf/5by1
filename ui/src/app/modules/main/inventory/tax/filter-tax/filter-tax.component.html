@@ -36,15 +36,10 @@
                 </mat-select>
 
 
-                <div class="betweenKeyInputs" *ngIf="filterForm.controls.rateType.value !== 'between'">
-                    <mat-form-field class="inputPrimary">
+                    <mat-form-field  *ngIf="filterForm.controls.rateType.value !== 'between'">
                         <input matInput type="number" formControlName="rate">
                     </mat-form-field>
-                    <mat-label class="betweenlable">and</mat-label>
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" readonly>
-                    </mat-form-field>
-                </div>
+                  
 
                 <div class="betweenKeyInputs" *ngIf="filterForm.controls.rateType.value === 'between'">
                     <mat-form-field class="inputPrimary">
@@ -71,15 +66,10 @@
                 </mat-select>
 
 
-                <div class="betweenKeyInputs" *ngIf="filterForm.controls.appliedToType.value !== 'between'">
-                    <mat-form-field class="inputPrimary">
+                    <mat-form-field *ngIf="filterForm.controls.appliedToType.value !== 'between'">
                         <input matInput type="number" formControlName="appliedTo">
                     </mat-form-field>
-                    <mat-label class="betweenlable">and</mat-label>
-                    <mat-form-field class="inputPrimary">
-                        <input matInput type="number" readonly>
-                    </mat-form-field>
-                </div>
+                 
 
                 <div class="betweenKeyInputs" *ngIf="filterForm.controls.appliedToType.value === 'between'">
                     <mat-form-field class="inputPrimary">

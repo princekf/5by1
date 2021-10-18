@@ -65,7 +65,7 @@ export class FilterPaymentComponent {
 
     const formFields: Array<FilterFormField> = [
       {name: 'paidDate',
-        type: 'Date'},
+        type: 'number'},
       {name: 'vendor',
         type: 'string'},
       {name: 'bill',
@@ -81,8 +81,6 @@ export class FilterPaymentComponent {
     this.router.navigate([], { queryParams: {whereS} });
 
   };
-
-
 
 
 }

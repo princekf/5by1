@@ -32,6 +32,8 @@ export class FilterProductComponent {
     reorderLevelEnd: new FormControl(''),
     Category: new FormControl(''),
     CategoryType: new FormControl('^'),
+    Status: new FormControl(''),
+    StatusType: new FormControl('^'),
 
   });
 
@@ -74,6 +76,8 @@ export class FilterProductComponent {
       {name: 'reorderLevel',
         type: 'number'},
       {name: 'Category',
+        type: 'string'},
+      {name: 'Status',
         type: 'string'},
     ];
     const whereS = createQueryStringFromFilterForm(this.filterForm, formFields);

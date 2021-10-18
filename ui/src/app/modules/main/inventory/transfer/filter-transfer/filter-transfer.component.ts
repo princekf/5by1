@@ -67,7 +67,7 @@ export class FilterTransferComponent {
       {name: 'toAccount',
         type: 'string'},
       {name: 'transferDate',
-        type: 'Date'},
+        type: 'number'},
       {name: 'amount',
         type: 'number'}
 
