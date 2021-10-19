@@ -10,6 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { QueryData } from '@shared/util/query-data';
+import { Observable } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 @Component({
   selector: 'app-create-transfer',
   templateUrl: './create-transfer.component.html',
@@ -23,6 +25,11 @@ export class CreateTransferComponent implements OnInit {
   loading = true;
 
   formHeader = 'Create Transfer';
+
+
+  fromAccount$: Observable<Array<Bank>>;
+
+  toAccount$: Observable<Array<Bank>>;
 
 
   banks: Array<Bank> = [];
@@ -53,6 +60,8 @@ export class CreateTransferComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+    this.initValueChanges();
 
 
     const tId = this.route.snapshot.queryParamMap.get('id');
@@ -92,6 +101,38 @@ export class CreateTransferComponent implements OnInit {
       }
 
     });
+
+  }
+
+
+  extractNameOfObject = (obj: {name: string}): string => obj.name;
+
+  private initValueChanges = () => {
+
+    this.fromAccount$ = this.form.controls.fromAccount.valueChanges
+      .pipe(flatMap((fromAccountQ) => {
+
+        if (typeof fromAccountQ !== 'string') {
+
+          return [];
+
+        }
+        return this.bankService.search({ where: {name: {like: fromAccountQ,
+          options: 'i'}} });
+
+      }));
+    this.toAccount$ = this.form.controls.toAccount.valueChanges
+      .pipe(flatMap((toAccountQ) => {
+
+        if (typeof toAccountQ !== 'string') {
+
+          return [];
+
+        }
+        return this.bankService.search({ where: {name: {like: toAccountQ,
+          options: 'i'}} });
+
+      }));
 
   }
 

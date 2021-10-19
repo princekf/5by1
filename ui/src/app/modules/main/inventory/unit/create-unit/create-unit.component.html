@@ -26,10 +26,13 @@
   <p>
     <mat-form-field>
       <mat-label>Base Unit</mat-label>
-      <mat-select placeholder="Ex. Milliegram is the base unit of Kilogram" formControlName="parent">
-        <mat-option></mat-option>
-        <mat-option *ngFor="let unit of units" [value]="unit">{{unit.name}}</mat-option>
-      </mat-select>
+
+      <input type="text" matInput placeholder="Type parent name" formControlName="parent" [matAutocomplete]="autoParent">
+      <mat-autocomplete autoActiveFirstOption #autoParent="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let unitS of units$ | async" [value]="unitS">
+          {{unitS.name}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </p>
   <p>

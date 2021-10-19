@@ -17,14 +17,14 @@ import { FilterInvoiceComponent } from '../filter-invoice/filter-invoice.compone
 })
 export class ListInvoiceComponent {
 
-  displayedColumns: string[] = [ 'customer.name', 'invoiceDate', 'invoiceNumber', 'totalAmount', 'totalDisount', 'totalTax', 'grandTotal', 'isReceived' ];
+  displayedColumns: string[] = [ 'customer.name', 'invoiceDate', 'invoiceNumber', 'totalAmount', 'totalDiscount', 'totalTax', 'grandTotal', 'isReceived' ];
 
   columnHeaders = {
     'customer.name': 'Customer',
     invoiceDate: 'Date',
     invoiceNumber: 'Invoice #',
     totalAmount: 'Amount',
-    totalDisount: 'Discount',
+    totalDiscount: 'Discount',
     totalTax: 'Tax',
     grandTotal: 'Grand Total',
     isReceived: 'Received'

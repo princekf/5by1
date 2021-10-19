@@ -54,8 +54,7 @@ export class CreateInvoiceComponent implements OnInit {
     private readonly customerService:CustomerService,
     private readonly stockService: StockService,
     private readonly toastr: ToastrService,
-    private readonly unitService: UnitService,
-    private fb: FormBuilder) { }
+    private readonly unitService: UnitService,) { }
 
     private initValueChanges = () => {
 
@@ -180,7 +179,7 @@ export class CreateInvoiceComponent implements OnInit {
           options: 'i'}}, }).subscribe((productsP) => (this.productsFiltered = productsP.items));
 
       });
-      // TODO here
+
       return fGrp;
 
     };
@@ -193,11 +192,11 @@ export class CreateInvoiceComponent implements OnInit {
         invoiceDate: this.fBuilder.control(new Date(), [ Validators.required ]),
         dueDate: this.fBuilder.control(''),
         invoiceNumber: this.fBuilder.control('', [ Validators.required ]),
-        totalAmount: this.fBuilder.control('', [ Validators.required ]),
-        totalDiscount: this.fBuilder.control(''),
+        totalAmount: this.fBuilder.control(0, [ Validators.required ]),
+        totalDiscount: this.fBuilder.control(0),
         totalTax: this.fBuilder.control(0, [ Validators.required ]),
         roundOff: this.fBuilder.control(0),
-        grandTotal: this.fBuilder.control('', [ Validators.required ]),
+        grandTotal: this.fBuilder.control(0, [ Validators.required ]),
         isReceived: this.fBuilder.control(true, [ Validators.required ]),
         saleItems: this.fBuilder.array([
           this.createSaleItemForm(),
@@ -347,7 +346,7 @@ export class CreateInvoiceComponent implements OnInit {
       }
       this.loading = true;
       const invoiceP = <Invoice> this.fboForm.value;
- 
+
       this.invoiceService.upsert(invoiceP).subscribe(() => {
 
         this.toastr.success(`Invoice ${invoiceP.invoiceNumber} is saved successfully`, 'Invoice saved');

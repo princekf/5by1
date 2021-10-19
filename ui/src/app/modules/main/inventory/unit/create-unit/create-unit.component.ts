@@ -6,6 +6,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Unit } from '@shared/entity/inventory/unit';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { QueryData } from '@shared/util/query-data';
+import { Observable } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 @Component({
   selector: 'app-create-unit',
   templateUrl: './create-unit.component.html',
@@ -20,6 +22,8 @@ export class CreateUnitComponent implements OnInit {
   loading = false;
 
   units: Array<Unit> = [];
+
+  units$: Observable<Array<Unit>>;
 
   timesConditionallyRequiredValidator = (formControl: AbstractControl): ValidationErrors => {
 
@@ -60,6 +64,8 @@ export class CreateUnitComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.initValueChanges();
+
     const tId = this.route.snapshot.queryParamMap.get('id');
     this.loading = true;
     this.unitService.search({}).subscribe((units) => {
@@ -97,6 +103,26 @@ export class CreateUnitComponent implements OnInit {
 
 
   }
+
+  private initValueChanges = () => {
+
+    this.units$ = this.fboForm.controls.parent.valueChanges
+      .pipe(flatMap((unitQ) => {
+
+        if (typeof unitQ !== 'string') {
+
+          return [];
+
+        }
+        return this.unitService.search({ where: {name: {like: unitQ,
+          options: 'i'}} });
+
+      }));
+
+  }
+
+
+  extractNameOfObject = (obj: {name: string}): string => obj.name;
 
   upsertUnit(): void {
 

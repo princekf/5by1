@@ -9,16 +9,14 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
 import {MatSelectModule} from '@angular/material/select';
-
 import { ListUnitComponent } from './list-unit/list-unit.component';
 import { CreateUnitComponent } from './create-unit/create-unit.component';
 import { DeleteUnitComponent } from './delete-unit/delete-unit.component';
-
 import { UnitRoutingModule } from './unit.routing.module';
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
 import { DataTableModule } from '../../data-table/data-table.module';
-
 import { FilterUnitComponent } from './filter-unit/filter-unit.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -27,7 +25,7 @@ import { FilterUnitComponent } from './filter-unit/filter-unit.component';
     CommonModule,
     UnitRoutingModule, ToolBarModule, DataTableModule, MatInputModule, MatFormFieldModule,
     ReactiveFormsModule, FormsModule, MatButtonModule, NgxSkeletonLoaderModule,
-    MatSortModule, MatTableModule, MatSelectModule
+    MatSortModule, MatTableModule, MatSelectModule, MatAutocompleteModule
   ]
 })
 export class UnitModule { }
