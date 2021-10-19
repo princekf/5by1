@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Invoice } from '@shared/entity/inventory/invoice';
-import { delay } from 'rxjs/internal/operators';
-import { invoice1, invoice2 } from '../mock-data/invoice.data';
+import { Invoice, SaleItem } from '@shared/entity/inventory/invoice';
 import { BaseHTTPService } from '@fboservices/base-http.service';
 import { INVOICE_API_URI } from '@shared/server-apis';
+import { Observable } from 'rxjs';
 
-const FAKE_TIMEOUT = 1000;
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +12,56 @@ export class InvoiceService extends BaseHTTPService<Invoice> {
 
   public API_URI = INVOICE_API_URI;
 
-    private items:Array<Invoice> = [ invoice1, invoice2 ]
+  private formatSaleItems = (invoice:Invoice, salteItems:Array<SaleItem>):void => {
 
-    public listAll():Observable<Array<Invoice>> {
+    for (const pItem of salteItems) {
 
-      return of(this.items).pipe(delay(FAKE_TIMEOUT));
+      const {product, unit, ...pItem2} = pItem;
+      pItem2.productId = product.id;
+      pItem2.unitId = unit.id;
+      if (!pItem2.expiryDate) {
+
+        delete pItem2.expiryDate;
+
+      }
+      if (!pItem2.mfgDate) {
+
+        delete pItem2.mfgDate;
+
+      }
+      invoice.saleItems.push(pItem2);
 
     }
+
+  }
+
+  public upsert = (invoice:Invoice):Observable<void> => {
+
+    const {id, customer, dueDate, invoiceDate, saleItems, ...invoice2} = invoice;
+    invoice2.customerId = customer?.id ?? '';
+    let invoiceDup:Invoice = {...invoice2};
+    if (dueDate) {
+
+      invoiceDup = {dueDate,
+        ...invoiceDup};
+
+    }
+    if (invoiceDate) {
+
+      invoiceDup = {invoiceDate,
+        ...invoiceDup};
+
+    }
+    invoiceDup.saleItems = [];
+    this.formatSaleItems(invoiceDup, saleItems);
+    if (id) {
+
+      return super.update({id,
+        ...invoiceDup});
+
+    }
+    return super.save(invoiceDup);
+
+  };
 
 }

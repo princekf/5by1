@@ -77,3 +77,7 @@ command-line of your application's root directory.
 
 To add a new empty controller, type in `yarn lb4 controller [<name>]` from the
 command-line of your application's root directory.
+### Relations
+
+To add a new empty controller, type in `yarn lb4 relation` from the
+command-line of your application's root directory.

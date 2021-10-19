@@ -11,7 +11,7 @@ import { Product } from '@shared/entity/inventory/product';
 import { ProductService } from '@fboservices/inventory/product.service';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { StockService } from '@fboservices/inventory/stock.service';
-import { forkJoin, Observable, throwError } from 'rxjs';
+import { forkJoin, throwError } from 'rxjs';
 import { UnitService } from '@fboservices/inventory/unit.service';
 import { CategoryService } from '@fboservices/inventory/category.service';
 import { QueryData } from '@shared/util/query-data';
@@ -195,8 +195,8 @@ export class CreateInvoiceComponent implements OnInit {
         invoiceNumber: this.fBuilder.control('', [ Validators.required ]),
         totalAmount: this.fBuilder.control('', [ Validators.required ]),
         totalDiscount: this.fBuilder.control(''),
-        totalTax: this.fBuilder.control(''),
-        roundOff: this.fBuilder.control(''),
+        totalTax: this.fBuilder.control(0, [ Validators.required ]),
+        roundOff: this.fBuilder.control(0),
         grandTotal: this.fBuilder.control('', [ Validators.required ]),
         isReceived: this.fBuilder.control(true, [ Validators.required ]),
         saleItems: this.fBuilder.array([

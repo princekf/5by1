@@ -58,6 +58,21 @@ export class SaleItem extends Entity implements SaleItemInft {
   })
   mrp: number;
 
+  @property({
+    type: 'date',
+  })
+  mfgDate: Date;
+
+  @property({
+    type: 'date',
+  })
+  expiryDate: Date;
+
+  @property({
+    type: 'number',
+  })
+  rrp: number;
+
   @belongsTo(() => Product)
   productId: string;
 

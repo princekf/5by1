@@ -62,6 +62,9 @@ export class ListRevenueComponent {
     private loadData = () => {
 
       this.loading = true;
+      this.queryParams.include = [
+        {relation: 'customer'}, {relation: 'invoice'}, {relation: 'bank'}
+      ];
       this.revenueService.list(this.queryParams).subscribe((revenues) => {
 
         this.revenues = revenues;

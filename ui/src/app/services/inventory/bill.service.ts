@@ -1,11 +1,8 @@
-import {bill1, bill2 as bill21} from '../mock-data/bill.data';
 import { Bill, PurchaseItem } from '@shared/entity/inventory/bill';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/internal/operators';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { BaseHTTPService } from '@fboservices/base-http.service';
 import { BILL_API_URI } from '@shared/server-apis';
-const FAKE_TIMEOUT = 1000;
 
 @Injectable({
   providedIn: 'root'
@@ -13,16 +10,6 @@ const FAKE_TIMEOUT = 1000;
 
 
 export class BillService extends BaseHTTPService<Bill> {
-
-
-    private items:Array<Bill> = [ bill1, bill21 ]
-
-    public listAll():Observable<Array<Bill>> {
-
-      return of(this.items).pipe(delay(FAKE_TIMEOUT));
-
-    }
-
 
   public API_URI = BILL_API_URI;
 

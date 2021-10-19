@@ -41,7 +41,7 @@ export class Invoice extends Entity implements InvoiceInft {
   @property({
     type: 'number',
   })
-  totalDisount: number;
+  totalDiscount: number;
 
   @property({
     type: 'number',

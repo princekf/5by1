@@ -7,7 +7,7 @@
   <p>
 
     <mat-form-field >
-      <mat-label>Choose a ReceivedDate </mat-label>
+      <mat-label>Received Date </mat-label>
       <input matInput [matDatepicker]="picker" formControlName="receivedDate" >
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
@@ -18,28 +18,38 @@
   <p>
     <mat-form-field>
       <mat-label>Customer Name</mat-label>
-      <mat-select placeholder="Enter Customer name" formControlName="customer">
-        <mat-option *ngFor="let customer of customers" [value]="customer">{{customer.name}}</mat-option>
-      </mat-select>
+      <input type="text" matInput placeholder="Type customer name" formControlName="customer"
+        [matAutocomplete]="autoCustomer">
+      <mat-autocomplete autoActiveFirstOption #autoCustomer="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let customerS of customers$ | async" [value]="customerS">
+          {{customerS.name}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </p>
 
   <p>
     <mat-form-field>
-      <mat-label>InvoiceNumber</mat-label>
-      <mat-select placeholder="Enter InvoiceNumber" formControlName="invoice">
-        <mat-option *ngFor="let invoice of invoices" [value]="invoice">{{invoice.invoiceNumber}}</mat-option>
-      </mat-select>
+      <mat-label>Invoice</mat-label>
+      <input type="text" matInput placeholder="Type invoice number" formControlName="invoice" [matAutocomplete]="autoInvoice">
+      <mat-autocomplete autoActiveFirstOption #autoInvoice="matAutocomplete" [displayWith]="extractInvoiceNumber">
+        <mat-option *ngFor="let invoiceS of invoices$ | async" [value]="invoiceS">
+          {{invoiceS.billNumber}}
+        </mat-option>
+      </mat-autocomplete>
 
     </mat-form-field>
   </p>
 
   <p>
     <mat-form-field>
-      <mat-label>Bank Number</mat-label>
-      <mat-select placeholder="Enter Bank Name" formControlName="bank">
-        <mat-option *ngFor="let bank of banks" [value]="bank">{{bank.name}}</mat-option>
-      </mat-select>
+      <mat-label>Bank</mat-label>
+      <input type="text" matInput placeholder="Type bank name" formControlName="bank" [matAutocomplete]="autoBank">
+      <mat-autocomplete autoActiveFirstOption #autoBank="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let bankS of banks$ | async" [value]="bankS">
+          {{bankS.name}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </p>
   <p>

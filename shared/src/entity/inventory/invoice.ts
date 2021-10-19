@@ -16,21 +16,24 @@ export interface SaleItem {
     totalAmount: number;
     batchNumber?: string;
     mrp?: number;
+    mfgDate: Date;
+    expiryDate: Date;
+    rrp: number;
 }
 
 export interface Invoice {
     id?: string;
     customer?: Customer;
     customerId?: string;
-    invoiceDate: Date;
+    invoiceDate?: Date;
     dueDate?: Date;
     invoiceNumber?: string;
     totalAmount: number;
-    totalDisount?: number;
+    totalDiscount?: number;
     totalTax?: number;
     roundOff?: number;
     grandTotal: number;
     notes?: string;
-    saleItems: Array<SaleItem>;
+    saleItems?: Array<SaleItem>;
     isReceived?: boolean;
 }

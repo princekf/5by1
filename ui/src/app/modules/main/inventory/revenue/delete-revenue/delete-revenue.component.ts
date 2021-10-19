@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
+import { QueryData } from '@shared/util/query-data';
 @Component({
   selector: 'app-delete-revenue',
   templateUrl: './delete-revenue.component.html',
@@ -66,7 +67,17 @@ export class DeleteRevenueComponent implements OnInit {
 
     const tIds = this.route.snapshot.queryParamMap.get('ids');
     const tIdArray = tIds.split(',');
-    this.revenueService.listByIds(tIdArray).subscribe((revenues) => {
+    const queryData:QueryData = {
+      include: [
+        {relation: 'customer'}, {relation: 'invoice'}, {relation: 'bank'}
+      ],
+      where: {
+        id: {
+          inq: tIdArray
+        }
+      }
+    };
+    this.revenueService.search(queryData).subscribe((revenues) => {
 
       this.dataSource.data = revenues;
       this.loading = false;
@@ -93,10 +104,13 @@ export class DeleteRevenueComponent implements OnInit {
     const revenues = this.dataSource.data;
     const tIds = [];
     revenues.forEach((revenueP) => tIds.push(revenueP.id));
-    this.revenueService.deleteByIds(tIds).subscribe((revenueP) => {
+    const where = {id: {
+      inq: tIds
+    }};
+    this.revenueService['delete'](where).subscribe((count) => {
 
       this.loading = false;
-      this.toastr.success('Revenues are deleted successfully', 'Revenues deleted');
+      this.toastr.success(`${count.count} revenues are deleted successfully`, 'Revenues deleted');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
