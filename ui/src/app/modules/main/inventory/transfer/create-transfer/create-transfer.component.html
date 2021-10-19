@@ -7,18 +7,26 @@
   <p>
     <mat-form-field>
       <mat-label>From Account</mat-label>
-      <mat-select placeholder="Enter From Account" formControlName="fromAccount">
-        <mat-option *ngFor="let bank of banks" [value]="bank">{{bank.name}}</mat-option>
-      </mat-select>
+
+      <input type="text" matInput placeholder="Type From Account name" formControlName="fromAccount" [matAutocomplete]="autofromAccount">
+      <mat-autocomplete autoActiveFirstOption #autofromAccount="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let fromAccountS of fromAccount$ | async" [value]="fromAccountS">
+          {{fromAccountS.name}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </p>
 
   <p>
     <mat-form-field>
       <mat-label>To Account</mat-label>
-      <mat-select placeholder="Enter To Account" formControlName="toAccount">
-        <mat-option *ngFor="let bank of banks" [value]="bank">{{bank.name}}</mat-option>
-      </mat-select>
+    
+      <input type="text" matInput placeholder="Type From Account name" formControlName="toAccount" [matAutocomplete]="autoToAccount">
+      <mat-autocomplete autoActiveFirstOption #autoToAccount="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let toAccountS of toAccount$ | async" [value]="toAccountS">
+          {{toAccountS.name}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </p>
 

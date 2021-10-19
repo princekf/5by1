@@ -83,7 +83,7 @@ export class CreateProductComponent implements OnInit {
       this.categoryOptions = this.fboForm.controls.category.valueChanges
         .pipe(flatMap((nameQ) => {
 
-          if (!nameQ || typeof nameQ !== 'string') {
+          if (typeof nameQ !== 'string') {
 
             return of([]);
 

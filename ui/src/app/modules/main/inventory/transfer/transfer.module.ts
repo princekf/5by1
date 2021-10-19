@@ -17,13 +17,15 @@ import {MatSortModule} from '@angular/material/sort';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FilterTransferComponent } from './filter-transfer/filter-transfer.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [ ListTransferComponent, CreateTransferComponent, DeleteTransferComponent, FilterTransferComponent ],
   imports: [
     CommonModule, TransferRoutingModule, MatSelectModule, MatFormFieldModule, ReactiveFormsModule,
     FormsModule, MatInputModule, MatButtonModule, MatTableModule, MatSortModule,
-    NgxSkeletonLoaderModule, ToolBarModule, DataTableModule, MatNativeDateModule, MatDatepickerModule
+    NgxSkeletonLoaderModule, ToolBarModule, DataTableModule, MatNativeDateModule, MatDatepickerModule,
+    MatAutocompleteModule
   ]
 })
 export class TransferModule { }

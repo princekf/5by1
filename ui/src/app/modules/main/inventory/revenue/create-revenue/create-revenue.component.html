@@ -34,7 +34,7 @@
       <input type="text" matInput placeholder="Type invoice number" formControlName="invoice" [matAutocomplete]="autoInvoice">
       <mat-autocomplete autoActiveFirstOption #autoInvoice="matAutocomplete" [displayWith]="extractInvoiceNumber">
         <mat-option *ngFor="let invoiceS of invoices$ | async" [value]="invoiceS">
-          {{invoiceS.billNumber}}
+          {{invoiceS.invoiceNumber}}
         </mat-option>
       </mat-autocomplete>
 
