@@ -8,7 +8,6 @@ import { PAYMENT_API_URI } from '@shared/server-apis';
 @Injectable({
   providedIn: 'root'
 })
-
 export class PaymentService extends BaseHTTPService<Payment> {
 
   public API_URI = PAYMENT_API_URI;

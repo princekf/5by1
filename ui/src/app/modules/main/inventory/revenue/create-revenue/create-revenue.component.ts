@@ -12,6 +12,8 @@ import { BankService } from '@fboservices/inventory/bank.service';
 import { CustomerService } from '@fboservices/inventory/customer.service';
 import { InvoiceService } from '@fboservices/inventory/invoice.service';
 import { QueryData } from '@shared/util/query-data';
+import { Observable } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 @Component({
   selector: 'app-create-revenue',
   templateUrl: './create-revenue.component.html',
@@ -28,13 +30,11 @@ export class CreateRevenueComponent implements OnInit {
 
   queryParams:QueryData = { };
 
-  revenues: Array<Revenue> = [];
+  customers$: Observable<Array<Customer>>;
 
-  banks: Array<Bank> = [];
+  invoices$: Observable<Array<Invoice>>;
 
-  customers: Array<Customer> =[];
-
-  invoices: Array<Invoice> =[];
+  banks$: Observable<Array<Bank>>;
 
   form: FormGroup = new FormGroup({
 
@@ -44,15 +44,15 @@ export class CreateRevenueComponent implements OnInit {
 
     customer: new FormControl('', [ Validators.required ]),
 
-    invoice: new FormControl('', [ Validators.required ]),
+    invoice: new FormControl(''),
 
     bank: new FormControl('', [ Validators.required ]),
 
-    category: new FormControl('', [ Validators.required ]),
+    category: new FormControl(''),
 
     amount: new FormControl('', [ Validators.required ]),
 
-    description: new FormControl('', [ Validators.required ]),
+    description: new FormControl(''),
 
   });
 
@@ -65,69 +65,94 @@ export class CreateRevenueComponent implements OnInit {
     private readonly invoiceService: InvoiceService,
   ) { }
 
+  private initValueChanges = () => {
+
+    this.customers$ = this.form.controls.customer.valueChanges
+      .pipe(flatMap((vendorQ) => {
+
+        if (typeof vendorQ !== 'string') {
+
+          return [];
+
+        }
+        return this.customerService.search({ where: {name: {like: vendorQ,
+          options: 'i'}} });
+
+      }));
+
+    this.invoices$ = this.form.controls.invoice.valueChanges
+      .pipe(flatMap((billQ) => {
+
+        if (typeof billQ !== 'string') {
+
+          return [];
+
+        }
+        return this.invoiceService.search({ where: {invoiceNumber: {like: billQ,
+          options: 'i'}} });
+
+      }));
+
+    this.banks$ = this.form.controls.bank.valueChanges
+      .pipe(flatMap((bankQ) => {
+
+        if (typeof bankQ !== 'string') {
+
+          return [];
+
+        }
+        return this.bankService.search({ where: {name: {like: bankQ,
+          options: 'i'}} });
+
+      }));
+
+  };
+
   ngOnInit(): void {
+
+    this.initValueChanges();
 
     const tId = this.route.snapshot.queryParamMap.get('id');
 
-    this.bankService.search({}).subscribe((banks) => {
-
-      this.banks = banks;
-
-
-    });
-
-    this.customerService.search({}).subscribe((customers) => {
-
-      this.customers = customers;
+    this.loading = false;
+    if (tId) {
 
 
-    });
+      this.formHeader = 'Update Revenue';
+      this.loading = true;
+      const queryParam:QueryData = {
+        include: [
+          {relation: 'customer'}, {relation: 'invoice'}, {relation: 'bank'}
+        ]
+      };
+      this.revenueService.get(tId, queryParam).subscribe((revenueC) => {
 
-
-    this.invoiceService.list(this.queryParams).subscribe((invoices) => {
-
-      this.invoices = invoices.items;
-
-
-    });
-
-    this.revenueService.listAll().subscribe((revenues) => {
-
-      this.revenues = revenues;
-
-      this.loading = false;
-      if (tId) {
-
-
-        this.formHeader = 'Update Revenue';
-        this.loading = true;
-        this.revenueService.get(tId).subscribe((revenueC) => {
-
-          this.form.setValue({
-            id: revenueC.id ?? '',
-            receivedDate: revenueC.receivedDate ?? '',
-            customer: revenueC.customer ?? '',
-            invoice: revenueC.invoice ?? '',
-            bank: revenueC.bank ?? '',
-            category: revenueC.category ?? '',
-            amount: revenueC.amount ?? '',
-            description: revenueC.description ?? ''
-          });
-
-          this.loading = false;
-
+        this.form.setValue({
+          id: revenueC.id ?? '',
+          receivedDate: revenueC.receivedDate ?? '',
+          customer: revenueC.customer ?? '',
+          invoice: revenueC.invoice ?? '',
+          bank: revenueC.bank ?? '',
+          category: revenueC.category ?? '',
+          amount: revenueC.amount ?? '',
+          description: revenueC.description ?? ''
         });
-
-      } else {
 
         this.loading = false;
 
-      }
+      });
 
-    });
+    } else {
+
+      this.loading = false;
+
+    }
 
   }
 
+  extractNameOfObject = (obj: {name: string}): string => obj.name;
+
+  extractInvoiceNumber = (obj: Invoice): string => obj.invoiceNumber;
 
   upsertRevenue(): void {
 
@@ -141,10 +166,9 @@ export class CreateRevenueComponent implements OnInit {
     const revenueP = <Revenue> this.form.value;
 
 
-    // eslint-disable-next-line max-len
-    (revenueP.id ? this.revenueService.update(revenueP) : this.revenueService.save(revenueP)).subscribe((revenueC) => {
+    this.revenueService.upsert(revenueP).subscribe(() => {
 
-      this.toastr.success(`Revenue ${revenueC.receivedDate} is saved successfully`, 'Revenue saved');
+      this.toastr.success(`Revenue ${revenueP.amount} is saved successfully`, 'Revenue saved');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {

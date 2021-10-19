@@ -23,3 +23,7 @@ export * from './sale-item-unit.controller';
 export * from './invoice.controller';
 export * from './invoice-customer.controller';
 export * from './stock.controller';
+export * from './revenue-customer.controller';
+export * from './revenue-invoice.controller';
+export * from './revenue-bank.controller';
+export * from './revenue.controller';

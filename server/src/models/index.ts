@@ -15,3 +15,4 @@ export * from './purchase-item-tax.model';
 export * from './payment.model';
 export * from './invoice.model';
 export * from './sale-item.model';
+export * from './revenue.model';

@@ -22,6 +22,7 @@ export class PaymentRepository extends FBOBaseRepository<
   constructor(
     @inject('datasources.fbomongo') dataSource: FbomongoDataSource, @repository.getter('VendorRepository') protected vendorRepositoryGetter: Getter<VendorRepository>, @repository.getter('BankRepository') protected bankRepositoryGetter: Getter<BankRepository>, @repository.getter('BillRepository') protected billRepositoryGetter: Getter<BillRepository>,
   ) {
+
     super(Payment, dataSource);
     this.bill = this.createBelongsToAccessorFor('bill', billRepositoryGetter,);
     this.registerInclusionResolver('bill', this.bill.inclusionResolver);
@@ -29,5 +30,7 @@ export class PaymentRepository extends FBOBaseRepository<
     this.registerInclusionResolver('bank', this.bank.inclusionResolver);
     this.vendor = this.createBelongsToAccessorFor('vendor', vendorRepositoryGetter,);
     this.registerInclusionResolver('vendor', this.vendor.inclusionResolver);
+
   }
+
 }
