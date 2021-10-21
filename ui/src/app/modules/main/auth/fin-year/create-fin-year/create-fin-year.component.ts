@@ -22,7 +22,7 @@ export class CreateFinYearComponent implements OnInit {
 
   loading = true;
 
-  formHeader = 'Create Fin-year';
+  formHeader = 'Create Fin Year';
 
   branchFiltered: Array<Branch> = [];
 
@@ -55,7 +55,7 @@ export class CreateFinYearComponent implements OnInit {
 
     if (tId) {
 
-      this.formHeader = 'Update Fin-year';
+      this.formHeader = 'Update Fin Year';
 
       const queryParam:QueryData = {
         include: [
