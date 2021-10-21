@@ -36,7 +36,6 @@ export class CreateBillComponent implements OnInit {
 
   iserror = false;
 
-  togglepayment = false;
 
   vendorsFiltered: Array<Vendor> = [];
 
@@ -339,18 +338,19 @@ export class CreateBillComponent implements OnInit {
 
     if (event.value === 'paylater') {
 
-      this.togglepayment = true;
+      this.fboForm.get('isPaid').setValue(false);
+
+      if (this.fboForm.controls.isPaid.value === false) {
+
+        const itemssFormArray = <FormArray> this.fboForm.get('bank');
+        itemssFormArray.disable();
+
+
+      }
 
     } else {
 
-      this.togglepayment = false;
-
-    }
-
-
-    if (this.fboForm.valid) {
-
-      this.upsertBill();
+      this.fboForm.get('isPaid').setValue(true);
 
     }
 
@@ -381,9 +381,6 @@ export class CreateBillComponent implements OnInit {
     }
 
     this.loading = true;
-
-    const itemssFormArray = <FormArray> this.fboForm.get('bank');
-    itemssFormArray.disable();
     const billP = <Bill> this.fboForm.value;
 
     this.billService.upsert(billP).subscribe(() => {
