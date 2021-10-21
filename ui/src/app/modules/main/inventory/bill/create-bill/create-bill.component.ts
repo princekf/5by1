@@ -16,6 +16,8 @@ import { forkJoin, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/internal/operators';
 import { CategoryService } from '@fboservices/inventory/category.service';
 import { QueryData } from '@shared/util/query-data';
+import { BankService } from '@fboservices/inventory/bank.service';
+import { Bank } from '@shared/entity/inventory/bank';
 
 
 @Component({
@@ -34,11 +36,18 @@ export class CreateBillComponent implements OnInit {
 
   iserror = false;
 
+
   vendorsFiltered: Array<Vendor> = [];
+
+  bankFiltered: Array<Bank> = [];
 
   productsFiltered: Array<Product> = [];
 
   fboForm: FormGroup;
+
+  queryParams: QueryData = {};
+
+  isVisible = true;
 
   displayedColumns: string[] = [ 'product', 'unitPrice', 'quantity', 'discount', 'totalAmount', 'batchNumber', 'expiryDate', 'mfgDate', 'mrp', 'rrp', 'action' ];
 
@@ -50,12 +59,14 @@ export class CreateBillComponent implements OnInit {
     private readonly billService: BillService,
     private readonly productService: ProductService,
     private readonly vendorService: VendorService,
+    private readonly bankService: BankService,
     private readonly unitService: UnitService,
     private readonly categoryService: CategoryService,
     private readonly toastr: ToastrService) { }
 
 
     private initValueChanges = () => {
+
 
       this.fboForm.controls.vendor.valueChanges.subscribe((vendorQ:unknown) => {
 
@@ -69,6 +80,7 @@ export class CreateBillComponent implements OnInit {
           .subscribe((vendors) => (this.vendorsFiltered = vendors));
 
       });
+
 
     };
 
@@ -84,6 +96,7 @@ export class CreateBillComponent implements OnInit {
     const rrp = this.fBuilder.control(pItem?.rrp ?? 0, [ Validators.required ]);
 
     const updateValueChanges = () => {
+
 
       if (typeof product.value === 'object') {
 
@@ -108,6 +121,7 @@ export class CreateBillComponent implements OnInit {
         this.fboForm.get('totalAmount').setValue(pAmount);
         this.fboForm.get('totalDiscount').setValue(pDiscount);
         this.fboForm.get('grandTotal').setValue(pGTotal);
+
 
       }
 
@@ -188,6 +202,7 @@ export class CreateBillComponent implements OnInit {
       totalTax: this.fBuilder.control(0, [ Validators.required ]),
       grandTotal: this.fBuilder.control(0, [ Validators.required ]),
       isPaid: this.fBuilder.control(true),
+      bank: this.fBuilder.control('', [ Validators.required ],),
       purchaseItems: this.fBuilder.array([
         this.createPurchaseItemForm(),
       ])
@@ -280,6 +295,17 @@ export class CreateBillComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.bankService.search({}).subscribe((banks) => {
+
+      this.bankFiltered = banks;
+
+      const defaultBank = banks.find((bankName) => bankName.name === banks[0].name);
+
+      this.fboForm.get('bank').setValue(defaultBank.name);
+
+
+    });
+
     this.initFboForm();
     this.initValueChanges();
     const formArray = this.fboForm.get('purchaseItems') as FormArray;
@@ -308,9 +334,32 @@ export class CreateBillComponent implements OnInit {
 
   }
 
+  saveWithBank(event):void {
+
+    if (event.value === 'paylater') {
+
+      this.fboForm.get('isPaid').setValue(false);
+
+      if (this.fboForm.controls.isPaid.value === false) {
+
+        const itemssFormArray = <FormArray> this.fboForm.get('bank');
+        itemssFormArray.disable();
+
+
+      }
+
+    } else {
+
+      this.fboForm.get('isPaid').setValue(true);
+
+    }
+
+  }
+
   extractNameOfObject = (obj: {name: string}): string => obj.name;
 
   upsertBill(): void {
+
 
     const itemsFormArray = <FormArray> this.fboForm.get('purchaseItems');
     for (let idx = itemsFormArray.length - 1; idx >= 0; idx--) {
@@ -323,14 +372,17 @@ export class CreateBillComponent implements OnInit {
       }
 
     }
+
     if (!this.fboForm.valid) {
 
       return;
 
 
     }
+
     this.loading = true;
     const billP = <Bill> this.fboForm.value;
+
     this.billService.upsert(billP).subscribe(() => {
 
       this.toastr.success(`Bill ${billP.billNumber} is saved successfully`, 'Bill saved');
@@ -345,6 +397,7 @@ export class CreateBillComponent implements OnInit {
     });
 
   }
+
 
  findUnitCode = (elm:FormGroup):string => elm.controls?.unit?.value?.code;
 

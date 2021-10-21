@@ -21,6 +21,9 @@ import { ToolBarModule } from '../../tool-bar/tool-bar.module';
 import { DataTableModule } from '../../data-table/data-table.module';
 import {MatIconModule} from '@angular/material/icon';
 import { FilterBillComponent } from './filter-bill/filter-bill.component';
+import {MatCardModule} from '@angular/material/card';
+import {MatMenuModule} from '@angular/material/menu';
+
 
 @NgModule({
   declarations: [ ListBillComponent, CreateBillComponent, DeleteBillComponent, FilterBillComponent ],
@@ -29,7 +32,7 @@ import { FilterBillComponent } from './filter-bill/filter-bill.component';
     MatSelectModule,
     ReactiveFormsModule, FormsModule, MatInputModule, MatDatepickerModule, MatNativeDateModule,
     MatAutocompleteModule, DataTableModule, ToolBarModule, MatFormFieldModule, MatButtonToggleModule,
-    MatSlideToggleModule, MatIconModule
+    MatSlideToggleModule, MatIconModule, MatCardModule, MatMenuModule
   ]
 })
 export class BillModule { }

@@ -105,7 +105,9 @@ export class ListTransactionComponent {
     private loadData = () => {
 
       this.loading = true;
-
+      this.queryParams.include = [
+        {relation: 'customer'}, {relation: 'invoice'}, {relation: 'bank'}
+      ];
 
       this.revenueService.list(this.queryParams).subscribe((revenues) => {
 
@@ -127,9 +129,6 @@ export class ListTransactionComponent {
 
 
           this.transactions = revenues;
-
-          this.dataSource = new MatTableDataSource<unknown>(revenues.items);
-
 
           this.loading = false;
 

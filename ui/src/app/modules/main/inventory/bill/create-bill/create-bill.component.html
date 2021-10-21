@@ -55,14 +55,6 @@
     <mat-datepicker #orderpicker></mat-datepicker>
     <mat-error *ngIf="fboForm.controls['orderDate'].hasError('required')"> Order Date is required </mat-error>
   </mat-form-field>
-  <p class="fbo-create-formTwo">
-    <mat-label class="paidlabel">Paid &nbsp;&nbsp;</mat-label>
-    <span>
-      <mat-slide-toggle formControlName="isPaid" color="primary"></mat-slide-toggle>
-    </span>
-  </p>
-
-
 
   <table [style.display]="loading ? 'none': ''" formArrayName="purchaseItems" mat-table [dataSource]="dataSource"
     matSort multiTemplateDataRows class="create-form-table" id="search-form">
@@ -195,53 +187,60 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="fiveby1-element-row"></tr>
 
   </table>
-  <div class="bottom-form" id="search-form">
-    <p id="fbo-create-formThree">
-      <mat-label>Total Amount&nbsp;</mat-label>
 
-      <mat-form-field class="fbo-create-formTotal">
-        <input matInput formControlName="totalAmount" type="number" readonly>
-        <mat-error *ngIf="fboForm.controls['totalAmount'].hasError('required')"> Amount is required </mat-error>
-      </mat-form-field>
+  <div class="bottom-form">
+    <mat-card class="card-one">
+      <mat-card-title>Total Amount</mat-card-title>
 
-    </p>
+      <mat-card-subtitle class="mat-subtitle-card">
+        {{fboForm.controls.totalAmount.value}}
 
-    <p id="fbo-create-formThree">
-      <mat-label>Total Discount</mat-label>
+      </mat-card-subtitle>
+    </mat-card>
 
-      <mat-form-field class="fbo-create-formTotal">
-        <input matInput formControlName="totalDiscount" type="number" readonly>
-        <mat-error *ngIf="fboForm.controls['totalDiscount'].hasError('required')">Discount is required </mat-error>
-      </mat-form-field>
+    <mat-card class="card-two">
+      <mat-card-title>Total Discount</mat-card-title>
 
-    </p>
+      <mat-card-subtitle class="mat-subtitle-card">
+        {{fboForm.controls.totalDiscount.value}}
 
-    <p id="fbo-create-formThree">
-      <mat-label>Total Tax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</mat-label>
+      </mat-card-subtitle>
+    </mat-card>
+    <mat-card class="card-three">
+      <mat-card-title>Total Tax</mat-card-title>
+      <mat-card-subtitle class="mat-subtitle-card">
+        {{fboForm.controls.totalTax.value}}
 
-      <mat-form-field class="fbo-create-formTotal">
-        <input matInput formControlName="totalTax" type="number" readonly>
-        <mat-error *ngIf="fboForm.controls['totalTax'].hasError('required')">Tax is required </mat-error>
-      </mat-form-field>
+      </mat-card-subtitle>
+    </mat-card>
 
-    </p>
+    <mat-card class="card-one">
+      <mat-card-title>Grand Total</mat-card-title>
 
-    <p id="fbo-create-formThree">
-      <mat-label>Grand Total&nbsp;&nbsp;&nbsp;</mat-label>
+      <mat-card-subtitle class="mat-subtitle-card">
+        {{fboForm.controls.grandTotal.value}}
 
-      <mat-form-field class="fbo-create-formTotal">
-        <input matInput formControlName="grandTotal" type="number" readonly>
-        <mat-error *ngIf="fboForm.controls['grandTotal'].hasError('required')">Grand Total is required </mat-error>
-      </mat-form-field>
-
-    </p>
-
-
+      </mat-card-subtitle>
+    </mat-card>
 
   </div>
 
-  <p class="form-submit-container">
+  <div class="form-submit-container">
     <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
-    <button class="submit-button" mat-button>Save</button>
-  </p>
+    <div class='submit-bank-button'>
+      <button class="paidBy-button" mat-button>
+
+        <mat-lable *ngIf="fboForm.controls.isPaid.value === true "> Paid By {{fboForm.controls.bank.value}}</mat-lable>
+        <mat-lable *ngIf="fboForm.controls.isPaid.value === false "> Pay Later</mat-lable>
+      </button>
+
+      <mat-select formControlName="bank" (selectionChange)="saveWithBank($event)">
+        <mat-option value='paylater'>Pay Later</mat-option>
+        <mat-option *ngFor="let bankS of bankFiltered" [displayWith]="extractNameOfObject" [value]="bankS.name">
+          {{bankS.name}}
+        </mat-option>
+      </mat-select>
+    </div>
+
+  </div>
 </form>
