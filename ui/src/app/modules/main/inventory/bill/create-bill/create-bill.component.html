@@ -225,32 +225,17 @@
 
   </div>
 
-
-  <!-- <div class="form-submit-container">
+  <div class="form-submit-container">
     <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
-    <div class='submit-bank-button' *ngIf ="togglepayment === true">
+    <div class='submit-bank-button'>
       <button class="paidBy-button" mat-button>
-        Paid By {{fboForm.controls.bank.value}}</button>
 
-      <mat-select formControlName="bank" (selectionChange)='saveWithBank($event.target.value)'>
-         <mat-option  (click)="togglepaymentMethod()">Pay Later</mat-option>
-        <mat-option *ngFor="let bankS of bankFiltered" [displayWith]="extractNameOfObject" [value]="bankS.name">
-          {{bankS.name}}
-        </mat-option>
-      </mat-select>
-    </div>
-    <button class="submit-button" mat-button>Pay Later</button>
-  </div> -->
-   <div class="form-submit-container">
-    <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
-    <div class='submit-bank-button' >
-      <button class="paidBy-button" mat-button>
-     
-        <mat-lable  *ngIf ="togglepayment === false "> Paid By {{fboForm.controls.bank.value}}</mat-lable>
-        <mat-lable  *ngIf ="togglepayment ===  true "> Pay Later</mat-lable></button>
+        <mat-lable *ngIf="togglepayment === false "> Paid By {{fboForm.controls.bank.value}}</mat-lable>
+        <mat-lable *ngIf="togglepayment ===  true "> Pay Later</mat-lable>
+      </button>
 
-      <mat-select formControlName="bank" (selectionChange)="saveWithBank($event)" >
-         <mat-option value='paylater' >Pay Later</mat-option>
+      <mat-select formControlName="bank" (selectionChange)="saveWithBank($event)">
+        <mat-option value='paylater'>Pay Later</mat-option>
         <mat-option *ngFor="let bankS of bankFiltered" [displayWith]="extractNameOfObject" [value]="bankS.name">
           {{bankS.name}}
         </mat-option>
