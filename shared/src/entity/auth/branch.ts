@@ -7,4 +7,5 @@ export interface Branch {
     address?: string;
     finYearStartDate?: Date;
     defaultFinYear?: FinYear;
+    defaultFinYearId?: string;
 }

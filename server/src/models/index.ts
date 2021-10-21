@@ -17,3 +17,5 @@ export * from './invoice.model';
 export * from './sale-item.model';
 export * from './revenue.model';
 export * from './company.model';
+export * from './branch.model';
+export * from './fin-year.model';
