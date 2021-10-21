@@ -6,4 +6,5 @@ export interface FinYear {
     startDate?: Date;
     endDate?: Date;
     branch?: Branch;
+    branchId?: string;
 }

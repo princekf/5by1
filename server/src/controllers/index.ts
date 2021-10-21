@@ -27,3 +27,8 @@ export * from './revenue-customer.controller';
 export * from './revenue-invoice.controller';
 export * from './revenue-bank.controller';
 export * from './revenue.controller';
+export * from './company.controller';
+export * from './branch-fin-year.controller';
+export * from './fin-year-branch.controller';
+export * from './branch.controller';
+export * from './fin-year.controller';
