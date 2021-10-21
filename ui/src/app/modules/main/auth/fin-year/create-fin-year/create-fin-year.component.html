@@ -1,0 +1,58 @@
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertFinyear()">
+
+
+  <p>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input formControlName="name" matInput placeholder="Enter Name">
+      <mat-error *ngIf="form.controls['name'].hasError('required')">Please Enter Name</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>StartDate</mat-label>
+ 
+      <input matInput [matDatepicker]="startDate" formControlName="startDate">
+      <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+      <mat-datepicker #startDate></mat-datepicker>
+      <mat-error *ngIf="form.controls['startDate'].hasError('required')">Please Enter Start Date</mat-error>
+
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>EndDate</mat-label>
+ 
+      <input matInput [matDatepicker]="endDate" formControlName="endDate">
+      <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+      <mat-datepicker #endDate></mat-datepicker>
+      <mat-error *ngIf="form.controls['endDate'].hasError('required')">Please Enter End Date</mat-error>
+
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Branch</mat-label>
+      <input formControlName="branch" matInput placeholder="Enter description" [matAutocomplete]="autobranch">
+      <mat-autocomplete autoActiveFirstOption #autobranch="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let branchS of branchFiltered" [value]="branchS">
+          {{branchS.name}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="form.controls['branch'].hasError('required')">Please write Branch</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
+    <button class="submit-button" mat-button>save</button>
+  </p>
+
+</form>

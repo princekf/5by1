@@ -1,5 +1,5 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response } from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors } from '@loopback/rest';
 import {Company} from '../models';
 import {CompanyRepository} from '../repositories';
 import { COMPANY_API } from '@shared/server-apis';
@@ -151,6 +151,33 @@ export class CompanyController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.companyRepository.deleteById(id);
+
+  }
+
+
+  @del(COMPANY_API)
+  @response(204, {
+    description: 'Companies DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(Company) where?: Where<Company>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Company ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Company ids are required');
+
+    }
+
+    const count = await this.companyRepository.deleteAll(where);
+    return count;
 
   }
 
