@@ -1,46 +1,48 @@
 import { Component, OnInit } from '@angular/core';
+import { CompanyService } from '@fboservices/auth/company.service';
+import { MainService } from '@fboservices/main.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UnitService } from '@fboservices/inventory/unit.service';
-import { MainService } from '@fboservices/main.service';
-import { Unit } from '@shared/entity/inventory/unit';
 import { ToastrService } from 'ngx-toastr';
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { QueryData } from '@shared/util/query-data';
+import { Company } from '@shared/entity/auth/company';
 
 @Component({
-  selector: 'app-delete-unit',
-  templateUrl: './delete-unit.component.html',
-  styleUrls: [ './delete-unit.component.scss', '../../../../../util/styles/fbo-table-style.scss' ],
+  selector: 'app-delete-company',
+  templateUrl: './delete-company.component.html',
+  styleUrls: [ './delete-company.component.scss', '../../../../../util/styles/fbo-table-style.scss' ],
   animations: fboTableRowExpandAnimation,
 })
-export class DeleteUnitComponent implements OnInit {
+export class DeleteCompanyComponent implements OnInit {
 
-  goToPreviousPage = _goToPreviousPage;
+  displayedColumns: string[] = [ 'name', 'email', 'address', ];
 
-  displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'parent.name', 'times', 'description' ];
-
-  extraColumns: Array<string>;
-
-  dataSource = new MatTableDataSource<Unit>([]);
 
   columnHeaders = {
     name: 'Name',
-    code: 'Code',
-    decimalPlaces: 'Decimals',
-    'parent.name': 'Base Unit',
-    description: 'Description',
+    email: 'Email',
+    address: 'Address',
+
   }
 
   loading = true;
 
+  goToPreviousPage = _goToPreviousPage;
+
+  extraColumns: Array<string>;
+
+  dataSource = new MatTableDataSource<Company>([]);
+
   findColumnValue = _findColumnValue;
 
-  constructor(public readonly router: Router,
+  constructor(
+    public readonly router: Router,
     public readonly route: ActivatedRoute,
-    private readonly unitService:UnitService,
+    private readonly companyService: CompanyService,
     private readonly mainService: MainService,
-    private readonly toastr: ToastrService) { }
+    private readonly toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
 
@@ -53,17 +55,16 @@ export class DeleteUnitComponent implements OnInit {
         }
       }
     };
-    this.unitService.search(queryData).subscribe((units) => {
+    this.companyService.search(queryData).subscribe((company) => {
 
-      this.dataSource.data = units;
+      this.dataSource.data = company;
       this.loading = false;
 
     });
 
   }
 
-
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     if (this.mainService.isMobileView()) {
 
@@ -75,27 +76,25 @@ export class DeleteUnitComponent implements OnInit {
 
   }
 
-  deleteUnits(): void {
+  deleteCompanys(): void {
 
     this.loading = true;
-    const units = this.dataSource.data;
+    const companies = this.dataSource.data;
     const tIds = [];
-    units.forEach((taxP) => tIds.push(taxP.id));
-
+    companies.forEach((companyP) => tIds.push(companyP.id));
     const where = {id: {
       inq: tIds
     }};
-
-    this.unitService['delete'](where).subscribe((count) => {
+    this.companyService['delete'](where).subscribe((count) => {
 
       this.loading = false;
-      this.toastr.success(`${count.count} units are deleted successfully`, 'Unit deleted');
+      this.toastr.success(`${count.count} Companys are deleted successfully`, 'Companys deleted');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error('Error in deleting units', 'Unit not deleted');
+      this.toastr.error('Error in deleting Companys', 'Company not deleted');
       console.error(error);
 
     });

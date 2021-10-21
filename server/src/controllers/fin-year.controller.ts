@@ -6,7 +6,7 @@ import {
   repository,
   Where,
 } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response } from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors } from '@loopback/rest';
 import {FinYear} from '../models/fin-year.model';
 import {FinYearRepository} from '../repositories/fin-year.repository';
 import { FIN_YEAR_API } from '@shared/server-apis';
@@ -160,5 +160,33 @@ export class FinYearController {
     await this.finYearRepository.deleteById(id);
 
   }
+
+
+  @del(FIN_YEAR_API)
+  @response(204, {
+    description: 'Branchs DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(FinYear) where?: Where<FinYear>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : FinYear ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : FinYear ids are required');
+
+    }
+
+    const count = await this.finYearRepository.deleteAll(where);
+    return count;
+
+  }
+
 
 }

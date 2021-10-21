@@ -1,5 +1,5 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response } from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors } from '@loopback/rest';
 import {Branch} from '../models/branch.model';
 import {BranchRepository} from '../repositories/branch.repository';
 import { BRANCH_API } from '@shared/server-apis';
@@ -153,5 +153,33 @@ export class BranchController {
     await this.branchRepository.deleteById(id);
 
   }
+
+
+  @del(BRANCH_API)
+  @response(204, {
+    description: 'Branchs DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(Branch) where?: Where<Branch>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Branch ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Branch ids are required');
+
+    }
+
+    const count = await this.branchRepository.deleteAll(where);
+    return count;
+
+  }
+
 
 }
