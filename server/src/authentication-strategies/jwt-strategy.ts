@@ -3,7 +3,7 @@ import {HttpErrors, Request} from '@loopback/rest';
 import {AuthenticationStrategy, TokenService} from '@loopback/authentication';
 import {UserProfile} from '@loopback/security';
 
-import {TokenServiceBindings} from '../keys';
+import {BindingKeys} from '../binding.keys';
 
 export class JWTAuthenticationStrategy implements AuthenticationStrategy {
 
@@ -12,7 +12,7 @@ export class JWTAuthenticationStrategy implements AuthenticationStrategy {
   private message401 = 'Authorization header not found.';
 
   constructor(
-    @inject(TokenServiceBindings.TOKEN_SERVICE)
+    @inject(BindingKeys.TOKEN_SERVICE)
     public tokenService: TokenService,
   ) {}
 

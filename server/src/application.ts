@@ -8,7 +8,7 @@ import { OpenApiSpec } from '@loopback/openapi-v3';
 import {FBOSequence} from './fbo.sequence';
 import {AuthenticationComponent, registerAuthenticationStrategy} from '@loopback/authentication';
 import {AuthorizationComponent} from '@loopback/authorization';
-import {PasswordHasherBindings, TokenServiceBindings, UserServiceBindings} from './keys';
+import {BindingKeys} from './binding.keys';
 import {BcryptHasher, JWTService, FBOUserService} from './services';
 import { JWTAuthenticationStrategy } from './authentication-strategies/jwt-strategy';
 import { SECURITY_SCHEME_SPEC, SECURITY_SPEC } from './utils/security-spec';
@@ -64,33 +64,28 @@ export class FiveByOneApplication extends BootMixin(
 
   private setUpBindings(): void {
 
-    /*
-     * Bind package.json to the application context
-     * this.bind(PackageKey).to(pkg);
-     */
-
     if (!process.env.JWT_TOKEN_SECRET) {
 
       throw new Error('JWT_ACCESS_TOKEN is missing .env file.');
 
     }
-    this.bind(TokenServiceBindings.TOKEN_SECRET).to(
+    this.bind(BindingKeys.TOKEN_SECRET).to(
       process.env.JWT_TOKEN_SECRET,
     );
 
     const expiresIn = process.env.JWT_TOKEN_EXPIRES_IN ?? '3600';
-    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(
+    this.bind(BindingKeys.TOKEN_EXPIRES_IN).to(
       expiresIn,
     );
 
-    this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
+    this.bind(BindingKeys.TOKEN_SERVICE).toClass(JWTService);
 
     // // Bind bcrypt hash services
     const hasherRound = 10;
-    this.bind(PasswordHasherBindings.ROUNDS).to(hasherRound);
-    this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher);
+    this.bind(BindingKeys.ROUNDS).to(hasherRound);
+    this.bind(BindingKeys.PASSWORD_HASHER).toClass(BcryptHasher);
 
-    this.bind(UserServiceBindings.USER_SERVICE).toClass(FBOUserService);
+    this.bind(BindingKeys.USER_SERVICE).toClass(FBOUserService);
 
   }
 
