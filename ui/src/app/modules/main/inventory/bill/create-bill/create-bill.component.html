@@ -230,8 +230,8 @@
     <div class='submit-bank-button'>
       <button class="paidBy-button" mat-button>
 
-        <mat-lable *ngIf="togglepayment === false "> Paid By {{fboForm.controls.bank.value}}</mat-lable>
-        <mat-lable *ngIf="togglepayment ===  true "> Pay Later</mat-lable>
+        <mat-lable *ngIf="fboForm.controls.isPaid.value === true "> Paid By {{fboForm.controls.bank.value}}</mat-lable>
+        <mat-lable *ngIf="fboForm.controls.isPaid.value === false "> Pay Later</mat-lable>
       </button>
 
       <mat-select formControlName="bank" (selectionChange)="saveWithBank($event)">

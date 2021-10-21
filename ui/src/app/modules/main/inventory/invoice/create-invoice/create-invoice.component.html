@@ -40,13 +40,6 @@
     <mat-error *ngIf="fboForm.controls['invoiceDate'].hasError('required')"> Invoice date is required</mat-error>
   </mat-form-field>
 
-  <p class="fbo-create-formTwo">
-    <mat-label class="paidlabel">Received &nbsp;&nbsp;</mat-label>
-    <span>
-      <mat-slide-toggle formControlName="isReceived" color="primary"></mat-slide-toggle>
-    </span>
-  </p>
-
 
   <table [style.display]="loading ? 'none': ''" formArrayName="saleItems" mat-table [dataSource]="dataSource" matSort
     multiTemplateDataRows class="create-form-table" id="search-form">
@@ -226,8 +219,22 @@
     </mat-card>
 
   </div>
-  <p class="form-submit-container">
+  <div class="form-submit-container">
     <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
-    <button type="submit" class="submit-button" mat-button>Save</button>
-  </p>
+    <div class='submit-bank-button'>
+      <button class="paidBy-button" mat-button>
+
+        <mat-lable *ngIf="fboForm.controls.isReceived.value === true "> Received By {{fboForm.controls.bank.value}}</mat-lable>
+        <mat-lable *ngIf="fboForm.controls.isReceived.value === false ">Not Received</mat-lable>
+      </button>
+
+      <mat-select formControlName="bank" (selectionChange)="saveWithBank($event)">
+        <mat-option value='notRecieved'>Not Received</mat-option>
+        <mat-option *ngFor="let bankS of bankFiltered" [displayWith]="extractNameOfObject" [value]="bankS.name">
+          {{bankS.name}}
+        </mat-option>
+      </mat-select>
+    </div>
+
+  </div>
 </form>

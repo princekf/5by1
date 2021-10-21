@@ -18,6 +18,8 @@ import { QueryData } from '@shared/util/query-data';
 
 import { map, catchError } from 'rxjs/internal/operators';
 import { Unit } from '@shared/entity/inventory/unit';
+import { Bank } from '@shared/entity/inventory/bank';
+import { BankService } from '@fboservices/inventory/bank.service';
 @Component({
   selector: 'app-create-invoice',
   templateUrl: './create-invoice.component.html',
@@ -33,7 +35,10 @@ export class CreateInvoiceComponent implements OnInit {
 
   iserror = false;
 
+
   productsFiltered: Array<Product> = [];
+
+  bankFiltered: Array<Bank> = [];
 
   fboForm: FormGroup;
 
@@ -54,7 +59,8 @@ export class CreateInvoiceComponent implements OnInit {
     private readonly customerService:CustomerService,
     private readonly stockService: StockService,
     private readonly toastr: ToastrService,
-    private readonly unitService: UnitService,) { }
+    private readonly unitService: UnitService,
+    private readonly bankService: BankService,) { }
 
     private initValueChanges = () => {
 
@@ -198,6 +204,7 @@ export class CreateInvoiceComponent implements OnInit {
         roundOff: this.fBuilder.control(0),
         grandTotal: this.fBuilder.control(0, [ Validators.required ]),
         isReceived: this.fBuilder.control(true, [ Validators.required ]),
+        bank: this.fBuilder.control('', [ Validators.required ],),
         saleItems: this.fBuilder.array([
           this.createSaleItemForm(),
         ])
@@ -291,6 +298,18 @@ export class CreateInvoiceComponent implements OnInit {
 
     ngOnInit(): void {
 
+      this.bankService.search({}).subscribe((banks) => {
+
+        this.bankFiltered = banks;
+
+        const defaultBank = banks.find((bankName) => bankName.name === banks[0].name);
+
+        this.fboForm.get('bank').setValue(defaultBank.name);
+
+
+      });
+
+
       this.initFboForm();
       this.initValueChanges();
       const formArray = this.fboForm.get('saleItems') as FormArray;
@@ -321,6 +340,29 @@ export class CreateInvoiceComponent implements OnInit {
 
     }
 
+    saveWithBank(event):void {
+
+      if (event.value === 'notRecieved') {
+
+        this.fboForm.get('isReceived').setValue(false);
+
+        if (this.fboForm.controls.isReceived.value === false) {
+
+          const itemssFormArray = <FormArray> this.fboForm.get('bank');
+          itemssFormArray.disable();
+
+
+        }
+
+      } else {
+
+        this.fboForm.get('isReceived').setValue(true);
+
+      }
+
+
+    }
+
     extractNameOfObject = (obj: {name: string}): string => obj.name;
 
     findUnitCode = (elm:FormGroup):string => elm.controls?.unit?.value?.code;
@@ -345,8 +387,8 @@ export class CreateInvoiceComponent implements OnInit {
 
       }
       this.loading = true;
-      const invoiceP = <Invoice> this.fboForm.value;
 
+      const invoiceP = <Invoice> this.fboForm.value;
       this.invoiceService.upsert(invoiceP).subscribe(() => {
 
         this.toastr.success(`Invoice ${invoiceP.invoiceNumber} is saved successfully`, 'Invoice saved');
