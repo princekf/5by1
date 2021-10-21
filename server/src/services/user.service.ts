@@ -4,7 +4,7 @@ import {User} from '../models';
 import {UserService} from '@loopback/authentication';
 import {securityId, UserProfile} from '@loopback/security';
 import {repository} from '@loopback/repository';
-import {PasswordHasherBindings} from '../keys';
+import {BindingKeys} from '../binding.keys';
 import {inject} from '@loopback/context';
 import {PasswordHasher} from './hash-password.service';
 
@@ -12,7 +12,7 @@ export class FBOUserService implements UserService<User, Credentials> {
 
   constructor(
     @repository(UserRepository) public userRepository: UserRepository,
-    @inject(PasswordHasherBindings.PASSWORD_HASHER)
+    @inject(BindingKeys.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
   ) {
   }

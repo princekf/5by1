@@ -4,6 +4,15 @@ export const LOGIN_API = `${BASE_URI}${USER_API}/login`;
 export const ME_API = `${BASE_URI}${USER_API}/me`;
 export const SIGNUP_API = `${BASE_URI}${USER_API}/signup`;
 
+export const COMPANY_API = '/auth/company';
+export const COMPANY_API_URI = `${BASE_URI}${COMPANY_API}`;
+
+export const BRANCH_API = '/auth/branch';
+export const BRANCH_API_URI = `${BASE_URI}${BRANCH_API}`;
+
+export const FIN_YEAR_API = '/auth/finyear';
+export const FIN_YEAR_API_URI = `${BASE_URI}${FIN_YEAR_API}`;
+
 export const VENDOR_API = '/inv/vendors';
 export const VENDOR_API_URI = `${BASE_URI}${VENDOR_API}`;
 

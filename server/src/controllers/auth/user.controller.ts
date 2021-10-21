@@ -22,7 +22,7 @@ import {
   HttpErrors,
 } from '@loopback/rest';
 import { ValidateUserForUniqueEMailInterceptor } from '../../interceptors';
-import { PasswordHasherBindings, TokenServiceBindings, UserServiceBindings } from '../../keys';
+import { BindingKeys } from '../../binding.keys';
 import { basicAuthorization } from '../../middlewares/auth.midd';
 import {NewUserRequest, User} from '../../models';
 import {Credentials, UserRepository} from '../../repositories';
@@ -42,11 +42,11 @@ export class UserController {
   constructor(
     @repository(UserRepository)
     public userRepository : UserRepository,
-    @inject(PasswordHasherBindings.PASSWORD_HASHER)
+    @inject(BindingKeys.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
-    @inject(UserServiceBindings.USER_SERVICE)
+    @inject(BindingKeys.USER_SERVICE)
     public userService: UserService<User, Credentials>,
-    @inject(TokenServiceBindings.TOKEN_SERVICE)
+    @inject(BindingKeys.TOKEN_SERVICE)
     public jwtService: TokenService,
   ) {}
 

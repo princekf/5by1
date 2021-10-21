@@ -57,7 +57,7 @@ export class FBOSequence implements SequenceHandler {
       const result = await this.invoke(route, args);
       this.send(response, result);
 
-    } catch (err) {
+    } catch (err: any) {
 
       if (
         err.code === AUTHENTICATION_STRATEGY_NOT_FOUND ||

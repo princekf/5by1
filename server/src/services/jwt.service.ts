@@ -4,7 +4,7 @@ import {promisify} from 'util';
 import {TokenService} from '@loopback/authentication';
 import {securityId, UserProfile} from '@loopback/security';
 import * as jwt from 'jsonwebtoken';
-import {TokenServiceBindings} from '../keys';
+import {BindingKeys} from '../binding.keys';
 
 const signAsync = <(
   payload: unknown,
@@ -16,9 +16,9 @@ const verifyAsync = promisify(jwt.verify);
 export class JWTService implements TokenService {
 
   constructor(
-    @inject(TokenServiceBindings.TOKEN_SECRET)
+    @inject(BindingKeys.TOKEN_SECRET)
     private jwtSecret: string,
-    @inject(TokenServiceBindings.TOKEN_EXPIRES_IN)
+    @inject(BindingKeys.TOKEN_EXPIRES_IN)
     private jwtExpiresIn: string,
   ) {
   }
