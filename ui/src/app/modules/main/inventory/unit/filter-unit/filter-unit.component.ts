@@ -8,7 +8,7 @@ import { OverlayContainer } from 'ngx-toastr';
 @Component({
   selector: 'app-filter-unit',
   templateUrl: './filter-unit.component.html',
-  styleUrls: [ './filter-unit.component.scss' ]
+  styleUrls: [ './filter-unit.component.scss', '../../../../../util/styles/fbo-filter-style.scss' ]
 })
 export class FilterUnitComponent {
 

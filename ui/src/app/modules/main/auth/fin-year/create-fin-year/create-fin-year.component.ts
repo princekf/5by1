@@ -36,7 +36,7 @@ export class CreateFinYearComponent implements OnInit {
 
     endDate: new FormControl('', [ Validators.required ]),
 
-    branch: new FormControl('',[ Validators.required ]),
+    branch: new FormControl('', [ Validators.required ]),
 
 
   });
@@ -62,14 +62,14 @@ export class CreateFinYearComponent implements OnInit {
           {relation: 'branch'}
         ]
       };
-      this.finYearService.get(tId, queryParam).subscribe((bankC) => {
+      this.finYearService.get(tId, queryParam).subscribe((finyearC) => {
 
         this.form.setValue({
-          id: bankC.id ?? '',
-          name: bankC.name ?? '',
-          startDate: bankC.startDate ?? '',
-          endDate: bankC.endDate ?? '',
-          branch: bankC.branch ?? '',
+          id: finyearC.id ?? '',
+          name: finyearC.name ?? '',
+          startDate: finyearC.startDate ?? '',
+          endDate: finyearC.endDate ?? '',
+          branch: finyearC.branch ?? '',
 
         });
 

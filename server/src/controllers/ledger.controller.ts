@@ -1,32 +1,17 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
-} from '@loopback/rest';
+import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
+import {post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors} from '@loopback/rest';
 import {Ledger} from '../models';
 import {LedgerRepository} from '../repositories';
+import { LEDGER_API } from '@shared/server-apis';
 
 export class LedgerController {
+
   constructor(
     @repository(LedgerRepository)
     public ledgerRepository : LedgerRepository,
   ) {}
 
-  @post('/ledgers')
+  @post(LEDGER_API)
   @response(200, {
     description: 'Ledger model instance',
     content: {'application/json': {schema: getModelSchemaRef(Ledger)}},
@@ -37,17 +22,20 @@ export class LedgerController {
         'application/json': {
           schema: getModelSchemaRef(Ledger, {
             title: 'NewLedger',
-            exclude: ['id'],
+            exclude: [ 'id' ],
           }),
         },
       },
     })
-    ledger: Omit<Ledger, 'id'>,
+      ledger: Omit<Ledger, 'id'>,
   ): Promise<Ledger> {
-    return this.ledgerRepository.create(ledger);
+
+    const lgR = await this.ledgerRepository.create(ledger);
+    return lgR;
+
   }
 
-  @get('/ledgers/count')
+  @get(`${LEDGER_API}/count`)
   @response(200, {
     description: 'Ledger model count',
     content: {'application/json': {schema: CountSchema}},
@@ -55,10 +43,13 @@ export class LedgerController {
   async count(
     @param.where(Ledger) where?: Where<Ledger>,
   ): Promise<Count> {
-    return this.ledgerRepository.count(where);
+
+    const countR = await this.ledgerRepository.count(where);
+    return countR;
+
   }
 
-  @get('/ledgers')
+  @get(LEDGER_API)
   @response(200, {
     description: 'Array of Ledger model instances',
     content: {
@@ -73,10 +64,13 @@ export class LedgerController {
   async find(
     @param.filter(Ledger) filter?: Filter<Ledger>,
   ): Promise<Ledger[]> {
-    return this.ledgerRepository.find(filter);
+
+    const lgsR = await this.ledgerRepository.find(filter);
+    return lgsR;
+
   }
 
-  @patch('/ledgers')
+  @patch(LEDGER_API)
   @response(200, {
     description: 'Ledger PATCH success count',
     content: {'application/json': {schema: CountSchema}},
@@ -89,13 +83,16 @@ export class LedgerController {
         },
       },
     })
-    ledger: Ledger,
+      ledger: Ledger,
     @param.where(Ledger) where?: Where<Ledger>,
   ): Promise<Count> {
-    return this.ledgerRepository.updateAll(ledger, where);
+
+    const countR = await this.ledgerRepository.updateAll(ledger, where);
+    return countR;
+
   }
 
-  @get('/ledgers/{id}')
+  @get(`${LEDGER_API}/{id}`)
   @response(200, {
     description: 'Ledger model instance',
     content: {
@@ -108,10 +105,13 @@ export class LedgerController {
     @param.path.string('id') id: string,
     @param.filter(Ledger, {exclude: 'where'}) filter?: FilterExcludingWhere<Ledger>
   ): Promise<Ledger> {
-    return this.ledgerRepository.findById(id, filter);
+
+    const lgR = await this.ledgerRepository.findById(id, filter);
+    return lgR;
+
   }
 
-  @patch('/ledgers/{id}')
+  @patch(`${LEDGER_API}/{id}`)
   @response(204, {
     description: 'Ledger PATCH success',
   })
@@ -124,12 +124,14 @@ export class LedgerController {
         },
       },
     })
-    ledger: Ledger,
+      ledger: Ledger,
   ): Promise<void> {
+
     await this.ledgerRepository.updateById(id, ledger);
+
   }
 
-  @put('/ledgers/{id}')
+  @put(`${LEDGER_API}/{id}`)
   @response(204, {
     description: 'Ledger PUT success',
   })
@@ -137,14 +139,47 @@ export class LedgerController {
     @param.path.string('id') id: string,
     @requestBody() ledger: Ledger,
   ): Promise<void> {
+
     await this.ledgerRepository.replaceById(id, ledger);
+
   }
 
-  @del('/ledgers/{id}')
+  @del(`${LEDGER_API}/{id}`)
   @response(204, {
     description: 'Ledger DELETE success',
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
+
     await this.ledgerRepository.deleteById(id);
+
   }
+
+
+  @del(LEDGER_API)
+  @response(204, {
+    description: 'Branchs DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(Ledger) where?: Where<Ledger>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : LedgerGroup ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : LedgerGroup ids are required');
+
+    }
+
+    const count = await this.ledgerRepository.deleteAll(where);
+    return count;
+
+  }
+
+
 }

@@ -47,14 +47,14 @@ export class CreateCompanyComponent implements OnInit {
     if (tId) {
 
       this.formHeader = 'Update Company';
-      this.companyService.get(tId, {}).subscribe((bankC) => {
+      this.companyService.get(tId, {}).subscribe((companyC) => {
 
         this.form.setValue({
-          id: bankC.id ?? '',
-          name: bankC.name ?? '',
-          code: bankC.code ?? '',
-          email: bankC.email ?? '',
-          address: bankC.address ?? '',
+          id: companyC.id ?? '',
+          name: companyC.name ?? '',
+          code: companyC.code ?? '',
+          email: companyC.email ?? '',
+          address: companyC.address ?? '',
 
         });
 
@@ -70,7 +70,7 @@ export class CreateCompanyComponent implements OnInit {
 
   }
 
-  upsertBank(): void {
+  upsertCompany(): void {
 
 
     if (!this.form.valid) {
