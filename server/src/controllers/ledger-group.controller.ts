@@ -1,5 +1,5 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response } from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors } from '@loopback/rest';
 import {LedgerGroup} from '../models/ledger-group.model';
 import {LedgerGroupRepository} from '../repositories/ledger-group.repository';
 import { LEDGER_GROUP_API } from '@shared/server-apis';
@@ -153,5 +153,32 @@ export class LedgerGroupController {
     await this.ledgerGroupRepository.deleteById(id);
 
   }
+
+  @del(LEDGER_GROUP_API)
+  @response(204, {
+    description: 'Branchs DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(LedgerGroup) where?: Where<LedgerGroup>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : LedgerGroup ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : LedgerGroup ids are required');
+
+    }
+
+    const count = await this.ledgerGroupRepository.deleteAll(where);
+    return count;
+
+  }
+
 
 }

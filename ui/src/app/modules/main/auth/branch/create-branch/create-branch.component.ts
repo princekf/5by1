@@ -62,15 +62,15 @@ export class CreateBranchComponent implements OnInit {
           {relation: 'defaultFinYear'}
         ]
       };
-      this.branchService.get(tId, queryParam).subscribe((bankC) => {
+      this.branchService.get(tId, queryParam).subscribe((branchC) => {
 
         this.form.setValue({
-          id: bankC.id ?? '',
-          name: bankC.name ?? '',
-          email: bankC.email ?? '',
-          address: bankC.address ?? '',
-          finYearStartDate: bankC.finYearStartDate ?? '',
-          defaultFinYear: bankC.defaultFinYear ?? ''
+          id: branchC.id ?? '',
+          name: branchC.name ?? '',
+          email: branchC.email ?? '',
+          address: branchC.address ?? '',
+          finYearStartDate: branchC.finYearStartDate ?? '',
+          defaultFinYear: branchC.defaultFinYear ?? ''
         });
 
         this.loading = false;
@@ -104,7 +104,7 @@ export class CreateBranchComponent implements OnInit {
 
   extractNameOfObject = (obj: {name: string}): string => obj.name;
 
-  upsertBank(): void {
+  upsertBranch(): void {
 
 
     if (!this.form.valid) {

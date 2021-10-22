@@ -1,1 +1,54 @@
-<p>create-ledger works!</p>
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertLedger()">
+
+
+  <p>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input formControlName="name" matInput placeholder="Enter Name">
+      <mat-error *ngIf="form.controls['name'].hasError('required')">Please Enter Name</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>LedgerGroup</mat-label>
+      <input formControlName="ledgerGroup" matInput placeholder="Enter ledgerGroup" [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let ledgerGroupS of ledgerGroupFiltered" [value]="ledgerGroupS">
+          {{ledgerGroupS.name}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="form.controls['ledgerGroup'].hasError('required')">Please Enter Ledger Group</mat-error>
+    </mat-form-field>
+  </p>
+
+
+  <p>
+    <mat-form-field>
+      <mat-label>Reference No</mat-label>
+      <input formControlName="refNo" matInput placeholder="Enter Reference No">
+      <mat-error *ngIf="form.controls['refNo'].hasError('required')">Please Enter Reference No</mat-error>
+
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Details</mat-label>
+      <input formControlName="details" matInput placeholder="Enter details">
+      <mat-error *ngIf="form.controls['details'].hasError('required')">Please Enter details</mat-error>
+    </mat-form-field>
+  </p>
+
+
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
+    <button class="submit-button" mat-button>save</button>
+  </p>
+
+</form>

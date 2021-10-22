@@ -92,11 +92,6 @@ const routes: Routes = [
         path: 'ledger',
         loadChildren: () => import('./accounting/ledger/ledger.module').then((mod) => mod.LedgerModule)
       },
-
-      {
-        path: 'acctransaction',
-        loadChildren: () => import('./accounting/transaction/transaction.module').then((mod) => mod.TransactionModule)
-      },
       {
         path: 'voucher',
         loadChildren: () => import('./accounting/voucher/voucher.module').then((mod) => mod.VoucherModule)
