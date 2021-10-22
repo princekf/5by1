@@ -16,11 +16,12 @@ import { FilterCompanyComponent } from '../filter-company/filter-company.compone
 })
 export class ListCompanyComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'name', 'email', 'address' ];
+  displayedColumns: string[] = [ 'name', 'code', 'email', 'address' ];
 
 
   columnHeaders = {
     name: 'Name',
+    code: 'Code',
     email: 'Email',
     address: 'Address',
 
@@ -50,6 +51,7 @@ export class ListCompanyComponent implements OnInit {
 
     this.loading = true;
     this.companyService.list(this.queryParams).subscribe((company) => {
+
 
       this.companies = company;
 
@@ -90,7 +92,6 @@ export class ListCompanyComponent implements OnInit {
     });
 
   }
-
 
 
 }
