@@ -8,7 +8,6 @@ import {
 } from '@loopback/rest';
 import {
   LedgerGroup,
-  LedgerGroup,
 } from '../models';
 import {LedgerGroupRepository} from '../repositories';
 
