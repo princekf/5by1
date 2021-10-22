@@ -34,6 +34,8 @@ export class ListTransactionComponent {
 
   }
 
+  isdelete = false;
+
 
   findColumnValue = _findColumnValue;
 
