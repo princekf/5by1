@@ -40,7 +40,7 @@
   <p>
     <mat-form-field>
       <mat-label>Branch</mat-label>
-      <input formControlName="branch" matInput placeholder="Enter description" [matAutocomplete]="autobranch">
+      <input formControlName="branch" matInput placeholder="Enter Branch" [matAutocomplete]="autobranch">
       <mat-autocomplete autoActiveFirstOption #autobranch="matAutocomplete" [displayWith]="extractNameOfObject">
         <mat-option *ngFor="let branchS of branchFiltered" [value]="branchS">
           {{branchS.name}}
