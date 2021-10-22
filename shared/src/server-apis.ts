@@ -13,6 +13,15 @@ export const BRANCH_API_URI = `${BASE_URI}${BRANCH_API}`;
 export const FIN_YEAR_API = '/auth/finyear';
 export const FIN_YEAR_API_URI = `${BASE_URI}${FIN_YEAR_API}`;
 
+export const LEDGER_GROUP_API = '/acc/ledgergroups';
+export const LEDGER_GROUP_API_URI = `${BASE_URI}${LEDGER_GROUP_API}`;
+
+export const LEDGER_API = '/acc/ledgers';
+export const LEDGER_API_URI = `${BASE_URI}${LEDGER_API}`;
+
+export const VOUCHER_API = '/acc/vouchers';
+export const VOUCHER_API_URI = `${BASE_URI}${VOUCHER_API}`;
+
 export const VENDOR_API = '/inv/vendors';
 export const VENDOR_API_URI = `${BASE_URI}${VENDOR_API}`;
 

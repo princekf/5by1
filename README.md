@@ -1,6 +1,6 @@
 # Simple ERP application built with the following technologies #
 
-* Server - Fastify
+* Server - Loopback 4
 * Database - MongoDB
 * UI - Angular 11
 * UX - Material
@@ -16,6 +16,4 @@
 * `yarn build:shared`
 * `yarn install:all`
 * `yarn start`
-* some times there will be errors with shared imports in ui or server project then do `yarn upgrade @shared` (in ui/server fodler)
-
-<!-- Reverting the commit. -->
+* some times there will be errors with shared imports in ui or server project then do `yarn upgrade @shared` (in ui and server fodlers)

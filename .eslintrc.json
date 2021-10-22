@@ -192,6 +192,6 @@
         "rest-spread-spacing": ["error", "never"],
         "template-curly-spacing": "error",
         "yield-star-spacing": ["error", "before"],
-        "no-unused-vars": ["error", { "args": "none" }]
+        "@typescript-eslint/no-unused-vars": ["error", { "args": "none" }]
     }
 }
