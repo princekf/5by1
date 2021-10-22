@@ -13,8 +13,8 @@ export enum VoucherType {
 
 export interface Voucher {
     id?: string;
-    name?: string;
-    voucherDate?: Date;
+    number?: string;
+    date?: Date;
     type?: VoucherType;
     details?: string;
     transactions?: Array<Transaction>
