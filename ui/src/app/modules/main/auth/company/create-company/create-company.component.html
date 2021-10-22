@@ -13,6 +13,13 @@
       <mat-error *ngIf="form.controls['name'].hasError('required')">Please Enter Name</mat-error>
     </mat-form-field>
   </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Code</mat-label>
+      <input formControlName="code" matInput placeholder="Enter Code">
+      <mat-error *ngIf="form.controls['code'].hasError('required')">Please Enter Code</mat-error>
+    </mat-form-field>
+  </p>
 
   <p>
     <mat-form-field>
