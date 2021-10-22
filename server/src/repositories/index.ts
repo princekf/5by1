@@ -17,3 +17,4 @@ export * from './revenue.repository';
 export * from './company.repository';
 export * from './branch.repository';
 export * from './fin-year.repository';
+export * from './ledger-group.repository';

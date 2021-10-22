@@ -10,7 +10,7 @@ export class Unit extends Entity implements UnitIntf {
     generated: false,
     defaultFn: 'uuidv4',
   })
-  id?: string;
+  id: string;
 
   @property({
     type: 'string',
@@ -22,12 +22,12 @@ export class Unit extends Entity implements UnitIntf {
   })
   code: string;
 
-  parent?: Unit;
+  parent: Unit;
 
   @property({
     type: 'number',
   })
-  times?: number;
+  times: number;
 
   @property({
     type: 'number',
