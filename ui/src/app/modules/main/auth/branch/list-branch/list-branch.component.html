@@ -1,0 +1,12 @@
+<app-tool-bar createUri="/branch/create" mainHeader="Branch"></app-tool-bar>
+<app-data-table tableHeader="List of Branch"
+[displayedColumns]="displayedColumns"
+[columnHeaders]="columnHeaders"
+[loading]="loading"
+[tableData]="branchs"
+editUri="/branch/create"
+deleteUri="/branch/delete"
+[filterItem]="filterItem"
+[columnParnsingFn]="columnParsingFn"
+></app-data-table>
+

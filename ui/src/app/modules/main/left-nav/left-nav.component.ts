@@ -69,7 +69,15 @@ const TREE_DATA: FoodNode[] = [
     icon: 'pie_chart'},
   {path: 'setting',
     name: 'Settings',
-    icon: 'settings'}
+    icon: 'settings',
+    children: [
+      {path: 'branch',
+        name: 'Branch'},
+      {path: 'company',
+        name: 'Company'},
+      {path: 'fin-year',
+        name: 'Fin Year'},
+    ]}
 ];
 
 @Component({

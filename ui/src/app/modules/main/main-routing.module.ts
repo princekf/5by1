@@ -71,6 +71,19 @@ const routes: Routes = [
         path: 'transaction',
         loadChildren: () => import('./inventory/transaction/transaction.module').then((mod) => mod.TransactionModule)
       },
+      {
+        path: 'branch',
+        loadChildren: () => import('./auth/branch/branch.module').then((mod) => mod.BranchModule)
+      },
+
+      {
+        path: 'company',
+        loadChildren: () => import('./auth/company/company.module').then((mod) => mod.CompanyModule)
+      },
+      {
+        path: 'fin-year',
+        loadChildren: () => import('./auth/fin-year/fin-year.module').then((mod) => mod.FinYearModule)
+      },
 
 
     ]

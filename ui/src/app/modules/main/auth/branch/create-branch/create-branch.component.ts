@@ -1,0 +1,135 @@
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { Branch } from '@shared/entity/auth/branch';
+import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
+import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
+import { BranchService } from '@fboservices/auth/branch.service';
+import { FinYearService } from '@fboservices/auth/fin-year.service';
+import { FinYear } from '@shared/entity/auth/fin-year';
+import { QueryData } from '@shared/util/query-data';
+
+@Component({
+  selector: 'app-create-branch',
+  templateUrl: './create-branch.component.html',
+  styleUrls: [ './create-branch.component.scss', '../../../../../util/styles/fbo-form-style.scss' ]
+})
+export class CreateBranchComponent implements OnInit {
+
+  goToPreviousPage = _goToPreviousPage;
+
+  loading = true;
+
+  formHeader = 'Create Branch';
+
+  finyearFiltered: Array<FinYear> = [];
+
+  form: FormGroup = new FormGroup({
+
+    id: new FormControl(null),
+
+    name: new FormControl('', [ Validators.required ]),
+
+    email: new FormControl('', [ Validators.required ]),
+
+    address: new FormControl('', [ Validators.required ]),
+
+    finYearStartDate: new FormControl(new Date(), [ Validators.required ]),
+
+    defaultFinYear: new FormControl('', [ Validators.required ]),
+
+  });
+
+  constructor(public readonly router: Router,
+    public readonly route: ActivatedRoute,
+    private readonly branchService: BranchService,
+    private readonly toastr: ToastrService,
+    private readonly finYearService:FinYearService) { }
+
+  ngOnInit(): void {
+
+    this.initValueChanges();
+
+    const tId = this.route.snapshot.queryParamMap.get('id');
+
+    if (tId) {
+
+      this.formHeader = 'Update Branch';
+
+      const queryParam:QueryData = {
+        include: [
+          {relation: 'defaultFinYear'}
+        ]
+      };
+      this.branchService.get(tId, queryParam).subscribe((bankC) => {
+
+        this.form.setValue({
+          id: bankC.id ?? '',
+          name: bankC.name ?? '',
+          email: bankC.email ?? '',
+          address: bankC.address ?? '',
+          finYearStartDate: bankC.finYearStartDate ?? '',
+          defaultFinYear: bankC.defaultFinYear ?? ''
+        });
+
+        this.loading = false;
+
+      });
+
+    } else {
+
+      this.loading = false;
+
+    }
+
+  }
+
+  private initValueChanges = () => {
+
+    this.form.controls.defaultFinYear.valueChanges.subscribe((customerQ:unknown) => {
+
+      if (typeof customerQ !== 'string') {
+
+        return;
+
+      }
+      this.finYearService.search({ where: {name: {like: customerQ,
+        options: 'i'}} })
+        .subscribe((defaultFinYears) => (this.finyearFiltered = defaultFinYears));
+
+    });
+
+  };
+
+  extractNameOfObject = (obj: {name: string}): string => obj.name;
+
+  upsertBank(): void {
+
+
+    if (!this.form.valid) {
+
+      return;
+
+    }
+    this.loading = true;
+    const branchP = <Branch> this.form.value;
+
+
+    this.branchService.upsert(branchP).subscribe(() => {
+
+      this.toastr.success(`Branch ${branchP.name} is saved successfully`, 'Branch saved');
+      this.goToPreviousPage(this.route, this.router);
+
+    }, (error) => {
+
+      this.loading = false;
+      this.toastr.error(`Error in saving Branch ${branchP.name}`, 'Branch not saved');
+      console.error(error);
+
+    });
+
+  }
+
+
+}
