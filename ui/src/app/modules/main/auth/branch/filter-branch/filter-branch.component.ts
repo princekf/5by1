@@ -7,7 +7,7 @@ import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from
 @Component({
   selector: 'app-filter-branch',
   templateUrl: './filter-branch.component.html',
-  styleUrls: [ './filter-branch.component.scss' ]
+  styleUrls: [ './filter-branch.component.scss', '../../../../../util/styles/fbo-filter-style.scss']
 })
 export class FilterBranchComponent implements OnInit {
 

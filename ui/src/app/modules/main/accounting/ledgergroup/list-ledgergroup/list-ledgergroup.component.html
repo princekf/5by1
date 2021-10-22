@@ -1,1 +1,11 @@
-<p>list-ledgergroup works!</p>
+<app-tool-bar createUri="/ledgerGroup/create" mainHeader="Ledger Group"></app-tool-bar>
+<app-data-table tableHeader="List of Ledger Groups"
+[displayedColumns]="displayedColumns"
+[columnHeaders]="columnHeaders"
+[loading]="loading"
+[tableData]="ledgerGroups"
+editUri="/ledgerGroup/create"
+deleteUri="/ledgerGroup/delete"
+[filterItem]="filterItem"
+></app-data-table>
+

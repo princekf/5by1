@@ -7,7 +7,7 @@ import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from
 @Component({
   selector: 'app-filter-bill',
   templateUrl: './filter-bill.component.html',
-  styleUrls: [ './filter-bill.component.scss' ]
+  styleUrls: [ './filter-bill.component.scss', '../../../../../util/styles/fbo-filter-style.scss']
 })
 export class FilterBillComponent {
 
