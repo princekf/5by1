@@ -18,6 +18,9 @@ export class FilterCompanyComponent implements OnInit {
     name: new FormControl(''),
     nameType: new FormControl('^'),
 
+    code: new FormControl(''),
+    codeType: new FormControl('^'),
+
     email: new FormControl(''),
     emailType: new FormControl('^'),
 
@@ -53,6 +56,8 @@ export class FilterCompanyComponent implements OnInit {
 
     const formFields: Array<FilterFormField> = [
       {name: 'name',
+        type: 'string'},
+      {name: 'code',
         type: 'string'},
       {name: 'email',
         type: 'string'},

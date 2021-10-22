@@ -19,6 +19,12 @@ export class Company extends Entity implements CompanyIntf {
 
   @property({
     type: 'string',
+
+  })
+  code: string;
+
+  @property({
+    type: 'string',
   })
   email: string;
 

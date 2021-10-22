@@ -10,7 +10,7 @@ import { CompanyService } from '@fboservices/auth/company.service';
 @Component({
   selector: 'app-create-company',
   templateUrl: './create-company.component.html',
-  styleUrls: [ './create-company.component.scss', '../../../../../util/styles/fbo-form-style.scss']
+  styleUrls: [ './create-company.component.scss', '../../../../../util/styles/fbo-form-style.scss' ]
 })
 export class CreateCompanyComponent implements OnInit {
 
@@ -25,6 +25,8 @@ export class CreateCompanyComponent implements OnInit {
     id: new FormControl(null),
 
     name: new FormControl('', [ Validators.required ]),
+
+    code: new FormControl('', [ Validators.required ]),
 
     email: new FormControl('', [ Validators.required ]),
 
@@ -50,6 +52,7 @@ export class CreateCompanyComponent implements OnInit {
         this.form.setValue({
           id: bankC.id ?? '',
           name: bankC.name ?? '',
+          code: bankC.code ?? '',
           email: bankC.email ?? '',
           address: bankC.address ?? '',
 
@@ -93,7 +96,6 @@ export class CreateCompanyComponent implements OnInit {
     });
 
   }
-
 
 
 }

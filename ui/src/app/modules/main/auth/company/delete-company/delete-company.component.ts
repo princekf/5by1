@@ -16,11 +16,12 @@ import { Company } from '@shared/entity/auth/company';
 })
 export class DeleteCompanyComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'name', 'email', 'address', ];
+  displayedColumns: string[] = [ 'name', 'code', 'email', 'address', ];
 
 
   columnHeaders = {
     name: 'Name',
+    code: 'code',
     email: 'Email',
     address: 'Address',
 
