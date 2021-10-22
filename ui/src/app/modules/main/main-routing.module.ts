@@ -84,6 +84,23 @@ const routes: Routes = [
         path: 'fin-year',
         loadChildren: () => import('./auth/fin-year/fin-year.module').then((mod) => mod.FinYearModule)
       },
+      {
+        path: 'ledgerGroup',
+        loadChildren: () => import('./accounting/ledgergroup/ledgergroup.module').then((mod) => mod.LedgergroupModule)
+      },
+      {
+        path: 'ledger',
+        loadChildren: () => import('./accounting/ledger/ledger.module').then((mod) => mod.LedgerModule)
+      },
+
+      {
+        path: 'acctransaction',
+        loadChildren: () => import('./accounting/transaction/transaction.module').then((mod) => mod.TransactionModule)
+      },
+      {
+        path: 'voucher',
+        loadChildren: () => import('./accounting/voucher/voucher.module').then((mod) => mod.VoucherModule)
+      },
 
 
     ]
