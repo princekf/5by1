@@ -31,6 +31,21 @@ export class SignupComponent {
     this.error = null;
     if (this.form.valid === true) {
 
+      if (!(/^(?<name>[a-zA-Z0-9_\-\.]+)@(?<domain>[a-zA-Z0-9_\-\.]+)\.(?<extn>[a-zA-Z]{2,5})$/ugm).test(this.form.value.email)) {
+
+        this.error = 'Please provide a valid email.';
+        return;
+
+
+      }
+      if (this.form.value.password !== this.form.value.cPassword) {
+
+        this.error = 'Password and confirm password should be same.';
+        return;
+
+
+      }
+
       this.loading = true;
       const {name, email, password} = this.form.value as {name:string, email:string, password:string};
       this.userService.signUp({name,
@@ -45,18 +60,6 @@ export class SignupComponent {
 
         this.loading = false;
         this.error = error.error.message;
-        if (!(/^(?<name>[a-zA-Z0-9_\-\.]+)@(?<domain>[a-zA-Z0-9_\-\.]+)\.(?<extn>[a-zA-Z]{2,5})$/ugm).test(this.form.value.email)) {
-
-          this.error = 'Please provide a valid email.';
-
-
-        }
-        if (this.form.value.password !== this.form.value.cPassword) {
-
-          this.error = 'Password and confirm password should be same.';
-
-
-        }
 
       });
 

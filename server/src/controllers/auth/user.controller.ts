@@ -308,4 +308,31 @@ export class UserController {
 
   }
 
+
+  @del(USER_API)
+  @response(204, {
+    description: 'Users DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(User) where?: Where<User>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : User ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : User ids are required');
+
+    }
+
+    const count = await this.userRepository.deleteAll(where);
+    return count;
+
+  }
+
 }

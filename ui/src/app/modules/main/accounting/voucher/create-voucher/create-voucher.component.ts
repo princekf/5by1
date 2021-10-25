@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Voucher, VoucherType, Transaction } from '@shared/entity/accounting/voucher';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Voucher, VoucherType} from '@shared/entity/accounting/voucher';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
@@ -50,54 +50,54 @@ export class CreateVoucherComponent implements OnInit {
     private readonly fBuilder: FormBuilder,) { }
 
 
-    private createTransactionFormGroup = (tItem?: Transaction): FormGroup => {
+    // private createTransactionFormGroup = (tItem?: Transaction): FormGroup => {
 
-      const ledger = this.fBuilder.control(tItem?.ledger ?? '', [ Validators.required, ]);
-      const debit = this.fBuilder.control(tItem?.debit ?? 0, [ Validators.required ]);
-      const credit = this.fBuilder.control(tItem?.credit ?? 0, [ Validators.required ]);
+    //   const ledger = this.fBuilder.control(tItem?.ledger ?? '', [ Validators.required, ]);
+    //   const debit = this.fBuilder.control(tItem?.debit ?? 0, [ Validators.required ]);
+    //   const credit = this.fBuilder.control(tItem?.credit ?? 0, [ Validators.required ]);
 
-      return this.fBuilder.group({
-        ledger,
-        debit,
-        credit,
+    //   return this.fBuilder.group({
+    //     ledger,
+    //     debit,
+    //     credit,
 
-      });
+    //   });
 
-    };
-
-
-    private createTransactionForm = (transaction?: Transaction): FormGroup => {
+    // };
 
 
-      const fGrp = this.createTransactionFormGroup(transaction);
-      const {ledger} = fGrp.controls;
-      ledger.valueChanges.subscribe((value) => {
-
-        if (typeof value === 'object') {
-
-          const formArray = this.form.get('transaction') as FormArray;
-          const lastFormGroup = formArray.get([ formArray.length - 1 ]) as FormGroup;
-          if (lastFormGroup.controls.ledger.value) {
-
-            formArray.push(this.createTransactionForm());
-            this.dataSource = new MatTableDataSource(formArray.controls);
-            this.createTransactionFormGroup().reset();
-
-          }
-          this.iserror = true;
-          return;
-
-        }
+    // private createTransactionForm = (transaction?: Transaction): FormGroup => {
 
 
-        this.ledgerService.list({ where: {name: {like: value,
-          options: 'i'}}, }).subscribe((ledgerP) => (this.ledgerFiltered = ledgerP.items));
+    //   const fGrp = this.createTransactionFormGroup(transaction);
+    //   const {ledger} = fGrp.controls;
+    //   ledger.valueChanges.subscribe((value) => {
 
-      });
+    //     if (typeof value === 'object') {
 
-      return fGrp;
+    //       const formArray = this.form.get('transaction') as FormArray;
+    //       const lastFormGroup = formArray.get([ formArray.length - 1 ]) as FormGroup;
+    //       if (lastFormGroup.controls.ledger.value) {
 
-    }
+    //         formArray.push(this.createTransactionForm());
+    //         this.dataSource = new MatTableDataSource(formArray.controls);
+    //         this.createTransactionFormGroup().reset();
+
+    //       }
+    //       this.iserror = true;
+    //       return;
+
+    //     }
+
+
+    //     this.ledgerService.list({ where: {name: {like: value,
+    //       options: 'i'}}, }).subscribe((ledgerP) => (this.ledgerFiltered = ledgerP.items));
+
+    //   });
+
+    //   return fGrp;
+
+    // }
 
 
     private initFboForm = () => {
@@ -114,9 +114,9 @@ export class CreateVoucherComponent implements OnInit {
 
         details: new FormControl('', [ Validators.required ]),
 
-        transaction: this.fBuilder.array([
-          this.createTransactionForm(),
-        ])
+        // transaction: this.fBuilder.array([
+        //   this.createTransactionForm(),
+        // ])
 
       });
 
@@ -126,8 +126,8 @@ export class CreateVoucherComponent implements OnInit {
 
       this.initFboForm();
 
-      const formArray = this.form.get('transaction') as FormArray;
-      this.dataSource = new MatTableDataSource(formArray.controls);
+      // const formArray = this.form.get('transaction') as FormArray;
+      // this.dataSource = new MatTableDataSource(formArray.controls);
 
 
       const tId = this.route.snapshot.queryParamMap.get('id');
@@ -164,17 +164,17 @@ export class CreateVoucherComponent implements OnInit {
   upsertVoucher(): void {
 
 
-    const itemsFormArray = <FormArray> this.form.get('transaction');
-    for (let idx = itemsFormArray.length - 1; idx >= 0; idx--) {
+    // const itemsFormArray = <FormArray> this.form.get('transaction');
+    // for (let idx = itemsFormArray.length - 1; idx >= 0; idx--) {
 
-      const curFgr = itemsFormArray.get([ idx ]) as FormGroup;
-      if (!curFgr.controls.ledger.value) {
+    //   const curFgr = itemsFormArray.get([ idx ]) as FormGroup;
+    //   if (!curFgr.controls.ledger.value) {
 
-        itemsFormArray.removeAt(idx);
+    //     itemsFormArray.removeAt(idx);
 
-      }
+    //   }
 
-    }
+    // }
 
     if (!this.form.valid) {
 
@@ -201,39 +201,39 @@ export class CreateVoucherComponent implements OnInit {
   }
 
 
-  removeAt= (idx:number): void => {
+  // removeAt= (idx:number): void => {
 
 
-    const itemsFormArray = <FormArray> this.form.get('transaction');
+  //   const itemsFormArray = <FormArray> this.form.get('transaction');
 
 
-    const curFgr = itemsFormArray.get([ idx ]) as FormGroup;
+  //   const curFgr = itemsFormArray.get([ idx ]) as FormGroup;
 
-    if (curFgr.controls.ledger.value) {
+  //   if (curFgr.controls.ledger.value) {
 
-      if (typeof curFgr.controls.ledger.value !== 'object') {
+  //     if (typeof curFgr.controls.ledger.value !== 'object') {
 
-        curFgr.get('ledger').setValue('');
+  //       curFgr.get('ledger').setValue('');
 
-        this.createTransactionFormGroup().reset();
-        this.createTransactionForm();
+  //       this.createTransactionFormGroup().reset();
+  //       this.createTransactionForm();
 
-      } else {
+  //     } else {
 
-        const {data} = this.dataSource;
-        data.splice(idx, 1);
-        this.dataSource.data = data;
+  //       const {data} = this.dataSource;
+  //       data.splice(idx, 1);
+  //       this.dataSource.data = data;
 
-        itemsFormArray.updateValueAndValidity();
-        this.form.updateValueAndValidity();
+  //       itemsFormArray.updateValueAndValidity();
+  //       this.form.updateValueAndValidity();
 
-        this.createTransactionFormGroup().reset();
+  //       this.createTransactionFormGroup().reset();
 
-      }
+  //     }
 
-    }
+  //   }
 
-  }
+  // }
 
 }
 

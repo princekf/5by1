@@ -88,6 +88,8 @@ const TREE_DATA: FoodNode[] = [
         name: 'Company'},
       {path: 'fin-year',
         name: 'Fin Year'},
+      {path: 'user',
+        name: 'User'},
     ]}
 ];
 
