@@ -1,1 +1,108 @@
-<p>create-voucher works!</p>
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertVoucher()">
+
+  <p>
+    <mat-form-field>
+      <mat-label>Voucher Number</mat-label>
+      <input formControlName="number" matInput placeholder="Enter Voucher Number">
+      <mat-error *ngIf="form.controls['number'].hasError('required')">Please Enter Voucher Number</mat-error>
+
+    </mat-form-field>
+  </p>
+  
+  <p>
+    <mat-form-field>
+      <mat-label>date</mat-label>
+      <input matInput [matDatepicker]="date" formControlName="date">
+      <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+      <mat-datepicker #date></mat-datepicker>
+      <mat-error *ngIf="form.controls['date'].hasError('required')">Please Enter date</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Type</mat-label>
+      <mat-select formControlName="type">
+        <mat-option *ngFor="let voucherTypeS of propertyNames" [value]="voucherTypeS[1]"   [displayWith]="extractNameOfObject">
+          {{voucherTypeS[1]}}
+        </mat-option>
+        </mat-select>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Details</mat-label>
+      <input formControlName="details" matInput placeholder="Enter details">
+      <mat-error *ngIf="form.controls['details'].hasError('required')">Please Enter details</mat-error>
+    </mat-form-field>
+  </p>
+
+
+  <table [style.display]="loading ? 'none': ''" formArrayName="transaction" mat-table [dataSource]="dataSource"
+  matSort multiTemplateDataRows class="create-form-table" id="search-form">
+
+  <ng-container matColumnDef="ledger">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Ledger </th>
+    <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+      <span class="mobile-label">Ledger</span>
+      <mat-form-field class="fbo-create-form-first">
+        <input type="text" matInput formControlName="ledger" [matAutocomplete]="auto">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="extractNameOfObject">
+          <mat-option *ngFor="let ledgerS of ledgerFiltered" [value]="ledgerS">
+            {{ledgerS.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="debit">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Debit </th>
+    <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+      <span class="mobile-label">Debit</span>
+      <mat-form-field class="fbo-create-form-number">
+        <input matInput type="number" formControlName="debit">
+      </mat-form-field>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="credit">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Credit </th>
+    <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+      <span class="mobile-label">Credit</span>
+      <mat-form-field class="fbo-create-form-number">
+        <input matInput type="number" formControlName="credit">
+      </mat-form-field>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"></th>
+    <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+      <span class="fbo-create-form-numberdelete">
+        <button mat-icon-button type="button" color="warn" focusable="true" (click)="removeAt(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </span>
+    </td>
+  </ng-container>
+
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns" class="displayedColumns" class="fiveby1-table-header"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="fiveby1-element-row"></tr>
+
+</table>
+
+
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
+    <button class="submit-button" mat-button>save</button>
+  </p>
+
+</form>
