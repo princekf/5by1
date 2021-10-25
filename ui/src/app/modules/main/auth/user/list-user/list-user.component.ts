@@ -1,30 +1,30 @@
 import { Component, OnInit } from '@angular/core';
-import { FinYearService } from '@fboservices/auth//fin-year.service';
+import { UserService } from '@fboservices/user.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
-import { FilterFinYearComponent } from '../filter-fin-year/filter-fin-year.component';
-import { FinYear } from '@shared/entity/auth/fin-year';
+import { FilterUserComponent } from '../filter-user/filter-user.component';
+import { User } from '@shared/entity/auth/user';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
 
 @Component({
-  selector: 'app-list-fin-year',
-  templateUrl: './list-fin-year.component.html',
-  styleUrls: [ './list-fin-year.component.scss' ]
+  selector: 'app-list-user',
+  templateUrl: './list-user.component.html',
+  styleUrls: [ './list-user.component.scss' ]
 })
-export class ListFinYearComponent implements OnInit {
+export class ListUserComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'name', 'startDate', 'endDate', 'branch.name' ];
+  displayedColumns: string[] = [ 'name', 'email', 'role' ];
 
 
   columnHeaders = {
     name: 'Name',
-    startDate: 'StartDate',
-    endDate: 'EndDate',
-    'branch.name': 'Branch',
+    email: 'email',
+    role: 'Role',
+
 
   }
 
@@ -35,7 +35,7 @@ export class ListFinYearComponent implements OnInit {
   routerSubscription: Subscription;
 
 
-  FinYears: ListQueryRespType<FinYear> = {
+  Users: ListQueryRespType<User> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -44,38 +44,17 @@ export class ListFinYearComponent implements OnInit {
 
   filterItem: FilterItem;
 
-  columnParsingFn = (element:unknown, column:string): string => {
-
-    switch (column) {
-
-
-    case 'startDate':
-      return dayjs(element[column]).format(environment.dateFormat);
-
-    case 'endDate':
-      return dayjs(element[column]).format(environment.dateFormat);
-
-
-    }
-    return null;
-
-  }
-
   constructor(private activatedRoute: ActivatedRoute,
-    private finYearService: FinYearService) { }
+    private userService: UserService) { }
 
 
   private loadData = () => {
 
     this.loading = true;
 
-    this.queryParams.include = [ {
-      relation: 'branch'
-    } ];
-    this.finYearService.list(this.queryParams).subscribe((finyear) => {
+    this.userService.list(this.queryParams).subscribe((user) => {
 
-
-      this.FinYears = finyear;
+      this.Users = user;
 
 
       this.loading = false;
@@ -93,7 +72,7 @@ export class ListFinYearComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.filterItem = new FilterItem(FilterFinYearComponent, {});
+    this.filterItem = new FilterItem(FilterUserComponent, {});
 
   }
 

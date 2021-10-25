@@ -85,6 +85,10 @@ const routes: Routes = [
         loadChildren: () => import('./auth/fin-year/fin-year.module').then((mod) => mod.FinYearModule)
       },
       {
+        path: 'user',
+        loadChildren: () => import('./auth/user/user.module').then((mod) => mod.UserModule)
+      },
+      {
         path: 'ledgerGroup',
         loadChildren: () => import('./accounting/ledgergroup/ledgergroup.module').then((mod) => mod.LedgergroupModule)
       },

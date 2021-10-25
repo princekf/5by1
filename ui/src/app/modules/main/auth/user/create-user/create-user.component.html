@@ -1,0 +1,54 @@
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertUser()">
+
+
+  <p>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input formControlName="name" matInput placeholder="Enter Name">
+      <mat-error *ngIf="form.controls['name'].hasError('required')">Please Enter Name</mat-error>
+    </mat-form-field>
+  </p>
+
+
+  <p>
+    <mat-form-field>
+      <mat-label>E-mail</mat-label>
+      <input formControlName="email" matInput placeholder="Enter Name">
+      <mat-error *ngIf="form.controls['email'].hasError('required')">Please Enter Email</mat-error>
+    </mat-form-field>
+  </p>
+
+
+  <p>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input formControlName="password" matInput placeholder="Enter Name">
+      <mat-error *ngIf="form.controls['password'].hasError('required')">Please Enter Password</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Confirm Password</mat-label>
+      <input formControlName="cPassword" matInput placeholder="Enter Name">
+      <mat-error *ngIf="form.controls['cPassword'].hasError('required')">Please Enter confirmation Password</mat-error>
+    </mat-form-field>
+  </p>
+
+  
+  <mat-error *ngIf="error">
+    *{{ error }}
+  </mat-error>
+  <br>
+
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
+    <button class="submit-button" mat-button>save</button>
+  </p>
+
+</form>
