@@ -1,1 +1,12 @@
-<p>list-voucher works!</p>
+<app-tool-bar createUri="/voucher/create" mainHeader="Voucher"></app-tool-bar>
+<app-data-table tableHeader="List of Vouchers"
+[displayedColumns]="displayedColumns"
+[columnHeaders]="columnHeaders"
+[loading]="loading"
+[tableData]="vouchers"
+editUri="/voucher/create"
+deleteUri="/voucher/delete"
+[filterItem]="filterItem"
+[columnParnsingFn]="columnParsingFn"
+></app-data-table>
+

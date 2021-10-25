@@ -1,5 +1,5 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response } from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors } from '@loopback/rest';
 import {Voucher} from '../models/voucher.model';
 import {VoucherRepository} from '../repositories/voucher.repository';
 import { VOUCHER_API } from '@shared/server-apis';
@@ -153,5 +153,32 @@ export class VoucherController {
     await this.voucherRepository.deleteById(id);
 
   }
+
+  @del(VOUCHER_API)
+  @response(204, {
+    description: 'Voucher DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(Voucher) where?: Where<Voucher>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Voucher ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : Voucher ids are required');
+
+    }
+
+    const count = await this.voucherRepository.deleteAll(where);
+    return count;
+
+  }
+
 
 }
