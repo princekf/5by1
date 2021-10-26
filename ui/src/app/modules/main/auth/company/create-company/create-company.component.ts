@@ -20,6 +20,8 @@ export class CreateCompanyComponent implements OnInit {
 
   formHeader = 'Create company';
 
+  error: string;
+
   form: FormGroup = new FormGroup({
 
     id: new FormControl(null),
@@ -31,6 +33,8 @@ export class CreateCompanyComponent implements OnInit {
     email: new FormControl('', [ Validators.required ]),
 
     address: new FormControl('', [ Validators.required ]),
+
+    password: new FormControl('', [ Validators.required ]),
 
 
   });
@@ -55,6 +59,8 @@ export class CreateCompanyComponent implements OnInit {
           code: companyC.code ?? '',
           email: companyC.email ?? '',
           address: companyC.address ?? '',
+          password: companyC.password ?? '',
+
 
         });
 
@@ -72,30 +78,34 @@ export class CreateCompanyComponent implements OnInit {
 
   upsertCompany(): void {
 
+    if (this.form.valid === true) {
 
-    if (!this.form.valid) {
+      if (!(/^(?<name>[a-zA-Z0-9_\-\.]+)@(?<domain>[a-zA-Z0-9_\-\.]+)\.(?<extn>[a-zA-Z]{2,5})$/ugm).test(this.form.value.email)) {
 
-      return;
+        this.error = 'Please provide a valid email.';
+        return;
+
+
+      }
+
+      this.loading = true;
+      const companyP = <Company> this.form.value;
+
+      this.companyService.upsert(companyP).subscribe(() => {
+
+        this.toastr.success(`Company ${companyP.name} is saved successfully`, 'Company saved');
+        this.goToPreviousPage(this.route, this.router);
+
+      }, (error) => {
+
+        this.loading = false;
+        this.toastr.error(`Error in saving Company ${companyP.name}`, 'Company not saved');
+        console.error(error);
+
+      });
 
     }
-    this.loading = true;
-    const companyP = <Company> this.form.value;
-
-
-    this.companyService.upsert(companyP).subscribe(() => {
-
-      this.toastr.success(`Company ${companyP.name} is saved successfully`, 'Company saved');
-      this.goToPreviousPage(this.route, this.router);
-
-    }, (error) => {
-
-      this.loading = false;
-      this.toastr.error(`Error in saving Company ${companyP.name}`, 'Company not saved');
-      console.error(error);
-
-    });
 
   }
-
 
 }

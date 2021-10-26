@@ -37,8 +37,19 @@
       <mat-error *ngIf="form.controls['address'].hasError('required')">Please Enter Address</mat-error>
     </mat-form-field>
   </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input formControlName="password" matInput placeholder="Enter Password">
+      <mat-error *ngIf="form.controls['password'].hasError('required')">Please Enter Password</mat-error>
+    </mat-form-field>
+  </p>
 
-
+  
+  <mat-error *ngIf="error">
+    *{{ error }}
+  </mat-error>
+  <br>
   <p class="form-submit-container">
     <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
     <button class="submit-button" mat-button>save</button>
