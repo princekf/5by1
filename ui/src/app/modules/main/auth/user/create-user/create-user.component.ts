@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '@shared/entity/auth/user';
+
+import { permissions } from '@shared/util/permissions';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
@@ -7,6 +9,7 @@ import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { UserService } from '@fboservices/user.service';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-create-user',
@@ -21,6 +24,13 @@ export class CreateUserComponent implements OnInit {
 
   formHeader = 'Create User';
 
+  entities = permissions;
+
+  displayedColumns = [ 'entity', 'view', 'create', 'edit', 'deleteP' ];
+
+  dataSource = new MatTableDataSource<unknown>();
+
+  entity = Object.entries(this.entities);
 
   form: FormGroup = new FormGroup({
 
@@ -39,6 +49,8 @@ export class CreateUserComponent implements OnInit {
     private readonly userService:UserService) { }
 
   ngOnInit(): void {
+
+    this.dataSource.data = this.entity;
 
 
     const tId = this.route.snapshot.queryParamMap.get('id');
