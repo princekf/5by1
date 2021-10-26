@@ -1,0 +1,58 @@
+.fbo-create-formTwo{
+    width: 20%;
+    margin-right: 5%;
+    margin-top: 10px;
+    margin-left: 10%;
+  }
+  table {
+    margin-top: 50px;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 50px;
+  }
+  .mat-header-row{
+    background-color: #0062FF22;
+
+    height: 40px;
+    text-align: center;
+    }
+    th{
+      border-left: 0.5px solid  #0062FF22;
+    }
+    
+    td{
+      border-left: 0.5px solid  #0062FF22;
+      height: 35px;
+      width: 2%;
+      text-align: center;
+    }
+    :host ::ng-deep td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+      padding-right: 0px !important;
+      border-right: 0.5px solid #0062FF22;
+      width: 1%;
+      text-align: center;
+    }
+    :host ::ng-deep th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+      padding-right: 0px;
+      
+    }
+    
+    :host ::ng-deep  td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+      padding-left: 0px;
+    }
+:host ::ng-deep .mat-sort-header-container {
+      display: flex;
+      cursor: pointer;
+      padding-left: 44%;
+      align-items: center;
+      letter-spacing: normal;
+      outline: 0;
+  }
+  :host ::ng-deep .mat-row.ng-star-inserted { 
+    height: 40px !important; 
+  } 
+.form-submit-container button {
+    width: 10%;
+    margin-left: 4%;
+}
