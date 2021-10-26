@@ -20,3 +20,4 @@ export * from './fin-year.repository';
 export * from './ledger-group.repository';
 export * from './ledger.repository';
 export * from './voucher.repository';
+export * from './cost-centre.repository';
