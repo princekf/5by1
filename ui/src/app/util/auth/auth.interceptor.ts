@@ -27,18 +27,19 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     return next.handle(reqN).pipe(
-      catchError((error: HttpErrorResponse) => {
+      catchError((resp: HttpErrorResponse) => {
 
-        if (error.status === HTTP_RESPONSE_CODE.FORBIDDEN_USER) {
+        if ([ HTTP_RESPONSE_CODE.FORBIDDEN_USER, HTTP_RESPONSE_CODE.UNAUTHORIZED_USER ].includes(resp.status)) {
 
-          this.toastr.error('Your session might have expired.<br/><a href=\"/login\">Please login again</a>', 'Session expired', {
+          const message = resp.error?.error?.message ?? 'Your session might have expired.<br/><a href=\"/login\">Please login again</a>';
+          this.toastr.error(message, 'Access denied', {
             enableHtml: true,
             closeButton: true,
             timeOut: 10000
           });
 
         }
-        return throwError(error);
+        return throwError(resp.error);
 
       }), map((event: HttpEvent<unknown>) => event)
     );

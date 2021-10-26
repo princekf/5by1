@@ -1,3 +1,4 @@
+import { CostCentre } from './cost-centre';
 import { Ledger } from './ledger';
 
 export interface Transaction {
@@ -7,4 +8,5 @@ export interface Transaction {
     debit: number;
     credit: number;
     details?: string;
+    costCentre?: CostCentre;
 }

@@ -22,6 +22,13 @@
             <mat-error *ngIf="form.controls['password'].hasError('required')">Password is required</mat-error>
           </mat-form-field>
         </p>
+        <p>
+          <mat-form-field>
+
+            <input type="text" matInput placeholder="Company code" formControlName="company">
+            <mat-error *ngIf="form.controls['company'].hasError('required')"> Company code is required</mat-error>
+          </mat-form-field>
+        </p>
         <p *ngIf="error" class="error">
           {{ error }}
         </p>

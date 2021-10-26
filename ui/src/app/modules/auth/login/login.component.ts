@@ -24,6 +24,8 @@ export class LoginComponent {
 
     password: new FormControl('', [ Validators.required ]),
 
+    company: new FormControl('', [ Validators.required ]),
+
 
   });
 

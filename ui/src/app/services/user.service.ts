@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { User } from '@shared/entity/auth/user';
-import { SIGNUP_API, LOGIN_API, ME_API, USER_API_URI } from '@shared/server-apis';
+import { SIGNUP_API, LOGIN_API_URI, ME_API, USER_API_URI } from '@shared/server-apis';
 import { catchError, shareReplay } from 'rxjs/operators';
 import { AuthResponse } from '@shared/util/auth-resp';
 import { BaseHTTPService } from './base-http.service';
@@ -24,7 +24,7 @@ export class UserService extends BaseHTTPService<User> {
 
   login(user: { email: string; password: string; }): Observable<AuthResponse> {
 
-    return this.http.post<AuthResponse>(LOGIN_API, user)
+    return this.http.post<AuthResponse>(LOGIN_API_URI, user)
       .pipe(shareReplay())
       .pipe(
         catchError((err) => throwError(() => err))

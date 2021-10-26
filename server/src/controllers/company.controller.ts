@@ -1,14 +1,33 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors } from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, RequestContext } from '@loopback/rest';
 import {Company} from '../models';
-import {CompanyRepository} from '../repositories';
+import {CompanyRepository, UserRepository} from '../repositories';
 import { COMPANY_API } from '@shared/server-apis';
+import { authenticate } from '@loopback/authentication';
+import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
+import { basicAuthorization } from '../middlewares/auth.midd';
+import { CompanyModelForCreateSchema } from '../models/company.create.model';
+import {Getter, inject} from '@loopback/context';
+import { BindingKeys } from '../binding.keys';
+import { PasswordHasher } from '../services';
+import { permissions } from '@shared/util/permissions';
 
+@authenticate('jwt')
+@authorize({
+  allowedRoles: [ 'super-admin' ],
+  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
+})
 export class CompanyController {
 
   constructor(
     @repository(CompanyRepository)
     public companyRepository : CompanyRepository,
+    @inject.getter('repositories.UserRepository')
+    private userRepositoryGetter: Getter<UserRepository>,
+    @inject.context()
+    public context: RequestContext,
+    @inject(BindingKeys.PASSWORD_HASHER)
+    public passwordHasher: PasswordHasher,
   ) {}
 
   @post(COMPANY_API)
@@ -20,17 +39,46 @@ export class CompanyController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Company, {
+          schema: getModelSchemaRef(CompanyModelForCreateSchema, {
             title: 'NewCompany',
             exclude: [ 'id' ],
           }),
         },
       },
     })
-      company: Omit<Company, 'id'>,
+      companyS: Omit<CompanyModelForCreateSchema, 'id'>,
   ): Promise<Company> {
 
+    const {password, ...company} = companyS;
     const companyR = await this.companyRepository.create(company);
+    this.context.bind(BindingKeys.SESSION_DB_NAME).to(<string>company.code.toLowerCase());
+    const passwordC = await this.passwordHasher.hashPassword(password);
+    const userRepository = await this.userRepositoryGetter();
+    const permissions2 = [
+      {
+        key: 'user',
+        name: 'User',
+        operations: {
+          list: true,
+          view: true,
+          create: true,
+          update: true,
+          delete: true,
+        }
+      },
+      ...permissions
+    ];
+    const savedUser = await userRepository.create({
+      name: company.name,
+      email: company.email,
+      role: 'admin',
+      permissions: permissions2
+    });
+
+    // Set the password
+    await userRepository
+      .userCredentials(savedUser.id)
+      .create({password: passwordC});
     return companyR;
 
   }

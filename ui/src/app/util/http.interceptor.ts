@@ -21,7 +21,7 @@ export class HTTPInterceptor implements HttpInterceptor {
 
     private storeHeaderData = (resp:HttpResponseBase) => {
 
-      const accessToken = resp.headers.get(ACCESS_TOKEN_ID);
+      const accessToken = resp.headers?.get(ACCESS_TOKEN_ID);
       if (accessToken) {
 
         this.saveToLocalStorage(ACCESS_TOKEN_ID, accessToken);

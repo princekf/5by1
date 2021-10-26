@@ -25,10 +25,43 @@ const CredentialsSchema: SchemaObject = {
   },
 };
 
+const InstallSchema: SchemaObject = {
+  type: 'object',
+  required: [ 'installSecret' ],
+  properties: {
+    installSecret: {
+      type: 'string',
+      minLength: 8,
+    },
+  },
+};
+
 export const CredentialsRequestBody: Partial<RequestBodyObject> = {
   description: 'The input of login function',
   required: true,
   content: {
     'application/json': {schema: CredentialsSchema},
+  },
+};
+
+export const InstallRequestBody: Partial<RequestBodyObject> = {
+  description: 'The input of install function',
+  required: true,
+  content: {
+    'application/json': {schema: InstallSchema},
+  },
+};
+
+export const AuthResponseSchema = {
+  type: 'object',
+  properties: {
+    token: {type: 'string'},
+  },
+};
+
+export const InstallResponseSchema = {
+  type: 'object',
+  properties: {
+    message: {type: 'string'},
   },
 };

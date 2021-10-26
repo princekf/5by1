@@ -5,6 +5,7 @@ export interface Ledger {
     name?: string;
     ledgerGroup?: LedgerGroup;
     ledgerGroupId?: string;
+    openingBalance?: number;
     refNo?: string;
     details?: string;
 }

@@ -1,16 +1,16 @@
 import {inject} from '@loopback/core';
-import { FBOBaseRepository } from './fbo-base.repository';
-import {FbomongoDataSource} from '../datasources';
+import {FboCommonMongoDataSource} from '../datasources';
 import {Company, CompanyRelations} from '../models';
+import { DefaultCrudRepository } from '@loopback/repository';
 
-export class CompanyRepository extends FBOBaseRepository<
+export class CompanyRepository extends DefaultCrudRepository<
   Company,
   typeof Company.prototype.id,
   CompanyRelations
 > {
 
   constructor(
-    @inject('datasources.fbomongo') dataSource: FbomongoDataSource,
+    @inject('datasources.FBOCommonMongo') dataSource: FboCommonMongoDataSource,
   ) {
 
     super(Company, dataSource);

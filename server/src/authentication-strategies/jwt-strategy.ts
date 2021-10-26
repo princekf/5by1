@@ -1,9 +1,11 @@
-import {inject} from '@loopback/context';
-import {HttpErrors, Request} from '@loopback/rest';
-import {AuthenticationStrategy, TokenService} from '@loopback/authentication';
-import {UserProfile} from '@loopback/security';
+import {Getter, inject} from '@loopback/context';
+import {HttpErrors, Request, RequestContext} from '@loopback/rest';
+import {AuthenticationStrategy} from '@loopback/authentication';
 
 import {BindingKeys} from '../binding.keys';
+import { ProfileUser } from '../services';
+import { FBOTokenServiceInft } from '../services/fbo-token.serviceintf';
+import { UserRepository } from '../repositories';
 
 export class JWTAuthenticationStrategy implements AuthenticationStrategy {
 
@@ -13,13 +15,21 @@ export class JWTAuthenticationStrategy implements AuthenticationStrategy {
 
   constructor(
     @inject(BindingKeys.TOKEN_SERVICE)
-    public tokenService: TokenService,
+    public tokenService: FBOTokenServiceInft,
+    @inject.getter('repositories.UserRepository')
+    private userRepositoryGetter: Getter<UserRepository>,
+    @inject.context()
+    public context: RequestContext,
   ) {}
 
-  async authenticate(request: Request): Promise<UserProfile | undefined> {
+  async authenticate(request: Request): Promise<ProfileUser | undefined> {
 
     const token: string = this.extractCredentials(request);
-    const userProfile: UserProfile = await this.tokenService.verifyToken(token);
+    const userProfile: ProfileUser = await this.tokenService.verifyToken(token);
+
+    // this.context.bind(BindingKeys.SESSION_DB_NAME).to(<string>userProfile.company?.toLowerCase());
+    // const userRepository = await this.userRepositoryGetter();
+    // const cUser = await userRepository.findById(userProfile.id);
     return userProfile;
 
   }

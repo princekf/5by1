@@ -1,6 +1,6 @@
 import {Entity, model, property, hasOne} from '@loopback/repository';
 import {UserCredentials} from './user-credentials.model';
-import { User as UserInft } from '@shared/entity/auth/user';
+import { Permission, User as UserInft } from '@shared/entity/auth/user';
 
 @model()
 export class User extends Entity implements UserInft {
@@ -30,6 +30,12 @@ export class User extends Entity implements UserInft {
     nullable: false,
   })
   role: string;
+
+  @property({
+    type: 'array',
+    itemType: 'object',
+  })
+  permissions: Array<Permission>;
 
   @hasOne(() => UserCredentials)
   userCredentials: UserCredentials;

@@ -1,8 +1,8 @@
 import { BindingKey } from '@loopback/context';
-import { TokenService, UserService } from '@loopback/authentication';
-import { User } from './models';
+import { UserService } from '@loopback/authentication';
 import { Credentials } from './repositories';
-import { PasswordHasher } from './services';
+import { PasswordHasher, ProfileUser } from './services';
+import { FBOTokenServiceInft } from './services/fbo-token.serviceintf';
 
 export class BindingKeys {
 
@@ -15,7 +15,7 @@ export class BindingKeys {
     'authentication.jwt.expires.in.seconds',
   );
 
-  public static TOKEN_SERVICE = BindingKey.create<TokenService>(
+  public static TOKEN_SERVICE = BindingKey.create<FBOTokenServiceInft>(
     'services.authentication.jwt.tokenservice',
   );
 
@@ -25,8 +25,10 @@ export class BindingKeys {
 
   public static ROUNDS = BindingKey.create<number>('services.hasher.round');
 
-  public static USER_SERVICE = BindingKey.create<UserService<User, Credentials>>(
+  public static USER_SERVICE = BindingKey.create<UserService<ProfileUser, Credentials>>(
     'services.user.service',
   );
+
+  public static SESSION_DB_NAME = BindingKey.create<string>('session.database.name');
 
 }
