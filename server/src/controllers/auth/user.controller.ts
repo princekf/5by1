@@ -12,12 +12,14 @@ import { PasswordHasher } from '../../services';
 import { AuthResponseSchema, CredentialsRequestBody, InstallRequestBody, InstallResponseSchema, UserProfileSchema } from '../specs/user-controller.specs';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import { USER_API } from '@shared/server-apis';
+import { resourcePermissions } from '../../utils/resource-permissions';
 
-@authenticate('jwt')
-@authorize({
+const authDetails = {
   allowedRoles: [ 'admin', 'user', 'super-admin' ],
   voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+};
+@authenticate('jwt')
+@authorize(authDetails)
 export class UserController {
 
   constructor(
@@ -194,6 +196,8 @@ export class UserController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.commonResources.name,
+    ...authDetails})
   async printCurrentUser(
     @inject(SecurityBindings.USER)
       currentUserProfile: UserProfile,

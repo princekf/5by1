@@ -1,6 +1,6 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
 import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, RequestContext } from '@loopback/rest';
-import {Company} from '../models';
+import {Company} from '../models/company.model';
 import {CompanyRepository, UserRepository} from '../repositories';
 import { COMPANY_API } from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
@@ -54,8 +54,8 @@ export class CompanyController {
     this.context.bind(BindingKeys.SESSION_DB_NAME).to(<string>company.code.toLowerCase());
     const passwordC = await this.passwordHasher.hashPassword(password);
     const userRepository = await this.userRepositoryGetter();
-    const permissions2 = [
-      {
+    const permissions2 = {
+      'user': {
         key: 'user',
         name: 'User',
         operations: {
@@ -67,7 +67,7 @@ export class CompanyController {
         }
       },
       ...permissions
-    ];
+    };
     const savedUser = await userRepository.create({
       name: company.name,
       email: company.email,

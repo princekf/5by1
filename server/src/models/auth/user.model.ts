@@ -32,10 +32,9 @@ export class User extends Entity implements UserInft {
   role: string;
 
   @property({
-    type: 'array',
-    itemType: 'object',
+    type: 'object',
   })
-  permissions: Array<Permission>;
+  permissions: Record<string, Permission>;
 
   @hasOne(() => UserCredentials)
   userCredentials: UserCredentials;

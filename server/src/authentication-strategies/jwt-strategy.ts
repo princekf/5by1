@@ -16,20 +16,12 @@ export class JWTAuthenticationStrategy implements AuthenticationStrategy {
   constructor(
     @inject(BindingKeys.TOKEN_SERVICE)
     public tokenService: FBOTokenServiceInft,
-    @inject.getter('repositories.UserRepository')
-    private userRepositoryGetter: Getter<UserRepository>,
-    @inject.context()
-    public context: RequestContext,
   ) {}
 
   async authenticate(request: Request): Promise<ProfileUser | undefined> {
 
     const token: string = this.extractCredentials(request);
     const userProfile: ProfileUser = await this.tokenService.verifyToken(token);
-
-    // this.context.bind(BindingKeys.SESSION_DB_NAME).to(<string>userProfile.company?.toLowerCase());
-    // const userRepository = await this.userRepositoryGetter();
-    // const cUser = await userRepository.findById(userProfile.id);
     return userProfile;
 
   }
