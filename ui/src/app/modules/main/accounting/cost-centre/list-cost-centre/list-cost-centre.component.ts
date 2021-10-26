@@ -1,29 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { CompanyService } from '@fboservices/auth/company.service';
+import { CostCentreService } from '@fboservices/accounting/cost-centre.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
-
-import { Company } from '@shared/entity/auth/company';
-import { FilterCompanyComponent } from '../filter-company/filter-company.component';
+import { FilterCostCentreComponent } from '../filter-cost-centre/filter-cost-centre.component';
+import { CostCentre } from '@shared/entity/accounting/cost-centre';
 
 @Component({
-  selector: 'app-list-company',
-  templateUrl: './list-company.component.html',
-  styleUrls: [ './list-company.component.scss' ]
+  selector: 'app-list-cost-centre',
+  templateUrl: './list-cost-centre.component.html',
+  styleUrls: [ './list-cost-centre.component.scss' ]
 })
-export class ListCompanyComponent implements OnInit {
+export class ListCostCentreComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'name', 'code', 'email', 'address'];
+  displayedColumns: string[] = [ 'name', 'details' ];
 
 
   columnHeaders = {
     name: 'Name',
-    code: 'Code',
-    email: 'Email',
-    address: 'Address',
+    details: 'Details',
 
   }
 
@@ -34,7 +31,7 @@ export class ListCompanyComponent implements OnInit {
   routerSubscription: Subscription;
 
 
-  companies: ListQueryRespType<Company> = {
+  costCentres: ListQueryRespType<CostCentre> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -43,17 +40,19 @@ export class ListCompanyComponent implements OnInit {
 
   filterItem: FilterItem;
 
+
   constructor(private activatedRoute: ActivatedRoute,
-    private companyService: CompanyService) { }
+    private costCentreService: CostCentreService) { }
 
 
   private loadData = () => {
 
     this.loading = true;
-    this.companyService.list(this.queryParams).subscribe((company) => {
+
+    this.costCentreService.list(this.queryParams).subscribe((costCentre) => {
 
 
-      this.companies = company;
+      this.costCentres = costCentre;
 
       this.loading = false;
 
@@ -70,7 +69,7 @@ export class ListCompanyComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.filterItem = new FilterItem(FilterCompanyComponent, {});
+    this.filterItem = new FilterItem(FilterCostCentreComponent, {});
 
   }
 

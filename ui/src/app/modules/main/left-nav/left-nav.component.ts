@@ -74,6 +74,8 @@ const TREE_DATA: FoodNode[] = [
         name: 'Ledger'},
       {path: 'voucher',
         name: 'Voucher'},
+      {path: 'cost-centre',
+        name: 'Cost-Centre'},
     ] },
   {path: 'report',
     name: 'Reports',
