@@ -145,6 +145,11 @@ export class UserController {
 
     try {
 
+      if (credentials.installSecret !== process.env.INSTALL_APP_SECRET) {
+
+        throw new HttpErrors.Forbidden('Invalid credentials.');
+
+      }
       // Create super admin user
 
       // Encrypt the password
@@ -214,6 +219,8 @@ export class UserController {
     description: 'User model instance',
     content: {'application/json': {schema: getModelSchemaRef(User)}},
   })
+  @authorize({resource: resourcePermissions.userCreate.name,
+    ...authDetails})
   async create(
     @requestBody({
       content: {
@@ -228,6 +235,7 @@ export class UserController {
       user: Omit<User, 'id'>,
   ): Promise<User> {
 
+    user.role = 'user';
     const userRet = await this.userRepository.create(user);
     return userRet;
 

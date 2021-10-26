@@ -19,19 +19,25 @@ export class LoginComponent {
 
   form: FormGroup = new FormGroup({
 
-
     email: new FormControl('', [ Validators.required ]),
-
     password: new FormControl('', [ Validators.required ]),
-
     company: new FormControl('', [ Validators.required ]),
-
 
   });
 
   constructor(private readonly userService: UserService,
     private readonly router: Router,
     private readonly route: ActivatedRoute) { }
+
+  ngOnInit():void {
+
+    if (localStorage.getItem(ACCESS_TOKEN_ID)) {
+
+      this.router.navigate([ '/' ]);
+
+    }
+
+  }
 
   submit(): void {
 
@@ -53,7 +59,6 @@ export class LoginComponent {
         if (!(/^(?<name>[a-zA-Z0-9_\-\.]+)@(?<domain>[a-zA-Z0-9_\-\.]+)\.(?<extn>[a-zA-Z]{2,5})$/ugm).test(this.form.value.email)) {
 
           this.error = 'Please provide a valid email.';
-
 
         }
 

@@ -34,13 +34,6 @@ export class Company extends Entity implements CompanyIntf {
   })
   address: string;
 
-  @property({
-    type: 'string',
-
-  })
-  password: string;
-
-
   constructor(data?: Partial<Company>) {
 
     super(data);

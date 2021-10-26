@@ -37,10 +37,10 @@
       <mat-error *ngIf="form.controls['address'].hasError('required')">Please Enter Address</mat-error>
     </mat-form-field>
   </p>
-  <p>
+  <p *ngIf="!form.controls['id'].value">
     <mat-form-field>
       <mat-label>Password</mat-label>
-      <input formControlName="password" matInput placeholder="Enter Password">
+      <input type="password" formControlName="password" matInput placeholder="Enter Password">
       <mat-error *ngIf="form.controls['password'].hasError('required')">Please Enter Password</mat-error>
     </mat-form-field>
   </p>

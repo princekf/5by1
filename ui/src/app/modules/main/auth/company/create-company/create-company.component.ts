@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Company } from '@shared/entity/auth/company';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
@@ -59,14 +58,13 @@ export class CreateCompanyComponent implements OnInit {
           code: companyC.code ?? '',
           email: companyC.email ?? '',
           address: companyC.address ?? '',
-          password: companyC.password ?? '',
-
-
+          password: '',
         });
 
         this.loading = false;
 
       });
+      this.form.controls.password.clearValidators();
 
     } else {
 
@@ -89,7 +87,7 @@ export class CreateCompanyComponent implements OnInit {
       }
 
       this.loading = true;
-      const companyP = <Company> this.form.value;
+      const companyP = this.form.value;
 
       this.companyService.upsert(companyP).subscribe(() => {
 
