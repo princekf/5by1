@@ -1,15 +1,18 @@
 import {AuthorizationContext, AuthorizationDecision, AuthorizationMetadata} from '@loopback/authorization';
 import {securityId} from '@loopback/security';
+import { UserRepository } from '../repositories';
 import { ProfileUser } from '../services';
+import { resourcePermissions } from '../utils/resource-permissions';
 
 /*
  * Instance level authorizer
  * Can be also registered as an authorizer, depends on users' need.
  */
-export const basicAuthorization = (
+export const basicAuthorization = async(
   authorizationCtx: AuthorizationContext,
   metadata: AuthorizationMetadata,
-): unknown => {
+): Promise<unknown> => {
+
 
   // No access if authorization details are missing
   let currentUser: ProfileUser;
@@ -35,19 +38,24 @@ export const basicAuthorization = (
 
   }
 
-  // Authorize everything that does not have a allowedRoles property
   if (!metadata.allowedRoles) {
 
-    return AuthorizationDecision.ALLOW;
+    return AuthorizationDecision.DENY;
 
   }
 
-  if (metadata.allowedRoles?.includes(currentUser.role)) {
+  if (!metadata.allowedRoles?.includes(currentUser.role)) {
+
+    return AuthorizationDecision.DENY;
+
+  }
+  if (metadata.resource === resourcePermissions.commonResources.name) {
 
     return AuthorizationDecision.ALLOW;
 
   }
-
-  return AuthorizationDecision.DENY;
+  const userRepository:UserRepository = authorizationCtx.invocationContext.getSync('repositories.UserRepository');
+  const cUser = await userRepository.findById(currentUser.id);
+  return AuthorizationDecision.ALLOW;
 
 };

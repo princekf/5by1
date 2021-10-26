@@ -8,5 +8,5 @@ export interface User {
     name?: string;
     email?: string;
     password?: string;
-    permissions?: Array<Permission>
+    permissions?: Record<string, Permission>
 }
