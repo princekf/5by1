@@ -31,7 +31,7 @@ export const fboTableRowExpandAnimation = [
 
 export const goToPreviousPage = (route: ActivatedRoute, router: Router): void => {
 
-  const burl = route.snapshot.queryParamMap.get('burl');
+  const burl = route.snapshot.queryParamMap.get('burl') ?? '/';
   const uParams:Record<string, string> = {};
   let baseUri = burl;
   if (burl?.includes('?')) {
