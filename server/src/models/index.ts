@@ -22,3 +22,4 @@ export * from './fin-year.model';
 export * from './ledger-group.model';
 export * from './ledger.model';
 export * from './voucher.model';
+export * from './cost-centre.model';

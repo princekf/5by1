@@ -25,6 +25,9 @@ export const LEDGER_API_URI = `${BASE_URI}${LEDGER_API}`;
 export const VOUCHER_API = '/acc/vouchers';
 export const VOUCHER_API_URI = `${BASE_URI}${VOUCHER_API}`;
 
+export const COST_CENTRE_API = '/acc/costcentres';
+export const COST_CENTRE_API_URI = `${BASE_URI}${COST_CENTRE_API}`;
+
 export const VENDOR_API = '/inv/vendors';
 export const VENDOR_API_URI = `${BASE_URI}${VENDOR_API}`;
 
