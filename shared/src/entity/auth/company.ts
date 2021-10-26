@@ -4,5 +4,4 @@ export interface Company {
     code?:string;
     email?: string;
     address?: string;
-    password?:string
 }
