@@ -1,7 +1,6 @@
 import { Permission } from '../entity/auth/user';
 
 const CURD_OPERATIONS = {
-  list: true,
   view: true,
   create: true,
   update: true,

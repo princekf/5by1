@@ -18,16 +18,17 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 @NgModule({
-  declarations: [ListUserComponent, DeleteUserComponent, FilterUserComponent, CreateUserComponent],
+  declarations: [ ListUserComponent, DeleteUserComponent, FilterUserComponent, CreateUserComponent ],
   imports: [
     CommonModule,
     UserRoutingModule,
     DataTableModule, MatTableModule, NgxSkeletonLoaderModule, MatSortModule, ToolBarModule,
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule,
-    MatInputModule, MatButtonModule,
+    MatInputModule, MatButtonModule, MatCheckboxModule
   ]
 })
 export class UserModule { }
