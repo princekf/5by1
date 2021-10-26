@@ -1,6 +1,5 @@
 import {HttpErrors} from '@loopback/rest';
 import {Credentials, UserRepository} from '../repositories';
-import {User} from '../models';
 import {UserService} from '@loopback/authentication';
 import {securityId, UserProfile} from '@loopback/security';
 import {repository} from '@loopback/repository';
@@ -8,7 +7,16 @@ import {BindingKeys} from '../binding.keys';
 import {inject} from '@loopback/context';
 import {PasswordHasher} from './hash-password.service';
 
-export class FBOUserService implements UserService<User, Credentials> {
+export interface ProfileUser {
+  [securityId]: string;
+  [attribute: string]: any;
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  company?: string;
+}
+export class FBOUserService implements UserService<ProfileUser, Credentials> {
 
   constructor(
     @repository(UserRepository) public userRepository: UserRepository,
@@ -17,7 +25,7 @@ export class FBOUserService implements UserService<User, Credentials> {
   ) {
   }
 
-  async verifyCredentials(credentials: Credentials): Promise<User> {
+  async verifyCredentials(credentials: Credentials): Promise<ProfileUser> {
 
     const invalidCredentialsError = 'Invalid email or password.';
 
@@ -49,17 +57,24 @@ export class FBOUserService implements UserService<User, Credentials> {
 
     }
 
-    return foundUser;
+    return {
+      [securityId]: foundUser.id,
+      id: foundUser.id,
+      name: foundUser.name,
+      email: foundUser.email,
+      role: foundUser.role,
+      company: credentials.company,
+    };
 
   }
 
   // eslint-disable-next-line class-methods-use-this
-  public convertToUserProfile(user: User): UserProfile {
+  public convertToUserProfile(user: ProfileUser): UserProfile {
 
+    const {id, ...userT} = user;
     return {
-      [securityId]: user.id,
-      id: user.id,
-      role: user.role
+      id,
+      ...userT
     };
 
   }

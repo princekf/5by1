@@ -5,6 +5,7 @@ import {TokenService} from '@loopback/authentication';
 import {securityId, UserProfile} from '@loopback/security';
 import * as jwt from 'jsonwebtoken';
 import {BindingKeys} from '../binding.keys';
+import { ProfileUser } from '.';
 
 const signAsync = <(
   payload: unknown,
@@ -23,7 +24,7 @@ export class JWTService implements TokenService {
   ) {
   }
 
-  async verifyToken(token: string): Promise<UserProfile> {
+  async verifyToken(token: string): Promise<ProfileUser> {
 
     if (!token) {
 
@@ -33,7 +34,7 @@ export class JWTService implements TokenService {
 
     }
 
-    let userProfile: UserProfile;
+    let userProfile: ProfileUser;
 
     try {
 
@@ -43,8 +44,10 @@ export class JWTService implements TokenService {
       userProfile = {
         [securityId]: decodedToken.id,
         name: decodedToken.name,
+        email: decodedToken.email,
         id: decodedToken.id,
         role: decodedToken.role,
+        company: decodedToken.company,
       };
 
     } catch (error: any) {
@@ -58,7 +61,7 @@ export class JWTService implements TokenService {
 
   }
 
-  async generateToken(userProfile: UserProfile): Promise<string> {
+  async generateToken(userProfile: ProfileUser): Promise<string> {
 
     if (!userProfile) {
 
@@ -72,6 +75,8 @@ export class JWTService implements TokenService {
       name: userProfile.name,
       role: userProfile.role,
       publicAddress: userProfile.publicAddress,
+      email: userProfile.email,
+      company: userProfile.company,
     };
     // Generate a JSON Web Token
     let token: string;

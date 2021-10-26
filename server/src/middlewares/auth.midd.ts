@@ -1,5 +1,6 @@
 import {AuthorizationContext, AuthorizationDecision, AuthorizationMetadata} from '@loopback/authorization';
-import {securityId, UserProfile} from '@loopback/security';
+import {securityId} from '@loopback/security';
+import { ProfileUser } from '../services';
 
 /*
  * Instance level authorizer
@@ -11,13 +12,16 @@ export const basicAuthorization = (
 ): unknown => {
 
   // No access if authorization details are missing
-  let currentUser: UserProfile;
+  let currentUser: ProfileUser;
   if (authorizationCtx.principals.length > 0) {
 
-    const [ {id, name, role} ] = authorizationCtx.principals;
+    const [ {id, name, role, email, company} ] = authorizationCtx.principals;
     currentUser = {[securityId]: id,
+      id,
       name,
-      role};
+      role,
+      email,
+      company};
 
   } else {
 
@@ -38,19 +42,12 @@ export const basicAuthorization = (
 
   }
 
-  let roleIsAllowed = false;
   if (metadata.allowedRoles?.includes(currentUser.role)) {
 
-    roleIsAllowed = true;
+    return AuthorizationDecision.ALLOW;
 
   }
 
-  if (!roleIsAllowed) {
-
-    return AuthorizationDecision.DENY;
-
-  }
-
-  return AuthorizationDecision.ALLOW;
+  return AuthorizationDecision.DENY;
 
 };

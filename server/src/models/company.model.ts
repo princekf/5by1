@@ -19,15 +19,15 @@ export class Company extends Entity implements CompanyIntf {
 
   @property({
     type: 'string',
-
+    required: true,
   })
   code: string;
 
   @property({
     type: 'string',
+    required: true,
   })
   email: string;
-
 
   @property({
     type: 'string',

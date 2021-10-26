@@ -1,40 +1,21 @@
 import { authenticate, TokenService, UserService } from '@loopback/authentication';
 import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
 import { inject, intercept } from '@loopback/context';
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
-  HttpErrors,
-} from '@loopback/rest';
+import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where } from '@loopback/repository';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, RequestContext } from '@loopback/rest';
 import { ValidateUserForUniqueEMailInterceptor } from '../../interceptors';
 import { BindingKeys } from '../../binding.keys';
 import { basicAuthorization } from '../../middlewares/auth.midd';
 import {NewUserRequest, User} from '../../models';
-import {Credentials, UserRepository} from '../../repositories';
+import { Credentials, UserRepository} from '../../repositories';
 import { PasswordHasher } from '../../services';
-import { CredentialsRequestBody, UserProfileSchema } from '../specs/user-controller.specs';
+import { AuthResponseSchema, CredentialsRequestBody, InstallRequestBody, InstallResponseSchema, UserProfileSchema } from '../specs/user-controller.specs';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import { USER_API } from '@shared/server-apis';
-import { AuthResponse } from '@shared/util/auth-resp';
 
 @authenticate('jwt')
 @authorize({
-  allowedRoles: [ 'admin', 'user' ],
+  allowedRoles: [ 'admin', 'user', 'super-admin' ],
   voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
 })
 export class UserController {
@@ -48,6 +29,8 @@ export class UserController {
     public userService: UserService<User, Credentials>,
     @inject(BindingKeys.TOKEN_SERVICE)
     public jwtService: TokenService,
+    @inject.context()
+    public context: RequestContext,
   ) {}
 
   @authenticate.skip()
@@ -126,7 +109,7 @@ export class UserController {
       '200': {
         description: 'Token',
         content: {
-          'application/json': {schema: getModelSchemaRef(AuthResponse)},
+          'application/json': {schema: AuthResponseSchema},
         },
       },
     },
@@ -136,9 +119,66 @@ export class UserController {
   ): Promise<{token: string}> {
 
     const user = await this.userService.verifyCredentials(credentials);
-    const userProfile = this.userService.convertToUserProfile(user);
+    const userProfile = this.userService.convertToUserProfile(user,);
     const token = await this.jwtService.generateToken(userProfile);
     return {token};
+
+  }
+
+  @authenticate.skip()
+  @authorize.skip()
+  @post(`${USER_API}/install`, {
+    responses: {
+      '200': {
+        description: 'Install status',
+        content: {
+          'application/json': {schema: InstallResponseSchema},
+        },
+      },
+    },
+  })
+  async install(
+    @requestBody(InstallRequestBody) credentials: {installSecret: string},
+  ): Promise<{message: string}> {
+
+    try {
+
+      // Create super admin user
+
+      // Encrypt the password
+      const passwordC = await this.passwordHasher.hashPassword(
+        process.env.SUPER_ADMIN_PASSWORD ?? 'YoYo231Hia',
+      );
+      const savedUser = await this.userRepository.create({
+        name: process.env.SUPER_ADMIN_NAME,
+        email: process.env.SUPER_ADMIN_EMAIL,
+        role: 'super-admin',
+      });
+
+      // Set the password
+      await this.userRepository
+        .userCredentials(savedUser.id)
+        .create({password: passwordC});
+
+
+    } catch (errorP: unknown) {
+
+      const error = errorP as {code: number, errmsg: string};
+      // MongoError 11000 duplicate key
+      const mongoDuplicateKey = 11000;
+      if (error.code === mongoDuplicateKey && error.errmsg.includes('index: uniqueEmail')) {
+
+        throw new HttpErrors.Conflict('Email value is already taken');
+
+      } else {
+
+        throw error;
+
+      }
+
+    }
+    const message = 'I am ready';
+    return {message};
 
   }
 

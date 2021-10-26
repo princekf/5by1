@@ -16,7 +16,8 @@ import {
   AuthenticationBindings,
   USER_PROFILE_NOT_FOUND,
 } from '@loopback/authentication';
-
+import { LOGIN_API, INSTALL_API} from '@shared/server-apis';
+import { BindingKeys } from './binding.keys';
 const {SequenceActions} = RestBindings;
 export class FBOSequence implements SequenceHandler {
 
@@ -39,6 +40,35 @@ export class FBOSequence implements SequenceHandler {
   ) {
   }
 
+  private findDBNamaeOfCommonRequests =
+  (routePath: string, context: RequestContext, params: Array<{company: string}>) => {
+
+    switch (routePath) {
+
+    case INSTALL_API:
+      if (process.env.COMMON_DB) {
+
+        context.bind(BindingKeys.SESSION_DB_NAME).to(process.env.COMMON_DB);
+
+      }
+      break;
+    case LOGIN_API:
+      const [ uDetails ] = params;
+      if (!uDetails.company) {
+
+        const err = new Error('Parameter company is missing');
+        Object.assign(err, {statusCode: 401 });
+        this.reject(context, err);
+        return;
+
+      }
+      context.bind(BindingKeys.SESSION_DB_NAME).to(<string>uDetails.company.toLowerCase());
+      break;
+
+    }
+
+  };
+
   public handle = async(context: RequestContext):Promise<void> => {
 
     try {
@@ -52,8 +82,14 @@ export class FBOSequence implements SequenceHandler {
       }
       const route = this.findRoute(request);
       // Call authentication action
-      await this.authenticateRequest(request);
+      const uProfile = await this.authenticateRequest(request);
       const args = await this.parseParams(request, route);
+      this.findDBNamaeOfCommonRequests(route.path, context, args);
+      if (uProfile && uProfile.company) {
+
+        context.bind(BindingKeys.SESSION_DB_NAME).to(<string>uProfile.company.toLowerCase());
+
+      }
       const result = await this.invoke(route, args);
       this.send(response, result);
 

@@ -2,10 +2,10 @@ import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
 
 const config = {
-  name: 'fbomongo',
+  name: 'FBOCommonMongo',
   connector: 'mongodb',
-  url: process.env.MONGODB_URI,
-  database: 'fboerp2',
+  url: `${process.env.MONGODB_URI}/${process.env.COMMON_DB}`,
+  database: process.env.COMMON_DB,
   useNewUrlParser: true
 };
 
@@ -16,15 +16,15 @@ const config = {
  * Learn more at https://loopback.io/doc/en/lb4/Life-cycle.html
  */
 @lifeCycleObserver('datasource')
-export class FbomongoDataSource extends juggler.DataSource
+export class FboCommonMongoDataSource extends juggler.DataSource
   implements LifeCycleObserver {
 
-  static dataSourceName = config.name;
+  static dataSourceName = 'FBOCommonMongo';
 
   static readonly defaultConfig = config;
 
   constructor(
-    @inject('datasources.config.fbomongo', {optional: true})
+    @inject('datasources.config.FBOCommonMongo', {optional: true})
     dsConfig: Record<string, unknown> = config,
   ) {
 

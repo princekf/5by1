@@ -1,8 +1,8 @@
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { ACCESS_TOKEN_ID } from '@shared/Constants';
 import { Injectable } from '@angular/core';
 import { UserService } from '@fboservices/user.service';
+import { LOCAL_USER_KEY } from '@fboutil/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +30,7 @@ export class AppAuthGuard implements CanActivate {
     try {
 
       const user = await this.userService.findMe().toPromise();
+      localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(user));
       if (user && user.id) {
 
         return true;
