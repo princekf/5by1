@@ -1,5 +1,5 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response} from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors} from '@loopback/rest';
 import {CostCentre} from '../models/cost-centre.model';
 import {CostCentreRepository} from '../repositories/cost-centre.repository';
 import { COST_CENTRE_API} from '@shared/server-apis';
@@ -161,5 +161,32 @@ export class CostCentreController {
     await this.costCentreRepository.deleteById(id);
 
   }
+
+  @del(COST_CENTRE_API)
+  @response(204, {
+    description: 'CostCentre DELETE success count',
+    content: {'application/json': {schema: CountSchema}},
+  })
+  async deleteAll(
+    @param.where(CostCentre) where?: Where<CostCentre>,
+  ): Promise<Count> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : CostCentre ids are required');
+
+    }
+    const whereC = where as {id: {inq: Array<string>}};
+    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : CostCentre ids are required');
+
+    }
+
+    const count = await this.costCentreRepository.deleteAll(where);
+    return count;
+
+  }
+
 
 }

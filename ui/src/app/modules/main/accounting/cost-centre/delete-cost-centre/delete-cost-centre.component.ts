@@ -1,30 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { CompanyService } from '@fboservices/auth/company.service';
-import { MainService } from '@fboservices/main.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue, goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { QueryData } from '@shared/util/query-data';
-import { Company } from '@shared/entity/auth/company';
+
+import { CostCentre } from '@shared/entity/accounting/cost-centre';
+import { CostCentreService } from '@fboservices/accounting/cost-centre.service';
+import { MainService } from '@fboservices/main.service';
 
 @Component({
-  selector: 'app-delete-company',
-  templateUrl: './delete-company.component.html',
-  styleUrls: [ './delete-company.component.scss', '../../../../../util/styles/fbo-table-style.scss' ],
+  selector: 'app-delete-cost-centre',
+  templateUrl: './delete-cost-centre.component.html',
+  styleUrls: [ './delete-cost-centre.component.scss', '../../../../../util/styles/fbo-table-style.scss' ],
   animations: fboTableRowExpandAnimation,
 })
-export class DeleteCompanyComponent implements OnInit {
+export class DeleteCostCentreComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'name', 'code', 'email', 'address', 'password' ];
+  displayedColumns: string[] = [ 'name', 'details' ];
 
 
   columnHeaders = {
     name: 'Name',
-    code: 'code',
-    email: 'Email',
-    address: 'Address',
-    password: 'Password',
+
+    details: 'Details',
 
   }
 
@@ -34,14 +33,15 @@ export class DeleteCompanyComponent implements OnInit {
 
   extraColumns: Array<string>;
 
-  dataSource = new MatTableDataSource<Company>([]);
+  dataSource = new MatTableDataSource<CostCentre>([]);
 
   findColumnValue = _findColumnValue;
+
 
   constructor(
     public readonly router: Router,
     public readonly route: ActivatedRoute,
-    private readonly companyService: CompanyService,
+    private readonly costCentreService: CostCentreService,
     private readonly mainService: MainService,
     private readonly toastr: ToastrService
   ) { }
@@ -57,9 +57,9 @@ export class DeleteCompanyComponent implements OnInit {
         }
       }
     };
-    this.companyService.search(queryData).subscribe((company) => {
+    this.costCentreService.search(queryData).subscribe((costCentre) => {
 
-      this.dataSource.data = company;
+      this.dataSource.data = costCentre;
       this.loading = false;
 
     });
@@ -78,25 +78,26 @@ export class DeleteCompanyComponent implements OnInit {
 
   }
 
-  deleteCompanys(): void {
+  deleteCostCentres(): void {
 
     this.loading = true;
-    const companies = this.dataSource.data;
+    const CostCentres = this.dataSource.data;
     const tIds = [];
-    companies.forEach((companyP) => tIds.push(companyP.id));
+    CostCentres.forEach((CostCentreP) => tIds.push(CostCentreP.id));
     const where = {id: {
       inq: tIds
     }};
-    this.companyService['delete'](where).subscribe((count) => {
+
+    this.costCentreService['delete'](where).subscribe((count) => {
 
       this.loading = false;
-      this.toastr.success(`${count.count} Companys are deleted successfully`, 'Companys deleted');
+      this.toastr.success(`${count.count} CostCentres are deleted successfully`, 'CostCentres deleted');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error('Error in deleting Companys', 'Company not deleted');
+      this.toastr.error('Error in deleting CostCentres', 'CostCentre not deleted');
       console.error(error);
 
     });

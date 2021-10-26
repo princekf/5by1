@@ -97,10 +97,13 @@ const routes: Routes = [
         loadChildren: () => import('./accounting/ledger/ledger.module').then((mod) => mod.LedgerModule)
       },
       {
+        path: 'cost-centre',
+        loadChildren: () => import('./accounting/cost-centre/cost-centre.module').then((mod) => mod.CostCentreModule)
+      },
+      {
         path: 'voucher',
         loadChildren: () => import('./accounting/voucher/voucher.module').then((mod) => mod.VoucherModule)
       },
-
 
     ]
   },
