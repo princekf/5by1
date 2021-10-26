@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { User } from '@shared/entity/auth/user';
-import { SIGNUP_API, LOGIN_API, ME_API } from '@shared/server-apis';
+import { SIGNUP_API, LOGIN_API, ME_API, USER_API_URI } from '@shared/server-apis';
 import { catchError, shareReplay } from 'rxjs/operators';
 import { AuthResponse } from '@shared/util/auth-resp';
+import { BaseHTTPService } from './base-http.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class UserService extends BaseHTTPService<User> {
 
-  constructor(
-    private readonly http: HttpClient
-  ) { }
+  public API_URI = USER_API_URI;
 
   signUp(user: User): Observable<User> {
 
@@ -41,6 +39,19 @@ export class UserService {
       .pipe(
         catchError((err) => throwError(() => err))
       );
+
+  }
+
+  public upsert(user:User):Observable<void> {
+
+    const {id, ...user2} = user;
+    if (id) {
+
+      return super.update({id,
+        ...user2});
+
+    }
+    return super.save(user2);
 
   }
 
