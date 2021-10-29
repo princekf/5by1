@@ -4,14 +4,12 @@ import {CostCentre} from '../models/cost-centre.model';
 import {CostCentreRepository} from '../repositories/cost-centre.repository';
 import { COST_CENTRE_API} from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class CostCentreController {
 
   constructor(
@@ -24,6 +22,8 @@ export class CostCentreController {
     description: 'CostCentre model instance',
     content: {'application/json': {schema: getModelSchemaRef(CostCentre)}},
   })
+  @authorize({resource: resourcePermissions.costcentreCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -48,6 +48,8 @@ export class CostCentreController {
     description: 'CostCentre model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.costcentreView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(CostCentre) where?: Where<CostCentre>,
   ): Promise<Count> {
@@ -69,6 +71,8 @@ export class CostCentreController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.costcentreView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(CostCentre) filter?: Filter<CostCentre>,
   ): Promise<CostCentre[]> {
@@ -83,6 +87,8 @@ export class CostCentreController {
     description: 'CostCentre PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.costcentreUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -109,6 +115,8 @@ export class CostCentreController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.costcentreView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(CostCentre, {exclude: 'where'}) filter?: FilterExcludingWhere<CostCentre>
@@ -123,6 +131,8 @@ export class CostCentreController {
   @response(204, {
     description: 'CostCentre PATCH success',
   })
+  @authorize({resource: resourcePermissions.costcentreUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -143,6 +153,8 @@ export class CostCentreController {
   @response(204, {
     description: 'CostCentre PUT success',
   })
+  @authorize({resource: resourcePermissions.costcentreUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() costCentre: CostCentre,
@@ -156,6 +168,8 @@ export class CostCentreController {
   @response(204, {
     description: 'CostCentre DELETE success',
   })
+  @authorize({resource: resourcePermissions.costcentreDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.costCentreRepository.deleteById(id);
@@ -167,6 +181,8 @@ export class CostCentreController {
     description: 'CostCentre DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.costcentreDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(CostCentre) where?: Where<CostCentre>,
   ): Promise<Count> {
@@ -187,6 +203,5 @@ export class CostCentreController {
     return count;
 
   }
-
 
 }

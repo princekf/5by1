@@ -3,15 +3,14 @@ import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, resp
 import {Revenue} from '../models/revenue.model';
 import {RevenueRepository} from '../repositories/revenue.repository';
 import { REVENUE_API } from '@shared/server-apis';
+
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class RevenueController {
 
   constructor(
@@ -24,6 +23,8 @@ export class RevenueController {
     description: 'Revenue model instance',
     content: {'application/json': {schema: getModelSchemaRef(Revenue)}},
   })
+  @authorize({resource: resourcePermissions.revenueCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -48,6 +49,8 @@ export class RevenueController {
     description: 'Revenue model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.revenueView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Revenue) where?: Where<Revenue>,
   ): Promise<Count> {
@@ -69,6 +72,8 @@ export class RevenueController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.revenueView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Revenue) filter?: Filter<Revenue>,
   ): Promise<Revenue[]> {
@@ -83,6 +88,8 @@ export class RevenueController {
     description: 'Revenue PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.revenueUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -109,6 +116,8 @@ export class RevenueController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.revenueView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Revenue, {exclude: 'where'}) filter?: FilterExcludingWhere<Revenue>
@@ -123,6 +132,8 @@ export class RevenueController {
   @response(204, {
     description: 'Revenue PATCH success',
   })
+  @authorize({resource: resourcePermissions.revenueUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -143,6 +154,8 @@ export class RevenueController {
   @response(204, {
     description: 'Revenue PUT success',
   })
+  @authorize({resource: resourcePermissions.revenueUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() revenue: Revenue,
@@ -156,6 +169,8 @@ export class RevenueController {
   @response(204, {
     description: 'Revenue DELETE success',
   })
+  @authorize({resource: resourcePermissions.revenueDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.revenueRepository.deleteById(id);
@@ -167,6 +182,8 @@ export class RevenueController {
     description: 'Revenues DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.revenueDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Revenue) where?: Where<Revenue>,
   ): Promise<Count> {

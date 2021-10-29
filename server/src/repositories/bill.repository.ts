@@ -1,7 +1,8 @@
 import {inject, Getter} from '@loopback/core';
 import {DefaultCrudRepository, repository, BelongsToAccessor, HasManyRepositoryFactory} from '@loopback/repository';
-import {FbomongoDataSource} from '../datasources';
+import { BindingKeys } from '../binding.keys';
 import {Bill, BillRelations, Vendor, PurchaseItem} from '../models';
+import { dsSessionFactory } from '../services/data-source-session-factory';
 import {VendorRepository} from './vendor.repository';
 
 export class BillRepository extends DefaultCrudRepository<
@@ -15,11 +16,11 @@ export class BillRepository extends DefaultCrudRepository<
   public readonly purchaseItems: HasManyRepositoryFactory<PurchaseItem, typeof Bill.prototype.id>;
 
   constructor(
-    @inject('datasources.fbomongo') dataSource: FbomongoDataSource,
     @repository.getter('VendorRepository') protected vendorRepositoryGetter: Getter<VendorRepository>,
+    @inject(BindingKeys.SESSION_DB_NAME) dbName: string
   ) {
 
-    super(Bill, dataSource);
+    super(Bill, dsSessionFactory.createRunTimeDataSource(dbName));
     this.vendor = this.createBelongsToAccessorFor('vendor', vendorRepositoryGetter,);
     this.registerInclusionResolver('vendor', this.vendor.inclusionResolver);
 

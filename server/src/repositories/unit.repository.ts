@@ -1,7 +1,8 @@
 import {inject, Getter} from '@loopback/core';
 import {DefaultCrudRepository, repository, BelongsToAccessor} from '@loopback/repository';
-import {FbomongoDataSource} from '../datasources';
+import { BindingKeys } from '../binding.keys';
 import {Unit, UnitRelations} from '../models';
+import { dsSessionFactory } from '../services/data-source-session-factory';
 
 export class UnitRepository extends DefaultCrudRepository<
   Unit,
@@ -12,12 +13,12 @@ export class UnitRepository extends DefaultCrudRepository<
   public readonly parent: BelongsToAccessor<Unit, typeof Unit.prototype.id>;
 
   constructor(
-    @inject('datasources.fbomongo') dataSource: FbomongoDataSource,
     @repository.getter('UnitRepository')
     protected unitRepositoryGetter: Getter<UnitRepository>,
+    @inject(BindingKeys.SESSION_DB_NAME) dbName: string
   ) {
 
-    super(Unit, dataSource);
+    super(Unit, dsSessionFactory.createRunTimeDataSource(dbName));
     this.parent = this.createBelongsToAccessorFor('parent', Getter.fromValue(this),);
     this.registerInclusionResolver('parent', this.parent.inclusionResolver);
 

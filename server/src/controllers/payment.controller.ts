@@ -4,14 +4,12 @@ import {Payment} from '../models';
 import {PaymentRepository} from '../repositories/payment.repository';
 import { PAYMENT_API } from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class PaymentController {
 
   constructor(
@@ -24,6 +22,8 @@ export class PaymentController {
     description: 'Payment model instance',
     content: {'application/json': {schema: getModelSchemaRef(Payment)}},
   })
+  @authorize({resource: resourcePermissions.paymentCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -48,6 +48,8 @@ export class PaymentController {
     description: 'Payment model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.paymentView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Payment) where?: Where<Payment>,
   ): Promise<Count> {
@@ -69,6 +71,8 @@ export class PaymentController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.paymentView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Payment) filter?: Filter<Payment>,
   ): Promise<Payment[]> {
@@ -83,6 +87,8 @@ export class PaymentController {
     description: 'Payment PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.paymentUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -109,6 +115,8 @@ export class PaymentController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.paymentView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Payment, {exclude: 'where'}) filter?: FilterExcludingWhere<Payment>
@@ -123,6 +131,8 @@ export class PaymentController {
   @response(204, {
     description: 'Payment PATCH success',
   })
+  @authorize({resource: resourcePermissions.paymentUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -143,6 +153,8 @@ export class PaymentController {
   @response(204, {
     description: 'Payment PUT success',
   })
+  @authorize({resource: resourcePermissions.paymentUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() payment: Payment,
@@ -156,6 +168,8 @@ export class PaymentController {
   @response(204, {
     description: 'Payment DELETE success',
   })
+  @authorize({resource: resourcePermissions.paymentDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.paymentRepository.deleteById(id);
@@ -167,6 +181,8 @@ export class PaymentController {
     description: 'Payments DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.paymentDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Payment) where?: Where<Payment>,
   ): Promise<Count> {

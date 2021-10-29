@@ -3,7 +3,13 @@ import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, resp
 import {Invoice} from '../models';
 import {InvoiceRepository} from '../repositories';
 import { INVOICE_API } from '@shared/server-apis';
+import { authenticate } from '@loopback/authentication';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
+@authenticate('jwt')
+@authorize(adminAndUserAuthDetails)
 export class InvoiceController {
 
   constructor(
@@ -16,6 +22,8 @@ export class InvoiceController {
     description: 'Invoice model instance',
     content: {'application/json': {schema: getModelSchemaRef(Invoice)}},
   })
+  @authorize({resource: resourcePermissions.invoiceCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -40,6 +48,8 @@ export class InvoiceController {
     description: 'Invoice model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.invoiceView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Invoice) where?: Where<Invoice>,
   ): Promise<Count> {
@@ -61,6 +71,8 @@ export class InvoiceController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.invoiceView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Invoice) filter?: Filter<Invoice>,
   ): Promise<Invoice[]> {
@@ -75,6 +87,8 @@ export class InvoiceController {
     description: 'Invoice PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.invoiceUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -101,6 +115,8 @@ export class InvoiceController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.invoiceView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Invoice, {exclude: 'where'}) filter?: FilterExcludingWhere<Invoice>
@@ -115,6 +131,8 @@ export class InvoiceController {
   @response(204, {
     description: 'Invoice PATCH success',
   })
+  @authorize({resource: resourcePermissions.invoiceUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -135,6 +153,8 @@ export class InvoiceController {
   @response(204, {
     description: 'Invoice PUT success',
   })
+  @authorize({resource: resourcePermissions.invoiceUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() invoice: Invoice,
@@ -148,6 +168,8 @@ export class InvoiceController {
   @response(204, {
     description: 'Invoice DELETE success',
   })
+  @authorize({resource: resourcePermissions.invoiceDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.invoiceRepository.deleteById(id);
@@ -159,6 +181,8 @@ export class InvoiceController {
     description: 'Invoices DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.invoiceDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Invoice) where?: Where<Invoice>,
   ): Promise<Count> {

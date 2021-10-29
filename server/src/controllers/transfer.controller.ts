@@ -1,36 +1,16 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
-  HttpErrors,
-} from '@loopback/rest';
+import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where} from '@loopback/repository';
+import {post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors} from '@loopback/rest';
 import {Transfer} from '../models';
 import {TransferRepository} from '../repositories';
 import {TRANSFER_API} from '@shared/server-apis';
 
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class TransferController {
 
   constructor(
@@ -43,6 +23,8 @@ export class TransferController {
     description: 'Transfer model instance',
     content: {'application/json': {schema: getModelSchemaRef(Transfer)}},
   })
+  @authorize({resource: resourcePermissions.transferCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -67,6 +49,8 @@ export class TransferController {
     description: 'Transfer model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.transferView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Transfer) where?: Where<Transfer>,
   ): Promise<Count> {
@@ -88,6 +72,8 @@ export class TransferController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.transferView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Transfer) filter?: Filter<Transfer>,
   ): Promise<Transfer[]> {
@@ -102,6 +88,8 @@ export class TransferController {
     description: 'Transfer PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.transferUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -128,6 +116,8 @@ export class TransferController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.transferView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Transfer, {exclude: 'where'}) filter?: FilterExcludingWhere<Transfer>
@@ -142,6 +132,8 @@ export class TransferController {
   @response(204, {
     description: 'Transfer PATCH success',
   })
+  @authorize({resource: resourcePermissions.transferUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -162,6 +154,8 @@ export class TransferController {
   @response(204, {
     description: 'Transfer PUT success',
   })
+  @authorize({resource: resourcePermissions.transferUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() transfer: Transfer,
@@ -175,6 +169,8 @@ export class TransferController {
   @response(204, {
     description: 'Transfer DELETE success',
   })
+  @authorize({resource: resourcePermissions.transferDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.transferRepository.deleteById(id);
@@ -186,6 +182,8 @@ export class TransferController {
     description: 'Transfers DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.transferDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Transfer) where?: Where<Transfer>,
   ): Promise<Count> {

@@ -1,7 +1,8 @@
 import {inject} from '@loopback/core';
 import { FBOBaseRepository } from '.';
-import {FbomongoDataSource} from '../datasources';
+import { BindingKeys } from '../binding.keys';
 import {Customer, CustomerRelations} from '../models';
+import { dsSessionFactory } from '../services/data-source-session-factory';
 
 export class CustomerRepository extends FBOBaseRepository<
   Customer,
@@ -10,10 +11,10 @@ export class CustomerRepository extends FBOBaseRepository<
 > {
 
   constructor(
-    @inject('datasources.fbomongo') dataSource: FbomongoDataSource,
+    @inject(BindingKeys.SESSION_DB_NAME) dbName: string
   ) {
 
-    super(Customer, dataSource);
+    super(Customer, dsSessionFactory.createRunTimeDataSource(dbName));
 
   }
 

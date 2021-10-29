@@ -3,7 +3,13 @@ import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, resp
 import {Branch} from '../models/branch.model';
 import {BranchRepository} from '../repositories/branch.repository';
 import { BRANCH_API } from '@shared/server-apis';
+import { authenticate } from '@loopback/authentication';
+import { authorize, } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminOnlyAuthDetails } from '../utils/autherize-details';
 
+@authenticate('jwt')
+@authorize(adminOnlyAuthDetails)
 export class BranchController {
 
   constructor(
@@ -16,6 +22,8 @@ export class BranchController {
     description: 'Branch model instance',
     content: {'application/json': {schema: getModelSchemaRef(Branch)}},
   })
+  @authorize({resource: resourcePermissions.branchCreate.name,
+    ...adminOnlyAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -40,6 +48,8 @@ export class BranchController {
     description: 'Branch model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.branchView.name,
+    ...adminOnlyAuthDetails})
   async count(
     @param.where(Branch) where?: Where<Branch>,
   ): Promise<Count> {
@@ -61,6 +71,8 @@ export class BranchController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.branchView.name,
+    ...adminOnlyAuthDetails})
   async find(
     @param.filter(Branch) filter?: Filter<Branch>,
   ): Promise<Branch[]> {
@@ -75,6 +87,8 @@ export class BranchController {
     description: 'Branch PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.branchUpdate.name,
+    ...adminOnlyAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -101,6 +115,8 @@ export class BranchController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.branchView.name,
+    ...adminOnlyAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Branch, {exclude: 'where'}) filter?: FilterExcludingWhere<Branch>
@@ -115,6 +131,8 @@ export class BranchController {
   @response(204, {
     description: 'Branch PATCH success',
   })
+  @authorize({resource: resourcePermissions.branchUpdate.name,
+    ...adminOnlyAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -135,6 +153,8 @@ export class BranchController {
   @response(204, {
     description: 'Branch PUT success',
   })
+  @authorize({resource: resourcePermissions.branchUpdate.name,
+    ...adminOnlyAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() branch: Branch,
@@ -148,6 +168,8 @@ export class BranchController {
   @response(204, {
     description: 'Branch DELETE success',
   })
+  @authorize({resource: resourcePermissions.branchDelete.name,
+    ...adminOnlyAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.branchRepository.deleteById(id);
@@ -160,6 +182,8 @@ export class BranchController {
     description: 'Branchs DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.branchDelete.name,
+    ...adminOnlyAuthDetails})
   async deleteAll(
     @param.where(Branch) where?: Where<Branch>,
   ): Promise<Count> {
@@ -180,6 +204,5 @@ export class BranchController {
     return count;
 
   }
-
 
 }

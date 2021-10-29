@@ -25,6 +25,13 @@ const stockSummarySchema = {
   }
 };
 
+import { authenticate } from '@loopback/authentication';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
+
+@authenticate('jwt')
+@authorize(adminAndUserAuthDetails)
 export class StockController {
 
   constructor(@repository(BillRepository)
@@ -39,6 +46,8 @@ export class StockController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.stockView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
   ): Promise<Array<StockSummary>> {

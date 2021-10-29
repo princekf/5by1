@@ -5,14 +5,12 @@ import {CategoryRepository, UnitRepository} from '../repositories';
 import { CATEGORY_API } from '@shared/server-apis';
 
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class CategoryController {
 
   constructor(
@@ -27,6 +25,8 @@ export class CategoryController {
     description: 'Category model instance',
     content: {'application/json': {schema: getModelSchemaRef(Category)}},
   })
+  @authorize({resource: resourcePermissions.categoryCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -51,6 +51,8 @@ export class CategoryController {
     description: 'Category model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.categoryView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Category) where?: Where<Category>,
   ): Promise<Count> {
@@ -72,6 +74,8 @@ export class CategoryController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.categoryView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Category) filter?: Filter<Category>,
   ): Promise<Category[]> {
@@ -86,6 +90,8 @@ export class CategoryController {
     description: 'Category PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.categoryUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -112,6 +118,8 @@ export class CategoryController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.categoryView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Category, {exclude: 'where'}) filter?: FilterExcludingWhere<Category>
@@ -126,6 +134,8 @@ export class CategoryController {
   @response(204, {
     description: 'Category PATCH success',
   })
+  @authorize({resource: resourcePermissions.categoryUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -146,6 +156,8 @@ export class CategoryController {
   @response(204, {
     description: 'Category PUT success',
   })
+  @authorize({resource: resourcePermissions.categoryUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() category: Category,
@@ -159,6 +171,8 @@ export class CategoryController {
   @response(204, {
     description: 'Category DELETE success',
   })
+  @authorize({resource: resourcePermissions.categoryDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.categoryRepository.deleteById(id);
@@ -171,6 +185,8 @@ export class CategoryController {
     description: 'Category DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.categoryDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Category) where?: Where<Category>,
   ): Promise<Count> {

@@ -1,25 +1,22 @@
 import { authenticate, TokenService, UserService } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
+import { authorize } from '@loopback/authorization';
 import { inject, intercept } from '@loopback/context';
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where } from '@loopback/repository';
 import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, RequestContext } from '@loopback/rest';
-import { ValidateUserForUniqueEMailInterceptor } from '../../interceptors';
-import { BindingKeys } from '../../binding.keys';
-import { basicAuthorization } from '../../middlewares/auth.midd';
-import {NewUserRequest, User} from '../../models';
-import { Credentials, UserRepository} from '../../repositories';
-import { PasswordHasher } from '../../services';
-import { AuthResponseSchema, CredentialsRequestBody, InstallRequestBody, InstallResponseSchema, UserProfileSchema } from '../specs/user-controller.specs';
+import { ValidateUserForUniqueEMailInterceptor } from '../interceptors';
+import { BindingKeys } from '../binding.keys';
+import {NewUserRequest, User} from '../models';
+import { Credentials, UserRepository} from '../repositories';
+import { PasswordHasher } from '../services';
+import { AuthResponseSchema, CredentialsRequestBody, InstallRequestBody, InstallResponseSchema, UserProfileSchema } from './specs/user-controller.specs';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import { USER_API } from '@shared/server-apis';
-import { resourcePermissions } from '../../utils/resource-permissions';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { allRoleAuthDetails } from '../utils/autherize-details';
 
-const authDetails = {
-  allowedRoles: [ 'admin', 'user', 'super-admin' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-};
+
 @authenticate('jwt')
-@authorize(authDetails)
+@authorize(allRoleAuthDetails)
 export class UserController {
 
   constructor(
@@ -35,42 +32,9 @@ export class UserController {
     public context: RequestContext,
   ) {}
 
-  @authenticate.skip()
-  @authorize.skip()
-  @intercept(ValidateUserForUniqueEMailInterceptor.BINDING_KEY)
-  @post(`${USER_API}/signup`, {
-    responses: {
-      '200': {
-        description: 'User',
-        content: {
-          'application/json': {
-            schema: {
-              'x-ts-type': User,
-            },
-          },
-        },
-      },
-    },
-  })
-  async signUp(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(NewUserRequest, { title: 'NewUser',
-            exclude: [ 'id', 'role' ] }),
-        },
-      },
-    })
-      newUserRequest: Credentials,
-  ): Promise<User> {
-
-    newUserRequest.role = 'user';
-
+  private saveUserWithCredentials = async(userT: Partial<User>, password: string):Promise<User> => {
 
     try {
-
-      // Create the new user
-      const {password, ...userT} = newUserRequest;
 
       // Encrypt the password
       const passwordC = await this.passwordHasher.hashPassword(
@@ -101,6 +65,70 @@ export class UserController {
       }
 
     }
+
+  }
+
+  @intercept(ValidateUserForUniqueEMailInterceptor.BINDING_KEY)
+  @post(USER_API)
+  @response(200, {
+    description: 'User model instance',
+    content: {'application/json': {schema: getModelSchemaRef(User)}},
+  })
+  @authorize({resource: resourcePermissions.userCreate.name,
+    ...allRoleAuthDetails})
+  async create(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(NewUserRequest, {
+            title: 'NewUser',
+            exclude: [ 'id' ],
+          }),
+        },
+      },
+    })
+      userR: Omit<NewUserRequest, 'id'>,
+  ): Promise<User> {
+
+    const {password, ...user} = userR;
+    user.role = 'user';
+    const userRet = await this.saveUserWithCredentials(user, password);
+    return userRet;
+
+  }
+
+  @intercept(ValidateUserForUniqueEMailInterceptor.BINDING_KEY)
+  @post(`${USER_API}/signup`, {
+    responses: {
+      '200': {
+        description: 'User',
+        content: {
+          'application/json': {
+            schema: {
+              'x-ts-type': User,
+            },
+          },
+        },
+      },
+    },
+  })
+  async signUp(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(User, { title: 'Sign-Up User',
+            exclude: [ 'id', 'role' ] }),
+        },
+      },
+    })
+      newUserRequest: Credentials,
+  ): Promise<User> {
+
+    newUserRequest.role = 'user';
+    // Create the new user
+    const {password, ...userT} = newUserRequest;
+    const userR = await this.saveUserWithCredentials(userT, password);
+    return userR;
 
   }
 
@@ -202,7 +230,7 @@ export class UserController {
     },
   })
   @authorize({resource: resourcePermissions.commonResources.name,
-    ...authDetails})
+    ...allRoleAuthDetails})
   async printCurrentUser(
     @inject(SecurityBindings.USER)
       currentUserProfile: UserProfile,
@@ -214,38 +242,13 @@ export class UserController {
 
   }
 
-  @post(USER_API)
-  @response(200, {
-    description: 'User model instance',
-    content: {'application/json': {schema: getModelSchemaRef(User)}},
-  })
-  @authorize({resource: resourcePermissions.userCreate.name,
-    ...authDetails})
-  async create(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(User, {
-            title: 'NewUser',
-            exclude: [ 'id' ],
-          }),
-        },
-      },
-    })
-      user: Omit<User, 'id'>,
-  ): Promise<User> {
-
-    user.role = 'user';
-    const userRet = await this.userRepository.create(user);
-    return userRet;
-
-  }
-
   @get(`${USER_API}/count`)
   @response(200, {
     description: 'User model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.userView.name,
+    ...allRoleAuthDetails})
   async count(
     @param.where(User) where?: Where<User>,
   ): Promise<Count> {
@@ -267,6 +270,8 @@ export class UserController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.userView.name,
+    ...allRoleAuthDetails})
   async find(
     @param.filter(User) filter?: Filter<User>,
   ): Promise<User[]> {
@@ -281,6 +286,8 @@ export class UserController {
     description: 'User PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.userUpdate.name,
+    ...allRoleAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -307,6 +314,8 @@ export class UserController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.userView.name,
+    ...allRoleAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
@@ -321,6 +330,8 @@ export class UserController {
   @response(204, {
     description: 'User PATCH success',
   })
+  @authorize({resource: resourcePermissions.userUpdate.name,
+    ...allRoleAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -341,6 +352,8 @@ export class UserController {
   @response(204, {
     description: 'User PUT success',
   })
+  @authorize({resource: resourcePermissions.userUpdate.name,
+    ...allRoleAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() user: User,
@@ -354,6 +367,8 @@ export class UserController {
   @response(204, {
     description: 'User DELETE success',
   })
+  @authorize({resource: resourcePermissions.userDelete.name,
+    ...allRoleAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.userRepository.deleteById(id);
@@ -366,6 +381,8 @@ export class UserController {
     description: 'Users DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.userDelete.name,
+    ...allRoleAuthDetails})
   async deleteAll(
     @param.where(User) where?: Where<User>,
   ): Promise<Count> {

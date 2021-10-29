@@ -4,6 +4,13 @@ import {Voucher} from '../models/voucher.model';
 import {VoucherRepository} from '../repositories/voucher.repository';
 import { VOUCHER_API } from '@shared/server-apis';
 
+import { authenticate } from '@loopback/authentication';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
+
+@authenticate('jwt')
+@authorize(adminAndUserAuthDetails)
 export class VoucherController {
 
   constructor(
@@ -16,6 +23,8 @@ export class VoucherController {
     description: 'Voucher model instance',
     content: {'application/json': {schema: getModelSchemaRef(Voucher)}},
   })
+  @authorize({resource: resourcePermissions.voucherCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -40,6 +49,8 @@ export class VoucherController {
     description: 'Voucher model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Voucher) where?: Where<Voucher>,
   ): Promise<Count> {
@@ -61,6 +72,8 @@ export class VoucherController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Voucher) filter?: Filter<Voucher>,
   ): Promise<Voucher[]> {
@@ -75,6 +88,8 @@ export class VoucherController {
     description: 'Voucher PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.voucherUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -101,6 +116,8 @@ export class VoucherController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Voucher, {exclude: 'where'}) filter?: FilterExcludingWhere<Voucher>
@@ -115,6 +132,8 @@ export class VoucherController {
   @response(204, {
     description: 'Voucher PATCH success',
   })
+  @authorize({resource: resourcePermissions.voucherUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -135,6 +154,8 @@ export class VoucherController {
   @response(204, {
     description: 'Voucher PUT success',
   })
+  @authorize({resource: resourcePermissions.voucherUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() voucher: Voucher,
@@ -148,6 +169,8 @@ export class VoucherController {
   @response(204, {
     description: 'Voucher DELETE success',
   })
+  @authorize({resource: resourcePermissions.voucherDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.voucherRepository.deleteById(id);
@@ -159,6 +182,8 @@ export class VoucherController {
     description: 'Voucher DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.voucherDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Voucher) where?: Where<Voucher>,
   ): Promise<Count> {

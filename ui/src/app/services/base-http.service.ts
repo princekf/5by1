@@ -63,7 +63,7 @@ export class BaseHTTPService<T> {
   public save(item: T): Observable<void> {
 
     return this.http.post<void>(this.API_URI, item).pipe(
-      catchError((err) => throwError(() => err))
+      catchError((err) => throwError(err))
     );
 
   }
@@ -73,7 +73,7 @@ export class BaseHTTPService<T> {
 
     const cObj = item as unknown as { id: string };
     return this.http.patch<void>(`${this.API_URI}/${cObj.id}`, item).pipe(
-      catchError((err) => throwError(() => err))
+      catchError((err) => throwError(err))
     );
 
   }
@@ -85,7 +85,7 @@ export class BaseHTTPService<T> {
     let params = new HttpParams();
     params = params.set('filter', filterParam);
     return this.http.get<T>(`${this.API_URI}/${objId}`, { params }).pipe(
-      catchError((err) => throwError(() => err))
+      catchError((err) => throwError(err))
     );
 
   }
@@ -96,7 +96,7 @@ export class BaseHTTPService<T> {
     let params = new HttpParams();
     params = params.set('where', filterParam);
     return this.http['delete']<{ count: number }>(this.API_URI, { params }).pipe(
-      catchError((err) => throwError(() => err))
+      catchError((err) => throwError(err))
     );
 
   }

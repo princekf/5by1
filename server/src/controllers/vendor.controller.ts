@@ -7,14 +7,12 @@ import { ArrayReponse } from '../models/util/array-resp.model';
 import { ArrayResponse as ArrayReponseInft } from '@shared/util/array-resp';
 
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class VendorController {
 
   constructor(
@@ -27,6 +25,8 @@ export class VendorController {
     description: 'Vendor model instance',
     content: {'application/json': {schema: getModelSchemaRef(Vendor)}},
   })
+  @authorize({resource: resourcePermissions.vendorCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -51,6 +51,8 @@ export class VendorController {
     description: 'Tax model group names',
     content: {'application/json': {schema: ArrayReponse}},
   })
+  @authorize({resource: resourcePermissions.vendorView.name,
+    ...adminAndUserAuthDetails})
   async distinct(
     @param.path.string('column') column: string,
     @param.filter(Vendor) filter?: Filter<Vendor>,
@@ -66,6 +68,8 @@ export class VendorController {
     description: 'Vendor model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.vendorView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Vendor) where?: Where<Vendor>,
   ): Promise<Count> {
@@ -87,6 +91,8 @@ export class VendorController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.vendorView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Vendor) filter?: Filter<Vendor>,
   ): Promise<Vendor[]> {
@@ -101,6 +107,8 @@ export class VendorController {
     description: 'Vendor PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.vendorUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -127,6 +135,8 @@ export class VendorController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.vendorView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Vendor, {exclude: 'where'}) filter?: FilterExcludingWhere<Vendor>
@@ -141,6 +151,8 @@ export class VendorController {
   @response(204, {
     description: 'Vendor PATCH success',
   })
+  @authorize({resource: resourcePermissions.vendorUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -161,6 +173,8 @@ export class VendorController {
   @response(204, {
     description: 'Vendor PUT success',
   })
+  @authorize({resource: resourcePermissions.vendorUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() vendor: Vendor,
@@ -174,6 +188,8 @@ export class VendorController {
   @response(204, {
     description: 'Vendor DELETE success',
   })
+  @authorize({resource: resourcePermissions.vendorDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.vendorRepository.deleteById(id);
@@ -185,6 +201,8 @@ export class VendorController {
     description: 'Vendors DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.vendorDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Vendor) where?: Where<Vendor>,
   ): Promise<Count> {

@@ -1,9 +1,10 @@
 import {inject, Getter} from '@loopback/core';
 import {DefaultCrudRepository, repository, BelongsToAccessor} from '@loopback/repository';
-import {FbomongoDataSource} from '../datasources';
 import {Invoice, InvoiceRelations} from '../models/invoice.model';
 import {Customer} from '../models';
 import {CustomerRepository} from './customer.repository';
+import { BindingKeys } from '../binding.keys';
+import { dsSessionFactory } from '../services/data-source-session-factory';
 
 export class InvoiceRepository extends DefaultCrudRepository<
   Invoice,
@@ -14,10 +15,11 @@ export class InvoiceRepository extends DefaultCrudRepository<
   public readonly customer: BelongsToAccessor<Customer, typeof Invoice.prototype.id>;
 
   constructor(
-    @inject('datasources.fbomongo') dataSource: FbomongoDataSource, @repository.getter('CustomerRepository') protected customerRepositoryGetter: Getter<CustomerRepository>,
+    @repository.getter('CustomerRepository') protected customerRepositoryGetter: Getter<CustomerRepository>,
+    @inject(BindingKeys.SESSION_DB_NAME) dbName: string
   ) {
 
-    super(Invoice, dataSource);
+    super(Invoice, dsSessionFactory.createRunTimeDataSource(dbName));
     this.customer = this.createBelongsToAccessorFor('customer', customerRepositoryGetter,);
     this.registerInclusionResolver('customer', this.customer.inclusionResolver);
 

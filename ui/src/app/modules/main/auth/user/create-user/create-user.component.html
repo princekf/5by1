@@ -11,87 +11,51 @@
     <mat-error *ngIf="form.controls['name'].hasError('required')">Please Enter Name</mat-error>
   </mat-form-field>
 
-
-
-
   <mat-form-field class='fbo-create-formTwo'>
     <mat-label>E-mail</mat-label>
     <input formControlName="email" matInput placeholder="Enter Name">
     <mat-error *ngIf="form.controls['email'].hasError('required')">Please Enter Email</mat-error>
   </mat-form-field>
 
-
-
-
   <mat-form-field class='fbo-create-formTwo'>
     <mat-label>Password</mat-label>
-    <input formControlName="password" matInput placeholder="Enter Name">
+    <input type="password" formControlName="password" matInput placeholder="Enter Name">
     <mat-error *ngIf="form.controls['password'].hasError('required')">Please Enter Password</mat-error>
   </mat-form-field>
 
-
-
   <mat-form-field class='fbo-create-formTwo'>
     <mat-label>Confirm Password</mat-label>
-    <input formControlName="cPassword" matInput placeholder="Enter Name">
+    <input type="password" formControlName="cPassword" matInput placeholder="Enter Name">
     <mat-error *ngIf="form.controls['cPassword'].hasError('required')">Please Enter confirmation Password</mat-error>
   </mat-form-field>
-
 
   <mat-error *ngIf="error">
     *{{ error }}
   </mat-error>
   <br>
-
-
-  <table [style.display]="loading ? 'none': ''" matSort mat-table [dataSource]="dataSource">
-
-    <ng-container matColumnDef="entity">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"></th>
-      <td mat-cell *matCellDef="let element let i = dataIndex">
-        <span [displayWith]="extractNameOfObject">
-          {{element[1].name}}
-        </span>
-
+  <table [style.display]="loading ? 'none': ''" class="permission-table">
+    <tr>
+      <th></th>
+      <th>View</th>
+      <th>Create</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+    <tr *ngFor="let item of permissions | keyvalue">
+      <td class="title-column">{{item.key}}</td>
+      <td class="perm-column">
+        <mat-checkbox color="primary" [checked]="item.value.operations.view"
+        (change)="item.value.operations.view = $event.checked"></mat-checkbox>
       </td>
-    </ng-container>
-
-    <ng-container matColumnDef="view">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> View </th>
-      <td mat-cell *matCellDef="let element; let i = dataIndex">
-        <mat-checkbox color="primary">
-        </mat-checkbox>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="create">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Create </th>
-      <td mat-cell *matCellDef="let element; let i = dataIndex">
-        <mat-checkbox color="primary">
-        </mat-checkbox>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="edit">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Edit </th>
-      <td mat-cell *matCellDef="let element; let i = dataIndex">
-        <mat-checkbox color="primary">
-        </mat-checkbox>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="deleteP">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Delete </th>
-      <td mat-cell *matCellDef="let element; let i = dataIndex">
-        <mat-checkbox color="primary">
-        </mat-checkbox>
-      </td>
-    </ng-container>
-
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.create"
+        (change)="item.value.operations.create = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.update"
+        (change)="item.value.operations.update = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.delete"
+        (change)="item.value.operations.delete = $event.checked"></mat-checkbox></td>
+    </tr>
   </table>
+  
 
   <p class="form-submit-container">
     <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>

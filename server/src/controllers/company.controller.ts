@@ -4,19 +4,16 @@ import {Company} from '../models/company.model';
 import {CompanyRepository, UserRepository} from '../repositories';
 import { COMPANY_API } from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize } from '@loopback/authorization';
 import { CompanyModelForCreateSchema } from '../models/company.create.model';
 import {Getter, inject} from '@loopback/context';
 import { BindingKeys } from '../binding.keys';
 import { PasswordHasher } from '../services';
 import { permissions } from '@shared/util/permissions';
+import { superAdminAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'super-admin' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(superAdminAuthDetails)
 export class CompanyController {
 
   constructor(

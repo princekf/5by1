@@ -1,27 +1,17 @@
-import {
-  repository,
-} from '@loopback/repository';
-import {
-  param,
-  get,
-  getModelSchemaRef,
-} from '@loopback/rest';
-import {
-  Product,
-  Category,
-} from '../models';
+import {repository} from '@loopback/repository';
+import {param, get, getModelSchemaRef} from '@loopback/rest';
+import {Product, Category} from '../models';
 import {ProductRepository} from '../repositories';
 
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class ProductCategoryController {
+
   constructor(
     @repository(ProductRepository)
     public productRepository: ProductRepository,
@@ -33,15 +23,22 @@ export class ProductCategoryController {
         description: 'Category belonging to Product',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(Category)},
+            schema: {type: 'array',
+              items: getModelSchemaRef(Category)},
           },
         },
       },
     },
   })
+  @authorize({resource: resourcePermissions.productView.name,
+    ...adminAndUserAuthDetails})
   async getCategory(
     @param.path.string('id') id: typeof Product.prototype.id,
   ): Promise<Category> {
-    return this.productRepository.category(id);
+
+    const categoryR = await this.productRepository.category(id);
+    return categoryR;
+
   }
+
 }

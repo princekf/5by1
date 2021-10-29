@@ -1,7 +1,8 @@
 import {inject, Getter} from '@loopback/core';
 import {DefaultCrudRepository, repository, BelongsToAccessor} from '@loopback/repository';
-import {FbomongoDataSource} from '../datasources';
+import { BindingKeys } from '../binding.keys';
 import {Branch, BranchRelations, FinYear} from '../models';
+import { dsSessionFactory } from '../services/data-source-session-factory';
 import {FinYearRepository} from './fin-year.repository';
 
 export class BranchRepository extends DefaultCrudRepository<
@@ -13,10 +14,14 @@ export class BranchRepository extends DefaultCrudRepository<
   public readonly defaultFinYear: BelongsToAccessor<FinYear, typeof Branch.prototype.id>;
 
   constructor(
-    @inject('datasources.fbomongo') dataSource: FbomongoDataSource, @repository.getter('FinYearRepository') protected finYearRepositoryGetter: Getter<FinYearRepository>,
+    @repository.getter('FinYearRepository') protected finYearRepositoryGetter: Getter<FinYearRepository>,
+    @inject(BindingKeys.SESSION_DB_NAME) dbName: string
   ) {
-    super(Branch, dataSource);
+
+    super(Branch, dsSessionFactory.createRunTimeDataSource(dbName));
     this.defaultFinYear = this.createBelongsToAccessorFor('defaultFinYear', finYearRepositoryGetter,);
     this.registerInclusionResolver('defaultFinYear', this.defaultFinYear.inclusionResolver);
+
   }
+
 }

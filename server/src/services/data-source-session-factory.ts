@@ -3,7 +3,7 @@ class DataSourceSessionFactory {
 
     private dataSources:Record<string, FbomongoDataSource> = {};
 
-    createRunTimeDataSource(dbName: string):FboCommonMongoDataSource {
+    createRunTimeDataSource(dbName: string):FbomongoDataSource {
 
       if (this.dataSources[dbName]) {
 

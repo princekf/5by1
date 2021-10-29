@@ -1,4 +1,4 @@
-export * from './auth/user.controller';
+export * from './user.controller';
 export * from './unit.controller';
 export * from './unit-unit.controller';
 export * from './tax.controller';

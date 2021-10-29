@@ -7,14 +7,12 @@ import { ArrayReponse } from '../models/util/array-resp.model';
 import { ArrayResponse as ArrayReponseInft } from '@shared/util/array-resp';
 
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class TaxController {
 
   constructor(
@@ -27,6 +25,8 @@ export class TaxController {
     description: 'Tax model instance',
     content: {'application/json': {schema: getModelSchemaRef(Tax)}},
   })
+  @authorize({resource: resourcePermissions.taxCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -51,6 +51,8 @@ export class TaxController {
     description: 'Tax model group names',
     content: {'application/json': {schema: ArrayReponse}},
   })
+  @authorize({resource: resourcePermissions.taxView.name,
+    ...adminAndUserAuthDetails})
   async distinct(
     @param.path.string('column') column: string,
     @param.filter(Tax) filter?: Filter<Tax>,
@@ -66,6 +68,8 @@ export class TaxController {
     description: 'Tax model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.taxView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Tax) where?: Where<Tax>,
   ): Promise<Count> {
@@ -87,6 +91,8 @@ export class TaxController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.taxView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Tax) filter?: Filter<Tax>,
   ): Promise<Tax[]> {
@@ -101,6 +107,8 @@ export class TaxController {
     description: 'Tax PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.taxUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -127,6 +135,8 @@ export class TaxController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.taxView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Tax, {exclude: 'where'}) filter?: FilterExcludingWhere<Tax>
@@ -141,6 +151,8 @@ export class TaxController {
   @response(204, {
     description: 'Tax PATCH success',
   })
+  @authorize({resource: resourcePermissions.taxUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -161,6 +173,8 @@ export class TaxController {
   @response(204, {
     description: 'Tax PUT success',
   })
+  @authorize({resource: resourcePermissions.taxUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() tax: Tax,
@@ -174,6 +188,8 @@ export class TaxController {
   @response(204, {
     description: 'Tax DELETE success',
   })
+  @authorize({resource: resourcePermissions.taxDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.taxRepository.deleteById(id);
@@ -185,6 +201,8 @@ export class TaxController {
     description: 'Taxes DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.taxDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Tax) where?: Where<Tax>,
   ): Promise<Count> {

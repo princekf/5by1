@@ -6,16 +6,13 @@ import {CustomerRepository} from '../repositories';
 import { CUSTOMER_API } from '@shared/server-apis';
 import { ArrayReponse } from '../models/util/array-resp.model';
 import { ArrayResponse as ArrayReponseInft } from '@shared/util/array-resp';
-
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class CustomerController {
 
   constructor(
@@ -28,6 +25,8 @@ export class CustomerController {
     description: 'Customer model instance',
     content: {'application/json': {schema: getModelSchemaRef(Customer)}},
   })
+  @authorize({resource: resourcePermissions.customerCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -52,6 +51,8 @@ export class CustomerController {
     description: 'Tax model group names',
     content: {'application/json': {schema: ArrayReponse}},
   })
+  @authorize({resource: resourcePermissions.customerView.name,
+    ...adminAndUserAuthDetails})
   async distinct(
     @param.path.string('column') column: string,
     @param.filter(Customer) filter?: Filter<Customer>,
@@ -67,6 +68,8 @@ export class CustomerController {
     description: 'Customer model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.customerView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Customer) where?: Where<Customer>,
   ): Promise<Count> {
@@ -88,6 +91,8 @@ export class CustomerController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.customerView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Customer) filter?: Filter<Customer>,
   ): Promise<Customer[]> {
@@ -102,6 +107,8 @@ export class CustomerController {
     description: 'Customer PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.customerUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -128,6 +135,8 @@ export class CustomerController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.customerView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Customer, {exclude: 'where'}) filter?: FilterExcludingWhere<Customer>
@@ -142,6 +151,8 @@ export class CustomerController {
   @response(204, {
     description: 'Customer PATCH success',
   })
+  @authorize({resource: resourcePermissions.customerUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -162,6 +173,8 @@ export class CustomerController {
   @response(204, {
     description: 'Customer PUT success',
   })
+  @authorize({resource: resourcePermissions.customerUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() customer: Customer,
@@ -175,6 +188,8 @@ export class CustomerController {
   @response(204, {
     description: 'Customer DELETE success',
   })
+  @authorize({resource: resourcePermissions.customerDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.customerRepository.deleteById(id);
@@ -186,6 +201,8 @@ export class CustomerController {
     description: 'Customers DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.customerDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Customer) where?: Where<Customer>,
   ): Promise<Count> {

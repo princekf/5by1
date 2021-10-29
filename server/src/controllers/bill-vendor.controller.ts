@@ -1,26 +1,14 @@
-import {
-  repository,
-} from '@loopback/repository';
-import {
-  param,
-  get,
-  getModelSchemaRef,
-} from '@loopback/rest';
-import {
-  Bill,
-  Vendor,
-} from '../models';
+import {repository} from '@loopback/repository';
+import {param, get, getModelSchemaRef} from '@loopback/rest';
+import {Bill, Vendor} from '../models';
 import {BillRepository} from '../repositories';
 
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
-
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class BillVendorController {
 
   constructor(
@@ -41,11 +29,14 @@ export class BillVendorController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.billView.name,
+    ...adminAndUserAuthDetails})
   async getVendor(
     @param.path.string('id') id: typeof Bill.prototype.id,
   ): Promise<Vendor> {
 
-    return this.billRepository.vendor(id);
+    const vendorR = await this.billRepository.vendor(id);
+    return vendorR;
 
   }
 

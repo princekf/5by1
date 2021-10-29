@@ -4,14 +4,12 @@ import {Bill} from '../models';
 import {BillRepository} from '../repositories';
 import { BILL_API } from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize, } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class BillController {
 
   constructor(
@@ -24,6 +22,8 @@ export class BillController {
     description: 'Bill model instance',
     content: {'application/json': {schema: getModelSchemaRef(Bill)}},
   })
+  @authorize({resource: resourcePermissions.billCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -48,6 +48,8 @@ export class BillController {
     description: 'Bill model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.billView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Bill) where?: Where<Bill>,
   ): Promise<Count> {
@@ -69,6 +71,8 @@ export class BillController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.billView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Bill) filter?: Filter<Bill>,
   ): Promise<Bill[]> {
@@ -83,6 +87,8 @@ export class BillController {
     description: 'Bill PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.billUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -109,6 +115,8 @@ export class BillController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.billView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Bill, {exclude: 'where'}) filter?: FilterExcludingWhere<Bill>
@@ -123,6 +131,8 @@ export class BillController {
   @response(204, {
     description: 'Bill PATCH success',
   })
+  @authorize({resource: resourcePermissions.billUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -143,6 +153,8 @@ export class BillController {
   @response(204, {
     description: 'Bill PUT success',
   })
+  @authorize({resource: resourcePermissions.billUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() bill: Bill,
@@ -156,6 +168,8 @@ export class BillController {
   @response(204, {
     description: 'Bill DELETE success',
   })
+  @authorize({resource: resourcePermissions.billDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.billRepository.deleteById(id);
@@ -167,6 +181,8 @@ export class BillController {
     description: 'Bills DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.billDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Bill) where?: Where<Bill>,
   ): Promise<Count> {

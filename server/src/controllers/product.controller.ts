@@ -7,14 +7,12 @@ import { ArrayReponse } from '../models/util/array-resp.model';
 import { ArrayResponse as ArrayReponseInft } from '@shared/util/array-resp';
 
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class ProductController {
 
   constructor(
@@ -27,6 +25,8 @@ export class ProductController {
     description: 'Product model instance',
     content: {'application/json': {schema: getModelSchemaRef(Product)}},
   })
+  @authorize({resource: resourcePermissions.productCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -51,6 +51,8 @@ export class ProductController {
     description: 'Tax model group names',
     content: {'application/json': {schema: ArrayReponse}},
   })
+  @authorize({resource: resourcePermissions.productView.name,
+    ...adminAndUserAuthDetails})
   async distinct(
     @param.path.string('column') column: string,
     @param.filter(Product) filter?: Filter<Product>,
@@ -66,6 +68,8 @@ export class ProductController {
     description: 'Product model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.productView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Product) where?: Where<Product>,
   ): Promise<Count> {
@@ -87,6 +91,8 @@ export class ProductController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.productView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Product) filter?: Filter<Product>,
   ): Promise<Product[]> {
@@ -101,6 +107,8 @@ export class ProductController {
     description: 'Product PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.productUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -127,6 +135,8 @@ export class ProductController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.productView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Product, {exclude: 'where'}) filter?: FilterExcludingWhere<Product>
@@ -141,6 +151,8 @@ export class ProductController {
   @response(204, {
     description: 'Product PATCH success',
   })
+  @authorize({resource: resourcePermissions.productUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -161,6 +173,8 @@ export class ProductController {
   @response(204, {
     description: 'Product PUT success',
   })
+  @authorize({resource: resourcePermissions.productUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() product: Product,
@@ -174,6 +188,8 @@ export class ProductController {
   @response(204, {
     description: 'Product DELETE success',
   })
+  @authorize({resource: resourcePermissions.productDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.productRepository.deleteById(id);
@@ -185,6 +201,8 @@ export class ProductController {
     description: 'Products DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.productDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Product) where?: Where<Product>,
   ): Promise<Count> {

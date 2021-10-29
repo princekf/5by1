@@ -1,27 +1,16 @@
-import {
-  repository,
-} from '@loopback/repository';
-import {
-  param,
-  get,
-  getModelSchemaRef,
-} from '@loopback/rest';
-import {
-  Category,
-  Unit,
-} from '../models';
+import {repository} from '@loopback/repository';
+import {param, get, getModelSchemaRef} from '@loopback/rest';
+import {Category, Unit} from '../models';
 import {CategoryRepository} from '../repositories';
-
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class CategoryUnitController {
+
   constructor(
     @repository(CategoryRepository)
     public categoryRepository: CategoryRepository,
@@ -33,15 +22,22 @@ export class CategoryUnitController {
         description: 'Unit belonging to Category',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(Unit)},
+            schema: {type: 'array',
+              items: getModelSchemaRef(Unit)},
           },
         },
       },
     },
   })
+  @authorize({resource: resourcePermissions.categoryView.name,
+    ...adminAndUserAuthDetails})
   async getUnit(
     @param.path.string('id') id: typeof Category.prototype.id,
   ): Promise<Unit> {
-    return this.categoryRepository.unit(id);
+
+    const unitR = await this.categoryRepository.unit(id);
+    return unitR;
+
   }
+
 }

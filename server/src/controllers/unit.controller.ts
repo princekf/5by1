@@ -1,35 +1,16 @@
-import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
-  HttpErrors,
-} from '@loopback/rest';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where} from '@loopback/repository';
+import {post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors} from '@loopback/rest';
 import {Unit} from '../models';
 import {UnitRepository} from '../repositories';
 import { UNIT_API } from '@shared/server-apis';
 
+import { authenticate } from '@loopback/authentication';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
+
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class UnitController {
 
   constructor(
@@ -42,6 +23,8 @@ export class UnitController {
     description: 'Unit model instance',
     content: {'application/json': {schema: getModelSchemaRef(Unit)}},
   })
+  @authorize({resource: resourcePermissions.unitCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -66,6 +49,8 @@ export class UnitController {
     description: 'Unit model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.unitView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Unit) where?: Where<Unit>,
   ): Promise<Count> {
@@ -87,6 +72,8 @@ export class UnitController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.unitView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Unit) filter?: Filter<Unit>,
   ): Promise<Unit[]> {
@@ -114,6 +101,8 @@ export class UnitController {
     description: 'Unit PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.unitUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -140,6 +129,8 @@ export class UnitController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.unitView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Unit, {exclude: 'where'}) filter?: FilterExcludingWhere<Unit>
@@ -160,6 +151,8 @@ export class UnitController {
   @response(204, {
     description: 'Unit PATCH success',
   })
+  @authorize({resource: resourcePermissions.unitUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -180,6 +173,8 @@ export class UnitController {
   @response(204, {
     description: 'Unit PUT success',
   })
+  @authorize({resource: resourcePermissions.unitUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() unit: Unit,
@@ -193,6 +188,8 @@ export class UnitController {
   @response(204, {
     description: 'Unit DELETE success',
   })
+  @authorize({resource: resourcePermissions.unitDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.unitRepository.deleteById(id);
@@ -205,6 +202,8 @@ export class UnitController {
     description: 'Units DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.unitDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Unit) where?: Where<Unit>,
   ): Promise<Count> {

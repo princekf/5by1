@@ -1,18 +1,17 @@
-import {
-  repository,
-} from '@loopback/repository';
-import {
-  param,
-  get,
-  getModelSchemaRef,
-} from '@loopback/rest';
-import {
-  Payment,
-  Bank,
-} from '../models';
+import {repository} from '@loopback/repository';
+import {param, get, getModelSchemaRef} from '@loopback/rest';
+import {Payment, Bank} from '../models';
 import {PaymentRepository} from '../repositories';
 
+import { authenticate } from '@loopback/authentication';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
+
+@authenticate('jwt')
+@authorize(adminAndUserAuthDetails)
 export class PaymentBankController {
+
   constructor(
     @repository(PaymentRepository)
     public paymentRepository: PaymentRepository,
@@ -24,15 +23,22 @@ export class PaymentBankController {
         description: 'Bank belonging to Payment',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(Bank)},
+            schema: {type: 'array',
+              items: getModelSchemaRef(Bank)},
           },
         },
       },
     },
   })
+  @authorize({resource: resourcePermissions.paymentView.name,
+    ...adminAndUserAuthDetails})
   async getBank(
     @param.path.string('id') id: typeof Payment.prototype.id,
   ): Promise<Bank> {
-    return this.paymentRepository.bank(id);
+
+    const bankR = await this.paymentRepository.bank(id);
+    return bankR;
+
   }
+
 }

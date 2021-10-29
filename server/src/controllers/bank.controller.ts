@@ -5,14 +5,12 @@ import {Bank} from '../models';
 import {BankRepository} from '../repositories';
 import { BANK_API } from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize, } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class BankController {
 
   constructor(
@@ -25,6 +23,8 @@ export class BankController {
     description: 'Bank model instance',
     content: {'application/json': {schema: getModelSchemaRef(Bank)}},
   })
+  @authorize({resource: resourcePermissions.bankCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -49,6 +49,8 @@ export class BankController {
     description: 'Bank model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.bankView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Bank) where?: Where<Bank>,
   ): Promise<Count> {
@@ -70,6 +72,8 @@ export class BankController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.bankView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Bank) filter?: Filter<Bank>,
   ): Promise<Bank[]> {
@@ -84,6 +88,8 @@ export class BankController {
     description: 'Bank PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.bankUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -110,6 +116,8 @@ export class BankController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.bankView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Bank, {exclude: 'where'}) filter?: FilterExcludingWhere<Bank>
@@ -124,6 +132,8 @@ export class BankController {
   @response(204, {
     description: 'Bank PATCH success',
   })
+  @authorize({resource: resourcePermissions.bankUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -144,6 +154,8 @@ export class BankController {
   @response(204, {
     description: 'Bank PUT success',
   })
+  @authorize({resource: resourcePermissions.bankUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() bank: Bank,
@@ -157,6 +169,8 @@ export class BankController {
   @response(204, {
     description: 'Bank DELETE success',
   })
+  @authorize({resource: resourcePermissions.bankDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.bankRepository.deleteById(id);
@@ -168,6 +182,8 @@ export class BankController {
     description: 'Banks DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.bankDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Bank) where?: Where<Bank>,
   ): Promise<Count> {

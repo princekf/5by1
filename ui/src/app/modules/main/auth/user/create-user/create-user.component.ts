@@ -1,15 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '@shared/entity/auth/user';
-
-import { permissions } from '@shared/util/permissions';
+import { permissions as permissionsT} from '@shared/util/permissions';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
-
 import { UserService } from '@fboservices/user.service';
-
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
+import { User } from '@shared/entity/auth/user';
 
 @Component({
   selector: 'app-create-user',
@@ -24,16 +20,12 @@ export class CreateUserComponent implements OnInit {
 
   formHeader = 'Create User';
 
-  entities = permissions;
+  permissions = {};
 
-  displayedColumns = [ 'entity', 'view', 'create', 'edit', 'deleteP' ];
-
-  dataSource = new MatTableDataSource<unknown>();
-
-  entity = Object.entries(this.entities);
 
   form: FormGroup = new FormGroup({
 
+    id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
     email: new FormControl('', [ Validators.required ]),
     password: new FormControl('', [ Validators.required ]),
@@ -48,80 +40,135 @@ export class CreateUserComponent implements OnInit {
     private readonly toastr: ToastrService,
     private readonly userService:UserService) { }
 
-  ngOnInit(): void {
+    private mergePermissions = (permKey: string) => {
 
-    this.dataSource.data = this.entity;
+      const perm = permissionsT[permKey];
+      for (const opt in perm.operations) {
+
+        if (!perm.operations.hasOwnProperty(opt)) {
+
+          continue;
+
+        }
+        if (!this.permissions[permKey]) {
+
+          this.permissions[permKey] = {...perm};
+          const opt2s = this.permissions[permKey].operations;
+          for (const opt2 in opt2s) {
+
+            if (!opt2s.hasOwnProperty(opt2)) {
+
+              continue;
+
+            }
+            opt2s[opt2] = false;
+
+          }
+          continue;
+
+        }
+        const opt2s = this.permissions[permKey].operations;
+        for (const opt2 in opt2s) {
+
+          if (!opt2s.hasOwnProperty(opt2)) {
+
+            continue;
+
+          }
+          opt2s[opt2] = opt2s[opt2] ?? false;
+
+        }
+
+      }
+
+    }
+
+    ngOnInit(): void {
+
+      const tId = this.route.snapshot.queryParamMap.get('id');
+
+      if (tId) {
+
+        this.formHeader = 'Update User';
+
+        this.userService.get(tId, {}).subscribe((userC) => {
+
+          this.permissions = userC.permissions ?? {};
+          for (const permKey in permissionsT) {
+
+            if (!permissionsT.hasOwnProperty(permKey)) {
+
+              continue;
+
+            }
+            this.mergePermissions(permKey);
 
 
-    const tId = this.route.snapshot.queryParamMap.get('id');
+          }
+          this.form.setValue({
+            id: userC.id ?? '',
+            name: userC.name ?? '',
+            email: userC.email ?? '',
+            password: '',
+            cPassword: '',
+          });
 
-    if (tId) {
-
-      this.formHeader = 'Update User';
-
-      this.userService.get(tId, {}).subscribe((userC) => {
-
-        this.form.setValue({
-          name: userC.name ?? '',
-          email: userC.email ?? '',
-          password: userC.password ?? '',
-          cPassword: userC.password ?? '',
-
+          this.loading = false;
 
         });
 
+      } else {
+
         this.loading = false;
-
-      });
-
-    } else {
-
-      this.loading = false;
-
-    }
-
-  }
-
-
-  upsertUser(): void {
-
-
-    if (this.form.valid === true) {
-
-      if (!(/^(?<name>[a-zA-Z0-9_\-\.]+)@(?<domain>[a-zA-Z0-9_\-\.]+)\.(?<extn>[a-zA-Z]{2,5})$/ugm).test(this.form.value.email)) {
-
-        this.error = 'Please provide a valid email.';
-        return;
-
-
-      }
-      if (this.form.value.password !== this.form.value.cPassword) {
-
-        this.error = 'Password and Confirm password should be same.';
-        return;
-
 
       }
 
-      this.loading = true;
-      const userP = <User> this.form.value;
-      this.userService.upsert(userP).subscribe(() => {
-
-        this.toastr.success(`User ${userP.name} is saved successfully`, 'User saved');
-        this.goToPreviousPage(this.route, this.router);
-
-      }, (error) => {
-
-        this.loading = false;
-        this.toastr.error(`Error in saving User ${userP.name}`, 'User not saved');
-        console.error(error);
-
-      });
-
-
     }
 
-  }
+
+    upsertUser(): void {
+
+
+      if (this.form.valid === true) {
+
+        if (!(/^(?<name>[a-zA-Z0-9_\-\.]+)@(?<domain>[a-zA-Z0-9_\-\.]+)\.(?<extn>[a-zA-Z]{2,5})$/ugm).test(this.form.value.email)) {
+
+          this.error = 'Please provide a valid email.';
+          return;
+
+
+        }
+
+        this.loading = true;
+        const {cPassword, ...userP} = this.form.value;
+        if (this.form.value.password !== cPassword) {
+
+          this.error = 'Password and Confirm password should be same.';
+          return;
+
+
+        }
+        const userPerm:User = {
+          permissions: this.permissions,
+          ...userP
+        };
+        this.userService.upsert(userPerm).subscribe(() => {
+
+          this.toastr.success(`User ${userP.name} is saved successfully`, 'User saved');
+          this.goToPreviousPage(this.route, this.router);
+
+        }, (error) => {
+
+          const message = error.error?.message ?? `Error in saving User ${userP.name}`;
+          this.loading = false;
+          this.toastr.error(message, 'User not saved');
+
+        });
+
+
+      }
+
+    }
 
 
 }

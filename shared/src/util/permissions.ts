@@ -17,6 +17,11 @@ export const permissions:Record<string, Permission> = {
     name: 'Financial Year',
     operations: {...CURD_OPERATIONS}
   },
+  'user': {
+    key: 'user',
+    name: 'User',
+    operations: {...CURD_OPERATIONS}
+  },
   'unit': {
     key: 'unit',
     name: 'Unit',
@@ -40,6 +45,11 @@ export const permissions:Record<string, Permission> = {
   'invoice': {
     key: 'invoice',
     name: 'Invoice',
+    operations: {...CURD_OPERATIONS}
+  },
+  'stock': {
+    key: 'stock',
+    name: 'Stock',
     operations: {...CURD_OPERATIONS}
   },
   'revenue': {
@@ -92,4 +102,9 @@ export const permissions:Record<string, Permission> = {
     name: 'Voucher',
     operations: {...CURD_OPERATIONS}
   },
+  'costcentre': {
+    key: 'costcentre',
+    name: 'Cost Centres',
+    operations: {...CURD_OPERATIONS}
+  }
 };

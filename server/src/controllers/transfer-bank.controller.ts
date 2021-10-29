@@ -1,26 +1,15 @@
-import {
-  repository,
-} from '@loopback/repository';
-import {
-  param,
-  get,
-  getModelSchemaRef,
-} from '@loopback/rest';
-import {
-  Transfer,
-  Bank,
-} from '../models';
+import {repository} from '@loopback/repository';
+import {param, get, getModelSchemaRef} from '@loopback/rest';
+import {Transfer, Bank} from '../models';
 import {TransferRepository} from '../repositories';
 
 import { authenticate } from '@loopback/authentication';
-import { AuthorizationMetadata, authorize, Authorizer } from '@loopback/authorization';
-import { basicAuthorization } from '../middlewares/auth.midd';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
 @authenticate('jwt')
-@authorize({
-  allowedRoles: [ 'admin', 'user' ],
-  voters: [ basicAuthorization as Authorizer<AuthorizationMetadata> ],
-})
+@authorize(adminAndUserAuthDetails)
 export class TransferBankController {
 
   constructor(
@@ -41,6 +30,8 @@ export class TransferBankController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.transferView.name,
+    ...adminAndUserAuthDetails})
   async getBank(
     @param.path.string('id') id: typeof Transfer.prototype.id,
   ): Promise<Bank> {

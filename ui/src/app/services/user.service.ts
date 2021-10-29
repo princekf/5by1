@@ -44,14 +44,15 @@ export class UserService extends BaseHTTPService<User> {
 
   public upsert(user:User):Observable<void> {
 
-    const {id, ...user2} = user;
+    const {id, password, ...user2} = user;
     if (id) {
 
       return super.update({id,
         ...user2});
 
     }
-    return super.save(user2);
+    return super.save({password,
+      ...user2});
 
   }
 

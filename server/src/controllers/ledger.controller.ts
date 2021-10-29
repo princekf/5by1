@@ -3,7 +3,13 @@ import {post, param, get, getModelSchemaRef, patch, put, del, requestBody, respo
 import {Ledger} from '../models';
 import {LedgerRepository} from '../repositories';
 import { LEDGER_API } from '@shared/server-apis';
+import { authenticate } from '@loopback/authentication';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
+@authenticate('jwt')
+@authorize(adminAndUserAuthDetails)
 export class LedgerController {
 
   constructor(
@@ -16,6 +22,8 @@ export class LedgerController {
     description: 'Ledger model instance',
     content: {'application/json': {schema: getModelSchemaRef(Ledger)}},
   })
+  @authorize({resource: resourcePermissions.ledgerCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -40,6 +48,8 @@ export class LedgerController {
     description: 'Ledger model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.ledgerView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(Ledger) where?: Where<Ledger>,
   ): Promise<Count> {
@@ -61,6 +71,8 @@ export class LedgerController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.ledgerView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(Ledger) filter?: Filter<Ledger>,
   ): Promise<Ledger[]> {
@@ -75,6 +87,8 @@ export class LedgerController {
     description: 'Ledger PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.ledgerUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -101,6 +115,8 @@ export class LedgerController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.ledgerView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(Ledger, {exclude: 'where'}) filter?: FilterExcludingWhere<Ledger>
@@ -115,6 +131,8 @@ export class LedgerController {
   @response(204, {
     description: 'Ledger PATCH success',
   })
+  @authorize({resource: resourcePermissions.ledgerUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -135,6 +153,8 @@ export class LedgerController {
   @response(204, {
     description: 'Ledger PUT success',
   })
+  @authorize({resource: resourcePermissions.ledgerUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() ledger: Ledger,
@@ -148,6 +168,8 @@ export class LedgerController {
   @response(204, {
     description: 'Ledger DELETE success',
   })
+  @authorize({resource: resourcePermissions.ledgerDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.ledgerRepository.deleteById(id);
@@ -160,6 +182,8 @@ export class LedgerController {
     description: 'Branchs DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.ledgerDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(Ledger) where?: Where<Ledger>,
   ): Promise<Count> {
@@ -180,6 +204,5 @@ export class LedgerController {
     return count;
 
   }
-
 
 }

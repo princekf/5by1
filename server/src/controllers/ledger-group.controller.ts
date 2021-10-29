@@ -3,7 +3,13 @@ import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, resp
 import {LedgerGroup} from '../models/ledger-group.model';
 import {LedgerGroupRepository} from '../repositories/ledger-group.repository';
 import { LEDGER_GROUP_API } from '@shared/server-apis';
+import { authenticate } from '@loopback/authentication';
+import { authorize } from '@loopback/authorization';
+import { resourcePermissions } from '../utils/resource-permissions';
+import { adminAndUserAuthDetails } from '../utils/autherize-details';
 
+@authenticate('jwt')
+@authorize(adminAndUserAuthDetails)
 export class LedgerGroupController {
 
   constructor(
@@ -16,6 +22,8 @@ export class LedgerGroupController {
     description: 'LedgerGroup model instance',
     content: {'application/json': {schema: getModelSchemaRef(LedgerGroup)}},
   })
+  @authorize({resource: resourcePermissions.ledgergroupCreate.name,
+    ...adminAndUserAuthDetails})
   async create(
     @requestBody({
       content: {
@@ -40,6 +48,8 @@ export class LedgerGroupController {
     description: 'LedgerGroup model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.ledgergroupView.name,
+    ...adminAndUserAuthDetails})
   async count(
     @param.where(LedgerGroup) where?: Where<LedgerGroup>,
   ): Promise<Count> {
@@ -61,6 +71,8 @@ export class LedgerGroupController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.ledgergroupView.name,
+    ...adminAndUserAuthDetails})
   async find(
     @param.filter(LedgerGroup) filter?: Filter<LedgerGroup>,
   ): Promise<LedgerGroup[]> {
@@ -75,6 +87,8 @@ export class LedgerGroupController {
     description: 'LedgerGroup PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.ledgergroupUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateAll(
     @requestBody({
       content: {
@@ -101,6 +115,8 @@ export class LedgerGroupController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.ledgergroupView.name,
+    ...adminAndUserAuthDetails})
   async findById(
     @param.path.string('id') id: string,
     @param.filter(LedgerGroup, {exclude: 'where'}) filter?: FilterExcludingWhere<LedgerGroup>
@@ -115,6 +131,8 @@ export class LedgerGroupController {
   @response(204, {
     description: 'LedgerGroup PATCH success',
   })
+  @authorize({resource: resourcePermissions.ledgergroupUpdate.name,
+    ...adminAndUserAuthDetails})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -135,6 +153,8 @@ export class LedgerGroupController {
   @response(204, {
     description: 'LedgerGroup PUT success',
   })
+  @authorize({resource: resourcePermissions.ledgergroupUpdate.name,
+    ...adminAndUserAuthDetails})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() ledgerGroup: LedgerGroup,
@@ -148,6 +168,8 @@ export class LedgerGroupController {
   @response(204, {
     description: 'LedgerGroup DELETE success',
   })
+  @authorize({resource: resourcePermissions.ledgergroupDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
     await this.ledgerGroupRepository.deleteById(id);
@@ -159,6 +181,8 @@ export class LedgerGroupController {
     description: 'Branchs DELETE success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({resource: resourcePermissions.ledgergroupDelete.name,
+    ...adminAndUserAuthDetails})
   async deleteAll(
     @param.where(LedgerGroup) where?: Where<LedgerGroup>,
   ): Promise<Count> {
