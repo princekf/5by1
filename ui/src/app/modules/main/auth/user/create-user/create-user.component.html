@@ -47,7 +47,7 @@
   <table [style.display]="loading ? 'none': ''" matSort mat-table [dataSource]="dataSource">
 
     <ng-container matColumnDef="entity">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Entity </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"></th>
       <td mat-cell *matCellDef="let element let i = dataIndex">
         <span [displayWith]="extractNameOfObject">
           {{element[1].name}}
@@ -57,7 +57,7 @@
     </ng-container>
 
     <ng-container matColumnDef="view">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Debit </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> View </th>
       <td mat-cell *matCellDef="let element; let i = dataIndex">
         <mat-checkbox color="primary">
         </mat-checkbox>

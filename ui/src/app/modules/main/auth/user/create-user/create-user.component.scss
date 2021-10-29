@@ -11,35 +11,35 @@
     margin-right: 10%;
     margin-bottom: 50px;
   }
-  .mat-header-row{
+.mat-header-row{
     background-color: #0062FF22;
 
     height: 40px;
     text-align: center;
     }
-    th{
+th{
       border-left: 0.5px solid  #0062FF22;
     }
     
-    td{
+td{
       border-left: 0.5px solid  #0062FF22;
       height: 35px;
       width: 2%;
       text-align: center;
     }
-    :host ::ng-deep td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+:host ::ng-deep td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
       padding-right: 0px !important;
       border-right: 0.5px solid #0062FF22;
       width: 1%;
       text-align: center;
     }
-    :host ::ng-deep th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+:host ::ng-deep th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
       padding-right: 0px;
       
     }
-    
-    :host ::ng-deep  td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
-      padding-left: 0px;
+:host ::ng-deep  td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+      padding-left: 24px;
+      text-align: initial;
     }
 :host ::ng-deep .mat-sort-header-container {
       display: flex;
