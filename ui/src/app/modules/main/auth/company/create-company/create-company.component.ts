@@ -97,7 +97,7 @@ export class CreateCompanyComponent implements OnInit {
       }, (error) => {
 
         this.loading = false;
-        this.toastr.error(`Error in saving Company ${companyP.name}`, 'Company not saved');
+        this.toastr.error(`Error in saving Company ${companyP.name}. ${error.error?.message}`, 'Company not saved');
         console.error(error);
 
       });

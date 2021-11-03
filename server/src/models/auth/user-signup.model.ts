@@ -1,5 +1,5 @@
 import {model, property} from '@loopback/repository';
-import { User } from './user.model';
+import { User } from '../user.model';
 
 @model()
 export class NewUserRequest extends User {

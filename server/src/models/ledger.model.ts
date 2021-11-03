@@ -24,6 +24,18 @@ export class Ledger extends Entity implements LedgerIntf {
   details: string;
 
   @property({
+    type: 'number',
+    required: true,
+  })
+  obAmount: number;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  obType: 'Credit' | 'Debit';
+
+  @property({
     type: 'string',
   })
   refNo: string;

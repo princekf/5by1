@@ -1,4 +1,4 @@
-export * from './auth/user.model';
+export * from './user.model';
 export * from './auth/user-credentials.model';
 export * from './auth/user-signup.model';
 export * from './unit.model';
@@ -23,3 +23,4 @@ export * from './ledger-group.model';
 export * from './ledger.model';
 export * from './voucher.model';
 export * from './cost-centre.model';
+export * from './transaction.model';

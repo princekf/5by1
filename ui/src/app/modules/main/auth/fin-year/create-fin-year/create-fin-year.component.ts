@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 
 import { Branch } from '@shared/entity/auth/branch';
 import { ToastrService } from 'ngx-toastr';
@@ -6,15 +6,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { BranchService } from '@fboservices/auth/branch.service';
 import { FinYearService } from '@fboservices/auth/fin-year.service';
+import { FinYearRangeSelectionStrategy } from '@fboutil/fin-year-range-selection-strategy';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FinYear } from '@shared/entity/auth/fin-year';
 import { QueryData } from '@shared/util/query-data';
+import { MAT_DATE_RANGE_SELECTION_STRATEGY } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-create-fin-year',
   templateUrl: './create-fin-year.component.html',
-  styleUrls: [ './create-fin-year.component.scss', '../../../../../util/styles/fbo-form-style.scss' ]
+  styleUrls: [ './create-fin-year.component.scss', '../../../../../util/styles/fbo-form-style.scss' ],
+  providers: [ {
+    provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
+    useClass: FinYearRangeSelectionStrategy
+  } ]
 })
 export class CreateFinYearComponent implements OnInit {
 
@@ -29,13 +35,9 @@ export class CreateFinYearComponent implements OnInit {
   form: FormGroup = new FormGroup({
 
     id: new FormControl(null),
-
     name: new FormControl('', [ Validators.required ]),
-
-    startDate: new FormControl(new Date(), [ Validators.required ]),
-
+    startDate: new FormControl('', [ Validators.required ]),
     endDate: new FormControl('', [ Validators.required ]),
-
     branch: new FormControl('', [ Validators.required ]),
 
 
@@ -45,14 +47,16 @@ export class CreateFinYearComponent implements OnInit {
     public readonly route: ActivatedRoute,
     private readonly branchService: BranchService,
     private readonly toastr: ToastrService,
-    private readonly finYearService:FinYearService) { }
+    private readonly finYearService:FinYearService,
+    @Inject(MAT_DATE_RANGE_SELECTION_STRATEGY)
+    private rangeStrategy: FinYearRangeSelectionStrategy<unknown>) { }
 
   ngOnInit(): void {
 
     this.initValueChanges();
-
     const tId = this.route.snapshot.queryParamMap.get('id');
-
+    this.form.controls.startDate.disable();
+    this.form.controls.endDate.disable();
     if (tId) {
 
       this.formHeader = 'Update Fin Year';
@@ -67,9 +71,9 @@ export class CreateFinYearComponent implements OnInit {
         this.form.setValue({
           id: finyearC.id ?? '',
           name: finyearC.name ?? '',
+          branch: finyearC.branch ?? '',
           startDate: finyearC.startDate ?? '',
           endDate: finyearC.endDate ?? '',
-          branch: finyearC.branch ?? '',
 
         });
 
@@ -91,9 +95,17 @@ export class CreateFinYearComponent implements OnInit {
 
       if (typeof branchQ !== 'string') {
 
+        const branch = branchQ as Branch;
+        this.rangeStrategy.startDate = {
+          month: branch.finYearStartDate.getMonth(),
+          date: branch.finYearStartDate.getDate(),
+        };
+        this.form.controls.startDate.enable();
+        this.form.controls.endDate.enable();
         return;
 
       }
+      this.form.controls.startDate.disable();
       this.branchService.search({ where: {name: {like: branchQ,
         options: 'i'}} })
         .subscribe((branch) => (this.branchFiltered = branch));
@@ -130,7 +142,5 @@ export class CreateFinYearComponent implements OnInit {
     });
 
   }
-
-
 
 }

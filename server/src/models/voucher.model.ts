@@ -1,5 +1,6 @@
 import {Entity, model, property} from '@loopback/repository';
 import { Voucher as VoucherIntf, VoucherType } from '@shared/entity/accounting/voucher';
+import { Transaction } from './transaction.model';
 
 @model()
 export class Voucher extends Entity implements VoucherIntf {
@@ -32,6 +33,10 @@ export class Voucher extends Entity implements VoucherIntf {
     type: 'string',
   })
   details: string;
+
+
+  @property.array(Transaction)
+  transactions: Transaction[];
 
   constructor(data?: Partial<Voucher>) {
 

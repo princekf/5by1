@@ -3,6 +3,8 @@ import { Branch } from '@shared/entity/auth/branch';
 import { Observable } from 'rxjs';
 import { BaseHTTPService } from '../base-http.service';
 import { BRANCH_API_URI } from '@shared/server-apis';
+import { QueryData } from '@shared/util/query-data';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +30,19 @@ export class BranchService extends BaseHTTPService<Branch> {
 
     }
     return super.save(branch2);
+
+  }
+
+  public search(queryParams: QueryData): Observable<Array<Branch>> {
+
+    return super.search(queryParams).pipe(
+      map((branches) => {
+
+        branches.forEach((branch) => (branch.finYearStartDate = new Date(branch.finYearStartDate)));
+        return branches;
+
+      })
+    );
 
   }
 

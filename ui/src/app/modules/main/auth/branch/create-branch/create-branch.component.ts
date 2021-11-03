@@ -28,16 +28,11 @@ export class CreateBranchComponent implements OnInit {
   form: FormGroup = new FormGroup({
 
     id: new FormControl(null),
-
     name: new FormControl('', [ Validators.required ]),
-
     email: new FormControl('', [ Validators.required ]),
-
-    address: new FormControl('', [ Validators.required ]),
-
+    address: new FormControl(''),
     finYearStartDate: new FormControl(new Date(), [ Validators.required ]),
-
-    defaultFinYear: new FormControl('', [ Validators.required ]),
+    defaultFinYear: new FormControl(''),
 
   });
 

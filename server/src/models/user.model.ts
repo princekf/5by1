@@ -1,6 +1,7 @@
 import {Entity, model, property, hasOne} from '@loopback/repository';
-import {UserCredentials} from './user-credentials.model';
+import {UserCredentials} from './auth/user-credentials.model';
 import { Permission, User as UserInft } from '@shared/entity/auth/user';
+import { Branch } from './branch.model';
 
 @model()
 export class User extends Entity implements UserInft {
@@ -35,6 +36,14 @@ export class User extends Entity implements UserInft {
     type: 'object',
   })
   permissions: Record<string, Permission>;
+
+  branches: Array<Branch>;
+
+  @property({
+    type: 'array',
+    itemType: 'string',
+  })
+  branchIds?: string[];
 
   @hasOne(() => UserCredentials)
   userCredentials: UserCredentials;

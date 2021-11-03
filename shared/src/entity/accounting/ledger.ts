@@ -5,7 +5,9 @@ export interface Ledger {
     name?: string;
     ledgerGroup?: LedgerGroup;
     ledgerGroupId?: string;
-    openingBalance?: number;
+    // Opening balance amount and type
+    obAmount?: number;
+    obType?: 'Credit' | 'Debit';
     refNo?: string;
     details?: string;
 }

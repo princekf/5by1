@@ -6,11 +6,12 @@ import { COMPANY_API } from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { CompanyModelForCreateSchema } from '../models/company.create.model';
-import {Getter, inject} from '@loopback/context';
+import {Getter, inject, intercept} from '@loopback/context';
 import { BindingKeys } from '../binding.keys';
 import { PasswordHasher } from '../services';
 import { permissions } from '@shared/util/permissions';
 import { superAdminAuthDetails } from '../utils/autherize-details';
+import { ValidateCompanyForUniqueCodeInterceptor } from '../interceptors/validate-company-for-unique-code.interceptor';
 
 @authenticate('jwt')
 @authorize(superAdminAuthDetails)
@@ -27,6 +28,7 @@ export class CompanyController {
     public passwordHasher: PasswordHasher,
   ) {}
 
+  @intercept(ValidateCompanyForUniqueCodeInterceptor.BINDING_KEY)
   @post(COMPANY_API)
   @response(200, {
     description: 'Company model instance',

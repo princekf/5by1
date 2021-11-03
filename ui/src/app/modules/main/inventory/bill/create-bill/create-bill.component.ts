@@ -36,7 +36,6 @@ export class CreateBillComponent implements OnInit {
 
   iserror = false;
 
-
   vendorsFiltered: Array<Vendor> = [];
 
   bankFiltered: Array<Bank> = [];

@@ -1,3 +1,5 @@
+import { Branch } from './branch';
+
 export interface Permission {
     key: string;
     name: string;
@@ -8,5 +10,6 @@ export interface User {
     name?: string;
     email?: string;
     password?: string;
-    permissions?: Record<string, Permission>
+    permissions?: Record<string, Permission>;
+    branches?: Array<Branch>;
 }

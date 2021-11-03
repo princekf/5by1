@@ -38,3 +38,5 @@ export * from './ledger-ledger-group.controller';
 export * from './ledger.controller';
 export * from './voucher.controller';
 export * from './cost-centre.controller';
+export * from './transaction-ledger.controller';
+export * from './transaction-cost-centre.controller';

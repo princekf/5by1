@@ -8,6 +8,7 @@ import { LedgerService } from '@fboservices/accounting/ledger.service';
 import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service';
 import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 import { QueryData } from '@shared/util/query-data';
+import { TransactionType } from '@shared/entity/accounting/transaction';
 
 @Component({
   selector: 'app-create-ledger',
@@ -27,14 +28,12 @@ export class CreateLedgerComponent implements OnInit {
   form: FormGroup = new FormGroup({
 
     id: new FormControl(null),
-
     name: new FormControl('', [ Validators.required ]),
-
     ledgerGroup: new FormControl('', [ Validators.required ]),
-
-    refNo: new FormControl('', [ Validators.required ]),
-
-    details: new FormControl('', [ Validators.required ]),
+    obAmount: new FormControl(0, [ Validators.required ]),
+    obType: new FormControl('Credit', [ Validators.required ]),
+    refNo: new FormControl(''),
+    details: new FormControl(''),
 
   });
 
@@ -67,7 +66,8 @@ export class CreateLedgerComponent implements OnInit {
           ledgerGroup: ledgerC.ledgerGroup ?? '',
           refNo: ledgerC.refNo ?? '',
           details: ledgerC.details ?? '',
-
+          obAmount: ledgerC.obAmount ?? 0,
+          obType: ledgerC.obType ?? TransactionType.CREDIT,
         });
 
         this.loading = false;

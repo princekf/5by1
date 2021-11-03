@@ -8,21 +8,21 @@ import {
 } from '@loopback/core';
 import { repository } from '@loopback/repository';
 import { HttpErrors } from '@loopback/rest';
-import { UserRepository } from '../repositories';
+import { CompanyRepository } from '../repositories';
 
 /**
  * This class will be bound to the application as an `Interceptor` during
  * `boot`
  */
 // eslint-disable-next-line no-use-before-define
-@injectable({tags: {key: ValidateUserForUniqueEMailInterceptor.BINDING_KEY}})
-export class ValidateUserForUniqueEMailInterceptor implements Provider<Interceptor> {
+@injectable({tags: {key: ValidateCompanyForUniqueCodeInterceptor.BINDING_KEY}})
+export class ValidateCompanyForUniqueCodeInterceptor implements Provider<Interceptor> {
 
-  static readonly BINDING_KEY = `interceptors.${ValidateUserForUniqueEMailInterceptor.name}`;
+  static readonly BINDING_KEY = `interceptors.${ValidateCompanyForUniqueCodeInterceptor.name}`;
 
   constructor(
-    @repository(UserRepository)
-    public userRepository: UserRepository
+    @repository(CompanyRepository)
+    public companyRepository: CompanyRepository
   ) { }
 
   /**
@@ -49,12 +49,20 @@ export class ValidateUserForUniqueEMailInterceptor implements Provider<Intercept
 
     try {
 
-      const [ { email } ] = invocationCtx.args;
-      const nameAlreadyExist = await this.userRepository.find({where: {email: {regexp: `/^${email}$/i`}}});
+
+      const [ { code } ] = invocationCtx.args;
+      if ((/\s/gu).test(code)) {
+
+        throw new HttpErrors.UnprocessableEntity(
+          'Company code should not contains white spaces.',
+        );
+
+      }
+      const nameAlreadyExist = await this.companyRepository.find({where: {code: {regexp: `/^${code}$/i`}}});
       if (nameAlreadyExist.length) {
 
         throw new HttpErrors.UnprocessableEntity(
-          'E-Mail already exists',
+          'Company code already exists',
         );
 
       }

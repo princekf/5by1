@@ -1,12 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { VoucherRoutingModule } from './voucher-routing.module';
-import { ListVoucherComponent } from './list-voucher/list-voucher.component';
-import { CreateVoucherComponent } from './create-voucher/create-voucher.component';
-import { DeleteVoucherComponent } from './delete-voucher/delete-voucher.component';
-import { FilterVoucherComponent } from './filter-voucher/filter-voucher.component';
-
 import { DataTableModule } from '../../data-table/data-table.module';
 import {MatTableModule} from '@angular/material/table';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -21,13 +14,12 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatIconModule} from '@angular/material/icon';
-
+import { VoucherRoutingModule } from './voucher-routing.module';
 
 @NgModule({
-  declarations: [ ListVoucherComponent, CreateVoucherComponent, DeleteVoucherComponent, FilterVoucherComponent ],
+  declarations: [],
   imports: [
-    CommonModule,
-    VoucherRoutingModule,
+    CommonModule, VoucherRoutingModule,
     DataTableModule, MatTableModule, NgxSkeletonLoaderModule, MatSortModule, ToolBarModule,
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule,
     MatInputModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatIconModule

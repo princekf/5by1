@@ -12,7 +12,7 @@
         <p>
           <mat-form-field>
 
-            <input type="text" matInput placeholder="Email address" formControlName="email">
+            <input type="text" matInput placeholder="Email address" formControlName="email" autocomplete="off">
             <mat-error *ngIf="form.controls['email'].hasError('required')"> Email Address is required</mat-error>
           </mat-form-field>
         </p>
@@ -25,7 +25,7 @@
         <p>
           <mat-form-field>
 
-            <input type="text" matInput placeholder="Company code" formControlName="company">
+            <input type="text" matInput placeholder="Company code" formControlName="company" autocomplete="off">
             <mat-error *ngIf="form.controls['company'].hasError('required')"> Company code is required</mat-error>
           </mat-form-field>
         </p>

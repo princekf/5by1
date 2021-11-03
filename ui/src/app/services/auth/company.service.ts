@@ -24,7 +24,7 @@ export class CompanyService extends BaseHTTPService<Company> {
     }
     return this.http.post<void>(this.API_URI, {password,
       ...company2}).pipe(
-      catchError((err) => throwError(() => err))
+      catchError((err) => throwError(err))
     );
 
   }

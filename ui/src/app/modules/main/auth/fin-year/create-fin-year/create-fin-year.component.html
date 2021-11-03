@@ -16,29 +16,6 @@
 
   <p>
     <mat-form-field>
-      <mat-label>StartDate</mat-label>
- 
-      <input matInput [matDatepicker]="startDate" formControlName="startDate">
-      <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
-      <mat-datepicker #startDate></mat-datepicker>
-      <mat-error *ngIf="form.controls['startDate'].hasError('required')">Please Enter Start Date</mat-error>
-
-    </mat-form-field>
-  </p>
-  <p>
-    <mat-form-field>
-      <mat-label>EndDate</mat-label>
- 
-      <input matInput [matDatepicker]="endDate" formControlName="endDate">
-      <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
-      <mat-datepicker #endDate></mat-datepicker>
-      <mat-error *ngIf="form.controls['endDate'].hasError('required')">Please Enter End Date</mat-error>
-
-    </mat-form-field>
-  </p>
-
-  <p>
-    <mat-form-field>
       <mat-label>Branch</mat-label>
       <input formControlName="branch" matInput placeholder="Enter Branch" [matAutocomplete]="autobranch">
       <mat-autocomplete autoActiveFirstOption #autobranch="matAutocomplete" [displayWith]="extractNameOfObject">
@@ -49,6 +26,20 @@
       <mat-error *ngIf="form.controls['branch'].hasError('required')">Please write Branch</mat-error>
     </mat-form-field>
   </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Enter a date range</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate formControlName="startDate" placeholder="Start date" readonly='true'>
+        <input matEndDate formControlName="endDate" placeholder="End date" readonly='true'>
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+
+    </mat-form-field>
+  </p>
+
 
   <p class="form-submit-container">
     <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
