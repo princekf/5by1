@@ -1,5 +1,5 @@
 import {HttpErrors} from '@loopback/rest';
-import {Credentials, UserRepository} from '../repositories';
+import {BranchRepository, Credentials, FinYearRepository, UserRepository} from '../repositories';
 import {UserService} from '@loopback/authentication';
 import {securityId, UserProfile} from '@loopback/security';
 import {repository} from '@loopback/repository';
@@ -15,11 +15,15 @@ export interface ProfileUser {
   email: string;
   role: string;
   company?: string;
+  branch?: string;
+  finYear?: string;
 }
 export class FBOUserService implements UserService<ProfileUser, Credentials> {
 
   constructor(
     @repository(UserRepository) public userRepository: UserRepository,
+    @repository(BranchRepository) public branchRepository: BranchRepository,
+    @repository(FinYearRepository) public finYearRepository: FinYearRepository,
     @inject(BindingKeys.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
   ) {
@@ -57,6 +61,20 @@ export class FBOUserService implements UserService<ProfileUser, Credentials> {
 
     }
 
+    let branch = '';
+    let finYear:string|undefined = '';
+    if (foundUser.branchIds?.length) {
+
+      const branchF = await this.branchRepository.findById(foundUser.branchIds[0]);
+      branch = branchF.code;
+
+      const finYearF = await this.finYearRepository.findOne({
+        where: {branchId: branchF.id},
+      });
+      finYear = finYearF?.code;
+
+    }
+
     return {
       [securityId]: foundUser.id,
       id: foundUser.id,
@@ -64,6 +82,8 @@ export class FBOUserService implements UserService<ProfileUser, Credentials> {
       email: foundUser.email,
       role: foundUser.role,
       company: credentials.company,
+      branch,
+      finYear,
     };
 
   }

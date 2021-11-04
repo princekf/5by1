@@ -20,6 +20,12 @@ export class FinYear extends Entity implements FinYearIntf {
   name: string;
 
   @property({
+    type: 'string',
+    required: true,
+  })
+  code: string;
+
+  @property({
     type: 'date',
     required: true,
   })

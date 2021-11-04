@@ -37,8 +37,6 @@ export class User extends Entity implements UserInft {
   })
   permissions: Record<string, Permission>;
 
-  branches: Array<Branch>;
-
   @property({
     type: 'array',
     itemType: 'string',

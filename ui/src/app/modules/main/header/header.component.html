@@ -26,14 +26,14 @@
       </button>
 
       <div class="profile">
-        <div class="avatar" [ngStyle]="{'background-image': 'url(assets/images/profile.png)'}"></div>
         <p class="user">{{user.name}}</p>
+        <div class="avatar" [ngStyle]="{'background-image': 'url(assets/images/profile.png)'}"
+        [matMenuTriggerFor]="profileMenu"></div>
       </div>
-
-      <button primary mat-icon-button [matMenuTriggerFor]="menu" aria-label="Vertical menu">
-        <mat-icon class="mat-5by1-white">more_horiz</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
+      <mat-menu #profileMenu="matMenu">
+        <button *ngFor="let branch of branches" type="button" mat-menu-item >
+          {{branch}}
+        </button>
         <button type="button" mat-menu-item (click)="doLogout()">
           Logout
         </button>

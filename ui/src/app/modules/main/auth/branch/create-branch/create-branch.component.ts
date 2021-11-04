@@ -29,6 +29,7 @@ export class CreateBranchComponent implements OnInit {
 
     id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
+    code: new FormControl('', [ Validators.required ]),
     email: new FormControl('', [ Validators.required ]),
     address: new FormControl(''),
     finYearStartDate: new FormControl(new Date(), [ Validators.required ]),
@@ -62,6 +63,7 @@ export class CreateBranchComponent implements OnInit {
         this.form.setValue({
           id: branchC.id ?? '',
           name: branchC.name ?? '',
+          code: branchC.code ?? '',
           email: branchC.email ?? '',
           address: branchC.address ?? '',
           finYearStartDate: branchC.finYearStartDate ?? '',
@@ -119,7 +121,7 @@ export class CreateBranchComponent implements OnInit {
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error(`Error in saving Branch ${branchP.name}`, 'Branch not saved');
+      this.toastr.error(`Error in saving Branch ${branchP.name}. ${error.error?.message}`, 'Branch not saved');
       console.error(error);
 
     });

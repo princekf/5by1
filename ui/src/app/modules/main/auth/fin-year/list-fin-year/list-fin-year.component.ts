@@ -17,11 +17,12 @@ import { environment } from '@fboenvironments/environment';
 })
 export class ListFinYearComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'name', 'startDate', 'endDate', 'branch.name' ];
+  displayedColumns: string[] = [ 'name', 'code', 'startDate', 'endDate', 'branch.name' ];
 
 
   columnHeaders = {
     name: 'Name',
+    code: 'Code',
     startDate: 'StartDate',
     endDate: 'EndDate',
     'branch.name': 'Branch',

@@ -36,6 +36,7 @@ export class CreateFinYearComponent implements OnInit {
 
     id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
+    code: new FormControl('', [ Validators.required ]),
     startDate: new FormControl('', [ Validators.required ]),
     endDate: new FormControl('', [ Validators.required ]),
     branch: new FormControl('', [ Validators.required ]),
@@ -71,6 +72,7 @@ export class CreateFinYearComponent implements OnInit {
         this.form.setValue({
           id: finyearC.id ?? '',
           name: finyearC.name ?? '',
+          code: finyearC.name ?? '',
           branch: finyearC.branch ?? '',
           startDate: finyearC.startDate ?? '',
           endDate: finyearC.endDate ?? '',
@@ -136,7 +138,7 @@ export class CreateFinYearComponent implements OnInit {
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error(`Error in saving Fin-year ${FinyearP.name}`, 'Fin-year not saved');
+      this.toastr.error(`Error in saving Fin-year ${FinyearP.name}. ${error.error?.message}`, 'Fin-year not saved');
       console.error(error);
 
     });

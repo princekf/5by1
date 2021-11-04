@@ -7,6 +7,8 @@ import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
 import { adminAndUserAuthDetails } from '../utils/autherize-details';
+import { intercept } from '@loopback/context';
+import { ValidateFinYearForUniqueCodeInterceptor } from '../interceptors/validate-finyear-for-unique-code.interceptor';
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
@@ -17,6 +19,7 @@ export class FinYearController {
     public finYearRepository : FinYearRepository,
   ) {}
 
+  @intercept(ValidateFinYearForUniqueCodeInterceptor.BINDING_KEY)
   @post(FIN_YEAR_API)
   @response(200, {
     description: 'FinYear model instance',

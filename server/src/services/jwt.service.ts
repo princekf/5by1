@@ -2,7 +2,7 @@ import {inject} from '@loopback/context';
 import {HttpErrors} from '@loopback/rest';
 import {promisify} from 'util';
 import {TokenService} from '@loopback/authentication';
-import {securityId, UserProfile} from '@loopback/security';
+import {securityId} from '@loopback/security';
 import * as jwt from 'jsonwebtoken';
 import {BindingKeys} from '../binding.keys';
 import { ProfileUser } from '.';
@@ -48,6 +48,8 @@ export class JWTService implements TokenService {
         id: decodedToken.id,
         role: decodedToken.role,
         company: decodedToken.company,
+        branch: decodedToken.branch,
+        finYear: decodedToken.finYear,
       };
 
     } catch (error: any) {
@@ -77,6 +79,8 @@ export class JWTService implements TokenService {
       publicAddress: userProfile.publicAddress,
       email: userProfile.email,
       company: userProfile.company,
+      branch: userProfile.branch,
+      finYear: userProfile.finYear,
     };
     // Generate a JSON Web Token
     let token: string;

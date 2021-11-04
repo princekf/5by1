@@ -21,6 +21,12 @@ export class Branch extends Entity implements BranchIntf {
 
   @property({
     type: 'string',
+    required: true,
+  })
+  code: string;
+
+  @property({
+    type: 'string',
   })
   email: string;
 

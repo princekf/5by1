@@ -29,6 +29,31 @@
     <mat-error *ngIf="form.controls['cPassword'].hasError('required')">Please Enter confirmation Password</mat-error>
   </mat-form-field>
 
+    <mat-form-field class="fbo-create-form-100">
+      <mat-label>Branch</mat-label>
+      <mat-chip-list #brachChipList aria-label="Branch selection">
+        <mat-chip
+          *ngFor="let branch of selectedBranches"
+          removable="true"
+          (removed)="removeBranch(branch)">
+          {{branch.name}}
+          <button matChipRemove *ngIf="removable">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+
+        <input matInput placeholder="Enter Branch" [matAutocomplete]="autobranch"
+        [formControl]="branchAuto" [matChipInputFor]="brachChipList" 
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" #branchInput>
+
+      </mat-chip-list>
+      <mat-autocomplete autoActiveFirstOption #autobranch="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let branchS of branchFiltered" [value]="branchS">
+          {{branchS.name}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="branchAuto.hasError('required')">Please select branches</mat-error>
+    </mat-form-field>
   <mat-error *ngIf="error">
     *{{ error }}
   </mat-error>

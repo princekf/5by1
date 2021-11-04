@@ -5,12 +5,19 @@
 </div>
 <form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertFinyear()">
 
-
   <p>
     <mat-form-field>
       <mat-label>Name</mat-label>
       <input formControlName="name" matInput placeholder="Enter Name">
       <mat-error *ngIf="form.controls['name'].hasError('required')">Please Enter Name</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Code</mat-label>
+      <input formControlName="code" matInput placeholder="Enter Code">
+      <mat-error *ngIf="form.controls['code'].hasError('required')">Please Enter Name</mat-error>
     </mat-form-field>
   </p>
 
@@ -23,7 +30,7 @@
           {{branchS.name}}
         </mat-option>
       </mat-autocomplete>
-      <mat-error *ngIf="form.controls['branch'].hasError('required')">Please write Branch</mat-error>
+      <mat-error *ngIf="form.controls['branch'].hasError('required')">Please select a branch</mat-error>
     </mat-form-field>
   </p>
 

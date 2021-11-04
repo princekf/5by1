@@ -12,4 +12,5 @@ export interface User {
     password?: string;
     permissions?: Record<string, Permission>;
     branches?: Array<Branch>;
+    branchIds?: Array<string>;
 }

@@ -7,7 +7,7 @@ import { ValidateUserForUniqueEMailInterceptor } from '../interceptors';
 import { BindingKeys } from '../binding.keys';
 import {NewUserRequest, User} from '../models';
 import { Credentials, UserRepository} from '../repositories';
-import { PasswordHasher } from '../services';
+import { PasswordHasher, ProfileUser } from '../services';
 import { AuthResponseSchema, CredentialsRequestBody, InstallRequestBody, InstallResponseSchema, UserProfileSchema } from './specs/user-controller.specs';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import { USER_API } from '@shared/server-apis';
@@ -233,7 +233,7 @@ export class UserController {
     ...allRoleAuthDetails})
   async printCurrentUser(
     @inject(SecurityBindings.USER)
-      currentUserProfile: UserProfile,
+      currentUserProfile: ProfileUser,
   ): Promise<User> {
 
     const userId = currentUserProfile[securityId];

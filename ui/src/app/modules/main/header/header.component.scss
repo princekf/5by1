@@ -40,15 +40,16 @@ header {
 .user {
   margin-bottom: 0;
   font-size: 16px;
-  margin-left: 16px;
 }
 .avatar {
+  margin-left: 16px;
   width: 30px;
   height: 30px;
   border-radius: 8px;
   background-position: center;
   background-size: cover;
   display: inline-block;
+  cursor: pointer;
 }
 .header-divider{
   border-top-color: #E3E3E3;

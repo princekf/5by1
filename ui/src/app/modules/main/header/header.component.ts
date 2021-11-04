@@ -16,6 +16,8 @@ export class HeaderComponent implements OnInit {
 
   user: User;
 
+  branches = [ 'one', 'tow', 'three' ];
+
   constructor(private readonly mainService: MainService,
     private router: Router) {}
 

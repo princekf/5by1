@@ -7,6 +7,8 @@ import { authenticate } from '@loopback/authentication';
 import { authorize, } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
 import { adminOnlyAuthDetails } from '../utils/autherize-details';
+import { ValidateBranchForUniqueCodeInterceptor } from '../interceptors/validate-branch-for-unique-code.interceptor';
+import { intercept } from '@loopback/context';
 
 @authenticate('jwt')
 @authorize(adminOnlyAuthDetails)
@@ -17,6 +19,7 @@ export class BranchController {
     public branchRepository : BranchRepository,
   ) {}
 
+  @intercept(ValidateBranchForUniqueCodeInterceptor.BINDING_KEY)
   @post(BRANCH_API)
   @response(200, {
     description: 'Branch model instance',

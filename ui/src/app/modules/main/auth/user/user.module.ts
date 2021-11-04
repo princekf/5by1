@@ -19,7 +19,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   declarations: [ ListUserComponent, DeleteUserComponent, FilterUserComponent, CreateUserComponent ],
@@ -28,7 +29,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     UserRoutingModule,
     DataTableModule, MatTableModule, NgxSkeletonLoaderModule, MatSortModule, ToolBarModule,
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule,
-    MatInputModule, MatButtonModule, MatCheckboxModule
+    MatInputModule, MatButtonModule, MatCheckboxModule, MatAutocompleteModule, MatChipsModule,
   ]
 })
 export class UserModule { }

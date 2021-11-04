@@ -16,12 +16,13 @@ import { environment } from '@fboenvironments/environment';
 })
 export class ListBranchComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'name', 'email', 'address', 'finYearStartDate', 'defaultFinYear.name' ];
+  displayedColumns: string[] = [ 'name', 'email', 'code', 'address', 'finYearStartDate', 'defaultFinYear.name' ];
 
 
   columnHeaders = {
     name: 'Name',
     email: 'Email',
+    code: 'Code',
     address: 'Address',
     finYearStartDate: 'FinYearStartDate',
     'defaultFinYear.name': 'DefaultFinYear'
