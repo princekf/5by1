@@ -15,7 +15,7 @@ export class LoginComponent {
   error: string | null;
 
   loading = false;
-
+  hide = true;
 
   form: FormGroup = new FormGroup({
 
