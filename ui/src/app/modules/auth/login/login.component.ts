@@ -16,7 +16,7 @@ export class LoginComponent {
 
   loading = false;
   hide = true;
-
+ 
   form: FormGroup = new FormGroup({
 
     email: new FormControl('', [ Validators.required ]),
