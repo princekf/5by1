@@ -7,6 +7,8 @@ import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
 import { adminAndUserAuthDetails } from '../utils/autherize-details';
+import { ValidateLedgerForUniqueCodeInterceptor } from '../interceptors/validate-ledger-for-unique-name.interceptor';
+import { intercept } from '@loopback/context';
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
@@ -17,6 +19,7 @@ export class LedgerController {
     public ledgerRepository : LedgerRepository,
   ) {}
 
+  @intercept(ValidateLedgerForUniqueCodeInterceptor.BINDING_KEY)
   @post(LEDGER_API)
   @response(200, {
     description: 'Ledger model instance',

@@ -3,7 +3,7 @@ import {repository, BelongsToAccessor} from '@loopback/repository';
 import { FBOBaseRepository } from '.';
 import { BindingKeys } from '../binding.keys';
 import {Product, ProductRelations, Category} from '../models';
-import { dsSessionFactory } from '../services/data-source-session-factory';
+import { dsSessionFactory } from '../utils/data-source-session-factory';
 import {CategoryRepository} from './category.repository';
 
 export class ProductRepository extends FBOBaseRepository<

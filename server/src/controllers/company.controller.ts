@@ -50,7 +50,7 @@ export class CompanyController {
 
     const {password, ...company} = companyS;
     const companyR = await this.companyRepository.create(company);
-    this.context.bind(BindingKeys.SESSION_DB_NAME).to(<string>company.code.toLowerCase());
+    this.context.bind(BindingKeys.SESSION_COMPANY_CODE).to(<string>company.code.toLowerCase());
     const passwordC = await this.passwordHasher.hashPassword(password);
     const userRepository = await this.userRepositoryGetter();
     const permissions2 = {

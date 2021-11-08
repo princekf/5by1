@@ -1,5 +1,5 @@
 import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where} from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors } from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, RequestContext } from '@loopback/rest';
 import {FinYear} from '../models/fin-year.model';
 import {FinYearRepository} from '../repositories/fin-year.repository';
 import { FIN_YEAR_API } from '@shared/server-apis';
@@ -7,8 +7,14 @@ import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
 import { adminAndUserAuthDetails } from '../utils/autherize-details';
-import { intercept } from '@loopback/context';
+import { Getter, inject, intercept } from '@loopback/context';
 import { ValidateFinYearForUniqueCodeInterceptor } from '../interceptors/validate-finyear-for-unique-code.interceptor';
+import {SecurityBindings} from '@loopback/security';
+import { ProfileUser } from '../services';
+import { BindingKeys } from '../binding.keys';
+import { defaultLedgerGroups } from '../install/default.ledgergroups';
+import { LedgerGroupRepository } from '../repositories';
+import { LedgerGroup } from '../models';
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
@@ -18,6 +24,53 @@ export class FinYearController {
     @repository(FinYearRepository)
     public finYearRepository : FinYearRepository,
   ) {}
+
+  private installLedgerGroups = async(ledgerGroupRepository : LedgerGroupRepository) => {
+
+    const dLGs = [ ...defaultLedgerGroups ];
+    const pGroups = dLGs.filter((dLG) => !dLG.parent) as Array<LedgerGroup>;
+    const pGroupsSaved = await ledgerGroupRepository.createAll(pGroups);
+    const pGrpMap:Record<string, string> = {};
+    pGroupsSaved.forEach((pGrp) => (pGrpMap[pGrp.name] = pGrp.id));
+    const sGroups = dLGs.filter((dLG) => dLG.parent) as Array<LedgerGroup>;
+    const sGroups2:Array<LedgerGroup> = [];
+    const sGroups3:Array<LedgerGroup> = [];
+    sGroups.forEach((sGrp) => {
+
+      const {name, parent} = sGrp;
+      if (pGrpMap[parent?.name]) {
+
+        sGroups2.push({
+          name,
+          parentId: pGrpMap[parent.name]
+        } as LedgerGroup);
+
+      } else {
+
+        sGroups3.push({
+          name,
+          parent
+        } as LedgerGroup);
+
+      }
+
+    });
+    const s2GroupSaved = await ledgerGroupRepository.createAll(sGroups2);
+    s2GroupSaved.forEach((pGrp) => (pGrpMap[pGrp.name] = pGrp.id));
+    const sGroups4:Array<LedgerGroup> = [];
+    sGroups3.forEach((sGrp) => {
+
+      const {name, parent} = sGrp;
+      sGroups4.push({
+        name,
+        parentId: pGrpMap[parent.name]
+      } as LedgerGroup);
+
+    });
+
+    await ledgerGroupRepository.createAll(sGroups4);
+
+  };
 
   @intercept(ValidateFinYearForUniqueCodeInterceptor.BINDING_KEY)
   @post(FIN_YEAR_API)
@@ -39,9 +92,20 @@ export class FinYearController {
       },
     })
       finYear: Omit<FinYear, 'id'>,
+
+    @inject.context() context: RequestContext,
+    @inject(SecurityBindings.USER) uProfile: ProfileUser,
+    @repository.getter('LedgerGroupRepository') ledgerGroupRepositoryGetter: Getter<LedgerGroupRepository>,
   ): Promise<FinYear> {
 
     const finYearR = await this.finYearRepository.create(finYear);
+
+    /*
+     * Now install default data, like ledger groups, ledgers etc.
+     */
+    context.bind(BindingKeys.SESSION_DB_NAME).to(`${uProfile.company?.toLowerCase()}_${uProfile.branch?.toLowerCase()}_${finYear.code.toLowerCase()}`);
+    const ledgerGroupRepository = await ledgerGroupRepositoryGetter();
+    await this.installLedgerGroups(ledgerGroupRepository);
     return finYearR;
 
   }
@@ -178,7 +242,6 @@ export class FinYearController {
     await this.finYearRepository.deleteById(id);
 
   }
-
 
   @del(FIN_YEAR_API)
   @response(204, {

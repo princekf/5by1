@@ -24,10 +24,8 @@ export class CreateCostCentreComponent implements OnInit {
   form: FormGroup = new FormGroup({
 
     id: new FormControl(null),
-
     name: new FormControl('', [ Validators.required ]),
-
-    details: new FormControl('', [ Validators.required ]),
+    details: new FormControl(''),
 
   });
 

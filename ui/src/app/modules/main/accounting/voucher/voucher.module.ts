@@ -15,9 +15,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatIconModule} from '@angular/material/icon';
 import { VoucherRoutingModule } from './voucher-routing.module';
+import { DeleteVoucherComponent } from './delete-voucher/delete-voucher.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [ DeleteVoucherComponent ],
   imports: [
     CommonModule, VoucherRoutingModule,
     DataTableModule, MatTableModule, NgxSkeletonLoaderModule, MatSortModule, ToolBarModule,

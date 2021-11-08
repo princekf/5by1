@@ -3,7 +3,7 @@ import {repository, HasOneRepositoryFactory} from '@loopback/repository';
 import { FBOBaseRepository } from '.';
 import { BindingKeys } from '../binding.keys';
 import {User, UserRelations, UserCredentials} from '../models';
-import { dsSessionFactory } from '../services/data-source-session-factory';
+import { dsSessionFactory } from '../utils/data-source-session-factory';
 import {UserCredentialsRepository} from './user-credentials.repository';
 
 export type Credentials = {
@@ -23,7 +23,7 @@ export class UserRepository extends FBOBaseRepository<
 
   constructor(
     @repository.getter('UserCredentialsRepository') protected userCredentialsRepositoryGetter: Getter<UserCredentialsRepository>,
-    @inject(BindingKeys.SESSION_DB_NAME) dbName: string
+    @inject(BindingKeys.SESSION_COMPANY_CODE) dbName: string
   ) {
 
     super(User, dsSessionFactory.createRunTimeDataSource(dbName));

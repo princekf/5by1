@@ -2,7 +2,7 @@ import {inject, Getter} from '@loopback/core';
 import {DefaultCrudRepository, repository, BelongsToAccessor} from '@loopback/repository';
 import { BindingKeys } from '../binding.keys';
 import {SaleItem, SaleItemRelations, Product, Unit} from '../models';
-import { dsSessionFactory } from '../services/data-source-session-factory';
+import { dsSessionFactory } from '../utils/data-source-session-factory';
 import {ProductRepository} from './product.repository';
 import {UnitRepository} from './unit.repository';
 

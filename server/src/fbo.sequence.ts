@@ -9,16 +9,23 @@ import {
   RestBindings,
   Send,
   SequenceHandler,
+  Request,
 } from '@loopback/rest';
 import {
-  AuthenticateFn,
   AUTHENTICATION_STRATEGY_NOT_FOUND,
   AuthenticationBindings,
   USER_PROFILE_NOT_FOUND,
 } from '@loopback/authentication';
-import { LOGIN_API, INSTALL_API} from '@shared/server-apis';
+import { LOGIN_API, INSTALL_API, USER_API, BRANCH_API, FIN_YEAR_API, COMPANY_API } from '@shared/server-apis';
 import { BindingKeys } from './binding.keys';
+import { ProfileUser } from './services';
 const {SequenceActions} = RestBindings;
+
+
+interface AuthenticateFn {
+  (request: Request): Promise<ProfileUser>;
+}
+
 export class FBOSequence implements SequenceHandler {
 
 
@@ -40,30 +47,60 @@ export class FBOSequence implements SequenceHandler {
   ) {
   }
 
-  private findDBNamaeOfCommonRequests =
-  (routePath: string, context: RequestContext, params: Array<{company: string}>) => {
+  private findDBNameOfRequest =
+  (routePath: string, context: RequestContext, params: Array<{company: string}>, uProfile:ProfileUser) => {
 
     switch (routePath) {
 
     case INSTALL_API:
-      if (process.env.COMMON_DB) {
+      if (process.env.COMMON_COMPANY_CODE) {
 
-        context.bind(BindingKeys.SESSION_DB_NAME).to(process.env.COMMON_DB);
+        context.bind(BindingKeys.SESSION_DB_NAME).to(process.env.COMMON_COMPANY_CODE);
 
       }
-      break;
+      return;
     case LOGIN_API:
       const [ uDetails ] = params;
       if (!uDetails.company) {
 
-        const err = new Error('Parameter company is missing');
-        Object.assign(err, {statusCode: 401 });
-        this.reject(context, err);
-        return;
+        throw new Error('Parameter company is missing');
 
       }
-      context.bind(BindingKeys.SESSION_DB_NAME).to(<string>uDetails.company.toLowerCase());
-      break;
+      context.bind(BindingKeys.SESSION_COMPANY_CODE).to(<string>uDetails.company.toLowerCase());
+      return;
+
+    }
+
+    if (routePath.startsWith('/api-docs')) {
+
+      return;
+
+    }
+
+    if (routePath.startsWith(USER_API) || routePath.startsWith(BRANCH_API)
+     || routePath.startsWith(FIN_YEAR_API) || routePath.startsWith(COMPANY_API)) {
+
+      if (uProfile?.company) {
+
+        context.bind(BindingKeys.SESSION_COMPANY_CODE).to(<string>uProfile.company.toLowerCase());
+
+      } else {
+
+        throw new Error('Could not find company info from your session. Please login again.');
+
+      }
+      return;
+
+    }
+    if (uProfile?.company && uProfile?.branch && uProfile?.finYear) {
+
+      context.bind(BindingKeys.SESSION_COMPANY_CODE).to(<string>uProfile.company.toLowerCase());
+      const dbName = `${uProfile.company.toLowerCase()}_${uProfile.branch.toLowerCase()}_${uProfile.finYear.toLowerCase()}`;
+      context.bind(BindingKeys.SESSION_DB_NAME).to(dbName);
+
+    } else {
+
+      throw new Error('Financial year is not selected. Please select one.');
 
     }
 
@@ -84,12 +121,7 @@ export class FBOSequence implements SequenceHandler {
       // Call authentication action
       const uProfile = await this.authenticateRequest(request);
       const args = await this.parseParams(request, route);
-      this.findDBNamaeOfCommonRequests(route.path, context, args);
-      if (uProfile && uProfile.company) {
-
-        context.bind(BindingKeys.SESSION_DB_NAME).to(<string>uProfile.company.toLowerCase());
-
-      }
+      this.findDBNameOfRequest(route.path, context, args, uProfile);
       const result = await this.invoke(route, args);
       this.send(response, result);
 
@@ -105,6 +137,7 @@ export class FBOSequence implements SequenceHandler {
 
       }
 
+      Object.assign(err, {statusCode: 422 });
       this.reject(context, err);
 
     }

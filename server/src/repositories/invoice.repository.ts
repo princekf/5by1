@@ -4,7 +4,7 @@ import {Invoice, InvoiceRelations} from '../models/invoice.model';
 import {Customer} from '../models';
 import {CustomerRepository} from './customer.repository';
 import { BindingKeys } from '../binding.keys';
-import { dsSessionFactory } from '../services/data-source-session-factory';
+import { dsSessionFactory } from '../utils/data-source-session-factory';
 
 export class InvoiceRepository extends DefaultCrudRepository<
   Invoice,

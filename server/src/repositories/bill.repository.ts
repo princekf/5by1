@@ -2,7 +2,7 @@ import {inject, Getter} from '@loopback/core';
 import {DefaultCrudRepository, repository, BelongsToAccessor, HasManyRepositoryFactory} from '@loopback/repository';
 import { BindingKeys } from '../binding.keys';
 import {Bill, BillRelations, Vendor, PurchaseItem} from '../models';
-import { dsSessionFactory } from '../services/data-source-session-factory';
+import { dsSessionFactory } from '../utils/data-source-session-factory';
 import {VendorRepository} from './vendor.repository';
 
 export class BillRepository extends DefaultCrudRepository<

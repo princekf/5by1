@@ -44,11 +44,10 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Amount </th>
             <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
                 <mat-form-field class="amount-transaction-field">
-                    <input matInput type="number" formControlName="amount" [readonly]="i === 0" autocomplete="off">
+                    <input matInput type="number" formControlName="amount" [ngClass]="{primayamount: i === 0}" [readonly]="i === 0" autocomplete="off">
                     <button class="cr-dr-perfix" mat-flat-button matSuffix color="primary" type="button"
                      (click)="primaryTransactionType = primaryTransactionType === tType.CREDIT ? tType.DEBIT : tType.CREDIT"
                      [disabled]="i !== 0">{{findTransactionType(i)}}</button>
-                    <!-- <span matSuffix>Credit</span> -->
                 </mat-form-field>
             </td>
         </ng-container>

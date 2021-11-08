@@ -53,7 +53,7 @@ export class ValidateFinYearForUniqueCodeInterceptor implements Provider<Interce
       if ((/\s/gu).test(code)) {
 
         throw new HttpErrors.UnprocessableEntity(
-          'Company code should not contains white spaces.',
+          'Financial year code should not contains white spaces.',
         );
 
       }
@@ -61,7 +61,7 @@ export class ValidateFinYearForUniqueCodeInterceptor implements Provider<Interce
       if (nameAlreadyExist.length) {
 
         throw new HttpErrors.UnprocessableEntity(
-          'Company code already exists',
+          'Financial year code already exists',
         );
 
       }

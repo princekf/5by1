@@ -2,7 +2,7 @@ import {inject} from '@loopback/core';
 import { FBOBaseRepository } from '.';
 import { BindingKeys } from '../binding.keys';
 import {Customer, CustomerRelations} from '../models';
-import { dsSessionFactory } from '../services/data-source-session-factory';
+import { dsSessionFactory } from '../utils/data-source-session-factory';
 
 export class CustomerRepository extends FBOBaseRepository<
   Customer,

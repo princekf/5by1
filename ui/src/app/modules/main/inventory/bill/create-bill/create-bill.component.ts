@@ -313,10 +313,6 @@ export class CreateBillComponent implements OnInit {
     if (tId) {
 
       this.formHeader = 'Update Bills';
-
-    }
-    if (tId) {
-
       this.loading = true;
       const queryParam:QueryData = {
         include: [

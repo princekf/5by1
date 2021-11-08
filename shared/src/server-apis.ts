@@ -4,7 +4,8 @@ export const USER_API_URI = `${BASE_URI}${USER_API}`;
 export const LOGIN_API = `${USER_API}/login`;
 export const LOGIN_API_URI = `${BASE_URI}${LOGIN_API}`;
 export const INSTALL_API = `${USER_API}/install`;
-export const ME_API = `${BASE_URI}${USER_API}/me`;
+export const ME_API = `${USER_API}/me`;
+export const ME_API_URI = `${BASE_URI}${ME_API}`;
 export const SIGNUP_API = `${BASE_URI}${USER_API}/signup`;
 
 export const COMPANY_API = '/auth/company';

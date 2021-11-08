@@ -2,7 +2,7 @@ import {inject} from '@loopback/core';
 import { FBOBaseRepository } from './fbo-base.repository';
 import { BindingKeys } from '../binding.keys';
 import {CostCentre, CostCentreRelations} from '../models/cost-centre.model';
-import { dsSessionFactory } from '../services/data-source-session-factory';
+import { dsSessionFactory } from '../utils/data-source-session-factory';
 
 export class CostCentreRepository extends FBOBaseRepository<
   CostCentre,

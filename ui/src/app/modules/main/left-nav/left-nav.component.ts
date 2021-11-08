@@ -109,7 +109,7 @@ const menus: MenuNode[] = [
       {path: 'voucher-payment',
         name: 'Payment',
         pKey: 'voucher'},
-      {path: 'voucher-receipt',
+      {path: 'voucher/receipt',
         name: 'Receipt',
         pKey: 'voucher'},
       {path: 'voucher-contra',
@@ -133,7 +133,8 @@ const menus: MenuNode[] = [
     icon: 'settings',
     children: [
       {path: 'company',
-        name: 'Company'},
+        name: 'Company',
+        pKey: 'company'},
       {path: 'branch',
         name: 'Branch',
         pKey: 'branch'},

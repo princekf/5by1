@@ -2,7 +2,7 @@ import {inject, Getter} from '@loopback/core';
 import {DefaultCrudRepository, repository, BelongsToAccessor} from '@loopback/repository';
 import { BindingKeys } from '../binding.keys';
 import {LedgerGroup, LedgerGroupRelations} from '../models';
-import { dsSessionFactory } from '../services/data-source-session-factory';
+import { dsSessionFactory } from '../utils/data-source-session-factory';
 
 export class LedgerGroupRepository extends DefaultCrudRepository<
   LedgerGroup,

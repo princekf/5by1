@@ -93,7 +93,6 @@ export class ListLedgerComponent implements OnInit {
 
       this.loadData();
 
-
     });
 
   }

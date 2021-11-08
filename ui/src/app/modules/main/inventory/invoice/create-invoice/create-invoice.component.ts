@@ -319,10 +319,6 @@ export class CreateInvoiceComponent implements OnInit {
       if (tId) {
 
         this.formHeader = 'Update Invoices';
-
-      }
-      if (tId) {
-
         this.loading = true;
         const queryParam:QueryData = {
           include: [

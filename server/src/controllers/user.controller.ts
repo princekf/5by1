@@ -6,10 +6,10 @@ import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, resp
 import { ValidateUserForUniqueEMailInterceptor } from '../interceptors';
 import { BindingKeys } from '../binding.keys';
 import {NewUserRequest, User} from '../models';
-import { Credentials, UserRepository} from '../repositories';
+import { CompanyRepository, Credentials, UserRepository} from '../repositories';
 import { PasswordHasher, ProfileUser } from '../services';
 import { AuthResponseSchema, CredentialsRequestBody, InstallRequestBody, InstallResponseSchema, UserProfileSchema } from './specs/user-controller.specs';
-import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
+import {SecurityBindings, securityId} from '@loopback/security';
 import { USER_API } from '@shared/server-apis';
 import { resourcePermissions } from '../utils/resource-permissions';
 import { allRoleAuthDetails } from '../utils/autherize-details';
@@ -22,6 +22,8 @@ export class UserController {
   constructor(
     @repository(UserRepository)
     public userRepository : UserRepository,
+    @repository(CompanyRepository)
+    public companyRepository : CompanyRepository,
     @inject(BindingKeys.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
     @inject(BindingKeys.USER_SERVICE)
@@ -155,6 +157,44 @@ export class UserController {
 
   }
 
+  private installDefaultData = async() => {
+
+    // Create default company.
+    await this.companyRepository.create({
+      name: 'Five By One Solutions',
+      code: process.env.COMMON_COMPANY_CODE,
+      email: process.env.SUPER_ADMIN_EMAIL,
+    });
+
+    // Encrypt the password
+    const passwordC = await this.passwordHasher.hashPassword(
+      process.env.SUPER_ADMIN_PASSWORD ?? 'YoYo231Hia',
+    );
+    // Create super admin user
+    const permissions = {
+      'company': {
+        key: 'company',
+        name: 'Company',
+        operations: {view: true,
+          create: true,
+          update: true,
+          delete: true, }
+      }
+    };
+    const savedUser = await this.userRepository.create({
+      name: process.env.SUPER_ADMIN_NAME,
+      email: process.env.SUPER_ADMIN_EMAIL,
+      role: 'super-admin',
+      permissions,
+    });
+
+    // Set the password
+    await this.userRepository
+      .userCredentials(savedUser.id)
+      .create({password: passwordC});
+
+  };
+
   @authenticate.skip()
   @authorize.skip()
   @post(`${USER_API}/install`, {
@@ -178,23 +218,7 @@ export class UserController {
         throw new HttpErrors.Forbidden('Invalid credentials.');
 
       }
-      // Create super admin user
-
-      // Encrypt the password
-      const passwordC = await this.passwordHasher.hashPassword(
-        process.env.SUPER_ADMIN_PASSWORD ?? 'YoYo231Hia',
-      );
-      const savedUser = await this.userRepository.create({
-        name: process.env.SUPER_ADMIN_NAME,
-        email: process.env.SUPER_ADMIN_EMAIL,
-        role: 'super-admin',
-      });
-
-      // Set the password
-      await this.userRepository
-        .userCredentials(savedUser.id)
-        .create({password: passwordC});
-
+      await this.installDefaultData();
 
     } catch (errorP: unknown) {
 

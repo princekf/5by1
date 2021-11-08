@@ -15,8 +15,9 @@ export class LoginComponent {
   error: string | null;
 
   loading = false;
+
   hide = true;
- 
+
   form: FormGroup = new FormGroup({
 
     email: new FormControl('', [ Validators.required ]),
@@ -54,7 +55,7 @@ export class LoginComponent {
       }, (error) => {
 
         this.loading = false;
-        this.error = error.error.message;
+        this.error = error.error?.message ?? 'Error in login';
 
         if (!(/^(?<name>[a-zA-Z0-9_\-\.]+)@(?<domain>[a-zA-Z0-9_\-\.]+)\.(?<extn>[a-zA-Z]{2,5})$/ugm).test(this.form.value.email)) {
 

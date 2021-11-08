@@ -6,7 +6,7 @@ import {InvoiceRepository} from './invoice.repository';
 import {BankRepository} from './bank.repository';
 import { FBOBaseRepository } from './fbo-base.repository';
 import { BindingKeys } from '../binding.keys';
-import { dsSessionFactory } from '../services/data-source-session-factory';
+import { dsSessionFactory } from '../utils/data-source-session-factory';
 
 export class RevenueRepository extends FBOBaseRepository<
   Revenue,

@@ -1,7 +1,6 @@
 import {Entity, model, property, hasOne} from '@loopback/repository';
 import {UserCredentials} from './auth/user-credentials.model';
 import { Permission, User as UserInft } from '@shared/entity/auth/user';
-import { Branch } from './branch.model';
 
 @model()
 export class User extends Entity implements UserInft {

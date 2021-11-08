@@ -7,6 +7,9 @@ import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
 import { adminAndUserAuthDetails } from '../utils/autherize-details';
+import { intercept } from '@loopback/context';
+import { ValidateLGroupForUniqueCodeInterceptor } from '../interceptors/validate-ledgergroup-for-unique-name.interceptor';
+import { DenyDeletionOfDefaultLedgerGroup } from '../interceptors';
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
@@ -17,6 +20,7 @@ export class LedgerGroupController {
     public ledgerGroupRepository : LedgerGroupRepository,
   ) {}
 
+  @intercept(ValidateLGroupForUniqueCodeInterceptor.BINDING_KEY)
   @post(LEDGER_GROUP_API)
   @response(200, {
     description: 'LedgerGroup model instance',
@@ -176,6 +180,7 @@ export class LedgerGroupController {
 
   }
 
+  @intercept(DenyDeletionOfDefaultLedgerGroup.BINDING_KEY)
   @del(LEDGER_GROUP_API)
   @response(204, {
     description: 'Branchs DELETE success count',

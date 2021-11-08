@@ -50,10 +50,10 @@ export class ListCompanyComponent implements OnInit {
   private loadData = () => {
 
     this.loading = true;
-    this.companyService.list(this.queryParams).subscribe((company) => {
+    this.companyService.list(this.queryParams).subscribe((companies) => {
 
 
-      this.companies = company;
+      this.companies = companies;
 
       this.loading = false;
 

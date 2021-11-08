@@ -4,8 +4,8 @@ import {juggler} from '@loopback/repository';
 const config = {
   name: 'FBOCommonMongo',
   connector: 'mongodb',
-  url: `${process.env.MONGODB_URI}/${process.env.COMMON_DB}`,
-  database: process.env.COMMON_DB,
+  url: `${process.env.MONGODB_URI}/${process.env.COMMON_COMPANY_CODE}`,
+  database: process.env.COMMON_COMPANY_CODE,
   useNewUrlParser: true
 };
 

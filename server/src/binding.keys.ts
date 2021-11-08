@@ -31,4 +31,6 @@ export class BindingKeys {
 
   public static SESSION_DB_NAME = BindingKey.create<string>('session.database.name');
 
+  public static SESSION_COMPANY_CODE = BindingKey.create<string>('session.company.code');
+
 }

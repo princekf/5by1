@@ -2,7 +2,7 @@ import {inject, Getter} from '@loopback/core';
 import {DefaultCrudRepository, repository, BelongsToAccessor} from '@loopback/repository';
 import { BindingKeys } from '../binding.keys';
 import {FinYear, FinYearRelations, Branch} from '../models';
-import { dsSessionFactory } from '../services/data-source-session-factory';
+import { dsSessionFactory } from '../utils/data-source-session-factory';
 import {BranchRepository} from './branch.repository';
 
 export class FinYearRepository extends DefaultCrudRepository<
@@ -15,7 +15,7 @@ export class FinYearRepository extends DefaultCrudRepository<
 
   constructor(
     @repository.getter('BranchRepository') protected branchRepositoryGetter: Getter<BranchRepository>,
-    @inject(BindingKeys.SESSION_DB_NAME) dbName: string
+    @inject(BindingKeys.SESSION_COMPANY_CODE) dbName: string
   ) {
 
     super(FinYear, dsSessionFactory.createRunTimeDataSource(dbName));
