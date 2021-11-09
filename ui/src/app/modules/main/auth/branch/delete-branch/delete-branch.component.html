@@ -9,7 +9,7 @@
 
   <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> {{columnHeaders[column]}} </th>
-    <td mat-cell *matCellDef="let element" [columnParnsingFn]="columnParsingFn"> 
+    <td mat-cell *matCellDef="let element"> 
       {{findColumnValue(element, column, columnParsingFn)}} </td>
   </ng-container>
 

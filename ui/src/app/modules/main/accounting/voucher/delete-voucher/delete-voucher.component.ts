@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '@fboenvironments/environment';
 import { LedgerService } from '@fboservices/accounting/ledger.service';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
 import { MainService } from '@fboservices/main.service';
@@ -9,6 +10,7 @@ import { Ledger } from '@shared/entity/accounting/ledger';
 import { TransactionType } from '@shared/entity/accounting/transaction';
 import { Voucher } from '@shared/entity/accounting/voucher';
 import { QueryData } from '@shared/util/query-data';
+import * as dayjs from 'dayjs';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, of, throwError, zip } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
@@ -126,6 +128,18 @@ export class DeleteVoucherComponent implements OnInit {
       this.displayedColumns = this.extraColumns.splice(0, COLUMN_COUNT_MOBILE_VIEW);
 
     }
+
+  }
+
+  columnParsingFn = (element: unknown, column: string): string => {
+
+    switch (column) {
+
+    case 'date':
+      return dayjs(element[column]).format(environment.dateFormat);
+
+    }
+    return null;
 
   }
 

@@ -1,99 +1,10 @@
-<h2 class="form-header">{{formHeader}} </h2>
-
-<div *ngIf="loading">
-    <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
-</div>
-
-<form [style.display]="loading ? 'none': ''" [formGroup]="fboForm" (ngSubmit)="upsertVoucher()">
-
-    <mat-form-field class="fbo-form-field-multi">
-        <mat-label>Voucher Number</mat-label>
-        <input matInput formControlName="number" type="text" autocomplete="off">
-        <mat-error *ngIf="fboForm.controls['number'].hasError('required')"> Voucher number is required</mat-error>
-    </mat-form-field>
-
-    <mat-form-field class="fbo-form-field-multi">
-        <mat-label>Voucher date</mat-label>
-        <input matInput [matDatepicker]="voucherDatePicker" formControlName="date">
-        <mat-datepicker-toggle matSuffix [for]="voucherDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #voucherDatePicker></mat-datepicker>
-        <mat-error *ngIf="fboForm.controls['date'].hasError('required')"> Voucher date is required </mat-error>
-    </mat-form-field>
-    <mat-form-field class="fbo-form-field-details">
-        <mat-label>Voucher description</mat-label>
-        <input matInput formControlName="details" placeholder="Descriptions for these voucher" autocomplete="off">
-    </mat-form-field>
-    <table formArrayName="transactions" mat-table [dataSource]="transactionsDS" matSort multiTemplateDataRows
-        class="create-form-table">
-        <ng-container matColumnDef="ledger">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Ledger </th>
-            <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
-                <mat-form-field class="ledger-transaction-field">
-                    <input type="text" matInput formControlName="ledger" [matAutocomplete]="autoTransactionLedger">
-                    <mat-autocomplete autoActiveFirstOption #autoTransactionLedger="matAutocomplete"
-                        [displayWith]="extractNameOfObject">
-                        <mat-option *ngFor="let ledgerS of getProperLedgers(i)" [value]="ledgerS">
-                            {{ledgerS.name}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </td>
-        </ng-container>
-
-        <ng-container matColumnDef="amount">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Amount </th>
-            <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
-                <mat-form-field class="amount-transaction-field">
-                    <input matInput type="number" formControlName="amount" [ngClass]="{primayamount: i === 0}" [readonly]="i === 0" autocomplete="off">
-                    <button class="cr-dr-perfix" mat-flat-button matSuffix color="primary" type="button"
-                     (click)="primaryTransactionType = primaryTransactionType === tType.CREDIT ? tType.DEBIT : tType.CREDIT"
-                     [disabled]="i !== 0">{{findTransactionType(i)}}</button>
-                </mat-form-field>
-            </td>
-        </ng-container>
-
-        <ng-container matColumnDef="costCentre">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Cost Centre </th>
-            <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
-                <mat-form-field class="costCentre-transaction-field">
-                    <input type="text" matInput formControlName="costCentre" [matAutocomplete]="autoCostCentreLedger">
-                    <mat-autocomplete autoActiveFirstOption #autoCostCentreLedger="matAutocomplete"
-                        [displayWith]="extractNameOfObject">
-                        <mat-option *ngFor="let costCentreC of costCentresFiltered" [value]="costCentreC">
-                            {{costCentreC.name}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </td>
-        </ng-container>
-
-        <ng-container matColumnDef="details">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Details </th>
-            <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
-                <mat-form-field class="details-transaction-field">
-                    <input matInput type="text" formControlName="details" autocomplete="off">
-                </mat-form-field>
-            </td>
-        </ng-container>
-
-        <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"></th>
-            <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
-                <span *ngIf="shouldShowDelete(i)" class="fbo-create-form-numberdelete">
-                    <button mat-icon-button type="button" color="warn" focusable="true" (click)="removeAt(i)">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                </span>
-            </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="displayedColumns" class="fiveby1-table-header">
-        </tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="fiveby1-element-row"></tr>
-    </table>
-
-  <p class="form-submit-container">
-    <button class="cancel-button" type="button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
-    <button class="submit-button" mat-button>save</button>
-  </p>
-</form>
+<app-create-voucher
+formHeader='Create Journal'
+[primaryTransactionType]='primaryTransactionType'
+[voucherType]='voucherType'
+[canChangeTransactionType]='true'
+(primaryLedgerChangeEvent)="handleLedgerChangeEvent($event)"
+[ledgersFiltered]='ledgersFiltered'
+(compoundLedgerChangeEvent)="handleLedgerChangeEvent($event)"
+[ledgersCompoundFiltered]='ledgersFiltered'
+></app-create-voucher>

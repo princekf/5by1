@@ -72,7 +72,7 @@ export class DataTableComponent {
 
   @Input() deleteUri: string;
 
-  @Input() columnParnsingFn?:(elm:unknown, clm:string)=>string;
+  @Input() columnParsingFn?:(elm:unknown, clm:string)=>string;
 
   @ViewChild(MatSort) sort: MatSort;
 

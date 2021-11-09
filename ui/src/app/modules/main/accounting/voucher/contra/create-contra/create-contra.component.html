@@ -1,0 +1,10 @@
+<app-create-voucher
+formHeader='Create Contra'
+[primaryTransactionType]='primaryTransactionType'
+[voucherType]='voucherType'
+[canChangeTransactionType]='true'
+(primaryLedgerChangeEvent)="handleLedgerChangeEvent($event)"
+[ledgersFiltered]='ledgersFiltered'
+(compoundLedgerChangeEvent)="handleLedgerChangeEvent($event)"
+[ledgersCompoundFiltered]='ledgersFiltered'
+></app-create-voucher>

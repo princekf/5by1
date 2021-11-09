@@ -31,8 +31,8 @@ export class CreateReceiptComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const pLGNames = [ dlgn.SUNDRY_CREDITORS, dlgn.SUNDRY_DEBTORS ];
-    const cLGNames = [ dlgn.BANK_ACCOUNTS, dlgn.CACH_IN_HAND ];
+    const pLGNames = [ dlgn.BANK_ACCOUNTS, dlgn.CACH_IN_HAND ];
+    const cLGNames = [ dlgn.SUNDRY_CREDITORS, dlgn.SUNDRY_DEBTORS ];
     const queryData:QueryData = {
       where: {
         name: {

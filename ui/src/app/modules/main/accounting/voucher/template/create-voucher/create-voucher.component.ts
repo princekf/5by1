@@ -186,17 +186,11 @@ export class CreateVoucherComponent implements OnInit {
     this.fboForm.controls.details.setValue(voucher.details ?? '');
     this.fboForm.controls.type.setValue(voucher.type ?? VoucherType.JOURNAL);
     const [ pTrans, ...cTrans ] = voucher.transactions;
-    const compundTransForms:FormGroup[] = [];
-    for (const trans of cTrans) {
-
-      compundTransForms.push(this.createCompoundTransactionForm(trans));
-
-    }
-    this.fboForm.controls.transactions = this.fBuilder.array([
-      this.createPrimaryTransactionForm(pTrans),
-      ...compundTransForms,
-    ]);
     const formArray = this.fboForm.get('transactions') as FormArray;
+    formArray.clear();
+    formArray.push(this.createPrimaryTransactionForm(pTrans));
+    cTrans.forEach((ctrn) => formArray.push(this.createCompoundTransactionForm(ctrn)));
+    formArray.push(this.createCompoundTransactionForm());
     this.transactionsDS = new MatTableDataSource(formArray.controls);
 
   }
@@ -256,6 +250,7 @@ export class CreateVoucherComponent implements OnInit {
       this.createTrnasactionDetailsObserver(tId)
         .subscribe(([ voucher, ledgers, cCentres ]) => {
 
+          this.formHeader = `Update ${voucher.number}`;
           const cMap:Record<string, CostCentre> = {};
           cCentres.forEach((ldg) => (cMap[ldg.id] = ldg));
           const lMap:Record<string, Ledger> = {};

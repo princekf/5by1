@@ -1,12 +1,6 @@
 <app-tool-bar createUri="/voucher/journal/create" mainHeader="Journal"></app-tool-bar>
-
-<app-data-table tableHeader="List of Journals"
-[displayedColumns]="displayedColumns"
-[columnHeaders]="columnHeaders"
-[loading]="loading"
-[tableData]="vouchers"
-editUri="/voucher/create"
-deleteUri="/voucher/delete"
-[filterItem]="filterItem"
-></app-data-table>
-
+<app-list-voucher
+[voucherType]="voucherType"
+[tableHeader]="tableHeader"
+[editUri]="editUri"
+></app-list-voucher>

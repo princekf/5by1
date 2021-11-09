@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FilterJournalComponent } from './filter-journal.component';
+import { ListCreditNoteComponent } from './list-credit-note.component';
 
-describe('FilterJournalComponent', () => {
-  let component: FilterJournalComponent;
-  let fixture: ComponentFixture<FilterJournalComponent>;
+describe('ListCreditNoteComponent', () => {
+  let component: ListCreditNoteComponent;
+  let fixture: ComponentFixture<ListCreditNoteComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FilterJournalComponent ]
+      declarations: [ ListCreditNoteComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FilterJournalComponent);
+    fixture = TestBed.createComponent(ListCreditNoteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
