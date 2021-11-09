@@ -10,6 +10,13 @@ import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 import { QueryData } from '@shared/util/query-data';
 import { TransactionType } from '@shared/entity/accounting/transaction';
 
+interface ExtrasInteface {
+  extras : {
+    [prop: string]: { 'type' : string, 'name' : string };
+  }
+}
+
+const EXTRA_CONTROL_NAME = 'extras';
 @Component({
   selector: 'app-create-ledger',
   templateUrl: './create-ledger.component.html',
@@ -82,12 +89,42 @@ export class CreateLedgerComponent implements OnInit {
 
   }
 
+  private createExtraFormGroup = (extras:{ [prop: string]: { type: string; name: string; }; }): FormGroup => {
+
+    const formControls:Record<string, FormControl> = {};
+    for (const key in extras) {
+
+      if (!extras.hasOwnProperty(key)) {
+
+        continue;
+
+      }
+      formControls[key] = new FormControl('');
+
+    }
+
+    return new FormGroup(formControls);
+
+  }
+
   private initValueChanges = () => {
 
     this.form.controls.ledgerGroup.valueChanges.subscribe((ledgerQ:unknown) => {
 
       if (typeof ledgerQ !== 'string') {
 
+        const lGroup:LedgerGroup & ExtrasInteface = this.form.controls.ledgerGroup.value;
+        if (!lGroup.extras) {
+
+          return;
+
+        }
+        if (this.form.contains(EXTRA_CONTROL_NAME)) {
+
+          this.form.removeControl(EXTRA_CONTROL_NAME);
+
+        }
+        this.form.addControl(EXTRA_CONTROL_NAME, this.createExtraFormGroup(lGroup.extras));
         return;
 
       }
@@ -101,6 +138,39 @@ export class CreateLedgerComponent implements OnInit {
 
   extractNameOfObject = (obj: {name: string}): string => obj.name;
 
+  getFormName = (key: string): string => {
+
+    const lGroup:ExtrasInteface = this.form.controls.ledgerGroup.value;
+    const {name} = lGroup.extras[key];
+    return name;
+
+  }
+
+  extrasControls = ():Array<string> => {
+
+    const lGroup:ExtrasInteface = this.form.controls.ledgerGroup.value;
+
+    if (!lGroup?.extras) {
+
+      return [];
+
+    }
+
+    const keys:Array<string> = [];
+    for (const key in lGroup.extras) {
+
+      if (!lGroup.extras.hasOwnProperty(key)) {
+
+        continue;
+
+      }
+      keys.push(key);
+
+    }
+    return keys;
+
+  }
+
   upsertLedger(): void {
 
 
@@ -110,18 +180,16 @@ export class CreateLedgerComponent implements OnInit {
 
     }
     this.loading = true;
-    const LedgerP = <Ledger> this.form.value;
+    const ledgerP = <Ledger> this.form.value;
+    this.ledgerService.upsert(ledgerP).subscribe(() => {
 
-
-    this.ledgerService.upsert(LedgerP).subscribe(() => {
-
-      this.toastr.success(`Ledger ${LedgerP.name} is saved successfully`, 'Ledger saved');
+      this.toastr.success(`Ledger ${ledgerP.name} is saved successfully`, 'Ledger saved');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error(`Error in saving Ledger ${LedgerP.name}`, 'Ledger not saved');
+      this.toastr.error(`Error in saving Ledger ${ledgerP.name}`, 'Ledger not saved');
       console.error(error);
 
     });

@@ -10,4 +10,5 @@ export interface Ledger {
     obType?: 'Credit' | 'Debit';
     refNo?: string;
     details?: string;
+    [prop: string]: unknown;
 }

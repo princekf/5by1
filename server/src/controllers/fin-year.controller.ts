@@ -37,20 +37,22 @@ export class FinYearController {
     const sGroups3:Array<LedgerGroup> = [];
     sGroups.forEach((sGrp) => {
 
-      const {name, parent} = sGrp;
+      const {name, parent, extras} = sGrp;
       if (pGrpMap[parent?.name]) {
 
         sGroups2.push({
           name,
-          parentId: pGrpMap[parent.name]
-        } as LedgerGroup);
+          parentId: pGrpMap[parent.name],
+          extras
+        } as LedgerGroup & {extras : unknown});
 
       } else {
 
         sGroups3.push({
           name,
-          parent
-        } as LedgerGroup);
+          parent,
+          extras
+        } as LedgerGroup & {extras : unknown});
 
       }
 
@@ -60,11 +62,12 @@ export class FinYearController {
     const sGroups4:Array<LedgerGroup> = [];
     sGroups3.forEach((sGrp) => {
 
-      const {name, parent} = sGrp;
+      const {name, parent, extras} = sGrp;
       sGroups4.push({
         name,
-        parentId: pGrpMap[parent.name]
-      } as LedgerGroup);
+        parentId: pGrpMap[parent.name],
+        extras
+      } as LedgerGroup & {extras : unknown});
 
     });
 

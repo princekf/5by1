@@ -1,5 +1,23 @@
 import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 import { defalutLedgerGroupNames as dlgn} from '@shared/util/ledger-group-names';
+const extras = {
+  'gstin': {'type': 'string',
+    'name': 'GSTIN/UIN'},
+  'state': {'type': 'string',
+    'name': 'State'},
+  'mobile': {'type': 'string',
+    'name': 'Mobile'},
+  'email': {'type': 'string',
+    'name': 'E-Mail'},
+  'address1': {'type': 'string',
+    'name': 'Address Line 1'},
+  'address2': {'type': 'string',
+    'name': 'Address Line 2'},
+  'address3': {'type': 'string',
+    'name': 'Address Line 3'},
+  'pincode': {'type': 'string',
+    'name': 'PIN Code'}
+};
 export const defaultLedgerGroups:Array<LedgerGroup> = [
   {name: 'Assets'},
   {name: 'Liabilities'},
@@ -26,7 +44,8 @@ export const defaultLedgerGroups:Array<LedgerGroup> = [
   {name: 'Stock-in-hand',
     parent: {name: 'Current Assets'}},
   {name: dlgn.SUNDRY_DEBTORS,
-    parent: {name: 'Current Assets'}},
+    parent: {name: 'Current Assets'},
+    extras},
   {name: 'Current Liabilities',
     parent: {name: 'Liabilities'}},
   {name: 'Duties and Taxes',
@@ -34,7 +53,8 @@ export const defaultLedgerGroups:Array<LedgerGroup> = [
   {name: 'Provisions',
     parent: {name: 'Current Liabilities'}},
   {name: dlgn.SUNDRY_CREDITORS,
-    parent: {name: 'Current Liabilities'}},
+    parent: {name: 'Current Liabilities'},
+    extras},
   {name: 'Direct Expenses',
     parent: {name: 'Expenses'}},
   {name: 'Direct Income',

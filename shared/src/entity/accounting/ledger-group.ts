@@ -4,4 +4,5 @@ export interface LedgerGroup {
     parent?: LedgerGroup;
     parentId?: string;
     details?: string;
+    [prop: string]: unknown;
 }

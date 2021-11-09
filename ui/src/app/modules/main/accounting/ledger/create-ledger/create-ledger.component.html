@@ -5,7 +5,6 @@
 </div>
 <form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertLedger()">
 
-
   <p>
     <mat-form-field>
       <mat-label>Name</mat-label>
@@ -56,9 +55,17 @@
     </mat-form-field>
   </p>
 
+  <div *ngIf="form.controls['ledgerGroup'].value.extras" formGroupName="extras">
+    Extras
+    <br/>
+    <mat-form-field *ngFor="let extra of extrasControls()">
+      <mat-label>{{getFormName(extra)}}</mat-label>
+      <input [formControlName]="extra" matInput >
+    </mat-form-field>
+  </div>
 
   <p class="form-submit-container">
-    <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
+    <button class="cancel-button" type="button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
     <button class="submit-button" mat-button>save</button>
   </p>
 

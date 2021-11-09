@@ -46,8 +46,7 @@ export class Ledger extends Entity implements LedgerIntf {
   ledgerGroupId: string;
 
   // Indexer property to allow additional data
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  [prop: string]: unknown;
 
   constructor(data?: Partial<Ledger>) {
 
