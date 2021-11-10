@@ -55,6 +55,7 @@ export class FBOSequence implements SequenceHandler {
     case INSTALL_API:
       if (process.env.COMMON_COMPANY_CODE) {
 
+        context.bind(BindingKeys.SESSION_COMPANY_CODE).to(process.env.COMMON_COMPANY_CODE.toLowerCase());
         context.bind(BindingKeys.SESSION_DB_NAME).to(process.env.COMMON_COMPANY_CODE);
 
       }

@@ -7,17 +7,9 @@ import {BindingKeys} from '../binding.keys';
 import {inject} from '@loopback/context';
 import {PasswordHasher} from './hash-password.service';
 import { User } from '../models';
-
-export interface ProfileUser {
+import { ProfileUser as ProfileUserInft} from '@shared/util/profile-user';
+export interface ProfileUser extends ProfileUserInft{
   [securityId]: string;
-  [attribute: string]: any;
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  company?: string;
-  branch?: string;
-  finYear?: string;
 }
 export class FBOUserService implements UserService<ProfileUser, Credentials> {
 

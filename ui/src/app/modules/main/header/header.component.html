@@ -31,8 +31,8 @@
         [matMenuTriggerFor]="profileMenu"></div>
       </div>
       <mat-menu #profileMenu="matMenu">
-        <button *ngFor="let branch of branches" type="button" mat-menu-item >
-          {{branch}}
+        <button type="button" mat-menu-item (click)="goToMyAccount()">
+          My Account
         </button>
         <button type="button" mat-menu-item (click)="doLogout()">
           Logout

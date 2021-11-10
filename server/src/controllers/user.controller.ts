@@ -6,14 +6,14 @@ import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, resp
 import { ValidateUserForUniqueEMailInterceptor } from '../interceptors';
 import { BindingKeys } from '../binding.keys';
 import {NewUserRequest, User} from '../models';
-import { CompanyRepository, Credentials, UserRepository} from '../repositories';
+import { BranchRepository, CompanyRepository, Credentials, FinYearRepository, UserRepository} from '../repositories';
 import { PasswordHasher, ProfileUser } from '../services';
-import { AuthResponseSchema, CredentialsRequestBody, InstallRequestBody, InstallResponseSchema, UserProfileSchema } from './specs/user-controller.specs';
+import { AuthResponseSchema, CredentialsRequestBody, InstallRequestBody, InstallResponseSchema, SwitchFinYearRequestBody, SwitchFinYearResponseSchema, UserProfileSchema } from './specs/user-controller.specs';
 import {SecurityBindings, securityId} from '@loopback/security';
-import { USER_API } from '@shared/server-apis';
+import { ME_API, MY_ACCOUNT_API, USER_API, SWITCH_FIN_YEAR_API } from '@shared/server-apis';
 import { resourcePermissions } from '../utils/resource-permissions';
-import { allRoleAuthDetails } from '../utils/autherize-details';
-
+import { adminAndUserAuthDetails, allRoleAuthDetails } from '../utils/autherize-details';
+import { MyAccountResp } from '@shared/util/my-account-resp';
 
 @authenticate('jwt')
 @authorize(allRoleAuthDetails)
@@ -241,7 +241,7 @@ export class UserController {
 
   }
 
-  @get(`${USER_API}/me`, {
+  @get(ME_API, {
     responses: {
       '200': {
         description: 'The current user profile',
@@ -265,6 +265,79 @@ export class UserController {
     return userT;
 
   }
+
+  @get(MY_ACCOUNT_API, {
+    responses: {
+      '200': {
+        description: 'The current user profile',
+        content: {
+          'application/json': {
+            schema: UserProfileSchema,
+          },
+        },
+      },
+    },
+  })
+  @authorize({resource: resourcePermissions.commonResources.name,
+    ...allRoleAuthDetails})
+  async findSessionAccountDetails(
+    @inject(SecurityBindings.USER)
+      currentUserProfile: ProfileUser,
+    @repository(CompanyRepository)
+      companyRepository : CompanyRepository,
+    @repository(BranchRepository)
+      branchRepository : BranchRepository,
+    @repository(FinYearRepository)
+      finYearRepository : FinYearRepository,
+  ): Promise<MyAccountResp> {
+
+    const userId = currentUserProfile[securityId];
+    const user = await this.userRepository.findById(userId);
+    const company = await companyRepository.findOne({
+      where: {code: {regexp: `/^${currentUserProfile.company}$/i`}},
+    });
+    const branches = await branchRepository.find();
+    const finYears = await finYearRepository.find();
+    return {user,
+      company,
+      branches,
+      finYears,
+      sessionUser: currentUserProfile};
+
+  }
+
+  @post(SWITCH_FIN_YEAR_API, {
+    responses: {
+      '200': {
+        description: 'Switch financial year status',
+        content: {
+          'application/json': {schema: SwitchFinYearResponseSchema},
+        },
+      },
+    },
+  })
+  @authorize({resource: resourcePermissions.commonResources.name,
+    ...adminAndUserAuthDetails})
+  async switchFinYear(
+    @requestBody(SwitchFinYearRequestBody) data: {finYearId: string},
+    @inject(SecurityBindings.USER)
+      currentUserProfile: ProfileUser,
+    @repository(BranchRepository)
+      branchRepository : BranchRepository,
+    @repository(FinYearRepository)
+      finYearRepository : FinYearRepository,
+  ): Promise<{token: string}> {
+
+    const finYear = await finYearRepository.findById(data.finYearId);
+    const branch = await branchRepository.findById(finYear.branchId);
+    const userProfile2 = {...currentUserProfile};
+    userProfile2.branch = branch.code;
+    userProfile2.finYear = finYear.code;
+    const token = await this.jwtService.generateToken(userProfile2);
+    return {token};
+
+  }
+
 
   @get(`${USER_API}/count`)
   @response(200, {

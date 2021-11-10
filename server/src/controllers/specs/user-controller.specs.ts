@@ -65,3 +65,29 @@ export const InstallResponseSchema = {
     message: {type: 'string'},
   },
 };
+
+
+const SwitchFinYearSchema: SchemaObject = {
+  type: 'object',
+  required: [ 'finYearId' ],
+  properties: {
+    finYearId: {
+      type: 'string',
+    },
+  },
+};
+
+export const SwitchFinYearRequestBody: Partial<RequestBodyObject> = {
+  description: 'The input of switch fin year function',
+  required: true,
+  content: {
+    'application/json': {schema: SwitchFinYearSchema},
+  },
+};
+
+export const SwitchFinYearResponseSchema = {
+  type: 'object',
+  properties: {
+    token: {type: 'string'},
+  },
+};

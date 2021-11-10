@@ -49,7 +49,7 @@ export class ValidateFinYearForUniqueCodeInterceptor implements Provider<Interce
 
     try {
 
-      const [ { code } ] = invocationCtx.args;
+      const [ { code, branchId } ] = invocationCtx.args;
       if ((/\s/gu).test(code)) {
 
         throw new HttpErrors.UnprocessableEntity(
@@ -57,7 +57,8 @@ export class ValidateFinYearForUniqueCodeInterceptor implements Provider<Interce
         );
 
       }
-      const nameAlreadyExist = await this.finYearRepository.find({where: {code: {regexp: `/^${code}$/i`}}});
+      const nameAlreadyExist = await this.finYearRepository.find({where: {code: {regexp: `/^${code}$/i`},
+        branchId}});
       if (nameAlreadyExist.length) {
 
         throw new HttpErrors.UnprocessableEntity(

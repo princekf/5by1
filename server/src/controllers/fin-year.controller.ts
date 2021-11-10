@@ -13,7 +13,7 @@ import {SecurityBindings} from '@loopback/security';
 import { ProfileUser } from '../services';
 import { BindingKeys } from '../binding.keys';
 import { defaultLedgerGroups } from '../install/default.ledgergroups';
-import { LedgerGroupRepository } from '../repositories';
+import { BranchRepository, LedgerGroupRepository } from '../repositories';
 import { LedgerGroup } from '../models';
 
 @authenticate('jwt')
@@ -97,16 +97,25 @@ export class FinYearController {
       finYear: Omit<FinYear, 'id'>,
 
     @inject.context() context: RequestContext,
+    @repository(BranchRepository)
+      branchRepository : BranchRepository,
     @inject(SecurityBindings.USER) uProfile: ProfileUser,
     @repository.getter('LedgerGroupRepository') ledgerGroupRepositoryGetter: Getter<LedgerGroupRepository>,
   ): Promise<FinYear> {
 
+    const {branchId} = finYear;
+    const branch = await branchRepository.findById(branchId);
+    if (!branch) {
+
+      throw new Error('Please select a proper branch');
+
+    }
     const finYearR = await this.finYearRepository.create(finYear);
 
     /*
      * Now install default data, like ledger groups, ledgers etc.
      */
-    context.bind(BindingKeys.SESSION_DB_NAME).to(`${uProfile.company?.toLowerCase()}_${uProfile.branch?.toLowerCase()}_${finYear.code.toLowerCase()}`);
+    context.bind(BindingKeys.SESSION_DB_NAME).to(`${uProfile.company?.toLowerCase()}_${branch.code?.toLowerCase()}_${finYear.code.toLowerCase()}`);
     const ledgerGroupRepository = await ledgerGroupRepositoryGetter();
     await this.installLedgerGroups(ledgerGroupRepository);
     return finYearR;

@@ -6,6 +6,10 @@ export const LOGIN_API_URI = `${BASE_URI}${LOGIN_API}`;
 export const INSTALL_API = `${USER_API}/install`;
 export const ME_API = `${USER_API}/me`;
 export const ME_API_URI = `${BASE_URI}${ME_API}`;
+export const MY_ACCOUNT_API = `${USER_API}/my-account`;
+export const MY_ACCOUNT_API_URI = `${BASE_URI}${MY_ACCOUNT_API}`;
+export const SWITCH_FIN_YEAR_API = `${USER_API}/switch-fin-year`;
+export const SWITCH_FIN_YEAR_API_URI = `${BASE_URI}${SWITCH_FIN_YEAR_API}`;
 export const SIGNUP_API = `${BASE_URI}${USER_API}/signup`;
 
 export const COMPANY_API = '/auth/company';

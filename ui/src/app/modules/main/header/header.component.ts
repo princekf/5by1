@@ -16,8 +16,6 @@ export class HeaderComponent implements OnInit {
 
   user: User;
 
-  branches = [ 'Change Fin Year' ];
-
   constructor(private readonly mainService: MainService,
     private router: Router) {}
 
@@ -49,6 +47,12 @@ export class HeaderComponent implements OnInit {
 
     localStorage.removeItem(ACCESS_TOKEN_ID);
     this.router.navigate([ '/login' ]);
+
+  };
+
+  goToMyAccount = ():void => {
+
+    this.router.navigate([ '/my-account' ]);
 
   };
 

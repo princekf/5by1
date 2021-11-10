@@ -104,6 +104,10 @@ const routes: Routes = [
         path: 'voucher',
         loadChildren: () => import('./accounting/voucher/voucher.module').then((mod) => mod.VoucherModule)
       },
+      {
+        path: 'my-account',
+        loadChildren: () => import('./auth/my-account/my-account.module').then((mod) => mod.MyAccountModule)
+      },
 
     ]
   },
