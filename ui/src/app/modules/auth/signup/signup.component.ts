@@ -14,7 +14,8 @@ export class SignupComponent {
   error: string | null;
 
   loading = false;
-
+  hide = true;
+  hide1 = true;
   form: FormGroup = new FormGroup({
     name: new FormControl('', [ Validators.required ]),
     email: new FormControl('', [ Validators.required ]),

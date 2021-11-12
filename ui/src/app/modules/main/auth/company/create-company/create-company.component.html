@@ -40,8 +40,10 @@
   <p *ngIf="!form.controls['id'].value">
     <mat-form-field>
       <mat-label>Password</mat-label>
-      <input type="password" formControlName="password" matInput placeholder="Enter Password">
-      <mat-error *ngIf="form.controls['password'].hasError('required')">Please Enter Password</mat-error>
+      <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+            
+      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+       <mat-error *ngIf="form.controls['password'].hasError('required')">Please Enter Password</mat-error>
     </mat-form-field>
   </p>
 

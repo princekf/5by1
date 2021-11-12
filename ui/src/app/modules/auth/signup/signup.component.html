@@ -23,14 +23,19 @@
         </p>
         <p>
           <mat-form-field>
-            <input type="password" matInput placeholder="Password" formControlName="password">
+            <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+            
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             <mat-error *ngIf="form.controls['password'].hasError('required')"> Password is required</mat-error>
           </mat-form-field>
         </p>
         <p>
           <mat-form-field>
-            <input type="password" matInput placeholder="Confirm Password" formControlName="cPassword">
-            <mat-error *ngIf="form.controls['cPassword'].hasError('required')">Confirm Password is required</mat-error>
+            <mat-label>Re-Enter your password</mat-label>
+            <input matInput [type]="hide1 ? 'password' : 'text'" formControlName="password">
+            
+            <mat-icon matSuffix (click)="hide1 = !hide1">{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
+             <mat-error *ngIf="form.controls['cPassword'].hasError('required')">Confirm Password is required</mat-error>
           </mat-form-field>
         </p>
         <p *ngIf="error" class="error">
