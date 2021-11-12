@@ -16,7 +16,7 @@ export class CreateCompanyComponent implements OnInit {
   goToPreviousPage = _goToPreviousPage;
 
   loading = true;
-
+  hide = true;
   formHeader = 'Create company';
 
   error: string;

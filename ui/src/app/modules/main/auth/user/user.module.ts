@@ -21,12 +21,13 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatChipsModule} from '@angular/material/chips';
-
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [ ListUserComponent, DeleteUserComponent, FilterUserComponent, CreateUserComponent ],
   imports: [
     CommonModule,
     UserRoutingModule,
+    MatIconModule,
     DataTableModule, MatTableModule, NgxSkeletonLoaderModule, MatSortModule, ToolBarModule,
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule,
     MatInputModule, MatButtonModule, MatCheckboxModule, MatAutocompleteModule, MatChipsModule,

@@ -19,13 +19,17 @@
 
   <mat-form-field class='fbo-create-formTwo'>
     <mat-label>Password</mat-label>
-    <input type="password" formControlName="password" matInput placeholder="Enter Name">
-    <mat-error *ngIf="form.controls['password'].hasError('required')">Please Enter Password</mat-error>
+    <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+            
+      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+     <mat-error *ngIf="form.controls['password'].hasError('required')">Please Enter Password</mat-error>
   </mat-form-field>
 
   <mat-form-field class='fbo-create-formTwo'>
     <mat-label>Confirm Password</mat-label>
-    <input type="password" formControlName="cPassword" matInput placeholder="Enter Name">
+    <input matInput [type]="hide1 ? 'password' : 'text'" formControlName="cPassword" matInput placeholder="Enter Name">
+    <mat-icon matSuffix (click)="hide1 = !hide1">{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
+            
     <mat-error *ngIf="form.controls['cPassword'].hasError('required')">Please Enter confirmation Password</mat-error>
   </mat-form-field>
 

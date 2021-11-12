@@ -23,7 +23,8 @@ export class CreateUserComponent implements OnInit {
   goToPreviousPage = _goToPreviousPage;
 
   loading = true;
-
+  hide = true;
+  hide1 = true;
   formHeader = 'Create User';
 
   permissions = {};
