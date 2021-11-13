@@ -4,7 +4,7 @@ import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service'
 import { Ledger } from '@shared/entity/accounting/ledger';
 import { TransactionType } from '@shared/entity/accounting/transaction';
 import { VoucherType } from '@shared/entity/accounting/voucher';
-import { defalutLedgerGroupNames as dlgn} from '@shared/util/ledger-group-names';
+import { defalutLedgerGroupCodes as dlgn} from '@shared/util/ledger-group-codes';
 import { QueryData } from '@shared/util/query-data';
 
 @Component({
@@ -36,7 +36,7 @@ export class CreateSalesComponent implements OnInit {
     const queryData:QueryData = {
       where: {
         name: {
-          inq: [ ...pLGNames, ...cLGNames ]
+          code: [ ...pLGNames, ...cLGNames ]
         }
       }
     };
@@ -44,7 +44,7 @@ export class CreateSalesComponent implements OnInit {
 
       ledgerGroups.forEach((lgr) => {
 
-        pLGNames.includes(lgr.name) ? this.pLedgerGroupIds.push(lgr.id) : this.cLedgerGroupIds.push(lgr.id);
+        pLGNames.includes(lgr.code) ? this.pLedgerGroupIds.push(lgr.id) : this.cLedgerGroupIds.push(lgr.id);
 
       });
 

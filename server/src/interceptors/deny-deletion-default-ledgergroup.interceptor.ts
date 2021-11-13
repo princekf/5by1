@@ -55,7 +55,7 @@ export class DenyDeletionOfDefaultLedgerGroup implements Provider<Interceptor> {
 
         for (const dGroup of defaultLedgerGroups) {
 
-          if (lGroup.name === dGroup.name) {
+          if (lGroup.code === dGroup.code) {
 
             throw new HttpErrors.UnprocessableEntity(
               `You are not allowed to delete default ledger group -- ${lGroup.name}`,

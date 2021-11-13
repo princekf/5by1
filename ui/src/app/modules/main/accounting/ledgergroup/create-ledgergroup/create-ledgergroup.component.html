@@ -14,7 +14,15 @@
       </mat-error>
     </mat-form-field>
   </p>
-
+  <p>
+    <mat-form-field>
+      <mat-label>Code</mat-label>
+      <input type="text" matInput placeholder="Enter Code" formControlName="code">
+      <mat-error *ngIf="fboForm.controls['code'].hasError('required')">
+        Code is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
   <p>
     <mat-form-field>
       <mat-label>Parent</mat-label>

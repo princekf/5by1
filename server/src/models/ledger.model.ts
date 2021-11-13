@@ -15,8 +15,15 @@ export class Ledger extends Entity implements LedgerIntf {
 
   @property({
     type: 'string',
+    required: true,
   })
   name: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  code: string;
 
   @property({
     type: 'string',
@@ -34,11 +41,6 @@ export class Ledger extends Entity implements LedgerIntf {
     required: true,
   })
   obType: 'Credit' | 'Debit';
-
-  @property({
-    type: 'string',
-  })
-  refNo: string;
 
   ledgerGroup: LedgerGroup;
 

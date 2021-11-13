@@ -36,10 +36,10 @@ export class CreateLedgerComponent implements OnInit {
 
     id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
+    code: new FormControl('', [ Validators.required ]),
     ledgerGroup: new FormControl('', [ Validators.required ]),
     obAmount: new FormControl(0, [ Validators.required ]),
     obType: new FormControl('Credit', [ Validators.required ]),
-    refNo: new FormControl(''),
     details: new FormControl(''),
 
   });
@@ -70,8 +70,8 @@ export class CreateLedgerComponent implements OnInit {
         this.form.setValue({
           id: ledgerC.id ?? '',
           name: ledgerC.name ?? '',
+          code: ledgerC.code ?? '',
           ledgerGroup: ledgerC.ledgerGroup ?? '',
-          refNo: ledgerC.refNo ?? '',
           details: ledgerC.details ?? '',
           obAmount: ledgerC.obAmount ?? 0,
           obType: ledgerC.obType ?? TransactionType.CREDIT,

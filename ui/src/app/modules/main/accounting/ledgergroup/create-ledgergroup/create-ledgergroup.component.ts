@@ -51,8 +51,8 @@ export class CreateLedgergroupComponent implements OnInit {
   fboForm: FormGroup = new FormGroup({
     id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
+    code: new FormControl('', [ Validators.required ]),
     parent: new FormControl(''),
-
     details: new FormControl(''),
   });
 
@@ -81,10 +81,9 @@ export class CreateLedgergroupComponent implements OnInit {
         this.ledgergroupService.get(tId, queryParam).subscribe((ledgerGroupC) => {
 
           this.fboForm.setValue({id: ledgerGroupC.id,
-            name: ledgerGroupC.name,
-
+            name: ledgerGroupC.name ?? '',
+            code: ledgerGroupC.code ?? '',
             parent: ledgerGroupC.parent ? this.ledgerGroups?.find((ledgerGroupI) => ledgerGroupI.id === ledgerGroupC.parentId) : '',
-
             details: ledgerGroupC.details ?? ''});
 
           this.loading = false;

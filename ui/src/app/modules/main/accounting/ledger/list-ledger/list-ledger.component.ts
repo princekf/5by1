@@ -16,13 +16,15 @@ import { Ledger } from '@shared/entity/accounting/ledger';
 })
 export class ListLedgerComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'name', 'ledgerGroup.name', 'refNo', 'details' ];
+  displayedColumns: string[] = [ 'name', 'code', 'ledgerGroup.name', 'obAmount', 'obType', 'details' ];
 
 
   columnHeaders = {
     name: 'Name',
+    code: 'Code',
     'ledgerGroup.name': 'Ledger Group',
-    refNo: 'Reference No',
+    obAmount: 'Opening Balance',
+    obType: 'Opening Type',
     details: 'Details',
 
   }

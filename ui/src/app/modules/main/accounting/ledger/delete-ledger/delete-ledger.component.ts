@@ -17,13 +17,14 @@ import { LedgerService } from '@fboservices/accounting/ledger.service';
 })
 export class DeleteLedgerComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'name', 'ledgerGroup.name', 'refNo', 'details' ];
+  displayedColumns: string[] = [ 'name', 'ledgerGroup.name', 'obAmount', 'obType', 'details' ];
 
 
   columnHeaders = {
     name: 'Name',
     'ledgerGroup.name': 'Ledger Group',
-    refNo: 'Reference No',
+    obAmount: 'Opening Balance',
+    obType: 'Opening Type',
     details: 'Details',
 
   }

@@ -5,7 +5,7 @@ import { Ledger } from '@shared/entity/accounting/ledger';
 import { TransactionType } from '@shared/entity/accounting/transaction';
 import { VoucherType } from '@shared/entity/accounting/voucher';
 import { QueryData } from '@shared/util/query-data';
-import { defalutLedgerGroupNames as dlgn} from '@shared/util/ledger-group-names';
+import { defalutLedgerGroupCodes as dlgn} from '@shared/util/ledger-group-codes';
 
 @Component({
   selector: 'app-create-payment',
@@ -35,7 +35,7 @@ export class CreatePaymentComponent implements OnInit {
     const cLGNames = [ dlgn.SUNDRY_CREDITORS, dlgn.SUNDRY_DEBTORS ];
     const queryData:QueryData = {
       where: {
-        name: {
+        code: {
           inq: [ ...pLGNames, ...cLGNames ]
         }
       }
@@ -44,7 +44,7 @@ export class CreatePaymentComponent implements OnInit {
 
       ledgerGroups.forEach((lgr) => {
 
-        pLGNames.includes(lgr.name) ? this.pLedgerGroupIds.push(lgr.id) : this.cLedgerGroupIds.push(lgr.id);
+        pLGNames.includes(lgr.code) ? this.pLedgerGroupIds.push(lgr.id) : this.cLedgerGroupIds.push(lgr.id);
 
       });
 

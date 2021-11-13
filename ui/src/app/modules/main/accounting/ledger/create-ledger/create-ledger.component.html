@@ -12,6 +12,13 @@
       <mat-error *ngIf="form.controls['name'].hasError('required')">Please Enter Name</mat-error>
     </mat-form-field>
   </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Code</mat-label>
+      <input formControlName="code" matInput placeholder="Enter Code">
+      <mat-error *ngIf="form.controls['code'].hasError('required')">Please Enter Code</mat-error>
+    </mat-form-field>
+  </p>
 
   <p>
     <mat-form-field>
@@ -38,13 +45,6 @@
         <mat-option value="Debit">Debit</mat-option>
         </mat-select>
       <mat-error *ngIf="form.controls['obType'].hasError('required')">Please select opening balance type</mat-error>
-    </mat-form-field>
-  </p>
-
-  <p>
-    <mat-form-field>
-      <mat-label>Reference No</mat-label>
-      <input formControlName="refNo" matInput placeholder="Enter Reference No">
     </mat-form-field>
   </p>
 

@@ -8,7 +8,7 @@ import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
 import { adminAndUserAuthDetails } from '../utils/autherize-details';
 import { intercept } from '@loopback/context';
-import { ValidateLGroupForUniqueCodeInterceptor } from '../interceptors/validate-ledgergroup-for-unique-name.interceptor';
+import { ValidateLedgerGroupInterceptor } from '../interceptors/validate-ledgergroup.interceptor';
 import { DenyDeletionOfDefaultLedgerGroup } from '../interceptors';
 
 @authenticate('jwt')
@@ -20,7 +20,7 @@ export class LedgerGroupController {
     public ledgerGroupRepository : LedgerGroupRepository,
   ) {}
 
-  @intercept(ValidateLGroupForUniqueCodeInterceptor.BINDING_KEY)
+  @intercept(ValidateLedgerGroupInterceptor.BINDING_KEY)
   @post(LEDGER_GROUP_API)
   @response(200, {
     description: 'LedgerGroup model instance',
@@ -131,6 +131,7 @@ export class LedgerGroupController {
 
   }
 
+  @intercept(ValidateLedgerGroupInterceptor.BINDING_KEY)
   @patch(`${LEDGER_GROUP_API}/{id}`)
   @response(204, {
     description: 'LedgerGroup PATCH success',
@@ -153,6 +154,7 @@ export class LedgerGroupController {
 
   }
 
+  @intercept(ValidateLedgerGroupInterceptor.BINDING_KEY)
   @put(`${LEDGER_GROUP_API}/{id}`)
   @response(204, {
     description: 'LedgerGroup PUT success',

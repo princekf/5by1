@@ -4,7 +4,7 @@ import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service'
 import { Ledger } from '@shared/entity/accounting/ledger';
 import { TransactionType } from '@shared/entity/accounting/transaction';
 import { VoucherType } from '@shared/entity/accounting/voucher';
-import { defalutLedgerGroupNames as dlgn} from '@shared/util/ledger-group-names';
+import { defalutLedgerGroupCodes as dlgn} from '@shared/util/ledger-group-codes';
 import { QueryData } from '@shared/util/query-data';
 
 @Component({
@@ -35,7 +35,7 @@ export class CreatePurchaseComponent implements OnInit {
     const cLGNames = [ dlgn.PURCHASE_ACCOUNTS ];
     const queryData:QueryData = {
       where: {
-        name: {
+        code: {
           inq: [ ...pLGNames, ...cLGNames ]
         }
       }
@@ -44,7 +44,7 @@ export class CreatePurchaseComponent implements OnInit {
 
       ledgerGroups.forEach((lgr) => {
 
-        pLGNames.includes(lgr.name) ? this.pLedgerGroupIds.push(lgr.id) : this.cLedgerGroupIds.push(lgr.id);
+        pLGNames.includes(lgr.code) ? this.pLedgerGroupIds.push(lgr.id) : this.cLedgerGroupIds.push(lgr.id);
 
       });
 

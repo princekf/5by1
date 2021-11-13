@@ -50,8 +50,6 @@ export class FilterLedgergroupComponent implements OnInit {
     const formFields: Array<FilterFormField> = [
       {name: 'name',
         type: 'string'},
-      {name: 'refNo',
-        type: 'string'},
 
 
     ];
@@ -59,4 +57,5 @@ export class FilterLedgergroupComponent implements OnInit {
     this.router.navigate([], { queryParams: {whereS} });
 
   };
+
 }

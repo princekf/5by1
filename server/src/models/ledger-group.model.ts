@@ -14,8 +14,15 @@ export class LedgerGroup extends Entity implements LedgerGroupIntf {
 
   @property({
     type: 'string',
+    required: true,
   })
   name: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  code: string;
 
   @property({
     type: 'string',

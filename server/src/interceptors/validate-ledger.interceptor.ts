@@ -15,10 +15,10 @@ import { LedgerRepository } from '../repositories';
  * `boot`
  */
 // eslint-disable-next-line no-use-before-define
-@injectable({tags: {key: ValidateLedgerForUniqueCodeInterceptor.BINDING_KEY}})
-export class ValidateLedgerForUniqueCodeInterceptor implements Provider<Interceptor> {
+@injectable({tags: {key: ValidateLedgerInterceptor.BINDING_KEY}})
+export class ValidateLedgerInterceptor implements Provider<Interceptor> {
 
-  static readonly BINDING_KEY = `interceptors.${ValidateLedgerForUniqueCodeInterceptor.name}`;
+  static readonly BINDING_KEY = `interceptors.${ValidateLedgerInterceptor.name}`;
 
   constructor(
     @repository(LedgerRepository)
@@ -37,6 +37,24 @@ export class ValidateLedgerForUniqueCodeInterceptor implements Provider<Intercep
 
   }
 
+
+  private fetchParams = (args: any):{id?: string, code: string, name: string} => {
+
+    const [ first, second ] = args;
+
+    if (second) {
+
+      const {code, name} = second;
+      return {id: first,
+        name,
+        code};
+
+    }
+    return first;
+
+
+  }
+
   /**
    * The logic to intercept an invocation
    * @param invocationCtx - Invocation context
@@ -50,7 +68,14 @@ export class ValidateLedgerForUniqueCodeInterceptor implements Provider<Intercep
     try {
 
 
-      const [ { name } ] = invocationCtx.args;
+      const {id, code, name} = this.fetchParams(invocationCtx.args);
+      if ((/^\s|\s$/u).test(code)) {
+
+        throw new HttpErrors.UnprocessableEntity(
+          'Ledger code should not contains white spaces at end or beginning.',
+        );
+
+      }
       if ((/^\s|\s$/u).test(name)) {
 
         throw new HttpErrors.UnprocessableEntity(
@@ -58,11 +83,11 @@ export class ValidateLedgerForUniqueCodeInterceptor implements Provider<Intercep
         );
 
       }
-      const nameAlreadyExist = await this.ledgerRepository.find({where: {name: {regexp: `/^${name}$/i`}}});
+      const nameAlreadyExist = await this.ledgerRepository.find({where: {or: [ {name: {regexp: `/^${name}$/i`}}, {code: {regexp: `/^${code}$/i`}} ]}});
       if (nameAlreadyExist.length) {
 
         throw new HttpErrors.UnprocessableEntity(
-          'Ledger name already exists',
+          'Ledger code/name already exists',
         );
 
       }

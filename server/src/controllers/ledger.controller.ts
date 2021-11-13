@@ -7,7 +7,7 @@ import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
 import { adminAndUserAuthDetails } from '../utils/autherize-details';
-import { ValidateLedgerForUniqueCodeInterceptor } from '../interceptors/validate-ledger-for-unique-name.interceptor';
+import { ValidateLedgerInterceptor } from '../interceptors/validate-ledger.interceptor';
 import { intercept } from '@loopback/context';
 
 @authenticate('jwt')
@@ -19,7 +19,7 @@ export class LedgerController {
     public ledgerRepository : LedgerRepository,
   ) {}
 
-  @intercept(ValidateLedgerForUniqueCodeInterceptor.BINDING_KEY)
+  @intercept(ValidateLedgerInterceptor.BINDING_KEY)
   @post(LEDGER_API)
   @response(200, {
     description: 'Ledger model instance',
@@ -152,6 +152,7 @@ export class LedgerController {
 
   }
 
+  @intercept(ValidateLedgerInterceptor.BINDING_KEY)
   @put(`${LEDGER_API}/{id}`)
   @response(204, {
     description: 'Ledger PUT success',

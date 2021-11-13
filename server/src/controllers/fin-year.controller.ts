@@ -31,18 +31,19 @@ export class FinYearController {
     const pGroups = dLGs.filter((dLG) => !dLG.parent) as Array<LedgerGroup>;
     const pGroupsSaved = await ledgerGroupRepository.createAll(pGroups);
     const pGrpMap:Record<string, string> = {};
-    pGroupsSaved.forEach((pGrp) => (pGrpMap[pGrp.name] = pGrp.id));
+    pGroupsSaved.forEach((pGrp) => (pGrpMap[pGrp.code] = pGrp.id));
     const sGroups = dLGs.filter((dLG) => dLG.parent) as Array<LedgerGroup>;
     const sGroups2:Array<LedgerGroup> = [];
     const sGroups3:Array<LedgerGroup> = [];
     sGroups.forEach((sGrp) => {
 
-      const {name, parent, extras} = sGrp;
-      if (pGrpMap[parent?.name]) {
+      const {name, code, parent, extras} = sGrp;
+      if (pGrpMap[parent?.code]) {
 
         sGroups2.push({
           name,
-          parentId: pGrpMap[parent.name],
+          code,
+          parentId: pGrpMap[parent.code],
           extras
         } as LedgerGroup & {extras : unknown});
 
@@ -50,6 +51,7 @@ export class FinYearController {
 
         sGroups3.push({
           name,
+          code,
           parent,
           extras
         } as LedgerGroup & {extras : unknown});
@@ -58,14 +60,15 @@ export class FinYearController {
 
     });
     const s2GroupSaved = await ledgerGroupRepository.createAll(sGroups2);
-    s2GroupSaved.forEach((pGrp) => (pGrpMap[pGrp.name] = pGrp.id));
+    s2GroupSaved.forEach((pGrp) => (pGrpMap[pGrp.code] = pGrp.id));
     const sGroups4:Array<LedgerGroup> = [];
     sGroups3.forEach((sGrp) => {
 
-      const {name, parent, extras} = sGrp;
+      const {name, code, parent, extras} = sGrp;
       sGroups4.push({
         name,
-        parentId: pGrpMap[parent.name],
+        code,
+        parentId: pGrpMap[parent.code],
         extras
       } as LedgerGroup & {extras : unknown});
 

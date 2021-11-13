@@ -17,9 +17,6 @@ export class FilterLedgerComponent implements OnInit {
     name: new FormControl(''),
     nameType: new FormControl('^'),
 
-    refNo: new FormControl(''),
-    refNoType: new FormControl('^'),
-
     ledgerGroup: new FormControl(''),
     ledgerGroupType: new FormControl('eq'),
 
@@ -51,8 +48,6 @@ export class FilterLedgerComponent implements OnInit {
 
     const formFields: Array<FilterFormField> = [
       {name: 'name',
-        type: 'string'},
-      {name: 'refNo',
         type: 'string'},
       {name: 'ledgerGroup',
         type: 'string'},

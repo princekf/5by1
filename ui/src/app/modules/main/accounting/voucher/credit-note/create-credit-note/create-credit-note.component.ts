@@ -4,7 +4,7 @@ import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service'
 import { Ledger } from '@shared/entity/accounting/ledger';
 import { TransactionType } from '@shared/entity/accounting/transaction';
 import { VoucherType } from '@shared/entity/accounting/voucher';
-import { defalutLedgerGroupNames as dlgn} from '@shared/util/ledger-group-names';
+import { defalutLedgerGroupCodes as dlgn} from '@shared/util/ledger-group-codes';
 import { QueryData } from '@shared/util/query-data';
 
 @Component({
@@ -34,7 +34,7 @@ export class CreateCreditNoteComponent implements OnInit {
     const pLGNames = [ dlgn.SUNDRY_CREDITORS, dlgn.SUNDRY_DEBTORS ];
     const queryData:QueryData = {
       where: {
-        name: {
+        code: {
           inq: pLGNames
         }
       }

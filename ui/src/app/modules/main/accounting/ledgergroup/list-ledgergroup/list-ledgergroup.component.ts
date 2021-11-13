@@ -15,10 +15,11 @@ import { FilterLedgergroupComponent } from '../filter-ledgergroup/filter-ledgerg
 })
 export class ListLedgergroupComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'name', 'parent.name', 'details' ];
+  displayedColumns: string[] = [ 'name', 'code', 'parent.name', 'details' ];
 
   columnHeaders = {
     name: 'Name',
+    code: 'Code',
     'parent.name': 'Parent Name',
     details: 'Details'
   }
