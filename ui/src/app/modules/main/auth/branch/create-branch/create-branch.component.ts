@@ -37,6 +37,8 @@ export class CreateBranchComponent implements OnInit {
 
   });
 
+  branchId: string;
+
   constructor(public readonly router: Router,
     public readonly route: ActivatedRoute,
     private readonly branchService: BranchService,
@@ -52,6 +54,7 @@ export class CreateBranchComponent implements OnInit {
     if (tId) {
 
       this.formHeader = 'Update Branch';
+      this.branchId = tId;
 
       const queryParam:QueryData = {
         include: [
@@ -92,7 +95,8 @@ export class CreateBranchComponent implements OnInit {
 
       }
       this.finYearService.search({ where: {name: {like: customerQ,
-        options: 'i'}} })
+        options: 'i'},
+      branchId: this.branchId ?? ''} })
         .subscribe((defaultFinYears) => (this.finyearFiltered = defaultFinYears));
 
     });

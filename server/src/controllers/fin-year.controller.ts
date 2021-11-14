@@ -13,8 +13,11 @@ import {SecurityBindings} from '@loopback/security';
 import { ProfileUser } from '../services';
 import { BindingKeys } from '../binding.keys';
 import { defaultLedgerGroups } from '../install/default.ledgergroups';
-import { BranchRepository, LedgerGroupRepository } from '../repositories';
-import { LedgerGroup } from '../models';
+import { BranchRepository, LedgerGroupRepository, LedgerRepository } from '../repositories';
+import { Ledger, LedgerGroup } from '../models';
+import { defalutLedgerGroupCodes as dlgc } from '@shared/util/ledger-group-codes';
+import { defaultLedgers } from '../install/default.ledgers';
+import { TransactionType } from '@shared/entity/accounting/transaction';
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
@@ -78,6 +81,28 @@ export class FinYearController {
 
   };
 
+  private installLedgers =
+  async(ledgerRepository : LedgerRepository, ledgerGroupRepository : LedgerGroupRepository) => {
+
+    const lGroups = await ledgerGroupRepository.find({where: {code: {inq: [ dlgc.LIABILITIES, dlgc.CACH_IN_HAND ]}}});
+    const lGroupMap:Record<string, string> = {};
+    lGroups.forEach((lgrp) => (lGroupMap[lgrp.code] = lgrp.id));
+
+    const ledgers:Array<Ledger> = [];
+    defaultLedgers.forEach((ldg) => {
+
+      const {name, code, ledgerGroup} = ldg;
+      ledgers.push({name,
+        code,
+        ledgerGroupId: lGroupMap[ledgerGroup?.code ?? ''],
+        obAmount: 0,
+        obType: TransactionType.CREDIT} as Ledger);
+
+    });
+    await ledgerRepository.createAll(ledgers);
+
+  };
+
   @intercept(ValidateFinYearForUniqueCodeInterceptor.BINDING_KEY)
   @post(FIN_YEAR_API)
   @response(200, {
@@ -104,6 +129,7 @@ export class FinYearController {
       branchRepository : BranchRepository,
     @inject(SecurityBindings.USER) uProfile: ProfileUser,
     @repository.getter('LedgerGroupRepository') ledgerGroupRepositoryGetter: Getter<LedgerGroupRepository>,
+    @repository.getter('LedgerRepository') ledgerRepositoryGetter: Getter<LedgerRepository>,
   ): Promise<FinYear> {
 
     const {branchId} = finYear;
@@ -121,6 +147,8 @@ export class FinYearController {
     context.bind(BindingKeys.SESSION_DB_NAME).to(`${uProfile.company?.toLowerCase()}_${branch.code?.toLowerCase()}_${finYear.code.toLowerCase()}`);
     const ledgerGroupRepository = await ledgerGroupRepositoryGetter();
     await this.installLedgerGroups(ledgerGroupRepository);
+    const ledgerRepository = await ledgerRepositoryGetter();
+    await this.installLedgers(ledgerRepository, ledgerGroupRepository);
     return finYearR;
 
   }
