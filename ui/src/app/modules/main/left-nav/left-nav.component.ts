@@ -4,6 +4,7 @@ import {MatTreeNestedDataSource} from '@angular/material/tree';
 import { MainService } from '@fboservices/main.service';
 import { LOCAL_USER_KEY } from '@fboutil/constants';
 import { Permission, User } from '@shared/entity/auth/user';
+import { SessionUser } from '@shared/util/session-user';
 
 interface MenuNode {
   path: string;
@@ -196,7 +197,8 @@ export class LeftNavComponent implements OnInit {
     const userS = localStorage.getItem(LOCAL_USER_KEY);
     if (userS) {
 
-      const user:User = JSON.parse(userS);
+      const sessionUser:SessionUser = JSON.parse(userS);
+      const { user } = sessionUser;
       const {permissions} = user;
       const permittedMenus = [];
       for (const menu of menus) {

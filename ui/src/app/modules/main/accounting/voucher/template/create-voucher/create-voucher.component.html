@@ -14,7 +14,8 @@
 
     <mat-form-field class="fbo-form-field-multi">
         <mat-label>Voucher date</mat-label>
-        <input matInput [matDatepicker]="voucherDatePicker" formControlName="date">
+        <input matInput [matDatepicker]="voucherDatePicker" formControlName="date"
+        [min]="finYear.startDate" [max]="finYear.endDate">
         <mat-datepicker-toggle matSuffix [for]="voucherDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #voucherDatePicker></mat-datepicker>
         <mat-error *ngIf="fboForm.controls['date'].hasError('required')"> Voucher date is required </mat-error>

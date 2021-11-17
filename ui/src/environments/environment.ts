@@ -6,8 +6,6 @@
 
 export const environment = {
   production: false,
-  fbClientId: '1102431090188347',
-  googleClientId: '511070809113-4cfqdhk0ammq2mbujccinqfrmbqodgrj.apps.googleusercontent.com',
   dateFormat: 'YYYY-MM-DD'
 };
 

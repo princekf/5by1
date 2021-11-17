@@ -14,16 +14,23 @@ import { ME_API, MY_ACCOUNT_API, USER_API, SWITCH_FIN_YEAR_API } from '@shared/s
 import { resourcePermissions } from '../utils/resource-permissions';
 import { adminAndUserAuthDetails, allRoleAuthDetails } from '../utils/autherize-details';
 import { MyAccountResp } from '@shared/util/my-account-resp';
+import { SessionUser } from '@shared/util/session-user';
+import { Company } from '@shared/entity/auth/company';
 
 @authenticate('jwt')
 @authorize(allRoleAuthDetails)
 export class UserController {
 
+  // eslint-disable-next-line max-params
   constructor(
     @repository(UserRepository)
     public userRepository : UserRepository,
     @repository(CompanyRepository)
     public companyRepository : CompanyRepository,
+    @repository(BranchRepository)
+    public branchRepository : BranchRepository,
+    @repository(FinYearRepository)
+    public finYearRepository : FinYearRepository,
     @inject(BindingKeys.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
     @inject(BindingKeys.USER_SERVICE)
@@ -257,12 +264,19 @@ export class UserController {
     ...allRoleAuthDetails})
   async printCurrentUser(
     @inject(SecurityBindings.USER)
-      currentUserProfile: ProfileUser,
-  ): Promise<User> {
+      cUProfile: ProfileUser,
+  ): Promise<SessionUser> {
 
-    const userId = currentUserProfile[securityId];
-    const userT = await this.userRepository.findById(userId);
-    return userT;
+    const userId = cUProfile[securityId];
+    const user = await this.userRepository.findById(userId);
+    const company = await this.companyRepository.findOne({where: {code: {regexp: `/^${cUProfile.company}$/i`}}});
+    const branch = await this.branchRepository.findOne({where: {code: {regexp: `/^${cUProfile.branch}$/i`}}});
+    const finYear = await this.finYearRepository.findOne({where: {code: {regexp: `/^${cUProfile.finYear}$/i`}}});
+
+    return {user,
+      company,
+      branch,
+      finYear};
 
   }
 

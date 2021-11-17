@@ -29,8 +29,9 @@ export class AppAuthGuard implements CanActivate {
     }
     try {
 
-      const user = await this.userService.findMe().toPromise();
-      localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(user));
+      const userResp = await this.userService.findMe().toPromise();
+      const { user } = userResp;
+      localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(userResp));
       if (user && user.id) {
 
         return true;

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { User } from '@shared/entity/auth/user';
+import { SessionUser } from '@shared/util/session-user';
 import { SIGNUP_API, LOGIN_API_URI, ME_API_URI, USER_API_URI, MY_ACCOUNT_API_URI, SWITCH_FIN_YEAR_API_URI } from '@shared/server-apis';
 import { catchError, shareReplay } from 'rxjs/operators';
 import { AuthResponse } from '@shared/util/auth-resp';
@@ -33,9 +34,9 @@ export class UserService extends BaseHTTPService<User> {
 
   }
 
-  findMe(): Observable<User> {
+  findMe(): Observable<SessionUser> {
 
-    return this.http.get<User>(ME_API_URI)
+    return this.http.get<SessionUser>(ME_API_URI)
       .pipe(shareReplay())
       .pipe(
         catchError((err) => throwError(() => err))

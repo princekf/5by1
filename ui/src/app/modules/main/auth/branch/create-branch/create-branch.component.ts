@@ -10,6 +10,9 @@ import { FinYearService } from '@fboservices/auth/fin-year.service';
 import { FinYear } from '@shared/entity/auth/fin-year';
 import { QueryData } from '@shared/util/query-data';
 
+const FYS = 1990;
+const FMS = 3;
+const FDS = 1;
 @Component({
   selector: 'app-create-branch',
   templateUrl: './create-branch.component.html',
@@ -32,7 +35,7 @@ export class CreateBranchComponent implements OnInit {
     code: new FormControl('', [ Validators.required ]),
     email: new FormControl('', [ Validators.required ]),
     address: new FormControl(''),
-    finYearStartDate: new FormControl(new Date(), [ Validators.required ]),
+    finYearStartDate: new FormControl(new Date(FYS, FMS, FDS), [ Validators.required ]),
     defaultFinYear: new FormControl(''),
 
   });

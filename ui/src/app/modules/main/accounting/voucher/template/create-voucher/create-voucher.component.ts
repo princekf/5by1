@@ -14,6 +14,9 @@ import { QueryData } from '@shared/util/query-data';
 import { LedgerService } from '@fboservices/accounting/ledger.service';
 import { catchError, switchMap } from 'rxjs/operators';
 import { of, throwError, zip } from 'rxjs';
+import { LOCAL_USER_KEY } from '@fboutil/constants';
+import { SessionUser } from '@shared/util/session-user';
+import { FinYear } from '@shared/entity/auth/fin-year';
 
 @Component({
   selector: 'app-create-voucher',
@@ -49,6 +52,8 @@ export class CreateVoucherComponent implements OnInit {
   displayedColumns: string[] = [ 'ledger', 'amount', 'costCentre', 'details', 'action' ];
 
   costCentresFiltered: Array<CostCentre> = [];
+
+  finYear: FinYear;
 
   constructor(
     public readonly router: Router,
@@ -238,6 +243,10 @@ export class CreateVoucherComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    const userS = localStorage.getItem(LOCAL_USER_KEY);
+    const sessionUser: SessionUser = JSON.parse(userS);
+    this.finYear = sessionUser.finYear;
 
     this.initFboForm();
     const formArray = this.fboForm.get('transactions') as FormArray;

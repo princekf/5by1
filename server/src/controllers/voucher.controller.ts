@@ -8,7 +8,7 @@ import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
 import { adminAndUserAuthDetails } from '../utils/autherize-details';
-import { ValidateVoucherForUniqueNumInterceptor } from '../interceptors/validate-voucher-for-unique-number.interceptor';
+import { ValidateVoucherInterceptor } from '../interceptors/validate-voucher.interceptor';
 import { intercept } from '@loopback/context';
 
 @authenticate('jwt')
@@ -20,7 +20,7 @@ export class VoucherController {
     public voucherRepository : VoucherRepository,
   ) {}
 
-  @intercept(ValidateVoucherForUniqueNumInterceptor.BINDING_KEY)
+  @intercept(ValidateVoucherInterceptor.BINDING_KEY)
   @post(VOUCHER_API)
   @response(200, {
     description: 'Voucher model instance',
