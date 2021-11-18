@@ -10,7 +10,7 @@ export class ListSalesComponent {
 
   voucherType = VoucherType.SALES;
 
-  tableHeader = 'List of Purchases';
+  tableHeader = 'List of Sales';
 
   editUri = '/voucher/sales/create';
 

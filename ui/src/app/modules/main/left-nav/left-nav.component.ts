@@ -3,8 +3,9 @@ import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import { MainService } from '@fboservices/main.service';
 import { LOCAL_USER_KEY } from '@fboutil/constants';
-import { Permission, User } from '@shared/entity/auth/user';
+import { Permission } from '@shared/entity/auth/user';
 import { SessionUser } from '@shared/util/session-user';
+import { Router } from '@angular/router';
 
 interface MenuNode {
   path: string;
@@ -161,9 +162,12 @@ export class LeftNavComponent implements OnInit {
 
   activeNode:MenuNode = null;
 
+  activeParentNode:MenuNode = null;
+
   leftMenuDrawerOpened = false;
 
-  constructor(private readonly mainService: MainService) {}
+  constructor(private readonly mainService: MainService,
+    private readonly router: Router) {}
 
   private findPermittedMenus = (menu: MenuNode, permissions: Record<string, Permission>) => {
 
@@ -194,6 +198,7 @@ export class LeftNavComponent implements OnInit {
 
   ngOnInit(): void {
 
+    const cUriS = this.router.url.split('?')[0].replace('/', '');
     const userS = localStorage.getItem(LOCAL_USER_KEY);
     if (userS) {
 
@@ -209,12 +214,27 @@ export class LeftNavComponent implements OnInit {
           const {...menuT} = menu;
           menuT.children = childrenP;
           permittedMenus.push(menuT);
+          childrenP.forEach((child) => {
+
+            if (child.path.indexOf(cUriS) === 0) {
+
+              this.activeNode = child;
+              this.activeParentNode = menuT;
+
+            }
+
+          });
 
         }
 
       }
 
       this.dataSource.data = permittedMenus;
+      if (this.activeNode) {
+
+        this.treeControl.expand(this.activeParentNode);
+
+      }
 
     }
     this.mainService.leftMenuDrawerSubject.subscribe((opened) => (this.leftMenuDrawerOpened = opened));
@@ -227,6 +247,12 @@ export class LeftNavComponent implements OnInit {
 
     this.activeNode = Boolean(node.children || node.children?.length) ? null : node;
     this.treeControl.isExpanded(node) ? this.treeControl.collapse(node) : this.treeControl.expand(node);
+
+  }
+
+  goToHome = ():void => {
+
+    this.router.navigate([ '/' ], {});
 
   }
 

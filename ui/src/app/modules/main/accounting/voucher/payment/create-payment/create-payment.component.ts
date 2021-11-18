@@ -4,7 +4,7 @@ import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service'
 import { Ledger } from '@shared/entity/accounting/ledger';
 import { TransactionType } from '@shared/entity/accounting/transaction';
 import { VoucherType } from '@shared/entity/accounting/voucher';
-import { QueryData } from '@shared/util/query-data';
+import { findLedgerIdsIncludingChilds2 } from '../../voucher.util';
 import { defalutLedgerGroupCodes as dlgn} from '@shared/util/ledger-group-codes';
 
 @Component({
@@ -33,20 +33,12 @@ export class CreatePaymentComponent implements OnInit {
 
     const pLGNames = [ dlgn.BANK_ACCOUNTS, dlgn.CACH_IN_HAND ];
     const cLGNames = [ dlgn.SUNDRY_CREDITORS, dlgn.SUNDRY_DEBTORS ];
-    const queryData:QueryData = {
-      where: {
-        code: {
-          inq: [ ...pLGNames, ...cLGNames ]
-        }
-      }
-    };
-    this.ledgergroupService.search(queryData).subscribe((ledgerGroups) => {
+    const where = {code: {
+      inq: [ ...pLGNames, ...cLGNames ]
+    }};
+    this.ledgergroupService.childs(where).subscribe((ledgerGroups) => {
 
-      ledgerGroups.forEach((lgr) => {
-
-        pLGNames.includes(lgr.code) ? this.pLedgerGroupIds.push(lgr.id) : this.cLedgerGroupIds.push(lgr.id);
-
-      });
+      [ this.pLedgerGroupIds, this.cLedgerGroupIds ] = findLedgerIdsIncludingChilds2(pLGNames, cLGNames, ledgerGroups);
 
     });
 

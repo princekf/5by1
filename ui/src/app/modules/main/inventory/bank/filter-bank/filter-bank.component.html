@@ -2,8 +2,6 @@
     <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
         <div (click)="$event.stopPropagation()">
 
-
-
             <div class="filter-content-div">
                 <mat-label class="lable">Type</mat-label>
                 <mat-select formControlName="typeType" class="select">
@@ -36,13 +34,11 @@
                     <mat-option value="gt">Greater than</mat-option>
                     <mat-option value="between">Between</mat-option>
                 </mat-select>
-
-
-      
-                    <mat-form-field *ngIf="filterForm.controls.openingBalanceType.value !== 'between'">
-                        <input matInput type="number" formControlName="openingBalance">
-                    </mat-form-field>
-               
+                
+                <mat-form-field *ngIf="filterForm.controls.openingBalanceType.value !== 'between'">
+                    <input matInput type="number" formControlName="openingBalance">
+                </mat-form-field>
+                
                 <div class="betweenKeyInputs" *ngIf="filterForm.controls.openingBalanceType.value === 'between'">
                     <mat-form-field class="inputPrimary">
                         <input matInput type="number" formControlName="openingBalanceStart">
@@ -51,7 +47,6 @@
                     <mat-form-field class="inputPrimary">
                         <input matInput type="number" formControlName="openingBalanceEnd">
                     </mat-form-field>
-
                 </div>
             </div>
 

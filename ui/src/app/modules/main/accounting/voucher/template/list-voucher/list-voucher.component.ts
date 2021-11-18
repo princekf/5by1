@@ -27,13 +27,14 @@ export class ListVoucherComponent implements OnInit {
 
   @Input() tableHeader: string;
 
-  displayedColumns: string[] = [ 'number', 'date', 'ledger', 'amount', 'details' ];
+  displayedColumns: string[] = [ 'number', 'date', 'pledger', 'cledger', 'amount', 'details' ];
 
   columnHeaders = {
     number: 'Voucher #',
     date: 'Date',
     details: 'Details',
-    ledger: 'Ledger',
+    pledger: 'Primary Ledger',
+    cledger: 'Compound Ledger',
     amount: 'Amount'
   }
 
@@ -41,7 +42,7 @@ export class ListVoucherComponent implements OnInit {
 
   loading = true;
 
-  vouchers: ListQueryRespType<Voucher & { amount: string, ledger: string }> = {
+  vouchers: ListQueryRespType<Voucher & { amount: string, pledger: string, cledger: string }> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -64,6 +65,7 @@ export class ListVoucherComponent implements OnInit {
         for (const pItem of voucherListData.items) {
 
           ledgerIds.push(pItem.transactions[0].ledgerId);
+          ledgerIds.push(pItem.transactions[1].ledgerId);
 
         }
         const queryDataL: QueryData = {
@@ -85,13 +87,15 @@ export class ListVoucherComponent implements OnInit {
         const itemsT = [];
         for (const item of items) {
 
-          const [ firstTr ] = item.transactions;
-          const ledger = ledgerMap[firstTr.ledgerId];
+          const [ firstTr, secondTr ] = item.transactions;
+          const pledger = ledgerMap[firstTr.ledgerId];
+          const cledger = ledgerMap[secondTr.ledgerId];
           const tType = firstTr.type === TransactionType.CREDIT ? 'Cr' : 'Dr';
           itemsT.push({
             ...item,
             amount: `${firstTr.amount} ${tType}`,
-            ledger: ledger.name,
+            pledger: pledger.name,
+            cledger: cledger.name,
           });
 
         }

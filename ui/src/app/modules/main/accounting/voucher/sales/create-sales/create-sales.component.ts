@@ -5,7 +5,7 @@ import { Ledger } from '@shared/entity/accounting/ledger';
 import { TransactionType } from '@shared/entity/accounting/transaction';
 import { VoucherType } from '@shared/entity/accounting/voucher';
 import { defalutLedgerGroupCodes as dlgn} from '@shared/util/ledger-group-codes';
-import { QueryData } from '@shared/util/query-data';
+import { findLedgerIdsIncludingChilds2 } from '../../voucher.util';
 
 @Component({
   selector: 'app-create-sales',
@@ -33,20 +33,12 @@ export class CreateSalesComponent implements OnInit {
 
     const pLGNames = [ dlgn.SUNDRY_CREDITORS, dlgn.SUNDRY_DEBTORS ];
     const cLGNames = [ dlgn.SALES_ACCOUNTS ];
-    const queryData:QueryData = {
-      where: {
-        name: {
-          code: [ ...pLGNames, ...cLGNames ]
-        }
-      }
-    };
-    this.ledgergroupService.search(queryData).subscribe((ledgerGroups) => {
+    const where = {code: {
+      inq: [ ...pLGNames, ...cLGNames ]
+    }};
+    this.ledgergroupService.childs(where).subscribe((ledgerGroups) => {
 
-      ledgerGroups.forEach((lgr) => {
-
-        pLGNames.includes(lgr.code) ? this.pLedgerGroupIds.push(lgr.id) : this.cLedgerGroupIds.push(lgr.id);
-
-      });
+      [ this.pLedgerGroupIds, this.cLedgerGroupIds ] = findLedgerIdsIncludingChilds2(pLGNames, cLGNames, ledgerGroups);
 
     });
 

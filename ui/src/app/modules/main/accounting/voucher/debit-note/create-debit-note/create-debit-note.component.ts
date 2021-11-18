@@ -5,7 +5,7 @@ import { Ledger } from '@shared/entity/accounting/ledger';
 import { TransactionType } from '@shared/entity/accounting/transaction';
 import { VoucherType } from '@shared/entity/accounting/voucher';
 import { defalutLedgerGroupCodes as dlgn} from '@shared/util/ledger-group-codes';
-import { QueryData } from '@shared/util/query-data';
+import { findLedgerIdsIncludingChilds } from '../../voucher.util';
 
 @Component({
   selector: 'app-create-debit-note',
@@ -32,16 +32,12 @@ export class CreateDebitNoteComponent implements OnInit {
   ngOnInit(): void {
 
     const pLGNames = [ dlgn.SUNDRY_CREDITORS, dlgn.SUNDRY_DEBTORS ];
-    const queryData:QueryData = {
-      where: {
-        code: {
-          inq: pLGNames
-        }
-      }
-    };
-    this.ledgergroupService.search(queryData).subscribe((ledgerGroups) => {
+    const where = {code: {
+      inq: [ ...pLGNames ]
+    }};
+    this.ledgergroupService.childs(where).subscribe((ledgerGroups) => {
 
-      ledgerGroups.forEach((lgr) => this.pLedgerGroupIds.push(lgr.id));
+      this.pLedgerGroupIds = findLedgerIdsIncludingChilds(pLGNames, ledgerGroups);
 
     });
 

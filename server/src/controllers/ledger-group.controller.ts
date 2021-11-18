@@ -10,6 +10,7 @@ import { adminAndUserAuthDetails } from '../utils/autherize-details';
 import { intercept } from '@loopback/context';
 import { ValidateLedgerGroupInterceptor } from '../interceptors/validate-ledgergroup.interceptor';
 import { DenyDeletionOfDefaultLedgerGroup } from '../interceptors';
+import { LedgerGroupWithParents } from '../models/ledger-group-with-parents.model';
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
@@ -82,6 +83,80 @@ export class LedgerGroupController {
   ): Promise<LedgerGroup[]> {
 
     const lgsR = await this.ledgerGroupRepository.find(filter);
+    return lgsR;
+
+  }
+
+  private fetchChilds = async(lgCodes: Array<string>):Promise<Array<LedgerGroup>> => {
+
+    const pQuery = await this.ledgerGroupRepository.execute(this.ledgerGroupRepository.modelClass.name, 'aggregate', [
+      {
+        '$graphLookup': {
+          'from': 'LedgerGroup',
+          'startWith': '$parentId',
+          'connectFromField': 'parentId',
+          'connectToField': '_id',
+          'as': 'parents',
+        }
+      },
+      {
+        '$addFields': {
+          'id': '$_id',
+        }
+      },
+      {
+        '$addFields': {
+          'parents': {
+            '$filter': {
+              'input': '$parents',
+              'cond': { '$in': [ '$$this.code', lgCodes ] }
+            }
+          }
+        }
+      },
+      {'$match': { '$or': [
+        {'parents': {'$exists': true,
+          '$not': {'$size': 0}}},
+        {'code': {'$in': lgCodes}}
+      ]}},
+    ]);
+    const lgsR = <Array<LedgerGroup>> await pQuery.toArray();
+    return lgsR;
+
+  }
+
+  @get(`${LEDGER_GROUP_API}/childs`)
+  @response(200, {
+    description: 'Childs of ledger groups',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(LedgerGroupWithParents, {
+            title: 'Ledger Groups with parents',
+          }),
+        },
+      },
+    },
+  })
+  @authorize({resource: resourcePermissions.ledgergroupView.name,
+    ...adminAndUserAuthDetails})
+  async childs(
+    @param.where(LedgerGroup) where?: Where<LedgerGroup>,
+  ): Promise<LedgerGroup[]> {
+
+    if (!where) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : LedgerGroup ids are required');
+
+    }
+    const whereC = where as {code: {inq: Array<string>}};
+    if (!whereC.code || !whereC.code.inq || whereC.code.inq.length < 1) {
+
+      throw new HttpErrors.Conflict('Invalid parameter : LedgerGroup ids are required');
+
+    }
+    const lgsR = await this.fetchChilds(whereC.code.inq);
     return lgsR;
 
   }
