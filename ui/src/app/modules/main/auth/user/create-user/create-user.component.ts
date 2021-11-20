@@ -5,12 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { UserService } from '@fboservices/user.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { User } from '@shared/entity/auth/user';
+import { Permission, User } from '@shared/entity/auth/user';
 import { Branch } from '@shared/entity/auth/branch';
 import { BranchService } from '@fboservices/auth/branch.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
 import { QueryData } from '@shared/util/query-data';
 
 @Component({
@@ -23,11 +21,16 @@ export class CreateUserComponent implements OnInit {
   goToPreviousPage = _goToPreviousPage;
 
   loading = true;
+
   hide = true;
+
   hide1 = true;
+
   formHeader = 'Create User';
 
-  permissions = {};
+  permissions:Record<string, Permission> = {};
+
+  itemPermissions:Record<string, Permission> = {};
 
   branchAuto = new FormControl();
 
@@ -56,7 +59,7 @@ export class CreateUserComponent implements OnInit {
     private readonly userService:UserService,
     private readonly branchService: BranchService,) { }
 
-    private mergePermissions = (permKey: string) => {
+    private mergePermissions = (permKey: string, pPermissions:Record<string, Permission>) => {
 
       const perm = permissionsT[permKey];
       for (const opt in perm.operations) {
@@ -66,10 +69,10 @@ export class CreateUserComponent implements OnInit {
           continue;
 
         }
-        if (!this.permissions[permKey]) {
+        if (!pPermissions[permKey]) {
 
-          this.permissions[permKey] = {...perm};
-          const opt2s = this.permissions[permKey].operations;
+          pPermissions[permKey] = {...perm};
+          const opt2s = pPermissions[permKey].operations;
           for (const opt2 in opt2s) {
 
             if (!opt2s.hasOwnProperty(opt2)) {
@@ -83,7 +86,7 @@ export class CreateUserComponent implements OnInit {
           continue;
 
         }
-        const opt2s = this.permissions[permKey].operations;
+        const opt2s = pPermissions[permKey].operations;
         for (const opt2 in opt2s) {
 
           if (!opt2s.hasOwnProperty(opt2)) {
@@ -140,6 +143,20 @@ export class CreateUserComponent implements OnInit {
 
     };
 
+    private categorisePermissions = (permKey: string, userC: User) => {
+
+      if ([ 'unit', 'tax', 'category', 'product', 'bank' ].includes(permKey)) {
+
+        this.itemPermissions[permKey] = userC.permissions[permKey] ?? null;
+        this.mergePermissions(permKey, this.itemPermissions);
+        return;
+
+      }
+      this.permissions[permKey] = userC.permissions[permKey] ?? null;
+      this.mergePermissions(permKey, this.permissions);
+
+    }
+
     ngOnInit(): void {
 
       this.branchAuto.valueChanges.subscribe(this.handleBranchValueChanges);
@@ -152,7 +169,6 @@ export class CreateUserComponent implements OnInit {
 
         this.userService.get(tId, {}).subscribe((userC) => {
 
-          this.permissions = userC.permissions ?? {};
           for (const permKey in permissionsT) {
 
             if (!permissionsT.hasOwnProperty(permKey)) {
@@ -160,7 +176,7 @@ export class CreateUserComponent implements OnInit {
               continue;
 
             }
-            this.mergePermissions(permKey);
+            this.categorisePermissions(permKey, userC);
 
           }
           this.form.setValue({
@@ -185,7 +201,22 @@ export class CreateUserComponent implements OnInit {
 
       } else {
 
-        this.permissions = {...permissionsT};
+        for (const permKey in permissionsT) {
+
+          if (!permissionsT.hasOwnProperty(permKey)) {
+
+            continue;
+
+          }
+          if ([ 'unit', 'tax', 'category', 'product', 'bank' ].includes(permKey)) {
+
+            this.itemPermissions[permKey] = {...permissionsT[permKey]};
+            continue;
+
+          }
+          this.permissions[permKey] = {...permissionsT[permKey]};
+
+        }
         this.loading = false;
 
       }

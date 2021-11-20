@@ -70,6 +70,26 @@
       <th>Edit</th>
       <th>Delete</th>
     </tr>
+    <tr>
+      <td colspan="5">Item</td>
+    </tr>
+
+    <tr *ngFor="let item of itemPermissions | keyvalue">
+      <td class="title-column">{{item.key}}</td>
+      <td class="perm-column">
+        <mat-checkbox color="primary" [checked]="item.value.operations.view"
+        (change)="item.value.operations.view = $event.checked"></mat-checkbox>
+      </td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.create"
+        (change)="item.value.operations.create = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.update"
+        (change)="item.value.operations.update = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.delete"
+        (change)="item.value.operations.delete = $event.checked"></mat-checkbox></td>
+    </tr>
+    <tr>
+      <td colspan="5">Others</td>
+    </tr>
     <tr *ngFor="let item of permissions | keyvalue">
       <td class="title-column">{{item.key}}</td>
       <td class="perm-column">
