@@ -44,6 +44,8 @@ export class CreateLedgerComponent implements OnInit {
 
   });
 
+  currentLedger: Ledger;
+
   constructor(public readonly router: Router,
     public readonly route: ActivatedRoute,
     private readonly ledgerService: LedgerService,
@@ -67,6 +69,7 @@ export class CreateLedgerComponent implements OnInit {
       };
       this.ledgerService.get(tId, queryParam).subscribe((ledgerC) => {
 
+        this.currentLedger = ledgerC;
         this.form.setValue({
           id: ledgerC.id ?? '',
           name: ledgerC.name ?? '',
@@ -99,7 +102,7 @@ export class CreateLedgerComponent implements OnInit {
         continue;
 
       }
-      formControls[key] = new FormControl('');
+      formControls[key] = new FormControl(this.currentLedger?.extras[key] ?? '');
 
     }
 
