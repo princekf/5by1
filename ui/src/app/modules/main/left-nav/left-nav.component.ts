@@ -216,7 +216,7 @@ export class LeftNavComponent implements OnInit {
           permittedMenus.push(menuT);
           childrenP.forEach((child) => {
 
-            if (child.path.indexOf(cUriS) === 0) {
+            if (cUriS.indexOf(child.path) === 0) {
 
               this.activeNode = child;
               this.activeParentNode = menuT;
