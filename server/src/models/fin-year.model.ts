@@ -2,7 +2,7 @@ import {Entity, model, property, belongsTo} from '@loopback/repository';
 import { FinYear as FinYearIntf } from '@shared/entity/auth/fin-year';
 import { Branch } from './branch.model';
 
-@model()
+@model({settings: {strict: false}})
 export class FinYear extends Entity implements FinYearIntf {
 
   @property({
@@ -41,6 +41,9 @@ export class FinYear extends Entity implements FinYearIntf {
 
   @belongsTo(() => Branch)
   branchId: string;
+
+  // Indexer property to allow additional data
+  [prop: string]: unknown;
 
   constructor(data?: Partial<FinYear>) {
 
