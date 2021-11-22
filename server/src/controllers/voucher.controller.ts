@@ -9,7 +9,11 @@ import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
 import { adminAndUserAuthDetails } from '../utils/autherize-details';
 import { ValidateVoucherInterceptor } from '../interceptors/validate-voucher.interceptor';
-import { intercept } from '@loopback/context';
+import { inject, intercept } from '@loopback/context';
+import { ProfileUser } from '../services';
+import {SecurityBindings} from '@loopback/security';
+import { FinYearRepository } from '../repositories';
+import { FinYear } from '@shared/entity/auth/fin-year';
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
@@ -40,9 +44,24 @@ export class VoucherController {
       },
     })
       voucher: Omit<Voucher, 'id'>,
+      @inject(SecurityBindings.USER) uProfile: ProfileUser,
+      @repository(FinYearRepository)
+      finYearRepository : FinYearRepository,
   ): Promise<Voucher> {
 
+    const finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
+    if (!finYear) {
+
+      throw new HttpErrors.UnprocessableEntity('Please select a proper financial year.');
+
+    }
+    const otherDetails = finYear.extras as {lastVNo:number};
+    const lastVNo = otherDetails?.lastVNo ?? 0;
+    const nextVNo = lastVNo + 1;
+    const nextVNoS = `${uProfile.company}/${uProfile.branch}/${uProfile.finYear}/${nextVNo}`.toUpperCase();
+    voucher.number = nextVNoS;
     const voucherR = await this.voucherRepository.create(voucher);
+    await finYearRepository.updateById(finYear.id, {extras: {lastVNo: nextVNo}});
     return voucherR;
 
   }

@@ -171,7 +171,7 @@ export class CreateVoucherComponent implements OnInit {
 
     this.fboForm = this.fBuilder.group({
       id: new FormControl(null),
-      number: new FormControl('', [ Validators.required ]),
+      number: new FormControl(''),
       date: this.fBuilder.control(new Date(), [ Validators.required ]),
       type: this.fBuilder.control(this.voucherType, [ Validators.required ]),
       details: this.fBuilder.control(''),

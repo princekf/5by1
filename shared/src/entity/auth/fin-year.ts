@@ -8,4 +8,5 @@ export interface FinYear {
     endDate?: Date;
     branch?: Branch;
     branchId?: string;
+    [prop: string]: unknown;
 }

@@ -133,7 +133,7 @@ export class FinYearController {
   ): Promise<FinYear> {
 
     const {branchId} = finYear;
-    const branch = await branchRepository.findById(branchId);
+    const branch = await branchRepository.findById(branchId as string);
     if (!branch) {
 
       throw new Error('Please select a proper branch');
@@ -144,7 +144,9 @@ export class FinYearController {
     /*
      * Now install default data, like ledger groups, ledgers etc.
      */
-    context.bind(BindingKeys.SESSION_DB_NAME).to(`${uProfile.company?.toLowerCase()}_${branch.code?.toLowerCase()}_${finYear.code.toLowerCase()}`);
+    const finYearCode = finYear.code as string;
+    const dbName = `${uProfile.company?.toLowerCase()}_${branch.code?.toLowerCase()}_${finYearCode.toLowerCase()}`;
+    context.bind(BindingKeys.SESSION_DB_NAME).to(dbName);
     const ledgerGroupRepository = await ledgerGroupRepositoryGetter();
     await this.installLedgerGroups(ledgerGroupRepository);
     const ledgerRepository = await ledgerRepositoryGetter();

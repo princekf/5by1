@@ -82,14 +82,6 @@ export class ValidateVoucherInterceptor implements Provider<Interceptor> {
         );
 
       }
-      const nameAlreadyExist = await this.voucherRepository.find({where: {number: {regexp: `/^${number}$/i`}}});
-      if (nameAlreadyExist.length) {
-
-        throw new HttpErrors.UnprocessableEntity(
-          'Voucher already exists',
-        );
-
-      }
       const { finYear, branch } = this.uProfile;
       const pQuery = await this.finYearRepository.execute(this.finYearRepository.modelClass.name, 'aggregate', [
         {$match: { code: { $eq: finYear}}},
