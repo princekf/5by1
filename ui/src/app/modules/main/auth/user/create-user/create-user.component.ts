@@ -28,9 +28,50 @@ export class CreateUserComponent implements OnInit {
 
   formHeader = 'Create User';
 
-  permissions:Record<string, Permission> = {};
+  permissions: Record<string, Permission> = {};
 
-  itemPermissions:Record<string, Permission> = {};
+  itemPermissions: Record<string, Permission> = {};
+
+  salePermissions: Record<string, Permission> = {};
+
+  purchasePermissions: Record<string, Permission> = {};
+
+  accountPermissions: Record<string, Permission> = {};
+
+  voucherPermissions: Record<string, Permission> = {};
+
+  settingsPermissions: Record<string, Permission> = {};
+
+  pcMap = [ {
+    permisions: [ 'unit', 'tax', 'category', 'product', 'bank' ],
+    category: this.itemPermissions,
+
+  },
+
+  {
+    permisions: [ 'invoice', 'revenue', 'customer' ],
+    category: this.salePermissions,
+  },
+  {
+    permisions: [ 'bill', 'payment', 'vendor' ],
+    category: this.purchasePermissions,
+  },
+
+  {
+    permisions: [ 'ledgergroup', 'ledger', 'costcentre' ],
+    category: this.accountPermissions,
+  },
+
+  {
+    permisions: [ 'voucher' ],
+    category: this.voucherPermissions,
+  },
+
+  {
+    permisions: [ 'user', 'branch', 'finyear' ],
+    category: this.settingsPermissions,
+  } ];
+
 
   branchAuto = new FormControl();
 
@@ -54,12 +95,12 @@ export class CreateUserComponent implements OnInit {
   selectedBranches: Array<Branch> = [];
 
   constructor(public readonly router: Router,
-    public readonly route: ActivatedRoute,
-    private readonly toastr: ToastrService,
-    private readonly userService:UserService,
-    private readonly branchService: BranchService,) { }
+              public readonly route: ActivatedRoute,
+              private readonly toastr: ToastrService,
+              private readonly userService: UserService,
+              private readonly branchService: BranchService) { }
 
-    private mergePermissions = (permKey: string, pPermissions:Record<string, Permission>) => {
+    private mergePermissions = (permKey: string, pPermissions: Record<string, Permission>) => {
 
       const perm = permissionsT[permKey];
       for (const opt in perm.operations) {
@@ -72,15 +113,15 @@ export class CreateUserComponent implements OnInit {
         if (!pPermissions[permKey]) {
 
           pPermissions[permKey] = {...perm};
-          const opt2s = pPermissions[permKey].operations;
-          for (const opt2 in opt2s) {
+          const opt3s = pPermissions[permKey].operations;
+          for (const opt2 in opt3s) {
 
-            if (!opt2s.hasOwnProperty(opt2)) {
+            if (!opt3s.hasOwnProperty(opt2)) {
 
               continue;
 
             }
-            opt2s[opt2] = false;
+            opt3s[opt2] = false;
 
           }
           continue;
@@ -102,7 +143,7 @@ export class CreateUserComponent implements OnInit {
 
     }
 
-    private handleBranchValueChanges = (branchQ:unknown) => {
+    private handleBranchValueChanges = (branchQ: unknown) => {
 
       if (!branchQ) {
 
@@ -127,7 +168,7 @@ export class CreateUserComponent implements OnInit {
 
     private fetchUserBranches = (branchIds: Array<string>): void => {
 
-      const queryData:QueryData = {
+      const queryData: QueryData = {
         where: {
           id: {
             inq: branchIds
@@ -145,19 +186,26 @@ export class CreateUserComponent implements OnInit {
 
     private categorisePermissions = (permKey: string, userC: User) => {
 
-      if ([ 'unit', 'tax', 'category', 'product', 'bank' ].includes(permKey)) {
+      const pcObj2 = this.pcMap.find((pcObj) => pcObj.permisions.includes(permKey));
 
-        this.itemPermissions[permKey] = userC.permissions[permKey] ?? null;
-        this.mergePermissions(permKey, this.itemPermissions);
-        return;
+
+      if (pcObj2) {
+
+        pcObj2.category[permKey] = userC.permissions[permKey] ?? null;
+        this.mergePermissions(permKey, pcObj2.category);
+
+      } else {
+
+        this.permissions[permKey] = userC.permissions[permKey] ?? null;
+        this.mergePermissions(permKey, this.permissions);
 
       }
-      this.permissions[permKey] = userC.permissions[permKey] ?? null;
-      this.mergePermissions(permKey, this.permissions);
+
 
     }
 
     ngOnInit(): void {
+
 
       this.branchAuto.valueChanges.subscribe(this.handleBranchValueChanges);
 
@@ -208,12 +256,14 @@ export class CreateUserComponent implements OnInit {
             continue;
 
           }
-          if ([ 'unit', 'tax', 'category', 'product', 'bank' ].includes(permKey)) {
+          const pcObj2 = this.pcMap.find((pcObj) => pcObj.permisions.includes(permKey));
+          if (pcObj2) {
 
-            this.itemPermissions[permKey] = {...permissionsT[permKey]};
+            pcObj2.category[permKey] = {...permissionsT[permKey]};
             continue;
 
           }
+
           this.permissions[permKey] = {...permissionsT[permKey]};
 
         }
@@ -221,7 +271,9 @@ export class CreateUserComponent implements OnInit {
 
       }
 
+
     }
+
 
     extractNameOfObject = (obj: {name: string}): string => obj?.name ?? '';
 
@@ -262,11 +314,11 @@ export class CreateUserComponent implements OnInit {
 
 
       }
-      const userPerm:User = {
+      const userPerm: User = {
         permissions: this.permissions,
         ...userP
       };
-      const selectedBranchIds:Array<string> = [];
+      const selectedBranchIds: Array<string> = [];
       this.selectedBranches.forEach((branch) => selectedBranchIds.push(branch.id));
       userPerm.branchIds = selectedBranchIds;
       this.userService.upsert(userPerm).subscribe(() => {
