@@ -20,7 +20,7 @@
   <mat-form-field class='fbo-create-formTwo'>
     <mat-label>Password</mat-label>
     <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
-            
+
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
      <mat-error *ngIf="form.controls['password'].hasError('required')">Please Enter Password</mat-error>
   </mat-form-field>
@@ -29,7 +29,7 @@
     <mat-label>Confirm Password</mat-label>
     <input matInput [type]="hide1 ? 'password' : 'text'" formControlName="cPassword" matInput placeholder="Enter Name">
     <mat-icon matSuffix (click)="hide1 = !hide1">{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
-            
+
     <mat-error *ngIf="form.controls['cPassword'].hasError('required')">Please Enter confirmation Password</mat-error>
   </mat-form-field>
 
@@ -47,7 +47,7 @@
         </mat-chip>
 
         <input matInput placeholder="Enter Branch" [matAutocomplete]="autobranch"
-        [formControl]="branchAuto" [matChipInputFor]="brachChipList" 
+        [formControl]="branchAuto" [matChipInputFor]="brachChipList"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes" #branchInput>
 
       </mat-chip-list>
@@ -63,6 +63,7 @@
   </mat-error>
   <br>
   <table [style.display]="loading ? 'none': ''" class="permission-table">
+  <h3>ITEM</h3>
     <tr>
       <th></th>
       <th>View</th>
@@ -70,9 +71,7 @@
       <th>Edit</th>
       <th>Delete</th>
     </tr>
-    <tr>
-      <td colspan="5">Item</td>
-    </tr>
+
 
     <tr *ngFor="let item of itemPermissions | keyvalue">
       <td class="title-column">{{item.key}}</td>
@@ -87,9 +86,152 @@
       <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.delete"
         (change)="item.value.operations.delete = $event.checked"></mat-checkbox></td>
     </tr>
-    <tr>
-      <td colspan="5">Others</td>
+<br>
+<br>
+
+<h2>SALE</h2>
+<tr>
+      <th></th>
+      <th>View</th>
+      <th>Create</th>
+      <th>Edit</th>
+      <th>Delete</th>
     </tr>
+    <tr>
+
+
+
+     <tr *ngFor="let item of salePermissions | keyvalue">
+      <td class="title-column">{{item.key}}</td>
+      <td class="perm-column">
+        <mat-checkbox color="primary" [checked]="item.value.operations.view"
+        (change)="item.value.operations.view = $event.checked"></mat-checkbox>
+      </td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.create"
+        (change)="item.value.operations.create = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.update"
+        (change)="item.value.operations.update = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.delete"
+        (change)="item.value.operations.delete = $event.checked"></mat-checkbox></td>
+    </tr>
+    <br>
+    <br>
+    <h2>PURCHASES</h2>
+<tr>
+      <th></th>
+      <th>View</th>
+      <th>Create</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+
+
+
+     <tr *ngFor="let item of purchasePermissions | keyvalue">
+      <td class="title-column">{{item.key}}</td>
+      <td class="perm-column">
+        <mat-checkbox color="primary" [checked]="item.value.operations.view"
+        (change)="item.value.operations.view = $event.checked"></mat-checkbox>
+      </td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.create"
+        (change)="item.value.operations.create = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.update"
+        (change)="item.value.operations.update = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.delete"
+        (change)="item.value.operations.delete = $event.checked"></mat-checkbox></td>
+    </tr>
+
+    <br>
+    <br>
+
+    <h2>ACCOUNTS</h2>
+    <tr>
+      <th></th>
+      <th>View</th>
+      <th>Create</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+
+     <tr *ngFor="let item of accountPermissions | keyvalue">
+      <td class="title-column">{{item.key}}</td>
+      <td class="perm-column">
+        <mat-checkbox color="primary" [checked]="item.value.operations.view"
+        (change)="item.value.operations.view = $event.checked"></mat-checkbox>
+      </td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.create"
+        (change)="item.value.operations.create = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.update"
+        (change)="item.value.operations.update = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.delete"
+        (change)="item.value.operations.delete = $event.checked"></mat-checkbox></td>
+    </tr>
+
+
+    <br>
+    <br>
+    <h2>VOUCHER</h2>
+    <tr>
+      <th></th>
+      <th>View</th>
+      <th>Create</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+
+     <tr *ngFor="let item of voucherPermissions | keyvalue">
+      <td class="title-column">{{item.key}}</td>
+      <td class="perm-column">
+        <mat-checkbox color="primary" [checked]="item.value.operations.view"
+        (change)="item.value.operations.view = $event.checked"></mat-checkbox>
+      </td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.create"
+        (change)="item.value.operations.create = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.update"
+        (change)="item.value.operations.update = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.delete"
+        (change)="item.value.operations.delete = $event.checked"></mat-checkbox></td>
+    </tr>
+
+
+
+    <br>
+    <br>
+    <h2>SETTINGS</h2>
+    <tr>
+      <th></th>
+      <th>View</th>
+      <th>Create</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+
+     <tr *ngFor="let item of settingsPermissions | keyvalue">
+      <td class="title-column">{{item.key}}</td>
+      <td class="perm-column">
+        <mat-checkbox color="primary" [checked]="item.value.operations.view"
+        (change)="item.value.operations.view = $event.checked"></mat-checkbox>
+      </td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.create"
+        (change)="item.value.operations.create = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.update"
+        (change)="item.value.operations.update = $event.checked"></mat-checkbox></td>
+      <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.delete"
+        (change)="item.value.operations.delete = $event.checked"></mat-checkbox></td>
+    </tr>
+
+<br>
+<br>
+<h2>OTHERS</h2>
+    <tr>
+      <th></th>
+      <th>View</th>
+      <th>Create</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+    <tr>
+
     <tr *ngFor="let item of permissions | keyvalue">
       <td class="title-column">{{item.key}}</td>
       <td class="perm-column">
@@ -104,7 +246,7 @@
         (change)="item.value.operations.delete = $event.checked"></mat-checkbox></td>
     </tr>
   </table>
-  
+
 
   <p class="form-submit-container">
     <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
