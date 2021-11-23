@@ -18,9 +18,10 @@ import { CreateVoucherComponent } from './create-voucher/create-voucher.componen
 import { ListVoucherComponent } from './list-voucher/list-voucher.component';
 
 import { DataTableModule } from '../../../data-table/data-table.module';
+import { FilterVoucherComponent } from './filter-voucher/filter-voucher.component';
 
 @NgModule({
-  declarations: [ CreateVoucherComponent, ListVoucherComponent, ],
+  declarations: [ CreateVoucherComponent, ListVoucherComponent, FilterVoucherComponent, ],
   imports: [
     CommonModule,
     MatIconModule,

@@ -13,7 +13,6 @@ import { inject, intercept } from '@loopback/context';
 import { ProfileUser } from '../services';
 import {SecurityBindings} from '@loopback/security';
 import { FinYearRepository } from '../repositories';
-import { FinYear } from '@shared/entity/auth/fin-year';
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)

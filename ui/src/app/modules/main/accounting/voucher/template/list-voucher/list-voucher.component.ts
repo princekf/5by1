@@ -12,7 +12,7 @@ import * as dayjs from 'dayjs';
 import { of, throwError, zip } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { FilterItem } from 'src/app/modules/main/directives/table-filter/filter-item';
-import { FilterReceiptComponent } from '../../receipt/filter-receipt/filter-receipt.component';
+import { FilterVoucherComponent } from '../filter-voucher/filter-voucher.component';
 
 @Component({
   selector: 'app-list-voucher',
@@ -117,7 +117,7 @@ export class ListVoucherComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.filterItem = new FilterItem(FilterReceiptComponent, {});
+    this.filterItem = new FilterItem(FilterVoucherComponent, {});
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
