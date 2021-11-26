@@ -12,6 +12,8 @@ import {BindingKeys} from './binding.keys';
 import {BcryptHasher, JWTService, FBOUserService} from './services';
 import { JWTAuthenticationStrategy } from './authentication-strategies/jwt-strategy';
 import { SECURITY_SCHEME_SPEC, SECURITY_SPEC } from './utils/security-spec';
+import path from 'path';
+import multer from 'multer';
 
 export {ApplicationConfig};
 
@@ -40,6 +42,9 @@ export class FiveByOneApplication extends BootMixin(
       path: '/api-docs',
     });
     this.component(RestExplorerComponent);
+
+    // Configure file upload with multer options
+    this.configureFileUpload(options.fileStorageDirectory);
 
     this.add(createBindingFromClass(JWTAuthenticationStrategy));
     registerAuthenticationStrategy(this, JWTAuthenticationStrategy);
@@ -86,6 +91,33 @@ export class FiveByOneApplication extends BootMixin(
     this.bind(BindingKeys.PASSWORD_HASHER).toClass(BcryptHasher);
 
     this.bind(BindingKeys.USER_SERVICE).toClass(FBOUserService);
+
+  }
+
+
+  /**
+   * Configure `multer` options for file upload
+   */
+  protected configureFileUpload(destinationP?: string): void {
+
+    // Upload files to `dist/.sandbox` by default
+    const destination = destinationP ?? path.join(__dirname, '../.sandbox');
+    this.bind(BindingKeys.STORAGE_DIRECTORY).to(destination);
+    const multerOptions: multer.Options = {
+      storage: multer.diskStorage({
+        destination,
+        // Use the original file name as is
+        filename: (req, file, callBack) => {
+
+          const RANDOM_MULT = 1E9;
+          const uniquePreffix = `${Date.now()}-${Math.round(Math.random() * RANDOM_MULT)}`;
+          callBack(null, `${uniquePreffix}_${file.originalname}`);
+
+        },
+      }),
+    };
+    // Configure the file upload service with multer options
+    this.configure(BindingKeys.FILE_UPLOAD_SERVICE).to(multerOptions);
 
   }
 

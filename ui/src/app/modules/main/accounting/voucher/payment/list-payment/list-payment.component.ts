@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { VoucherService } from '@fboservices/accounting/voucher.service';
 import { VoucherType } from '@shared/entity/accounting/voucher';
 
 @Component({
@@ -13,5 +14,15 @@ export class ListPaymentComponent {
   tableHeader = 'List of Payments';
 
   editUri = '/voucher/payment/create';
+
+  constructor(private voucherService: VoucherService) { }
+
+  handleImportClick = (file: File) => {
+    
+    this.voucherService.importVouchers(file).subscribe(() => {
+      console.log('file uploaded');
+      
+    });
+  }
 
 }

@@ -1,5 +1,6 @@
 import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors } from '@loopback/rest';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, RestBindings,
+  Response, Request } from '@loopback/rest';
 import {Voucher} from '../models/voucher.model';
 import {VoucherRepository} from '../repositories/voucher.repository';
 import { VOUCHER_API } from '@shared/server-apis';
@@ -12,7 +13,22 @@ import { ValidateVoucherInterceptor } from '../interceptors/validate-voucher.int
 import { inject, intercept } from '@loopback/context';
 import { ProfileUser } from '../services';
 import {SecurityBindings} from '@loopback/security';
-import { FinYearRepository } from '../repositories';
+import { CostCentreRepository, FinYearRepository, LedgerRepository } from '../repositories';
+import {FileUploadHandler} from '../types';
+import { BindingKeys } from '../binding.keys';
+import xlsx from 'xlsx';
+import { VoucherImport } from '../utils/voucher-import-spec';
+import { CostCentre, Ledger, Transaction } from '../models';
+import { TransactionType } from '@shared/entity/accounting/transaction';
+import { VoucherType } from '@shared/entity/accounting/voucher';
+
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
@@ -226,5 +242,237 @@ export class VoucherController {
 
   }
 
+  private saveUploadedFile = (fileUploadHandler: FileUploadHandler, request: Request, response2: Response) =>
+    new Promise<unknown>((resolve, reject) => {
+
+      fileUploadHandler(request, response2, (err: unknown) => {
+
+        if (err) {
+
+          reject(err);
+
+        } else {
+
+          resolve(VoucherController.getFilesAndFields(request));
+
+        }
+
+      });
+
+    })
+
+  private findLedgerMap = async(ledgerRepository:LedgerRepository, lCodes: Array<string>)
+  :Promise<Record<string, Ledger>> => {
+
+    const ledgers = await ledgerRepository.find({where: {code: {inq: lCodes}}});
+    const ledgerMap:Record<string, Ledger> = {};
+    ledgers.forEach((ldgr) => (ledgerMap[ldgr.code] = ldgr));
+    const invalidLCodes = lCodes.filter((lcd) => !ledgerMap[lcd]);
+    if (invalidLCodes && invalidLCodes.length) {
+
+      throw new HttpErrors.UnprocessableEntity(`The following ledger codes are invalid ${JSON.stringify(invalidLCodes)}`);
+
+    }
+    return ledgerMap;
+
+  }
+
+  private costCentreMap = async(costCentreRepository:CostCentreRepository, cCodes: Array<string>)
+  :Promise<Record<string, CostCentre>> => {
+
+    const ledgers = await costCentreRepository.find({where: {name: {inq: cCodes}}});
+    const cCenterMap:Record<string, CostCentre> = {};
+    ledgers.forEach((ldgr) => (cCenterMap[ldgr.name] = ldgr));
+    const invalidLCodes = cCodes.filter((lcd) => !cCenterMap[lcd]);
+    if (invalidLCodes && invalidLCodes.length) {
+
+      throw new HttpErrors.UnprocessableEntity(`The following cost centres are invalid ${JSON.stringify(invalidLCodes)}`);
+
+    }
+    return cCenterMap;
+
+  }
+
+  private extractVoucherData = (vouchersData:Array<VoucherImport>)
+  :[Array<string>, Array<string>] => {
+
+    const lCodes:Array<string> = [];
+    const ccCodes:Array<string> = [];
+    vouchersData.forEach((vData) => {
+
+      if (vData.PrimaryLedger && !lCodes.includes(vData.PrimaryLedger)) {
+
+        lCodes.push(vData.PrimaryLedger);
+
+      }
+
+      if (vData.CompoundLedger && !lCodes.includes(vData.CompoundLedger)) {
+
+        lCodes.push(vData.CompoundLedger);
+
+      }
+
+      if (vData.CostCentre && !ccCodes.includes(vData.CostCentre)) {
+
+        ccCodes.push(vData.CostCentre);
+
+      }
+
+    });
+    return [ lCodes, ccCodes ];
+
+  }
+
+  private findVoucherType = (vType: string):VoucherType => {
+
+    switch (vType) {
+
+    case 'Sales':
+      return VoucherType.SALES;
+    case 'Purchase':
+      return VoucherType.PURCHASE;
+    case 'Payment':
+      return VoucherType.PAYMENT;
+    case 'Receipt':
+      return VoucherType.RECEIPT;
+    case 'Contra':
+      return VoucherType.CONTRA;
+    case 'Journal':
+      return VoucherType.JOURNAL;
+    case 'Credit Note':
+      return VoucherType.CREDIT_NOTE;
+
+    }
+    return VoucherType.DEBIT_NOTE;
+
+  }
+
+  private createVoucher = async(vouchersData:Array<VoucherImport>, ledgerMap: Record<string, Ledger>,
+    cCentreMap:Record<string, CostCentre>, uProfile: ProfileUser, finYearRepository : FinYearRepository)
+    :Promise<void> => {
+
+    for (const vData of vouchersData) {
+
+      const details = vData.Details;
+      const date = dayjs.utc(vData.Date, 'DD/MM/YY')
+        .toDate();
+      const type = this.findVoucherType(vData.VoucherType);
+      const pType = vData.Credit > 0 ? TransactionType.CREDIT : TransactionType.DEBIT;
+      const cType = vData.Credit > 0 ? TransactionType.DEBIT : TransactionType.CREDIT;
+      const amount = vData.Credit > 0 ? vData.Credit : vData.Debit;
+      const pTransaction:Partial<Transaction> = {
+        type: pType,
+        order: 1,
+        ledgerId: ledgerMap[vData.PrimaryLedger].id,
+        amount,
+        costCentreId: cCentreMap[vData.CostCentre]?.id ?? null
+      };
+      const cTransaction:Partial<Transaction> = {
+        type: cType,
+        order: 2,
+        ledgerId: ledgerMap[vData.CompoundLedger].id,
+        amount,
+      };
+
+      const finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
+      if (!finYear) {
+
+        throw new HttpErrors.UnprocessableEntity('Please select a proper financial year.');
+
+      }
+      const otherDetails = finYear.extras as {lastVNo:number};
+      const lastVNo = otherDetails?.lastVNo ?? 0;
+      const nextVNo = lastVNo + 1;
+      const nextVNoS = `${uProfile.company}/${uProfile.branch}/${uProfile.finYear}/${nextVNo}`.toUpperCase();
+      await this.voucherRepository.create({
+        details,
+        date,
+        type,
+        number: nextVNoS,
+        transactions: [ pTransaction, cTransaction ]
+      });
+      await finYearRepository.updateById(finYear.id, {extras: {lastVNo: nextVNo}});
+
+    }
+
+  }
+
+  @post(`${VOUCHER_API}/import`, {
+    responses: {
+      200: {
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+            },
+          },
+        },
+        description: 'Files and fields',
+      },
+    },
+  })
+  async importVouchers(
+    @requestBody.file()
+      request: Request,
+    @inject(RestBindings.Http.RESPONSE) response2: Response,
+    @inject(BindingKeys.FILE_UPLOAD_SERVICE) fileUploadHandler: FileUploadHandler,
+    @inject(SecurityBindings.USER) uProfile: ProfileUser,
+    @repository(FinYearRepository) finYearRepository : FinYearRepository,
+    @repository(LedgerRepository) ledgerRepository : LedgerRepository,
+    @repository(CostCentreRepository) costCentreRepository : CostCentreRepository,
+  ): Promise<unknown> {
+
+    await this.saveUploadedFile(fileUploadHandler, request, response2);
+    const [ fileDetails ] = request.files as Array<{path: string}>;
+    const savedFilePath = fileDetails.path;
+    const workBook = xlsx.readFile(savedFilePath);
+    const sheetNames = workBook.SheetNames;
+    const vouchersData:Array<VoucherImport> = xlsx.utils.sheet_to_json(workBook.Sheets[sheetNames[0]]);
+    const [ lCodes, ccCodes ] = this.extractVoucherData(vouchersData);
+    const ledgerMap = await this.findLedgerMap(ledgerRepository, lCodes);
+    const cCentreMap = await this.costCentreMap(costCentreRepository, ccCodes);
+    await this.createVoucher(vouchersData, ledgerMap, cCentreMap, uProfile, finYearRepository);
+    return vouchersData;
+
+  }
+
+  /**
+   * Get files and fields for the request
+   * @param request - Http request
+   */
+  private static getFilesAndFields(request: Request) {
+
+    const uploadedFiles = request.files;
+    const mapper = (file2: globalThis.Express.Multer.File) => ({
+      fieldname: file2.fieldname,
+      originalname: file2.originalname,
+      encoding: file2.encoding,
+      mimetype: file2.mimetype,
+      size: file2.size,
+    });
+    let files = [];
+    if (Array.isArray(uploadedFiles)) {
+
+      files = uploadedFiles.map(mapper);
+
+    } else {
+
+      for (const filename in uploadedFiles) {
+
+        if (!uploadedFiles.hasOwnProperty(filename)) {
+
+          continue;
+
+        }
+
+        files.push(...uploadedFiles[filename].map(mapper));
+
+      }
+
+    }
+    return {files,
+      fields: request.body};
+
+  }
 
 }

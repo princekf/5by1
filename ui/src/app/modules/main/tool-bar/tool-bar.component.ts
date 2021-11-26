@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, Inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-tool-bar',
@@ -14,7 +15,11 @@ export class ToolBarComponent implements OnInit {
 
   @Input() subHeader: string;
 
-  constructor(private readonly router: Router) { }
+  @Output() onImportClickEvent = new EventEmitter<File>();
+
+
+  constructor(private readonly router: Router,
+    @Inject(DOCUMENT) private document: Document) { }
 
   ngOnInit(): void {
   }
@@ -22,6 +27,18 @@ export class ToolBarComponent implements OnInit {
   onCreateClick(): void {
 
     this.router.navigate([ this.createUri ], { queryParams: {burl: this.router.url} });
+
+  }
+
+  openImportFile = ():void => {
+
+    this.document.getElementById('importFileInput').click();
+
+  }
+
+  handleImportFileInput(files: FileList): void {
+
+    this.onImportClickEvent.emit(files[0]);
 
   }
 

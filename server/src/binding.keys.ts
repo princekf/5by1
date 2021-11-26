@@ -3,6 +3,7 @@ import { UserService } from '@loopback/authentication';
 import { Credentials } from './repositories';
 import { PasswordHasher, ProfileUser } from './services';
 import { FBOTokenServiceInft } from './services/fbo-token.serviceintf';
+import {FileUploadHandler} from './types';
 
 export class BindingKeys {
 
@@ -32,5 +33,17 @@ export class BindingKeys {
   public static SESSION_DB_NAME = BindingKey.create<string>('session.database.name');
 
   public static SESSION_COMPANY_CODE = BindingKey.create<string>('session.company.code');
+
+  /**
+   * Binding key for the file upload service
+   */
+  public static FILE_UPLOAD_SERVICE = BindingKey.create<FileUploadHandler>(
+    'services.FileUpload',
+  );
+
+  /**
+   * Binding key for the storage directory
+   */
+  public static STORAGE_DIRECTORY = BindingKey.create<string>('storage.directory');
 
 }

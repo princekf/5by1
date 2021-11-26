@@ -1,8 +1,10 @@
 <div class="header-container">
   <span class="main-header">{{mainHeader}}</span>
   <div class="empy-space"></div>
-  <button mat-flat-button class="tool-bar-button">
+  <button mat-flat-button class="tool-bar-button" (click)="openImportFile()">
     <mat-icon>save_alt</mat-icon><span class="tool-bar-button-caption">Import</span>
+    <input type="file" style="display:none" (change)="handleImportFileInput($event.target.files)" id="importFileInput"
+    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
   </button>
   <button mat-flat-button class="tool-bar-button">
     <mat-icon>ios_share</mat-icon><span class="tool-bar-button-caption">Export</span>
