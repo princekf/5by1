@@ -29,6 +29,8 @@ export class ListVoucherComponent implements OnInit {
 
   displayedColumns: string[] = [ 'number', 'date', 'pledger', 'cledger', 'amount', 'details' ];
 
+  numberColumns: string[] = [ 'amount' ];
+
   columnHeaders = {
     number: 'Voucher #',
     date: 'Date',

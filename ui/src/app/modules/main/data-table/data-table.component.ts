@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, Input, Type, ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, Input, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -25,6 +25,8 @@ export class DataTableComponent {
   @Input() tableHeader: string;
 
   @Input() columnHeaders: Record<string, string>;
+
+  @Input() numberColumns: Array<string> = [];
 
   private _tableData:ListQueryRespType<unknown>;
 
@@ -192,6 +194,17 @@ export class DataTableComponent {
     selectedTaxes.forEach((taxP) => ids.push(taxP.id));
     this.router.navigate([ this.deleteUri ], { queryParams: {ids: ids.join(),
       burl: this.router.url} });
+
+  }
+
+  findCssClass = (cName:string):string => {
+
+    if (this.numberColumns.includes(cName)) {
+
+      return 'column-right-align';
+
+    }
+    return '';
 
   }
 
