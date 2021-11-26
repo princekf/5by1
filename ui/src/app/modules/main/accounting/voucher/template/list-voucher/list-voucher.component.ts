@@ -71,8 +71,9 @@ export class ListVoucherComponent implements OnInit {
       const cledger = ledgerMap[secondTr.ledgerId];
       const tType = firstTr.type === TransactionType.CREDIT ? 'Cr' : 'Dr';
       const { details, ...item2} = item;
+      const details2 = details ?? '';
       itemsT.push({
-        details: details.length < maxLength ? details : `${details.substring(0, trimLength)}...`,
+        details: details2?.length < maxLength ? details2 : `${details2?.substring(0, trimLength)}...`,
         ...item2,
         amount: `${firstTr.amount} ${tType}`,
         pledger: pledger.name,

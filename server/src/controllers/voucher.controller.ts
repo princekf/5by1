@@ -354,7 +354,7 @@ export class VoucherController {
     for (const vData of vouchersData) {
 
       const details = vData.Details;
-      const date = dayjs.utc(vData.Date, 'DD/MM/YY')
+      const date = dayjs.utc(vData.Date, 'DD-MM-YYYY')
         .toDate();
       const type = this.findVoucherType(vData.VoucherType);
       const pType = vData.Credit > 0 ? TransactionType.CREDIT : TransactionType.DEBIT;
