@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  dateFormat: 'YYYY-MM-DD'
+  dateFormat: 'DD-MM-YYYY'
 };

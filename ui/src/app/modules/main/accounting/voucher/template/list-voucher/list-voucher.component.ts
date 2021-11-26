@@ -14,6 +14,8 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { FilterItem } from 'src/app/modules/main/directives/table-filter/filter-item';
 import { FilterVoucherComponent } from '../filter-voucher/filter-voucher.component';
 
+type VType = Voucher & { amount: string; pledger: string; cledger: string; };
+
 @Component({
   selector: 'app-list-voucher',
   templateUrl: './list-voucher.component.html',
@@ -44,7 +46,7 @@ export class ListVoucherComponent implements OnInit {
 
   loading = true;
 
-  vouchers: ListQueryRespType<Voucher & { amount: string, pledger: string, cledger: string }> = {
+  vouchers: ListQueryRespType<VType> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -55,6 +57,32 @@ export class ListVoucherComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
     private voucherService: VoucherService,
     private ledgerService: LedgerService,) { }
+
+
+  private formatItems = (ledgerMap: Record<string, Ledger>, items: Array<Voucher>):Array<VType> => {
+
+    const itemsT = [];
+    const maxLength = 20;
+    const trimLength = 17;
+    for (const item of items) {
+
+      const [ firstTr, secondTr ] = item.transactions;
+      const pledger = ledgerMap[firstTr.ledgerId];
+      const cledger = ledgerMap[secondTr.ledgerId];
+      const tType = firstTr.type === TransactionType.CREDIT ? 'Cr' : 'Dr';
+      const { details, ...item2} = item;
+      itemsT.push({
+        details: details.length < maxLength ? details : `${details.substring(0, trimLength)}...`,
+        ...item2,
+        amount: `${firstTr.amount} ${tType}`,
+        pledger: pledger.name,
+        cledger: cledger.name,
+      });
+
+    }
+    return itemsT;
+
+  }
 
   private loadData = () => {
 
@@ -86,21 +114,7 @@ export class ListVoucherComponent implements OnInit {
         const ledgerMap: Record<string, Ledger> = {};
         ledgers.forEach((ledger) => (ledgerMap[ledger.id] = ledger));
         const { totalItems, pageIndex, items } = { ...voucherListData };
-        const itemsT = [];
-        for (const item of items) {
-
-          const [ firstTr, secondTr ] = item.transactions;
-          const pledger = ledgerMap[firstTr.ledgerId];
-          const cledger = ledgerMap[secondTr.ledgerId];
-          const tType = firstTr.type === TransactionType.CREDIT ? 'Cr' : 'Dr';
-          itemsT.push({
-            ...item,
-            amount: `${firstTr.amount} ${tType}`,
-            pledger: pledger.name,
-            cledger: cledger.name,
-          });
-
-        }
+        const itemsT = this.formatItems(ledgerMap, items);
         this.vouchers = {
           totalItems,
           pageIndex,
