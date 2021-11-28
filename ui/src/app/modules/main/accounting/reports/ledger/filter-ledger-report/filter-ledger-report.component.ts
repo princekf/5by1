@@ -7,6 +7,7 @@ import { Ledger } from '@shared/entity/accounting/ledger';
 import { LedgerService } from '@fboservices/accounting/ledger.service';
 import { LOCAL_USER_KEY } from '@fboutil/constants';
 import { SessionUser } from '@shared/util/session-user';
+import * as dayjs from 'dayjs';
 
 @Component({
   selector: 'app-filter-ledger-report',
@@ -20,6 +21,10 @@ export class FilterLedgerReportComponent implements OnInit {
   queryParams:QueryData = { };
 
   filterForm: FormGroup;
+
+  minDate: string;
+
+  maxDate: string;
 
 
   constructor(private router:Router,
@@ -46,6 +51,8 @@ export class FilterLedgerReportComponent implements OnInit {
     const userS = localStorage.getItem(LOCAL_USER_KEY);
     const sessionUser: SessionUser = JSON.parse(userS);
     const {finYear} = sessionUser;
+    this.minDate = dayjs(finYear.startDate).format('YYYY-MM-DD');
+    this.maxDate = dayjs(finYear.endDate).format('YYYY-MM-DD');
     const end = new Date(finYear.endDate);
     const start = new Date(finYear.startDate);
     return [ start, end ];
