@@ -2,7 +2,7 @@ import { Component, ComponentFactoryResolver, Input, ViewChild } from '@angular/
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MainService } from '@fboservices/main.service';
 import { PAGE_SIZE_OPTIONS } from '@fboutil/constants';
 import { QueryData } from '@shared/util/query-data';
@@ -99,6 +99,7 @@ export class DataTableComponent {
   @ViewChild(TableFilterDirective, {static: true}) filterHost!: TableFilterDirective;
 
   constructor(private router:Router,
+    private activatedRoute: ActivatedRoute,
     private readonly mainService: MainService,
     private componentFactoryResolver: ComponentFactoryResolver) { }
 
@@ -139,6 +140,11 @@ export class DataTableComponent {
 
   ngOnInit():void {
 
+    this.activatedRoute.queryParams.subscribe((value) => {
+
+      this.queryParams = value;
+
+    });
     this.loadComponent();
 
 
@@ -172,7 +178,19 @@ export class DataTableComponent {
     });
     this.sort.sortChange.subscribe((cSort:Sort) => {
 
-      this.queryParams.order = [ `${cSort.active} ${cSort.direction}` ];
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {order, ...otherParams} = this.queryParams;
+      if (cSort.direction) {
+
+        this.queryParams = {...otherParams,
+          order: [ `${cSort.active} ${cSort.direction}` ]};
+
+      } else {
+
+        this.queryParams = {...otherParams};
+
+      }
+
       this.router.navigate([], { queryParams: this.queryParams });
 
     });
@@ -205,6 +223,17 @@ export class DataTableComponent {
 
     }
     return '';
+
+  }
+
+  findArrowPos = (cName:string):string => {
+
+    if (this.numberColumns.includes(cName)) {
+
+      return 'before';
+
+    }
+    return 'after';
 
   }
 

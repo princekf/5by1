@@ -11,7 +11,6 @@
 .empy-space{
     flex: 1 1;
 }  
-
 .filter-button {
   background-color:#0062FF;
   color: #FFFFFF;
@@ -48,6 +47,10 @@
     background-color: #0062FF22;
     height: 40px;
   }
+  
+  th.fbo-table-th {
+  padding-left: 10px;
+}
   tr.fiveby1-detail-row {
     height: 0;
     background-color: #0062FF22;
@@ -68,7 +71,7 @@
   }
 
   .fiveby1-element-row td.column-right-align {
-    padding-right: 20px;
+    padding-right: 2px;
     text-align: right;
   }
   

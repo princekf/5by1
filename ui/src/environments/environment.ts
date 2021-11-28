@@ -6,7 +6,8 @@
 
 export const environment = {
   production: false,
-  dateFormat: 'DD-MM-YYYY'
+  dateFormat: 'DD-MM-YYYY',
+  decimalPlaces: 2,
 };
 
 /*

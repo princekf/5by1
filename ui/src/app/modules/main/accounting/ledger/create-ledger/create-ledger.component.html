@@ -37,7 +37,7 @@
   <p>
     <mat-form-field>
       <mat-label>Opening Balance </mat-label>
-      <input formControlName="obAmount" matInput placeholder="Opening Balance">
+      <input formControlName="obAmount" matInput placeholder="Opening Balance" type="number">
       <mat-error *ngIf="form.controls['obAmount'].hasError('required')">Please enter opening balance</mat-error>
     </mat-form-field>
     <mat-form-field>

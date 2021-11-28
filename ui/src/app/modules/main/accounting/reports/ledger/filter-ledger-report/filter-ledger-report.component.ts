@@ -20,7 +20,7 @@ export class FilterLedgerReportComponent implements OnInit {
   filterForm: FormGroup = new FormGroup({
 
     'transactions.ledgerId': new FormControl(''),
-    'transactions.ledgerIdType': new FormControl('eq'),
+    'transactions.ledgerIdType': new FormControl(''),
 
 
   });

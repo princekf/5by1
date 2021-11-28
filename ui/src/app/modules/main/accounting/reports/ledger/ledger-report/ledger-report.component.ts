@@ -84,33 +84,82 @@ export class LedgerReportComponent implements OnInit {
 
     }
 
+  private extractReportItems =
+  (vouchers: Array<Voucher>, ledgerId: string):[Array<LedgerReportFields>, Array<string>] => {
+
+    const items: Array<LedgerReportFields> = [];
+    const otherLids:Array<string> = [];
+    for (const voucher of vouchers) {
+
+      const [ pTran, ...cTrans ] = voucher.transactions;
+      if (pTran.ledgerId === ledgerId) {
+
+        for (const cTran of cTrans) {
+
+          this.pushIntoItems(items, voucher, cTran.amount, pTran.type, cTran.ledgerId, cTran.details);
+          otherLids.push(cTran.ledgerId);
+
+        }
+
+      } else {
+
+        otherLids.push(pTran.ledgerId);
+        cTrans.filter((ctrn) => ctrn.ledgerId === ledgerId).forEach(
+          (tran) => this.pushIntoItems(items, voucher, tran.amount, tran.type, pTran.ledgerId, tran.details));
+
+      }
+
+    }
+    return [ items, otherLids ];
+
+  }
+
+  private createSummaryRows = (items: Array<LedgerReportFields>, ledger: string, debit: string, credit: string) => {
+
+    items.push({
+      id: null,
+      number: null,
+      ledger,
+      type: null,
+      date: null,
+      credit,
+      debit,
+      details: ''
+    });
+
+  }
+
+
+  private findBalances = (totalCredit: number, totalDebit: number, sLedger: Ledger):Array<string> => {
+
+    let opBalCr = '';
+    let opBalDr = '';
+    let balCr = totalCredit;
+    let balDr = totalDebit;
+    if (sLedger.obType === TransactionType.CREDIT) {
+
+      opBalCr = String(sLedger.obAmount);
+      balCr += sLedger.obAmount;
+
+    } else {
+
+      opBalDr = String(sLedger.obAmount);
+      balDr += sLedger.obAmount;
+
+    }
+    const balCrS = balCr > balDr ? String((balCr - balDr).toFixed(environment.decimalPlaces)) : '';
+    const balDrS = balDr > balCr ? String((balDr - balCr).toFixed(environment.decimalPlaces)) : '';
+    return [ opBalCr, opBalDr, balCrS, balDrS ];
+
+  }
+
   private loadData = (ledgerId: string) => {
 
     this.voucherService.search(this.queryParams).subscribe((vouchers) => {
 
-      const items: Array<LedgerReportFields> = [];
-      const otherLids:Array<string> = [];
-      for (const voucher of vouchers) {
-
-        const [ pTran, ...cTrans ] = voucher.transactions;
-        if (pTran.ledgerId === ledgerId) {
-
-          for (const cTran of cTrans) {
-
-            this.pushIntoItems(items, voucher, cTran.amount, pTran.type, cTran.ledgerId, cTran.details);
-            otherLids.push(cTran.ledgerId);
-
-          }
-
-        } else {
-
-          otherLids.push(pTran.ledgerId);
-          cTrans.filter((ctrn) => ctrn.ledgerId === ledgerId).forEach(
-            (tran) => this.pushIntoItems(items, voucher, tran.amount, tran.type, pTran.ledgerId, tran.details));
-
-        }
-
-      }
+      const [ items, otherLids ] = this.extractReportItems(vouchers, ledgerId);
+      // To show the details of selected ledger, fetch it from server.
+      otherLids.push(ledgerId);
       const queryDataL: QueryData = {
         where: {
           id: {
@@ -122,7 +171,21 @@ export class LedgerReportComponent implements OnInit {
 
         const ledgerMap:Record<string, Ledger> = {};
         ledgers.forEach((ldg) => (ledgerMap[ldg.id] = ldg));
-        items.forEach((item) => (item.ledger = ledgerMap[item.ledger].name));
+        const sLedger = ledgerMap[ledgerId];
+        this.tableHeader = `Ledger Report -- ${sLedger.name}`;
+        let totalDebit = 0;
+        let totalCredit = 0;
+        items.forEach((item) => {
+
+          item.ledger = ledgerMap[item.ledger].name;
+          totalDebit += Number(item.debit);
+          totalCredit += Number(item.credit);
+
+        });
+        this.createSummaryRows(items, 'Total', String(totalDebit.toFixed(environment.decimalPlaces)), String(totalCredit.toFixed(environment.decimalPlaces)));
+        const [ opBalCr, opBalDr, balCrS, balDrS ] = this.findBalances(totalCredit, totalDebit, sLedger);
+        this.createSummaryRows(items, 'Opening Balance', opBalDr, opBalCr);
+        this.createSummaryRows(items, 'Balance', balDrS, balCrS);
         this.ledgerRows = {
           items,
           totalItems: items.length,
@@ -162,6 +225,11 @@ export class LedgerReportComponent implements OnInit {
 
   columnParsingFn = (element: unknown, column: string): string => {
 
+    if (!element[column]) {
+
+      return null;
+
+    }
     switch (column) {
 
     case 'date':
