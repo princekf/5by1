@@ -9,6 +9,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './modules/auth/auth.module';
 import { httpInterceptorProviders } from '@fboutil/auth';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,6 +26,6 @@ import { httpInterceptorProviders } from '@fboutil/auth';
     ToastrModule.forRoot(),
   ],
   bootstrap: [ AppComponent ],
-  providers: [ httpInterceptorProviders ]
+  providers: [ ...httpInterceptorProviders, ]
 })
 export class AppModule { }

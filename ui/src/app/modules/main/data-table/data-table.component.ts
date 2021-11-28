@@ -199,6 +199,11 @@ export class DataTableComponent {
 
   editSelected = (): void => {
 
+    if (!this.editUri) {
+
+      return;
+
+    }
     const [ selectedTax ] = <Array<Tax>> this.selection.selected;
     this.router.navigate([ this.editUri ], { queryParams: {id: selectedTax.id,
       burl: this.router.url} });
@@ -206,6 +211,12 @@ export class DataTableComponent {
   }
 
   deleteSelected = (): void => {
+
+    if (!this.deleteUri) {
+
+      return;
+
+    }
 
     const selectedTaxes = <Array<Tax>> this.selection.selected;
     const ids = [];

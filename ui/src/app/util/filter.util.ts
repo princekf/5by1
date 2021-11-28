@@ -1,4 +1,9 @@
 import { FormGroup } from '@angular/forms';
+import * as dayjs from 'dayjs';
+import * as utc from 'dayjs/plugin/utc';
+import * as customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
 
 export interface SingleCondition {
     name: string;
@@ -86,8 +91,14 @@ export const createQueryStringFromFilterForm =
           options: 'i'};
         break;
       case 'number':
+        const whereNumberN = {};
+        whereNumberN[filterForm.controls[typeName]?.value] = filterForm.controls[fieldName]?.value;
+        where[fieldName] = whereNumberN;
+        break;
+      case 'date':
         const whereNumber = {};
-        whereNumber[filterForm.controls[typeName]?.value] = filterForm.controls[fieldName]?.value;
+        const dVal = filterForm.controls[fieldName]?.value;
+        whereNumber[filterForm.controls[typeName]?.value] = dayjs(dVal).format('YYYY-MM-DD');
         where[fieldName] = whereNumber;
         break;
 
@@ -98,9 +109,21 @@ export const createQueryStringFromFilterForm =
     const cType = filterForm.controls[typeName]?.value;
     if (cType === 'between') {
 
-      const start = filterForm.controls[`${fieldName}Start`]?.value;
-      const end = filterForm.controls[`${fieldName}End`]?.value;
-      where[fieldName] = {between: [ start, end ]};
+      if (formField.type === 'date') {
+
+        const sdVal = filterForm.controls[`${fieldName}Start`]?.value;
+        const edVal = filterForm.controls[`${fieldName}End`]?.value;
+        const start = dayjs(sdVal).format('YYYY-MM-DD');
+        const end = dayjs(edVal).format('YYYY-MM-DD');
+        where[fieldName] = {between: [ start, end ]};
+
+      } else {
+
+        const start = filterForm.controls[`${fieldName}Start`]?.value;
+        const end = filterForm.controls[`${fieldName}End`]?.value;
+        where[fieldName] = {between: [ start, end ]};
+
+      }
 
     }
 
