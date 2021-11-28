@@ -72,18 +72,6 @@ const menus: MenuNode[] = [
         name: 'Vendors',
         pKey: 'vendor'},
     ]},
-
-  /*
-   *{path: 'banking',
-   *  name: 'Banking',
-   *  icon: 'business_center',
-   *  children: [
-   *    {path: 'transfer',
-   *      name: 'Transfers'},
-   *    {path: 'transaction',
-   *      name: 'Transactions'},
-   *  ] },
-   */
   {path: 'accounts',
     name: 'Accounts',
     icon: 'business_center',
@@ -127,9 +115,14 @@ const menus: MenuNode[] = [
         name: 'Debit Note',
         pKey: 'voucher'},
     ] },
-  {path: 'report',
+  {path: 'reports',
     name: 'Reports',
-    icon: 'pie_chart'},
+    icon: 'pie_chart',
+    children: [
+      {path: 'reports/ledger',
+        name: 'Ledger',
+        pKey: 'ledger'},
+    ]},
   {path: 'setting',
     name: 'Settings',
     icon: 'settings',

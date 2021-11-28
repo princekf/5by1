@@ -108,6 +108,10 @@ const routes: Routes = [
         path: 'my-account',
         loadChildren: () => import('./auth/my-account/my-account.module').then((mod) => mod.MyAccountModule)
       },
+      {
+        path: 'reports',
+        loadChildren: () => import('./accounting/reports/reports.module').then((mod) => mod.ReportsModule)
+      },
 
     ]
   },

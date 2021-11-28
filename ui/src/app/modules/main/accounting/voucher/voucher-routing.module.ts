@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { DebitNoteModule } from './debit-note/debit-note.module';
 import { DeleteVoucherComponent } from './delete-voucher/delete-voucher.component';
 
 const routes: Routes = [

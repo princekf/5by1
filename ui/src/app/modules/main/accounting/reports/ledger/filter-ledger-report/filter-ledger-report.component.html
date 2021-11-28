@@ -1,0 +1,28 @@
+<div class="filter-item-card">
+    <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
+        <div (click)="$event.stopPropagation()">
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Ledger</mat-label>
+                <mat-select formControlName="transactions.ledgerIdType" class="select">
+                    <mat-option value="">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field class="ledger-transaction-field">
+                    <input type="text" matInput formControlName="transactions.ledgerId" [matAutocomplete]="autoTransactionLedger">
+                    <mat-autocomplete autoActiveFirstOption #autoTransactionLedger="matAutocomplete"
+                        [displayWith]="extractNameOfObject">
+                        <mat-option *ngFor="let ledgerS of ledgersFiltered" [value]="ledgerS.id">
+                            {{ledgerS.name}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+       
+        </div>
+
+        <div class='filter-actions-container'>
+            <button mat-button type="button" class="filtercancelbutton">Cancel</button>
+            <button mat-button type="submit" class="filtersavebutton">Submit</button>
+        </div>
+    </form>
+</div>
