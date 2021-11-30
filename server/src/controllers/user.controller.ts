@@ -15,7 +15,6 @@ import { resourcePermissions } from '../utils/resource-permissions';
 import { adminAndUserAuthDetails, allRoleAuthDetails } from '../utils/autherize-details';
 import { MyAccountResp } from '@shared/util/my-account-resp';
 import { SessionUser } from '@shared/util/session-user';
-import { Company } from '@shared/entity/auth/company';
 
 @authenticate('jwt')
 @authorize(allRoleAuthDetails)

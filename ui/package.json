@@ -28,6 +28,7 @@
     "@shared": "link:../shared/dist",
     "@swimlane/ngx-charts": "18.0.1",
     "@tabuckner/material-dayjs-adapter": "2.0.0",
+    "@vaseap/ng-material-treetable": "0.2.0",
     "dayjs": "1.10.6",
     "ngx-skeleton-loader": "2.10.1",
     "ngx-toastr": "14.1.0",

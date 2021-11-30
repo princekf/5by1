@@ -15,13 +15,16 @@ import {MatInputModule} from '@angular/material/input';
 import { MatDayjsDateModule } from '@tabuckner/material-dayjs-adapter';
 import { MatNativeDateModule } from '@angular/material/core';
 import {dayJSProviders} from '@fboutil/day-js-providers';
+import { TrialBalanceReportComponent } from './trial-balance/trial-balance-report/trial-balance-report.component';
+import { TreetableModule } from '@vaseap/ng-material-treetable';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @NgModule({
-  declarations: [ LedgerReportComponent, FilterLedgerReportComponent ],
+  declarations: [ LedgerReportComponent, FilterLedgerReportComponent, TrialBalanceReportComponent ],
   imports: [
     CommonModule, ReportsRoutingModule, DataTableModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule,
     ReactiveFormsModule, FormsModule, MatAutocompleteModule, MatSelectModule, MatFormFieldModule, MatInputModule,
-    MatDayjsDateModule
+    MatDayjsDateModule, TreetableModule, NgxSkeletonLoaderModule,
   ],
   providers: [ ...dayJSProviders ]
 })

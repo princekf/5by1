@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LedgerReportComponent } from './ledger/ledger-report/ledger-report.component';
+import { TrialBalanceReportComponent } from './trial-balance/trial-balance-report/trial-balance-report.component';
 
 const routes: Routes = [
   {
@@ -8,6 +9,12 @@ const routes: Routes = [
     pathMatch: 'full',
 
     component: LedgerReportComponent
+  },
+  {
+    path: 'trial-balance',
+    pathMatch: 'full',
+
+    component: TrialBalanceReportComponent
   },
 ];
 

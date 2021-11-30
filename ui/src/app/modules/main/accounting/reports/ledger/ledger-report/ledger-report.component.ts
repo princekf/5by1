@@ -79,7 +79,7 @@ export class LedgerReportComponent implements OnInit {
         debit,
         credit,
         ledger,
-        details,
+        details: details ?? voucher.details,
       });
 
     }

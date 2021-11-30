@@ -4,6 +4,7 @@ import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, resp
 import {Voucher} from '../models/voucher.model';
 import {VoucherRepository} from '../repositories/voucher.repository';
 import { VOUCHER_API } from '@shared/server-apis';
+import { LedgerSummaryTB } from '@shared/util/trial-balance-ledger-summary';
 
 import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
@@ -26,6 +27,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import { TrialBalanceLedgerSummaryRespSchema } from './specs/common-specs';
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -117,6 +119,67 @@ export class VoucherController {
 
     const vouchersR = await this.voucherRepository.find(filter);
     return vouchersR;
+
+  }
+
+  private ledgerSummaryAggregates = [
+    {'$unwind': '$transactions'},
+    {
+      '$lookup':
+ {
+   'from': 'Ledger',
+   'localField': 'transactions.ledgerId',
+   'foreignField': '_id',
+   'as': 'ledger'
+ }
+    },
+    {'$unwind': '$ledger'},
+    {
+      '$group': {
+        '_id': '$transactions.ledgerId',
+        'debit': {'$sum': {
+          '$switch': {
+            'branches': [
+              {
+                'case': { '$eq': [ '$transactions.type', 'Debit' ] },
+                'then': '$transactions.amount'
+              }
+            ],
+            'default': 0
+          }
+        }},
+        'credit': {'$sum': {
+          '$switch': {
+            'branches': [
+              {
+                'case': { '$eq': [ '$transactions.type', 'Credit' ] },
+                'then': '$transactions.amount'
+              }
+            ],
+            'default': 0
+          }
+        }},
+        'ledgerId': {'$first': '$ledger._id'},
+        'ledger': {'$first': '$ledger.name'},
+        'ledgerGroupId': {'$first': '$ledger.ledgerGroupId'}
+      }
+    },
+  ];
+
+  @get(`${VOUCHER_API}/ledgerSummary`)
+  @response(200, {
+    description: 'Ledger summary for trial balance',
+    content: {
+      'application/json': {schema: TrialBalanceLedgerSummaryRespSchema},
+    },
+  })
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
+  async ledgerSummary(): Promise<LedgerSummaryTB[]> {
+
+    const pQuery = await this.voucherRepository.execute(this.voucherRepository.modelClass.name, 'aggregate', this.ledgerSummaryAggregates);
+    const lgsR = <Array<LedgerSummaryTB>> await pQuery.toArray();
+    return lgsR;
 
   }
 
