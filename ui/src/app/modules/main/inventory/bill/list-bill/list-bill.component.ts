@@ -20,6 +20,8 @@ export class ListBillComponent {
 
   displayedColumns: string[] = [ 'vendor.name', 'billDate', 'billNumber', 'totalAmount', 'totalDiscount', 'totalTax', 'grandTotal', 'isPaid' ];
 
+  numberColumns: string[] = [ 'totalAmount' ];
+
   columnHeaders = {
     'vendor.name': 'Vendor',
     billDate: 'Bill Date',

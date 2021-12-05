@@ -19,6 +19,8 @@ export class ListPaymentComponent {
 
   displayedColumns: string[] = [ 'paidDate', 'vendor.name', 'bill.billNumber', 'bank.name', 'category', 'amount', 'description' ];
 
+  numberColumns: string[] = [ 'amount' ];
+
   columnHeaders = {
     paidDate: 'Paid Date',
     'vendor.name': 'Vendor',

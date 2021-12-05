@@ -19,6 +19,8 @@ export class ListInvoiceComponent {
 
   displayedColumns: string[] = [ 'customer.name', 'invoiceDate', 'invoiceNumber', 'totalAmount', 'totalDiscount', 'totalTax', 'grandTotal', 'isReceived' ];
 
+numberColumns: string[] = [ 'totalAmount' ];
+
   columnHeaders = {
     'customer.name': 'Customer',
     invoiceDate: 'Date',
