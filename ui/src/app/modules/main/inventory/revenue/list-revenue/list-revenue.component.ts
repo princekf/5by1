@@ -18,6 +18,8 @@ export class ListRevenueComponent {
 
   displayedColumns: string[] = [ 'receivedDate', 'customer.name', 'invoice.invoiceNumber', 'bank.name', 'category', 'amount', 'description' ];
 
+  numberColumns: string[] = [ 'amount' ];
+
   columnHeaders = {
     receivedDate: 'Received Date',
     'customer.name': 'Customer',
