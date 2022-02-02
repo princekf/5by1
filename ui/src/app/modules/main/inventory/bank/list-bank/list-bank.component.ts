@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterBankComponent } from '../filter-bank/filter-bank.component';
+
 @Component({
   selector: 'app-list-bank',
   templateUrl: './list-bank.component.html',

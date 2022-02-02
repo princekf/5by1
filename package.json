@@ -53,8 +53,6 @@
     "test:server": "cd server && yarn test",
     "test:ui": "cd ui && yarn test",
     "serve": "cd server && node build/server.js",
-    "bootstrap": "4.5.3",
-    "jquery": "3.5.1",
     "clean:all": "yarn clean:ui && yarn clean:server && yarn clean:shared && yarn clean:parent",
     "clean:ui": "cd ui && yarn cache clean",
     "clean:server": "cd server && yarn cache clean",

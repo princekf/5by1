@@ -7,7 +7,6 @@ import { BANK_API_URI } from '@shared/server-apis';
 @Injectable({
   providedIn: 'root'
 })
-
 export class BankService extends BaseHTTPService<Bank> {
 
   public API_URI = BANK_API_URI;

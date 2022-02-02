@@ -70,7 +70,8 @@ export class LedgerReportComponent implements OnInit {
       const { id, number, date, type } = voucher;
       let debit = '';
       let credit = '';
-      tType === TransactionType.CREDIT ? credit = String(amount) : debit = String(amount);
+      const amountS = amount.toFixed(environment.decimalPlaces);
+      tType === TransactionType.CREDIT ? credit = amountS : debit = amountS;
       items.push({
         id,
         number,

@@ -36,6 +36,17 @@ const InstallSchema: SchemaObject = {
   },
 };
 
+const ChangePasswordSchema: SchemaObject = {
+  type: 'object',
+  required: [ 'password' ],
+  properties: {
+    installSecret: {
+      type: 'string',
+      minLength: 8,
+    },
+  },
+};
+
 export const CredentialsRequestBody: Partial<RequestBodyObject> = {
   description: 'The input of login function',
   required: true,
@@ -49,6 +60,13 @@ export const InstallRequestBody: Partial<RequestBodyObject> = {
   required: true,
   content: {
     'application/json': {schema: InstallSchema},
+  },
+};
+export const ChangePasswordRequestBody: Partial<RequestBodyObject> = {
+  description: 'The input for change password',
+  required: true,
+  content: {
+    'application/json': {schema: ChangePasswordSchema},
   },
 };
 
@@ -66,6 +84,12 @@ export const InstallResponseSchema = {
   },
 };
 
+export const ChangePasswordResponseSchema = {
+  type: 'object',
+  properties: {
+    message: {type: 'string'},
+  },
+};
 
 const SwitchFinYearSchema: SchemaObject = {
   type: 'object',

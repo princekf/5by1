@@ -142,7 +142,7 @@ export class DataTableComponent {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
-      this.queryParams = value;
+      this.queryParams = {...value};
 
     });
     this.loadComponent();

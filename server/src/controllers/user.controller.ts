@@ -8,11 +8,13 @@ import { BindingKeys } from '../binding.keys';
 import {NewUserRequest, User} from '../models';
 import { BranchRepository, CompanyRepository, Credentials, FinYearRepository, UserRepository} from '../repositories';
 import { PasswordHasher, ProfileUser } from '../services';
-import { AuthResponseSchema, CredentialsRequestBody, InstallRequestBody, InstallResponseSchema, SwitchFinYearRequestBody, SwitchFinYearResponseSchema, UserProfileSchema } from './specs/user-controller.specs';
+import { AuthResponseSchema, CredentialsRequestBody, InstallRequestBody,
+  InstallResponseSchema, SwitchFinYearRequestBody, SwitchFinYearResponseSchema, ChangePasswordRequestBody,
+  UserProfileSchema, ChangePasswordResponseSchema } from './specs/user-controller.specs';
 import {SecurityBindings, securityId} from '@loopback/security';
 import { ME_API, MY_ACCOUNT_API, USER_API, SWITCH_FIN_YEAR_API } from '@shared/server-apis';
 import { resourcePermissions } from '../utils/resource-permissions';
-import { adminAndUserAuthDetails, allRoleAuthDetails } from '../utils/autherize-details';
+import { adminAndUserAuthDetails, allRoleAuthDetails, superAdminAuthDetails } from '../utils/autherize-details';
 import { MyAccountResp } from '@shared/util/my-account-resp';
 import { SessionUser } from '@shared/util/session-user';
 
@@ -39,6 +41,21 @@ export class UserController {
     @inject.context()
     public context: RequestContext,
   ) {}
+
+  private updateUserCredentials = async(userId: string, password: string):Promise<void> => {
+
+    // Encrypt the password
+    const passwordC = await this.passwordHasher.hashPassword(
+      password,
+    );
+    const savedUser = await this.userRepository.findById(userId);
+
+    // Set the password
+    await this.userRepository
+      .userCredentials(savedUser.id)
+      .create({password: passwordC});
+
+  }
 
   private saveUserWithCredentials = async(userT: Partial<User>, password: string):Promise<User> => {
 
@@ -243,6 +260,34 @@ export class UserController {
 
     }
     const message = 'I am ready';
+    return {message};
+
+  }
+
+  @authorize({resource: resourcePermissions.userUpdate.name,
+    ...superAdminAuthDetails})
+  @post(`${USER_API}/{id}/change-password`, {
+    responses: {
+      '200': {
+        description: 'Change password',
+        content: {
+          'application/json': {schema: ChangePasswordResponseSchema},
+        },
+      },
+    },
+  })
+  async changePassword(
+    @param.path.string('id') id: string,
+    @requestBody(ChangePasswordRequestBody) credentials: {password: string},
+  ): Promise<{message: string}> {
+
+    if (!credentials.password) {
+
+      throw new HttpErrors.Forbidden('Invalid credentials.');
+
+    }
+    await this.updateUserCredentials(id, credentials.password);
+    const message = 'Password updated';
     return {message};
 
   }
