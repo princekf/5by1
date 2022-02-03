@@ -1,4 +1,5 @@
-<app-tool-bar createUri="/ledger/create" mainHeader="Ledger"></app-tool-bar>
+<app-tool-bar createUri="/ledger/create" mainHeader="Ledger"
+(onExportClickEvent)="handleExportClick()"></app-tool-bar>
 <app-data-table tableHeader="List of Ledgers"
 [displayedColumns]="displayedColumns"
 [columnHeaders]="columnHeaders"

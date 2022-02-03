@@ -17,6 +17,8 @@ export class ToolBarComponent implements OnInit {
 
   @Output() onImportClickEvent = new EventEmitter<File>();
 
+  @Output() onExportClickEvent = new EventEmitter<void>();
+
 
   constructor(private readonly router: Router,
     @Inject(DOCUMENT) private document: Document) { }
@@ -39,6 +41,12 @@ export class ToolBarComponent implements OnInit {
   handleImportFileInput(files: FileList): void {
 
     this.onImportClickEvent.emit(files[0]);
+
+  }
+
+  handleExportData(): void {
+
+    this.onExportClickEvent.emit();
 
   }
 

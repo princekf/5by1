@@ -17,12 +17,20 @@ export class ListPaymentComponent {
 
   constructor(private voucherService: VoucherService) { }
 
-  handleImportClick = (file: File) => {
-    
+  handleImportClick = (file: File): void => {
+
     this.voucherService.importVouchers(file).subscribe(() => {
+
       console.log('file uploaded');
-      
+
     });
+
+  }
+
+  handleExportClick = (): void => {
+
+    console.log('export clicked...');
+
   }
 
 }
