@@ -8,7 +8,7 @@ import { HttpParams } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class LedgergroupService extends BaseHTTPService<LedgerGroup> {
+export class LedgerGroupService extends BaseHTTPService<LedgerGroup> {
 
 
   public API_URI = LEDGER_GROUP_API_URI;

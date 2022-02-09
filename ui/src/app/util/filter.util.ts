@@ -29,7 +29,7 @@ export const extractCondition = (name: string, condition: Record<string, unknown
     };
 
   }
-  for (const oper of [ 'eq', 'lt', 'gt', 'between' ]) {
+  for (const oper of [ 'eq', 'lt', 'gt', 'between', 'ne' ]) {
 
     if (condition[oper]) {
 
@@ -89,6 +89,9 @@ export const createQueryStringFromFilterForm =
       case 'string':
         where[fieldName] = {like: `${filterForm.controls[typeName]?.value}${filterForm.controls[fieldName]?.value}`,
           options: 'i'};
+        break;
+      case 'void':
+        where[fieldName] = {ne: filterForm.controls[fieldName]?.value};
         break;
       case 'number':
         const whereNumberN = {};

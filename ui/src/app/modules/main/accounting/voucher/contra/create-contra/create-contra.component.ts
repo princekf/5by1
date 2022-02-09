@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LedgerService } from '@fboservices/accounting/ledger.service';
-import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service';
+import { LedgerGroupService } from '@fboservices/accounting/ledger-group.service';
 import { Ledger } from '@shared/entity/accounting/ledger';
 import { TransactionType } from '@shared/entity/accounting/transaction';
 import { VoucherType } from '@shared/entity/accounting/voucher';
@@ -22,7 +22,7 @@ export class CreateContraComponent implements OnInit {
   pLedgerGroupIds: Array<string> = [];
 
   constructor(private ledgerService: LedgerService,
-    private ledgergroupService: LedgergroupService) { }
+    private ledgergroupService: LedgerGroupService) { }
 
   ngOnInit(): void {
 

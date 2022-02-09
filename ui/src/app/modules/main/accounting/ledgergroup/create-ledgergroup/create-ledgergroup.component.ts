@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service';
+import { LedgerGroupService } from '@fboservices/accounting/ledger-group.service';
 import { ToastrService } from 'ngx-toastr';
 import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
@@ -58,7 +58,7 @@ export class CreateLedgergroupComponent implements OnInit {
 
   constructor(public readonly router: Router,
     public readonly route: ActivatedRoute,
-    private readonly ledgergroupService:LedgergroupService,
+    private readonly ledgergroupService:LedgerGroupService,
     private readonly toastr: ToastrService) { }
 
   ngOnInit(): void {

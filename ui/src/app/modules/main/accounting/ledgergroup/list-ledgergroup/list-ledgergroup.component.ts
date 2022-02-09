@@ -4,7 +4,7 @@ import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
 import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 import { ActivatedRoute } from '@angular/router';
-import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service';
+import { LedgerGroupService } from '@fboservices/accounting/ledger-group.service';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterLedgergroupComponent } from '../filter-ledgergroup/filter-ledgergroup.component';
 
@@ -40,7 +40,7 @@ export class ListLedgergroupComponent implements OnInit {
 
   constructor(
     private activatedRoute : ActivatedRoute,
-    private readonly ledgergroupService:LedgergroupService) { }
+    private readonly ledgergroupService:LedgerGroupService) { }
 
     private loadData = () => {
 

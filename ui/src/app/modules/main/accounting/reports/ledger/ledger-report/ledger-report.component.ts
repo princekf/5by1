@@ -154,12 +154,20 @@ export class LedgerReportComponent implements OnInit {
 
   }
 
-  private loadData = (ledgerId: string) => {
+  private loadData = (ledgerId: string, againstId?: string) => {
 
     this.voucherService.search(this.queryParams).subscribe((vouchers) => {
 
-      const [ items, otherLids ] = this.extractReportItems(vouchers, ledgerId);
+      const [ items2, otherLids2 ] = this.extractReportItems(vouchers, ledgerId);
       // To show the details of selected ledger, fetch it from server.
+      let otherLids = otherLids2;
+      let items = items2;
+      if (againstId) {
+
+        items = items2.filter((item) => item.ledger === againstId);
+        otherLids = otherLids.filter((oId) => oId === againstId);
+
+      }
       otherLids.push(ledgerId);
       const queryDataL: QueryData = {
         where: {
@@ -213,8 +221,10 @@ export class LedgerReportComponent implements OnInit {
         this.loading = true;
         this.queryParams.where = JSON.parse(whereS);
         const ledgerParam = this.queryParams.where['transactions.ledgerId'] as {like: string};
+        const againstParam = this.queryParams.where.againstL as {ne: string};
         const ledgerId = ledgerParam?.like;
-        this.loadData(ledgerId);
+        const againstId = againstParam?.ne;
+        this.loadData(ledgerId, againstId);
 
       }
 

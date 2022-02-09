@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
 import { LedgerService } from '@fboservices/accounting/ledger.service';
-import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service';
+import { LedgerGroupService } from '@fboservices/accounting/ledger-group.service';
 import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 import { QueryData } from '@shared/util/query-data';
 import { TransactionType } from '@shared/entity/accounting/transaction';
@@ -50,7 +50,7 @@ export class CreateLedgerComponent implements OnInit {
     public readonly route: ActivatedRoute,
     private readonly ledgerService: LedgerService,
     private readonly toastr: ToastrService,
-    private readonly ledgergroupService:LedgergroupService) { }
+    private readonly ledgergroupService:LedgerGroupService) { }
 
   ngOnInit(): void {
 

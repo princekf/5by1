@@ -18,9 +18,11 @@ import {dayJSProviders} from '@fboutil/day-js-providers';
 import { TrialBalanceReportComponent } from './trial-balance/trial-balance-report/trial-balance-report.component';
 import { TreetableModule } from '@vaseap/ng-material-treetable';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { LedgerGroupReportComponent } from './ledger-group/ledger-group-report/ledger-group-report.component';
+import { FilterLedgerGroupReportComponent } from './ledger-group/filter-ledger-group-report/filter-ledger-group-report.component';
 
 @NgModule({
-  declarations: [ LedgerReportComponent, FilterLedgerReportComponent, TrialBalanceReportComponent ],
+  declarations: [ LedgerReportComponent, FilterLedgerReportComponent, TrialBalanceReportComponent, LedgerGroupReportComponent, FilterLedgerGroupReportComponent ],
   imports: [
     CommonModule, ReportsRoutingModule, DataTableModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule,
     ReactiveFormsModule, FormsModule, MatAutocompleteModule, MatSelectModule, MatFormFieldModule, MatInputModule,
