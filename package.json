@@ -1,63 +1,68 @@
 {
-  "name": "angular-typescript-mongo",
-  "version": "1.0.0",
-  "private": true,
-  "license": "MIT",
-  "engines": {
-    "node": "16.*",
-    "yarn": "1.*"
-  },
-  "devDependencies": {
-    "@types/webpack-node-externals": "2.5.0",
-    "@typescript-eslint/eslint-plugin": "4.12.0",
-    "@typescript-eslint/parser": "4.12.0",
-    "concurrently": "5.3.0",
-    "eslint": "7.16.0",
-    "eslint-config-google": "0.14.0",
-    "eslint-plugin-angular": "4.0.1",
-    "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "4.2.1",
-    "husky": "4.3.6",
-    "nodemon-webpack-plugin": "4.3.2",
-    "ts-loader": "8.0.12",
-    "ts-node": "9.1.1",
-    "tsconfig-paths-webpack-plugin": "3.3.0",
-    "typescript": "4.0.5",
-    "webpack": "5.11.0",
-    "webpack-cli": "4.2.0",
-    "webpack-node-externals": "2.5.2"
-  },
-  "husky": {
-    "hooks": {
-      "no-pre-commit": "yarn lint"
+    "name": "angular-typescript-mongo",
+    "version": "1.0.0",
+    "private": true,
+    "license": "MIT",
+    "engines": {
+        "node": "16.*",
+        "yarn": "1.*"
+    },
+    "devDependencies": {
+        "@types/webpack-node-externals": "2.5.0",
+        "@typescript-eslint/eslint-plugin": "4.12.0",
+        "@typescript-eslint/parser": "4.12.0",
+        "concurrently": "^7.0.0",
+        "eslint": "7.16.0",
+        "eslint-config-google": "0.14.0",
+        "eslint-plugin-angular": "4.0.1",
+        "eslint-plugin-import": "2.22.1",
+        "eslint-plugin-node": "11.1.0",
+        "eslint-plugin-promise": "4.2.1",
+        "husky": "^4.3.8",
+        "nodemon-webpack-plugin": "4.3.2",
+        "ts-loader": "8.0.12",
+        "ts-node": "9.1.1",
+        "tsconfig-paths-webpack-plugin": "3.3.0",
+        "typescript": "4.0.5",
+        "webpack": "5.11.0",
+        "webpack-cli": "4.2.0",
+        "webpack-node-externals": "2.5.2"
+    },
+    "husky": {
+        "hooks": {
+            "no-pre-commit": "yarn lint"
+        }
+    },
+    "scripts": {
+        "install:all": "yarn install && yarn install:shared && yarn install:server && yarn install:ui",
+        "install:server": "cd server && yarn install",
+        "install:ui": "cd ui && yarn install",
+        "install:shared": "cd shared && yarn install",
+        "build": "yarn build:shared && yarn build:server && yarn build:ui",
+        "build:server": "cd server && yarn build",
+        "build:ui": "cd ui && yarn build",
+        "build:shared": "cd shared && yarn build",
+        "start": "concurrently \"yarn start:server\" \"yarn start:ui\"",
+        "start:server": "cd server && yarn start:watch",
+        "start:ui": "cd ui && yarn start",
+        "lint:server": "cd server && yarn lint",
+        "lint:ui": "cd ui && yarn lint",
+        "lint": "yarn lint:server && yarn lint:ui",
+        "test": "yarn test:server",
+        "test-app": "yarn test:server && yarn test:ui",
+        "test:server": "cd server && yarn test",
+        "test:ui": "cd ui && yarn test",
+        "serve": "cd server && node build/server.js",
+        "clean:all": "yarn clean:ui && yarn clean:server && yarn clean:shared && yarn clean:parent",
+        "clean:ui": "cd ui && yarn cache clean",
+        "clean:server": "cd server && yarn cache clean",
+        "clean:shared": "cd shared && yarn cache clean",
+        "clean:parent": "yarn cache clean"
+    },
+    "dependencies": {
+        "exceljs": "^4.3.0",
+        "file-saver": "^2.0.5",
+        "jspdf": "^2.5.1",
+        "jspdf-autotable": "^3.5.23"
     }
-  },
-  "scripts": {
-    "install:all": "yarn install && yarn install:shared && yarn install:server && yarn install:ui",
-    "install:server": "cd server && yarn install",
-    "install:ui": "cd ui && yarn install",
-    "install:shared": "cd shared && yarn install",
-    "build": "yarn build:shared && yarn build:server && yarn build:ui",
-    "build:server": "cd server && yarn build",
-    "build:ui": "cd ui && yarn build",
-    "build:shared": "cd shared && yarn build",
-    "start": "concurrently \"yarn start:server\" \"yarn start:ui\"",
-    "start:server": "cd server && yarn start:watch",
-    "start:ui": "cd ui && yarn start",
-    "lint:server": "cd server && yarn lint",
-    "lint:ui": "cd ui && yarn lint",
-    "lint": "yarn lint:server && yarn lint:ui",
-    "test": "yarn test:server",
-    "test-app": "yarn test:server && yarn test:ui",
-    "test:server": "cd server && yarn test",
-    "test:ui": "cd ui && yarn test",
-    "serve": "cd server && node build/server.js",
-    "clean:all": "yarn clean:ui && yarn clean:server && yarn clean:shared && yarn clean:parent",
-    "clean:ui": "cd ui && yarn cache clean",
-    "clean:server": "cd server && yarn cache clean",
-    "clean:shared": "cd shared && yarn cache clean",
-    "clean:parent": "yarn cache clean"
-  },
-  "dependencies": {}
 }
