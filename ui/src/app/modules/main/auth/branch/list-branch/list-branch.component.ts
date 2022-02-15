@@ -9,6 +9,8 @@ import { FilterBranchComponent } from '../filter-branch/filter-branch.component'
 import { Branch } from '@shared/entity/auth/branch';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 @Component({
   selector: 'app-list-branch',
   templateUrl: './list-branch.component.html',
@@ -58,7 +60,8 @@ export class ListBranchComponent implements OnInit {
   }
 
   constructor(private activatedRoute: ActivatedRoute,
-    private branchService: BranchService) { }
+    private branchService: BranchService,
+    private dialog: MatDialog) { }
 
 
   private loadData = () => {
@@ -111,5 +114,27 @@ export class ListBranchComponent implements OnInit {
 
   }
 
+  handleExportClick = (): void => {
 
+    const tParams = {...this.queryParams};
+    tParams.limit = this.branchs.totalItems;
+    this.loading = true;
+    this.branchService.queryData(tParams).subscribe((items) => {
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
+
+  }
 }

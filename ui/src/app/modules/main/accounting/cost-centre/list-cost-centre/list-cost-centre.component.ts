@@ -7,7 +7,8 @@ import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterCostCentreComponent } from '../filter-cost-centre/filter-cost-centre.component';
 import { CostCentre } from '@shared/entity/accounting/cost-centre';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 @Component({
   selector: 'app-list-cost-centre',
   templateUrl: './list-cost-centre.component.html',
@@ -42,7 +43,8 @@ export class ListCostCentreComponent implements OnInit {
 
 
   constructor(private activatedRoute: ActivatedRoute,
-    private costCentreService: CostCentreService) { }
+    private costCentreService: CostCentreService,
+    private dialog: MatDialog) { }
 
 
   private loadData = () => {
@@ -91,6 +93,28 @@ export class ListCostCentreComponent implements OnInit {
     });
 
   }
+  handleExportClick = (): void => {
 
+    const tParams = {...this.queryParams};
+    tParams.limit = this.costCentres.totalItems;
+    this.loading = true;
+    this.costCentreService.queryData(tParams).subscribe((items) => {
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
+
+  }
 
 }

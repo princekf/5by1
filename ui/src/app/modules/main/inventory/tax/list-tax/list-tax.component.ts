@@ -7,6 +7,9 @@ import { Tax } from '@shared/entity/inventory/tax';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterTaxComponent } from '../filter-tax/filter-tax.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+
 @Component({
   selector: 'app-list-tax',
   templateUrl: './list-tax.component.html',
@@ -22,15 +25,15 @@ export class ListTaxComponent {
     rate: 'Rate (%)',
     appliedTo: 'Applied To (%)',
     description: 'Description'
-  }
+  };
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  taxes:ListQueryRespType<Tax> = {
+  taxes: ListQueryRespType<Tax> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -39,8 +42,9 @@ export class ListTaxComponent {
   filterItem: FilterItem;
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly taxService:TaxService) { }
+    private activatedRoute: ActivatedRoute,
+    private readonly taxService: TaxService,
+    private dialog: MatDialog) { }
 
   private loadData = () => {
 
@@ -58,7 +62,7 @@ export class ListTaxComponent {
 
     });
 
-  };
+  }
 
   ngOnInit(): void {
 
@@ -66,7 +70,7 @@ export class ListTaxComponent {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -85,5 +89,29 @@ export class ListTaxComponent {
 
 
   }
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.taxes.totalItems;
+    this.loading = true;
+    this.taxService.queryData(tParams).subscribe((items) => {
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
+
+  }
+
 
 }

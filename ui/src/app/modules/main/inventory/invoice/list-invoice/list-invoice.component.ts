@@ -9,6 +9,8 @@ import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterInvoiceComponent } from '../filter-invoice/filter-invoice.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 
 @Component({
   selector: 'app-list-invoice',
@@ -30,15 +32,15 @@ numberColumns: string[] = [ 'totalAmount' ];
     totalTax: 'Tax',
     grandTotal: 'Grand Total',
     isReceived: 'Received'
-  }
+  };
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  invoices:ListQueryRespType<Invoice> = {
+  invoices: ListQueryRespType<Invoice> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -47,7 +49,7 @@ numberColumns: string[] = [ 'totalAmount' ];
 
   filterItem: FilterItem;
 
-  columnParsingFn = (element:unknown, column:string): string => {
+  columnParsingFn = (element: unknown, column: string): string => {
 
     switch (column) {
 
@@ -62,8 +64,9 @@ numberColumns: string[] = [ 'totalAmount' ];
   }
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly invoiceService:InvoiceService) { }
+    private activatedRoute: ActivatedRoute,
+    private readonly invoiceService: InvoiceService,
+    private dialog: MatDialog) { }
 
     private loadData = () => {
 
@@ -83,7 +86,7 @@ numberColumns: string[] = [ 'totalAmount' ];
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -91,7 +94,7 @@ numberColumns: string[] = [ 'totalAmount' ];
 
     }
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -109,5 +112,27 @@ numberColumns: string[] = [ 'totalAmount' ];
       });
 
     }
+    handleExportClick = (): void => {
 
+      const tParams = {...this.queryParams};
+      tParams.limit = this.invoices.totalItems;
+      this.loading = true;
+      this.invoiceService.queryData(tParams).subscribe((items) => {
+
+        this.dialog.open(ExportPopupComponent, {
+          height: '500px',
+          data: {items,
+            displayedColumns: this.displayedColumns,
+            columnHeaders: this.columnHeaders}});
+        this.loading = false;
+
+
+      }, (error) => {
+
+        console.error(error);
+        this.loading = false;
+
+      });
+
+    }
 }

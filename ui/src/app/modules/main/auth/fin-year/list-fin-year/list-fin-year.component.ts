@@ -9,7 +9,8 @@ import { FilterFinYearComponent } from '../filter-fin-year/filter-fin-year.compo
 import { FinYear } from '@shared/entity/auth/fin-year';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 @Component({
   selector: 'app-list-fin-year',
   templateUrl: './list-fin-year.component.html',
@@ -63,7 +64,8 @@ export class ListFinYearComponent implements OnInit {
   }
 
   constructor(private activatedRoute: ActivatedRoute,
-    private finYearService: FinYearService) { }
+    private finYearService: FinYearService,
+    private dialog: MatDialog) { }
 
 
   private loadData = () => {
@@ -112,6 +114,30 @@ export class ListFinYearComponent implements OnInit {
 
       this.loadData();
 
+
+    });
+
+  }
+
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.FinYears.totalItems;
+    this.loading = true;
+    this.finYearService.queryData(tParams).subscribe((items) => {
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
 
     });
 

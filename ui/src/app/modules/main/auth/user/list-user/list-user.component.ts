@@ -9,7 +9,8 @@ import { FilterUserComponent } from '../filter-user/filter-user.component';
 import { User } from '@shared/entity/auth/user';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 @Component({
   selector: 'app-list-user',
   templateUrl: './list-user.component.html',
@@ -26,7 +27,7 @@ export class ListUserComponent implements OnInit {
     role: 'Role',
 
 
-  }
+  };
 
   loading = true;
 
@@ -45,7 +46,8 @@ export class ListUserComponent implements OnInit {
   filterItem: FilterItem;
 
   constructor(private activatedRoute: ActivatedRoute,
-    private userService: UserService) { }
+              private userService: UserService,
+              private dialog: MatDialog) { }
 
 
   private loadData = () => {
@@ -67,7 +69,7 @@ export class ListUserComponent implements OnInit {
 
     });
 
-  };
+  }
 
 
   ngOnInit(): void {
@@ -76,7 +78,7 @@ export class ListUserComponent implements OnInit {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -90,6 +92,29 @@ export class ListUserComponent implements OnInit {
 
       this.loadData();
 
+
+    });
+
+  }
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.Users.totalItems;
+    this.loading = true;
+    this.userService.queryData(tParams).subscribe((items) => {
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
 
     });
 

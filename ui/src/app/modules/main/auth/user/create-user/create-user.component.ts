@@ -164,7 +164,7 @@ export class CreateUserComponent implements OnInit {
         options: 'i'}} })
         .subscribe((branch) => (this.branchFiltered = branch));
 
-    };
+    }
 
     private fetchUserBranches = (branchIds: Array<string>): void => {
 
@@ -182,7 +182,7 @@ export class CreateUserComponent implements OnInit {
 
       });
 
-    };
+    }
 
     private categorisePermissions = (permKey: string, userC: User) => {
 

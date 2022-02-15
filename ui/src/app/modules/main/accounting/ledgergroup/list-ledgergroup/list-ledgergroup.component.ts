@@ -7,6 +7,8 @@ import { ActivatedRoute } from '@angular/router';
 import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterLedgergroupComponent } from '../filter-ledgergroup/filter-ledgergroup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 
 @Component({
   selector: 'app-list-ledgergroup',
@@ -40,7 +42,8 @@ export class ListLedgergroupComponent implements OnInit {
 
   constructor(
     private activatedRoute : ActivatedRoute,
-    private readonly ledgergroupService:LedgergroupService) { }
+    private readonly ledgergroupService:LedgergroupService,
+    private dialog: MatDialog) { }
 
     private loadData = () => {
 
@@ -83,6 +86,29 @@ export class ListLedgergroupComponent implements OnInit {
 
         }
         this.loadData();
+
+      });
+
+    }
+    handleExportClick = (): void => {
+
+      const tParams = {...this.queryParams};
+      tParams.limit = this.ledgerGroups.totalItems;
+      this.loading = true;
+      this.ledgergroupService.queryData(tParams).subscribe((items) => {
+
+        this.dialog.open(ExportPopupComponent, {
+          height: '500px',
+          data: {items,
+            displayedColumns: this.displayedColumns,
+            columnHeaders: this.columnHeaders}});
+        this.loading = false;
+
+
+      }, (error) => {
+
+        console.error(error);
+        this.loading = false;
 
       });
 

@@ -21,7 +21,7 @@ export class ToolBarComponent implements OnInit {
 
 
   constructor(private readonly router: Router,
-    @Inject(DOCUMENT) private document: Document) { }
+              @Inject(DOCUMENT) private document: Document) { }
 
   ngOnInit(): void {
   }
@@ -29,10 +29,11 @@ export class ToolBarComponent implements OnInit {
   onCreateClick(): void {
 
     this.router.navigate([ this.createUri ], { queryParams: {burl: this.router.url} });
+    console.log(this.router.url);
 
   }
 
-  openImportFile = ():void => {
+  openImportFile = (): void => {
 
     this.document.getElementById('importFileInput').click();
 

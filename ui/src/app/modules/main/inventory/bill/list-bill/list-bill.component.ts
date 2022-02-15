@@ -11,6 +11,8 @@ import { ProductService } from '@fboservices/inventory/product.service';
 import { Product } from '@shared/entity/inventory/product';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterBillComponent } from '../filter-bill/filter-bill.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 @Component({
   selector: 'app-list-bill',
   templateUrl: './list-bill.component.html',
@@ -18,7 +20,9 @@ import { FilterBillComponent } from '../filter-bill/filter-bill.component';
 })
 export class ListBillComponent {
 
-  displayedColumns: string[] = [ 'vendor.name', 'billDate', 'billNumber', 'totalAmount', 'totalDiscount', 'totalTax', 'grandTotal', 'isPaid' ];
+
+  displayedColumns: string[] = [ 'vendor.name', 'billDate', 'billNumber',
+  'totalAmount', 'totalDiscount', 'totalTax', 'grandTotal', 'isPaid' ];
 
   numberColumns: string[] = [ 'totalAmount' ];
 
@@ -31,26 +35,26 @@ export class ListBillComponent {
     totalTax: 'Tax',
     grandTotal: 'Grand Total',
     isPaid: 'Paid'
-  }
+  };
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  bills:ListQueryRespType<Bill> = {
+  bills: ListQueryRespType<Bill> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
   };
 
-  products: Array<Product> =[];
+  products: Array<Product> = [];
 
   filterItem: FilterItem;
 
 
-  columnParsingFn = (element:unknown, column:string): string => {
+  columnParsingFn = (element: unknown, column: string): string => {
 
 
     switch (column) {
@@ -66,9 +70,10 @@ export class ListBillComponent {
   }
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly billService:BillService,
-    private readonly productService:ProductService,
+    private activatedRoute: ActivatedRoute,
+    private readonly billService: BillService,
+    private readonly productService: ProductService,
+    private dialog: MatDialog
   ) { }
 
   private loadData = () => {
@@ -94,7 +99,8 @@ export class ListBillComponent {
 
     });
 
-  };
+  }
+
 
 
   ngOnInit(): void {
@@ -103,7 +109,8 @@ export class ListBillComponent {
 
   }
 
-  ngAfterViewInit():void {
+
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -117,6 +124,29 @@ export class ListBillComponent {
 
       this.loadData();
 
+
+    });
+
+  }
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.bills.totalItems;
+    this.loading = true;
+    this.billService.queryData(tParams).subscribe((items) => {
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
 
     });
 

@@ -7,6 +7,8 @@ import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterProductComponent } from '../filter-product/filter-product.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 
 @Component({
   selector: 'app-list-item',
@@ -26,15 +28,15 @@ export class ListProductComponent {
     reorderLevel: 'Re-Order',
     'category.name': 'Category',
     status: 'Status'
-  }
+  };
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  rawDatas:ListQueryRespType<Product> = {
+  rawDatas: ListQueryRespType<Product> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -43,8 +45,9 @@ export class ListProductComponent {
   filterItem: FilterItem;
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly productService:ProductService) { }
+    private activatedRoute: ActivatedRoute,
+    private readonly productService: ProductService,
+    private dialog: MatDialog) { }
 
     private loadData = () => {
 
@@ -64,7 +67,7 @@ export class ListProductComponent {
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -72,7 +75,7 @@ export class ListProductComponent {
 
     }
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -90,5 +93,29 @@ export class ListProductComponent {
       });
 
     }
+    handleExportClick = (): void => {
+
+      const tParams = {...this.queryParams};
+      tParams.limit = this.rawDatas.totalItems;
+      this.loading = true;
+      this.productService.queryData(tParams).subscribe((items) => {
+
+        this.dialog.open(ExportPopupComponent, {
+          height: '500px',
+          data: {items,
+            displayedColumns: this.displayedColumns,
+            columnHeaders: this.columnHeaders}});
+        this.loading = false;
+
+
+      }, (error) => {
+
+        console.error(error);
+        this.loading = false;
+
+      });
+
+    }
+
 
 }

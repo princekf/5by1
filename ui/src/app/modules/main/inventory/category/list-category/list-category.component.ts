@@ -8,6 +8,8 @@ import { Category } from '@shared/entity/inventory/category';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterCategoryComponent } from '../filter-category/filter-category.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 
 @Component({
   selector: 'app-list-category',
@@ -25,15 +27,15 @@ export class ListCategoryComponent {
     'unit.name': 'Unit',
     hsnNumber: 'hsnNumber',
     description: 'description',
-  }
+  };
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  categories:ListQueryRespType<Category> = {
+  categories: ListQueryRespType<Category> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -42,8 +44,9 @@ export class ListCategoryComponent {
   filterItem: FilterItem;
 
 
-  constructor(private activatedRoute : ActivatedRoute,
-    private categoryService:CategoryService) { }
+  constructor(private activatedRoute: ActivatedRoute,
+              private categoryService: CategoryService,
+              private dialog: MatDialog) { }
 
     private loadData = () => {
 
@@ -64,7 +67,7 @@ export class ListCategoryComponent {
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -73,7 +76,7 @@ export class ListCategoryComponent {
     }
 
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -92,6 +95,29 @@ export class ListCategoryComponent {
 
       });
 
+
+    }
+    handleExportClick = (): void => {
+
+      const tParams = {...this.queryParams};
+      tParams.limit = this.categories.totalItems;
+      this.loading = true;
+      this.categoryService.queryData(tParams).subscribe((items) => {
+
+        this.dialog.open(ExportPopupComponent, {
+          height: '500px',
+          data: {items,
+            displayedColumns: this.displayedColumns,
+            columnHeaders: this.columnHeaders}});
+        this.loading = false;
+
+
+      }, (error) => {
+
+        console.error(error);
+        this.loading = false;
+
+      });
 
     }
 

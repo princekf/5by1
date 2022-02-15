@@ -7,6 +7,8 @@ import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterBankComponent } from '../filter-bank/filter-bank.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 
 @Component({
   selector: 'app-list-bank',
@@ -23,7 +25,7 @@ export class ListBankComponent {
     name: 'Name',
     openingBalance: 'OpeningBalance',
     description: 'description',
-  }
+  };
 
   loading = true;
 
@@ -42,7 +44,8 @@ export class ListBankComponent {
   filterItem: FilterItem;
 
   constructor(private activatedRoute: ActivatedRoute,
-    private bankService: BankService) { }
+              private bankService: BankService,
+              private dialog: MatDialog) { }
 
 
   private loadData = () => {
@@ -62,7 +65,7 @@ export class ListBankComponent {
 
     });
 
-  };
+  }
 
 
   ngOnInit(): void {
@@ -71,7 +74,7 @@ export class ListBankComponent {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -85,6 +88,29 @@ export class ListBankComponent {
 
       this.loadData();
 
+
+    });
+
+  }
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.banks.totalItems;
+    this.loading = true;
+    this.bankService.queryData(tParams).subscribe((items) => {
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
 
     });
 

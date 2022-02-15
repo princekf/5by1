@@ -9,6 +9,9 @@ import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterRevenueComponent } from '../filter-revenue/filter-revenue.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+
 @Component({
   selector: 'app-list-revenue',
   templateUrl: './list-revenue.component.html',
@@ -16,7 +19,13 @@ import { FilterRevenueComponent } from '../filter-revenue/filter-revenue.compone
 })
 export class ListRevenueComponent {
 
-  displayedColumns: string[] = [ 'receivedDate', 'customer.name', 'invoice.invoiceNumber', 'bank.name', 'category', 'amount', 'description' ];
+  displayedColumns: string[] = [ 'receivedDate',
+    'customer.name',
+    'invoice.invoiceNumber',
+    'bank.name',
+    'category',
+    'amount',
+    'description' ];
 
   numberColumns: string[] = [ 'amount' ];
 
@@ -29,15 +38,15 @@ export class ListRevenueComponent {
     amount: 'Amount',
     description: 'Description',
 
-  }
+  };
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  revenues:ListQueryRespType<Revenue> = {
+  revenues: ListQueryRespType<Revenue> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -45,7 +54,7 @@ export class ListRevenueComponent {
 
   filterItem: FilterItem;
 
-  columnParsingFn = (element:unknown, column:string): string => {
+  columnParsingFn = (element: unknown, column: string): string => {
 
     switch (column) {
 
@@ -57,8 +66,9 @@ export class ListRevenueComponent {
 
   }
 
-  constructor(private activatedRoute : ActivatedRoute,
-    private revenueService:RevenueService) { }
+  constructor(private activatedRoute: ActivatedRoute,
+              private revenueService: RevenueService,
+              private dialog: MatDialog) { }
 
 
     private loadData = () => {
@@ -81,7 +91,7 @@ export class ListRevenueComponent {
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -90,7 +100,7 @@ export class ListRevenueComponent {
     }
 
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -107,6 +117,29 @@ export class ListRevenueComponent {
 
       });
 
+
+    }
+    handleExportClick = (): void => {
+
+      const tParams = {...this.queryParams};
+      tParams.limit = this.revenues .totalItems;
+      this.loading = true;
+      this.revenueService.queryData(tParams).subscribe((items) => {
+
+        this.dialog.open(ExportPopupComponent, {
+          height: '500px',
+          data: {items,
+            displayedColumns: this.displayedColumns,
+            columnHeaders: this.columnHeaders}});
+        this.loading = false;
+
+
+      }, (error) => {
+
+        console.error(error);
+        this.loading = false;
+
+      });
 
     }
 

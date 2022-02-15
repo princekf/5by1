@@ -9,7 +9,8 @@ import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterPaymentComponent } from '../filter-payment/filter-payment.component';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 @Component({
   selector: 'app-list-payment',
   templateUrl: './list-payment.component.html',
@@ -30,16 +31,16 @@ export class ListPaymentComponent {
     amount: 'Amount',
     description: 'Description',
 
-  }
+  };
 
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  payments:ListQueryRespType<Payment> = {
+  payments: ListQueryRespType<Payment> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -48,7 +49,7 @@ export class ListPaymentComponent {
   filterItem: FilterItem;
 
 
-  columnParsingFn = (element:unknown, column:string) : string => {
+  columnParsingFn = (element: unknown, column: string): string => {
 
     switch (column) {
 
@@ -62,8 +63,9 @@ export class ListPaymentComponent {
 
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private paymentService:PaymentService
+    private activatedRoute: ActivatedRoute,
+    private paymentService: PaymentService,
+    private dialog: MatDialog
   ) { }
 
 
@@ -87,7 +89,7 @@ export class ListPaymentComponent {
 
     });
 
-  };
+  }
 
   ngOnInit(): void {
 
@@ -95,7 +97,7 @@ export class ListPaymentComponent {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -114,5 +116,30 @@ export class ListPaymentComponent {
 
 
   }
+
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.payments.totalItems;
+    this.loading = true;
+    this.paymentService.queryData(tParams).subscribe((items) => {
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
+
+  }
+
 
 }

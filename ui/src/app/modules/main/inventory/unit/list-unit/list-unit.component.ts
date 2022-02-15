@@ -7,6 +7,9 @@ import { ActivatedRoute } from '@angular/router';
 import { UnitService } from '@fboservices/inventory/unit.service';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterUnitComponent } from '../filter-unit/filter-unit.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+
 
 @Component({
   selector: 'app-list-unit',
@@ -23,15 +26,15 @@ export class ListUnitComponent {
     decimalPlaces: 'Decimals',
     'parent.name': 'Base Unit',
     times: 'Times'
-  }
+  };
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  units:ListQueryRespType<Unit> = {
+  units: ListQueryRespType<Unit> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -40,8 +43,9 @@ export class ListUnitComponent {
   filterItem: FilterItem;
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly unitService:UnitService) { }
+    private activatedRoute: ActivatedRoute,
+    private readonly unitService: UnitService,
+    private dialog: MatDialog) { }
 
     private loadData = () => {
 
@@ -58,7 +62,7 @@ export class ListUnitComponent {
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -66,7 +70,7 @@ export class ListUnitComponent {
 
     }
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -78,6 +82,29 @@ export class ListUnitComponent {
 
         }
         this.loadData();
+
+      });
+
+    }
+    handleExportClick = (): void => {
+
+      const tParams = {...this.queryParams};
+      tParams.limit = this.units.totalItems;
+      this.loading = true;
+      this.unitService.queryData(tParams).subscribe((items) => {
+
+        this.dialog.open(ExportPopupComponent, {
+          height: '500px',
+          data: {items,
+            displayedColumns: this.displayedColumns,
+            columnHeaders: this.columnHeaders}});
+        this.loading = false;
+
+
+      }, (error) => {
+
+        console.error(error);
+        this.loading = false;
 
       });
 

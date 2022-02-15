@@ -7,6 +7,8 @@ import { Customer } from '@shared/entity/inventory/customer';
 import { VendorService } from '@fboservices/inventory/vendor.service';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterVendorComponent } from '../filter-vendor/filter-vendor.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 
 @Component({
   selector: 'app-list-vendor',
@@ -24,15 +26,15 @@ export class ListVendorComponent {
     state: 'State',
     address: 'Address',
     gstNo: 'GST No'
-  }
+  };
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  rawDatas:ListQueryRespType<Customer> = {
+  rawDatas: ListQueryRespType<Customer> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -41,8 +43,9 @@ export class ListVendorComponent {
   filterItem: FilterItem;
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly vendorService:VendorService) { }
+    private activatedRoute: ActivatedRoute,
+    private readonly vendorService: VendorService,
+    private dialog: MatDialog) { }
 
     private loadData = () => {
 
@@ -59,7 +62,7 @@ export class ListVendorComponent {
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -68,7 +71,7 @@ export class ListVendorComponent {
     }
 
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -82,6 +85,29 @@ export class ListVendorComponent {
 
         this.loadData();
 
+
+      });
+
+    }
+    handleExportClick = (): void => {
+
+      const tParams = {...this.queryParams};
+      tParams.limit = this.rawDatas.totalItems;
+      this.loading = true;
+      this.vendorService.queryData(tParams).subscribe((items) => {
+
+        this.dialog.open(ExportPopupComponent, {
+          height: '500px',
+          data: {items,
+            displayedColumns: this.displayedColumns,
+            columnHeaders: this.columnHeaders}});
+        this.loading = false;
+
+
+      }, (error) => {
+
+        console.error(error);
+        this.loading = false;
 
       });
 

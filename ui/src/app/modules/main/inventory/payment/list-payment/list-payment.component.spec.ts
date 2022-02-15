@@ -7,7 +7,7 @@ describe('ListPaymentComponent', () => {
   let component: ListPaymentComponent;
   let fixture: ComponentFixture<ListPaymentComponent>;
 
-  beforeEach(async() => {
+  beforeEach(async () => {
 
     await TestBed.configureTestingModule({
       declarations: [ ListPaymentComponent ]
