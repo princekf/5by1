@@ -9,6 +9,9 @@ import { FilterBranchComponent } from '../filter-branch/filter-branch.component'
 import { Branch } from '@shared/entity/auth/branch';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MainService } from '../../../../../services/main.service';
 @Component({
   selector: 'app-list-branch',
   templateUrl: './list-branch.component.html',
@@ -18,7 +21,6 @@ export class ListBranchComponent implements OnInit {
 
   displayedColumns: string[] = [ 'name', 'email', 'code', 'address', 'finYearStartDate', 'defaultFinYear.name' ];
 
-
   columnHeaders = {
     name: 'Name',
     email: 'Email',
@@ -27,6 +29,14 @@ export class ListBranchComponent implements OnInit {
     finYearStartDate: 'FinYearStartDate',
     'defaultFinYear.name': 'DefaultFinYear'
   }
+  xheaders = [
+    { header: 'Name', key: 'name', width: 30, },
+    { header: 'Email', key: 'email', width: 40 },
+    { header: 'Code', key: 'code', width: 15 },
+    { header: 'Address', key: 'Address', width: 50 },
+    { header: 'FinYearStartDate', key: 'FinYearStartDate', width: 19 },
+    { header: 'DefaultFinYear', key: 'DefaultFinYear', width: 15 }
+  ];
 
   loading = true;
 
@@ -58,7 +68,9 @@ export class ListBranchComponent implements OnInit {
   }
 
   constructor(private activatedRoute: ActivatedRoute,
-    private branchService: BranchService) { }
+    private branchService: BranchService,
+    private dialog: MatDialog,
+    private mainservice: MainService,) { }
 
 
   private loadData = () => {
@@ -106,6 +118,43 @@ export class ListBranchComponent implements OnInit {
 
       this.loadData();
 
+
+    });
+
+  }
+
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.branchs.totalItems;
+    this.loading = true;
+    let data = []
+    this.branchService.queryData(tParams).subscribe((items) => {
+
+      items.forEach((element: any) => {
+        const temp = [element.name, element.email, element.code, element.address,element.finYearStartDate];
+
+        data.push(temp)
+    });
+    const result = {
+      eheader:this.xheaders,
+      header:this.columnHeaders,
+      rowData: data
+    }
+  this.mainservice.setExport(result)
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
 
     });
 

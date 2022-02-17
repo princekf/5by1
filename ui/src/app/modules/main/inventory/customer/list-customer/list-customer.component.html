@@ -1,10 +1,2 @@
-<app-tool-bar createUri="/customer/create" mainHeader="Customer"></app-tool-bar>
-<app-data-table tableHeader="List of Customers"
-[displayedColumns]="displayedColumns"
-[columnHeaders]="columnHeaders"
-[loading]="loading"
-[tableData]="rawDatas"
-editUri="/customer/create"
-deleteUri="/customer/delete"
-[filterItem]="filterItem"
-></app-data-table>
+<app-tool-bar createUri="/customer/create" mainHeader="Customer" (onExportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-data-table tableHeader="List of Customers" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="rawDatas" editUri="/customer/create" deleteUri="/customer/delete" [filterItem]="filterItem"></app-data-table>

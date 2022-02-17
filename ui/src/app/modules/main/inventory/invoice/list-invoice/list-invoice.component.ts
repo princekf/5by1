@@ -9,6 +9,9 @@ import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterInvoiceComponent } from '../filter-invoice/filter-invoice.component';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MainService } from '../../../../../services/main.service';
 
 @Component({
   selector: 'app-list-invoice',
@@ -31,6 +34,17 @@ numberColumns: string[] = [ 'totalAmount' ];
     grandTotal: 'Grand Total',
     isReceived: 'Received'
   }
+  xheaders = [
+    { header: 'Customer', key: 'Customer', width: 30, },
+    { header: 'Date', key: 'Date', width: 15 },
+    { header: 'Invoice #', key: 'Invoice #', width: 20 },
+    { header: 'Amount', key:'Amount', width: 20 },
+    { header: 'Discount', key: 'Discount', width: 20 },
+    { header: 'Tax', key: 'Tax', width: 15 },
+    { header: 'Grand Total', key: 'Grand Total', width: 25 },
+    { header: 'Received', key: 'Received', width: 25 }
+
+  ];
 
   queryParams:QueryData = { };
 
@@ -63,7 +77,9 @@ numberColumns: string[] = [ 'totalAmount' ];
 
   constructor(
     private activatedRoute : ActivatedRoute,
-    private readonly invoiceService:InvoiceService) { }
+    private readonly invoiceService:InvoiceService,
+    private dialog: MatDialog,
+    private mainservice: MainService,) { }
 
     private loadData = () => {
 
@@ -109,5 +125,43 @@ numberColumns: string[] = [ 'totalAmount' ];
       });
 
     }
+
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.invoices.totalItems;
+    this.loading = true;
+    let data = []
+    this.invoiceService.queryData(tParams).subscribe((items) => {
+
+      items.forEach((element: any) => {
+        const temp = [element.customer?.name, element.invoiceDate, element.invoiceNumber,element.totalAmount,
+          element.totalDiscount,element.totalTax,element.grandTotal,element.isReceived];
+
+        data.push(temp)
+    });
+    const result = {
+      eheader:this.xheaders,
+      header:this.columnHeaders,
+      rowData: data
+    }
+  this.mainservice.setExport(result)
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
+
+  }
 
 }

@@ -7,6 +7,10 @@ import { Customer } from '@shared/entity/inventory/customer';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterCustomerComponent } from '../filter-customer/filter-customer.component';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MainService } from '../../../../../services/main.service';
+
 
 @Component({
   selector: 'app-list-customer',
@@ -20,12 +24,20 @@ export class ListCustomerComponent {
 
   columnHeaders = {
     name: 'Name',
-    email: 'E-Mail',
+    email: 'EMail',
     mobile: 'Mobile',
     state: 'State',
     address: 'Address',
     gstNo: 'GST No'
   }
+  xheaders = [
+    { header: 'Name', key: 'Name', width: 30, },
+    { header: 'E-Mail', key: 'E-Mail', width: 35 },
+    { header: 'Mobile', key: 'Mobile', width: 19 },
+    { header: 'State', key:'State', width: 20 },
+    { header: 'Address', key: 'Address', width: 40 },
+    { header: 'GST No', key: 'GST No', width: 25 }
+  ]
 
   queryParams:QueryData = { };
 
@@ -43,7 +55,9 @@ export class ListCustomerComponent {
 
   constructor(
     private activatedRoute : ActivatedRoute,
-    private readonly customerService:CustomerService) { }
+    private readonly customerService:CustomerService,
+    private dialog: MatDialog,
+    private mainservice: MainService,) { }
 
     private loadData = () => {
 
@@ -86,5 +100,42 @@ export class ListCustomerComponent {
       });
 
     }
+
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.rawDatas.totalItems;
+    this.loading = true;
+    let data = []
+    this.customerService.queryData(tParams).subscribe((items) => {
+
+      items.forEach((element: any) => {
+        const temp = [ element.name, element.email,element.mobile,element.state,element.address,element.gstNo];
+
+        data.push(temp)
+    });
+    const result = {
+      eheader:this.xheaders,
+      header:this.columnHeaders,
+      rowData: data
+    }
+  this.mainservice.setExport(result)
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
+
+  }
 
 }

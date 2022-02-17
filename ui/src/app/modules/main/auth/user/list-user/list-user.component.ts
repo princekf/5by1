@@ -9,6 +9,9 @@ import { FilterUserComponent } from '../filter-user/filter-user.component';
 import { User } from '@shared/entity/auth/user';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MainService } from '../../../../../services/main.service';
 
 @Component({
   selector: 'app-list-user',
@@ -19,14 +22,22 @@ export class ListUserComponent implements OnInit {
 
   displayedColumns: string[] = [ 'name', 'email', 'role' ];
 
-
   columnHeaders = {
     name: 'Name',
-    email: 'email',
+    email: 'Email',
     role: 'Role',
 
 
-  }
+  };
+
+  xheaders :any = [
+    { header: 'Name', key: 'name', width: 40 },
+      { header: 'Email', key: 'email', width: 50 },
+      { header: 'Role', key: 'Role', width: 10 },
+
+  ];
+
+
 
   loading = true;
 
@@ -45,7 +56,9 @@ export class ListUserComponent implements OnInit {
   filterItem: FilterItem;
 
   constructor(private activatedRoute: ActivatedRoute,
-    private userService: UserService) { }
+    private userService: UserService,
+    private dialog: MatDialog,
+    private mainservice: MainService,) { }
 
 
   private loadData = () => {
@@ -90,6 +103,42 @@ export class ListUserComponent implements OnInit {
 
       this.loadData();
 
+
+    });
+
+  }
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.Users.totalItems;
+    this.loading = true;
+    let data = []
+    this.userService.queryData(tParams).subscribe((items) => {
+
+      items.forEach((element: any) => {
+        const temp = [element.name, element.email, element.role];
+
+        data.push(temp)
+    });
+    const result = {
+      eheader:this.xheaders,
+      header:this.columnHeaders,
+      rowData: data
+    }
+  this.mainservice.setExport(result)
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
 
     });
 

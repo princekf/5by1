@@ -7,7 +7,9 @@ import { Customer } from '@shared/entity/inventory/customer';
 import { VendorService } from '@fboservices/inventory/vendor.service';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterVendorComponent } from '../filter-vendor/filter-vendor.component';
-
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MainService } from '../../../../../services/main.service';
 @Component({
   selector: 'app-list-vendor',
   templateUrl: './list-vendor.component.html',
@@ -25,6 +27,15 @@ export class ListVendorComponent {
     address: 'Address',
     gstNo: 'GST No'
   }
+  xheaders = [
+    { header: 'Name', key: 'Name', width: 30, },
+    { header: 'E-Mail', key: 'E-Mail', width: 45 },
+    { header: 'Mobile', key: 'Mobile', width: 20 },
+    { header: 'State', key:'State', width: 15 },
+    { header: 'Address', key: 'Address', width: 45 },
+    { header: 'GST No', key: 'GST No', width: 20 }
+  ];
+
 
   queryParams:QueryData = { };
 
@@ -42,7 +53,9 @@ export class ListVendorComponent {
 
   constructor(
     private activatedRoute : ActivatedRoute,
-    private readonly vendorService:VendorService) { }
+    private readonly vendorService:VendorService,
+    private dialog: MatDialog,
+    private mainservice: MainService,) { }
 
     private loadData = () => {
 
@@ -82,6 +95,43 @@ export class ListVendorComponent {
 
         this.loadData();
 
+
+      });
+
+    }
+    handleExportClick = (): void => {
+
+      const tParams = {...this.queryParams};
+      tParams.limit = this.rawDatas.totalItems;
+      this.loading = true;
+      let data = []
+      this.vendorService.queryData(tParams).subscribe((items) => {
+
+        items.forEach((element: any) => {
+          console.log(element );
+          const temp = [element.name, element.email, element.mobile,element.state,element.address,element.gstNo];
+
+          data.push(temp)
+      });
+      const result = {
+        eheader:this.xheaders,
+        header:this.columnHeaders,
+        rowData: data
+      }
+    this.mainservice.setExport(result)
+
+        this.dialog.open(ExportPopupComponent, {
+          height: '500px',
+          data: {items,
+            displayedColumns: this.displayedColumns,
+            columnHeaders: this.columnHeaders}});
+        this.loading = false;
+
+
+      }, (error) => {
+
+        console.error(error);
+        this.loading = false;
 
       });
 

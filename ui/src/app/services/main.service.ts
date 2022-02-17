@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 const MOBILE_SCREEN_MAX_WIDTH = 768;
 @Injectable({
@@ -37,6 +37,20 @@ export class MainService {
   showLeftMenuDrawer = ():void => {
 
     this.leftMenuDrawerMobileSubject.next(true);
+
+  }
+
+  private export = new BehaviorSubject<any>({});
+
+  setExport(products: any): void {
+
+    this.export.next(products);
+
+  }
+
+  getExport(): Observable<any> {
+
+    return this.export.asObservable();
 
   }
 

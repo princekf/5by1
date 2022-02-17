@@ -7,7 +7,9 @@ import { ActivatedRoute } from '@angular/router';
 import { UnitService } from '@fboservices/inventory/unit.service';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterUnitComponent } from '../filter-unit/filter-unit.component';
-
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MainService } from '../../../../../services/main.service';
 @Component({
   selector: 'app-list-unit',
   templateUrl: './list-unit.component.html',
@@ -24,6 +26,13 @@ export class ListUnitComponent {
     'parent.name': 'Base Unit',
     times: 'Times'
   }
+  xheaders = [
+    { header: 'Name', key: 'Name', width: 30, },
+    { header: 'Code', key: 'Code', width: 15 },
+    { header: 'Decimals', key: 'Decimals', width: 20 },
+    { header: 'Base Unit', key:'Base Unit', width: 15 },
+    { header: 'Times', key: 'Times', width: 15 }
+  ]
 
   queryParams:QueryData = { };
 
@@ -41,7 +50,9 @@ export class ListUnitComponent {
 
   constructor(
     private activatedRoute : ActivatedRoute,
-    private readonly unitService:UnitService) { }
+    private readonly unitService:UnitService,
+    private dialog: MatDialog,
+    private mainservice: MainService,) { }
 
     private loadData = () => {
 
@@ -83,4 +94,41 @@ export class ListUnitComponent {
 
     }
 
+    handleExportClick = (): void => {
+
+      const tParams = {...this.queryParams};
+      tParams.limit = this.units.totalItems;
+      this.loading = true;
+      let data = []
+      this.unitService.queryData(tParams).subscribe((items) => {
+
+        items.forEach((element: any) => {
+          console.log(element );
+          const temp = [element.name, element.code, element.decimalPlaces,element.parent?.name,element.times];
+
+          data.push(temp)
+      });
+      const result = {
+        eheader:this.xheaders,
+        header:this.columnHeaders,
+        rowData: data
+      }
+    this.mainservice.setExport(result)
+
+        this.dialog.open(ExportPopupComponent, {
+          height: '500px',
+          data: {items,
+            displayedColumns: this.displayedColumns,
+            columnHeaders: this.columnHeaders}});
+        this.loading = false;
+
+
+      }, (error) => {
+
+        console.error(error);
+        this.loading = false;
+
+      });
+
+    }
 }

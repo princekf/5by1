@@ -11,6 +11,9 @@ import { ProductService } from '@fboservices/inventory/product.service';
 import { Product } from '@shared/entity/inventory/product';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterBillComponent } from '../filter-bill/filter-bill.component';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MainService } from '../../../../../services/main.service';
 @Component({
   selector: 'app-list-bill',
   templateUrl: './list-bill.component.html',
@@ -18,7 +21,8 @@ import { FilterBillComponent } from '../filter-bill/filter-bill.component';
 })
 export class ListBillComponent {
 
-  displayedColumns: string[] = [ 'vendor.name', 'billDate', 'billNumber', 'totalAmount', 'totalDiscount', 'totalTax', 'grandTotal', 'isPaid' ];
+  displayedColumns: string[] = [ 'vendor.name', 'billDate', 'billNumber', 'totalAmount',
+  'totalDiscount', 'totalTax', 'grandTotal', 'isPaid' ];
 
   numberColumns: string[] = [ 'totalAmount' ];
 
@@ -32,6 +36,16 @@ export class ListBillComponent {
     grandTotal: 'Grand Total',
     isPaid: 'Paid'
   }
+  xheaders = [
+    { header: 'Vendor', key: 'Vendor', width: 25 },
+    { header: 'Bill Number #', key: 'Bill Number #', width: 30, },
+    { header: 'Amount', key: 'Amount', width: 25 },
+    { header: 'Discount', key: 'Discount', width: 20 },
+    { header: 'Tax', key: 'Tax', width: 25 },
+    { header: 'Grand Total', key: 'Grand Total', width: 30 },
+    { header: 'Paid', key: 'Paid', width: 25 }
+
+  ];
 
   queryParams:QueryData = { };
 
@@ -69,6 +83,8 @@ export class ListBillComponent {
     private activatedRoute : ActivatedRoute,
     private readonly billService:BillService,
     private readonly productService:ProductService,
+    private dialog: MatDialog,
+    private mainservice: MainService,
   ) { }
 
   private loadData = () => {
@@ -117,6 +133,44 @@ export class ListBillComponent {
 
       this.loadData();
 
+
+    });
+
+  }
+
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.bills.totalItems;
+    this.loading = true;
+    let data = []
+    this.billService.queryData(tParams).subscribe((items) => {
+
+      items.forEach((element: any) => {
+        const temp = [element.vendor?.name, element.billDate, element.billNumber,element.totalAmount,
+          element.totalDiscount,element.totalTax,element.grandTotal,element.isPaid];
+
+        data.push(temp)
+    });
+    const result = {
+      eheader:this.xheaders,
+      header:this.columnHeaders,
+      rowData: data
+    }
+  this.mainservice.setExport(result)
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
 
     });
 

@@ -5,9 +5,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
-
 import { Company } from '@shared/entity/auth/company';
 import { FilterCompanyComponent } from '../filter-company/filter-company.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MainService } from '../../../../../services/main.service';
 
 @Component({
   selector: 'app-list-company',
@@ -26,6 +28,13 @@ export class ListCompanyComponent implements OnInit {
     address: 'Address',
 
   }
+  xheaders = [
+
+    { header: 'Name', key: 'name', width: 30, },
+    { header: 'Code', key: 'code', width: 15 },
+    { header: 'Email', key: 'Email', width: 35 },
+    { header: 'Address', key: 'Address', width: 50 },
+  ];
 
   loading = true;
 
@@ -44,7 +53,9 @@ export class ListCompanyComponent implements OnInit {
   filterItem: FilterItem;
 
   constructor(private activatedRoute: ActivatedRoute,
-    private companyService: CompanyService) { }
+    private companyService: CompanyService,
+    private dialog: MatDialog,
+    private mainservice: MainService,) { }
 
 
   private loadData = () => {
@@ -92,6 +103,41 @@ export class ListCompanyComponent implements OnInit {
     });
 
   }
+  handleExportClick = (): void => {
 
+    const tParams = {...this.queryParams};
+    tParams.limit = this.companies.totalItems;
+    this.loading = true;
+    let data = []
+    this.companyService.queryData(tParams).subscribe((items) => {
+
+      items.forEach((element: any) => {
+        const temp = [element.name, element.code, element.email,element.address];
+
+        data.push(temp)
+    });
+    const result = {
+      eheader:this.xheaders,
+      header:this.columnHeaders,
+      rowData: data
+    }
+  this.mainservice.setExport(result)
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
+
+  }
 
 }

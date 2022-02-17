@@ -9,7 +9,9 @@ import { FilterFinYearComponent } from '../filter-fin-year/filter-fin-year.compo
 import { FinYear } from '@shared/entity/auth/fin-year';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MainService } from '../../../../../services/main.service';
 @Component({
   selector: 'app-list-fin-year',
   templateUrl: './list-fin-year.component.html',
@@ -19,7 +21,6 @@ export class ListFinYearComponent implements OnInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'startDate', 'endDate', 'branch.name' ];
 
-
   columnHeaders = {
     name: 'Name',
     code: 'Code',
@@ -28,6 +29,15 @@ export class ListFinYearComponent implements OnInit {
     'branch.name': 'Branch',
 
   }
+  xheaders = [
+
+    { header: 'Name', key: 'name', width: 30, },
+    { header: 'Code', key: 'code', width: 15 },
+    { header: 'StartDate', key: 'startDate', width: 15 },
+    { header: 'EndDate', key: 'EndDate', width: 15 },
+    { header: 'Branch', key: 'Branch', width: 25 },
+
+  ];
 
   loading = true;
 
@@ -63,7 +73,9 @@ export class ListFinYearComponent implements OnInit {
   }
 
   constructor(private activatedRoute: ActivatedRoute,
-    private finYearService: FinYearService) { }
+    private finYearService: FinYearService,
+    private dialog: MatDialog,
+    private mainservice: MainService,) { }
 
 
   private loadData = () => {
@@ -112,6 +124,42 @@ export class ListFinYearComponent implements OnInit {
 
       this.loadData();
 
+
+    });
+
+  }
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.FinYears.totalItems;
+    this.loading = true;
+    let data = []
+    this.finYearService.queryData(tParams).subscribe((items) => {
+
+      items.forEach((element: any) => {
+        const temp = [element.name, element.code, element.startDate,element.endDate,element.branch.name];
+
+        data.push(temp)
+    });
+    const result = {
+      eheader:this.xheaders,
+      header:this.columnHeaders,
+      rowData: data
+    }
+  this.mainservice.setExport(result)
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
 
     });
 

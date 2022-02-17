@@ -9,7 +9,9 @@ import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterPaymentComponent } from '../filter-payment/filter-payment.component';
-
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MainService } from '../../../../../services/main.service';
 @Component({
   selector: 'app-list-payment',
   templateUrl: './list-payment.component.html',
@@ -17,7 +19,8 @@ import { FilterPaymentComponent } from '../filter-payment/filter-payment.compone
 })
 export class ListPaymentComponent {
 
-  displayedColumns: string[] = [ 'paidDate', 'vendor.name', 'bill.billNumber', 'bank.name', 'category', 'amount', 'description' ];
+  displayedColumns: string[] = [ 'paidDate', 'vendor.name', 'bill.billNumber',
+    'bank.name', 'category', 'amount', 'description' ];
 
   numberColumns: string[] = [ 'amount' ];
 
@@ -31,6 +34,16 @@ export class ListPaymentComponent {
     description: 'Description',
 
   }
+  xheaders = [
+    { header: 'Paid Date', key: 'Paid Date', width: 25 },
+    { header: 'Vendor', key: 'Vendor', width: 20 },
+    { header: 'Bill', key: 'Bill', width: 20 },
+    { header: 'Bank', key:'Bank', width: 20 },
+    { header: 'Category', key: 'Category', width: 20 },
+    { header: 'Amount', key: 'Amount', width: 15 },
+    { header: 'Description', key: 'Description', width: 35 },
+
+  ]
 
 
   queryParams:QueryData = { };
@@ -63,7 +76,9 @@ export class ListPaymentComponent {
 
   constructor(
     private activatedRoute : ActivatedRoute,
-    private paymentService:PaymentService
+    private paymentService:PaymentService,
+    private dialog: MatDialog,
+    private mainservice: MainService,
   ) { }
 
 
@@ -112,6 +127,44 @@ export class ListPaymentComponent {
 
     });
 
+
+  }
+
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.payments.totalItems;
+    this.loading = true;
+    let data = []
+    this.paymentService.queryData(tParams).subscribe((items) => {
+
+      items.forEach((element: any) =>{
+        const temp = [element.paidDate, element.vendor?.name, element.bill?.billNumber,element.bank?.name,
+          element.category,element.amount,element.description];
+
+        data.push(temp)
+    });
+    const result = {
+      eheader:this.xheaders,
+      header:this.columnHeaders,
+      rowData: data
+    }
+  this.mainservice.setExport(result)
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
 
   }
 

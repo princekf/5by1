@@ -7,6 +7,9 @@ import { Tax } from '@shared/entity/inventory/tax';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterTaxComponent } from '../filter-tax/filter-tax.component';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MainService } from '../../../../../services/main.service';
 @Component({
   selector: 'app-list-tax',
   templateUrl: './list-tax.component.html',
@@ -23,7 +26,13 @@ export class ListTaxComponent {
     appliedTo: 'Applied To (%)',
     description: 'Description'
   }
-
+  xheaders = [
+    { header: 'Group Name', key: 'Group Name', width: 30 },
+    { header: 'Name', key: 'Name', width: 30 },
+    { header: 'Rate (%)', key: 'Rate (%)', width: 20 },
+    { header: 'Applied To (%)', key:'Applied To (%)', width: 15 },
+    { header: 'Description', key: 'Description', width: 30 },
+  ];
   queryParams:QueryData = { };
 
   routerSubscription: Subscription;
@@ -40,7 +49,9 @@ export class ListTaxComponent {
 
   constructor(
     private activatedRoute : ActivatedRoute,
-    private readonly taxService:TaxService) { }
+    private readonly taxService:TaxService,
+    private dialog: MatDialog,
+    private mainservice: MainService,) { }
 
   private loadData = () => {
 
@@ -86,4 +97,40 @@ export class ListTaxComponent {
 
   }
 
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.taxes.totalItems;
+    this.loading = true;
+    let data = []
+    this.taxService.queryData(tParams).subscribe((items) => {
+
+      items.forEach((element: any) => {
+        const temp = [element.groupName, element.name, element.rate,element.appliedTo,element.description];
+
+        data.push(temp)
+    });
+    const result = {
+      eheader:this.xheaders,
+      header:this.columnHeaders,
+      rowData: data
+    }
+  this.mainservice.setExport(result)
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
+
+  }
 }
