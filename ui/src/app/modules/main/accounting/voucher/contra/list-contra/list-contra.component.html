@@ -1,6 +1,2 @@
-<app-tool-bar createUri="/voucher/contra/create" mainHeader="Contra"></app-tool-bar>
-<app-list-voucher
-[voucherType]="voucherType"
-[tableHeader]="tableHeader"
-[editUri]="editUri"
-></app-list-voucher>
+<app-tool-bar createUri="/voucher/contra/create" mainHeader="Contra" (onImportClickEvent)="handleImportClick($event)" (onExportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-list-voucher [voucherType]="voucherType" [tableHeader]="tableHeader" [editUri]="editUri"></app-list-voucher>

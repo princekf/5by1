@@ -129,13 +129,7 @@ export class ListLedgerComponent implements OnInit {
         data.push(temp)
 
     });
-    const result = {
-      eheader:this.xheaders,
-      header:this.columnHeaders,
-      rowData: data
-
-    }
-  this.mainservice.setExport(result)
+ 
 
       this.dialog.open(ExportPopupComponent, {
         height: '500px',
@@ -143,8 +137,15 @@ export class ListLedgerComponent implements OnInit {
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});
       this.loading = false;
-
-    }, (error) => {
+      const result = {
+        eheader:this.xheaders,
+        header:this.columnHeaders,
+        rowData: data
+  
+      }
+    this.mainservice.setExport(result)
+    }
+    , (error) => {
 
       console.error(error);
       this.loading = false;

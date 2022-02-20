@@ -37,6 +37,11 @@ export class ExportPopupComponent implements OnInit {
       console.log(result);
       this.export = result
     })
+     this.mainservice.getExport().subscribe(result1=>{
+      console.log(result1);
+      this.export = result1
+    
+    })
 
   }
   exportExcel(): void {

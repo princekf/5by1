@@ -1,6 +1,2 @@
-<app-tool-bar createUri="/voucher/debit-note/create" mainHeader="Debit Note"></app-tool-bar>
-<app-list-voucher
-[voucherType]="voucherType"
-[tableHeader]="tableHeader"
-[editUri]="editUri"
-></app-list-voucher>
+<app-tool-bar createUri="/voucher/debit-note/create" mainHeader="Debit Note" (onImportClickEvent)="handleImportClick($event)" (onExportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-list-voucher [voucherType]="voucherType" [tableHeader]="tableHeader" [editUri]="editUri"></app-list-voucher>

@@ -13,6 +13,7 @@ import { of, throwError, zip } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { FilterItem } from 'src/app/modules/main/directives/table-filter/filter-item';
 import { FilterVoucherComponent } from '../filter-voucher/filter-voucher.component';
+import { MainService } from '../../../../../../services/main.service';
 
 type VType = Voucher & { amount: string; pledger: string; cledger: string; };
 
@@ -36,13 +37,22 @@ export class ListVoucherComponent implements OnInit {
   columnHeaders = {
     number: 'Voucher #',
     date: 'Date',
-    details: 'Details',
     pledger: 'Primary Ledger',
     cledger: 'Compound Ledger',
-    amount: 'Amount'
+    amount: 'Amount',
+    details: 'Details',
   }
+  xheaders = [
 
+    { header: 'Voucher #', key: 'number', width: 30, },
+    { header: 'Date', key: 'date', width: 30, },
+    { header: 'Primary Ledger', key: 'pledger', width: 30, },
+    { header: 'Compound Ledger', key: 'cledger', width: 30, },
+    { header: 'Amount', key: 'amount', width: 30, },
+    { header: 'Details', key: 'details', width: 30 }
+   ];
   queryParams: QueryData = {};
+  
 
   loading = true;
 
@@ -56,7 +66,8 @@ export class ListVoucherComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
     private voucherService: VoucherService,
-    private ledgerService: LedgerService,) { }
+    private ledgerService: LedgerService,
+    private mainservice: MainService,) { }
 
 
   private formatItems = (ledgerMap: Record<string, Ledger>, items: Array<Voucher>):Array<VType> => {
@@ -79,9 +90,21 @@ export class ListVoucherComponent implements OnInit {
         pledger: pledger.name,
         cledger: cledger.name,
       });
+      const result1 = {
+
+        items: itemsT,
+        displayedColumns:this.displayedColumns,
+        columnHeaders:this.columnHeaders,
+        eheader:this.xheaders,
+        header:this.columnHeaders,
+        rowData: itemsT
+    
+      }
+      this.mainservice.setExport(result1);
 
     }
     return itemsT;
+  
 
   }
 
