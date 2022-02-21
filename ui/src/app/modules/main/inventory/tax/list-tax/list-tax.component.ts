@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, OnInit  } from '@angular/core';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -15,7 +15,7 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-tax.component.html',
   styleUrls: [ './list-tax.component.scss' ],
 })
-export class ListTaxComponent {
+export class ListTaxComponent implements  AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [ 'groupName', 'name', 'rate', 'appliedTo', 'description' ];
 
@@ -25,21 +25,21 @@ export class ListTaxComponent {
     rate: 'Rate (%)',
     appliedTo: 'Applied To (%)',
     description: 'Description'
-  }
+  };
   xheaders = [
     { header: 'Group Name', key: 'Group Name', width: 30 },
     { header: 'Name', key: 'Name', width: 30 },
     { header: 'Rate (%)', key: 'Rate (%)', width: 20 },
-    { header: 'Applied To (%)', key:'Applied To (%)', width: 15 },
+    { header: 'Applied To (%)', key: 'Applied To (%)', width: 15 },
     { header: 'Description', key: 'Description', width: 30 },
   ];
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  taxes:ListQueryRespType<Tax> = {
+  taxes: ListQueryRespType<Tax> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -48,10 +48,10 @@ export class ListTaxComponent {
   filterItem: FilterItem;
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly taxService:TaxService,
+    private activatedRoute: ActivatedRoute,
+    private readonly taxService: TaxService,
     private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private mainservice: MainService, ) { }
 
   private loadData = () => {
 
@@ -69,7 +69,7 @@ export class ListTaxComponent {
 
     });
 
-  };
+  }
 
   ngOnInit(): void {
 
@@ -77,7 +77,7 @@ export class ListTaxComponent {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -102,20 +102,20 @@ export class ListTaxComponent {
     const tParams = {...this.queryParams};
     tParams.limit = this.taxes.totalItems;
     this.loading = true;
-    let data = []
+    const data = [];
     this.taxService.queryData(tParams).subscribe((items) => {
 
       items.forEach((element: any) => {
-        const temp = [element.groupName, element.name, element.rate,element.appliedTo,element.description];
+        const temp = [element.groupName, element.name, element.rate, element.appliedTo, element.description];
 
-        data.push(temp)
+        data.push(temp);
     });
-    const result = {
-      eheader:this.xheaders,
-      header:this.columnHeaders,
+      const result = {
+      eheader: this.xheaders,
+      header: this.columnHeaders,
       rowData: data
-    }
-  this.mainservice.setExport(result)
+    };
+      this.mainservice.setExport(result);
 
       this.dialog.open(ExportPopupComponent, {
         height: '500px',

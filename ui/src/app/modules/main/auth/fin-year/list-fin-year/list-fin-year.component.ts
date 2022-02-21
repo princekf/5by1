@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FinYearService } from '@fboservices/auth//fin-year.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
@@ -17,7 +17,7 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-fin-year.component.html',
   styleUrls: [ './list-fin-year.component.scss' ]
 })
-export class ListFinYearComponent implements OnInit {
+export class ListFinYearComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'startDate', 'endDate', 'branch.name' ];
 
@@ -28,7 +28,7 @@ export class ListFinYearComponent implements OnInit {
     endDate: 'EndDate',
     'branch.name': 'Branch',
 
-  }
+  };
   xheaders = [
 
     { header: 'Name', key: 'name', width: 30, },
@@ -55,7 +55,7 @@ export class ListFinYearComponent implements OnInit {
 
   filterItem: FilterItem;
 
-  columnParsingFn = (element:unknown, column:string): string => {
+  columnParsingFn = (element: unknown, column: string): string => {
 
     switch (column) {
 
@@ -73,9 +73,9 @@ export class ListFinYearComponent implements OnInit {
   }
 
   constructor(private activatedRoute: ActivatedRoute,
-    private finYearService: FinYearService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+              private finYearService: FinYearService,
+              private dialog: MatDialog,
+              private mainservice: MainService, ) { }
 
 
   private loadData = () => {
@@ -101,7 +101,7 @@ export class ListFinYearComponent implements OnInit {
 
     });
 
-  };
+  }
 
 
   ngOnInit(): void {
@@ -110,7 +110,7 @@ export class ListFinYearComponent implements OnInit {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -133,20 +133,20 @@ export class ListFinYearComponent implements OnInit {
     const tParams = {...this.queryParams};
     tParams.limit = this.FinYears.totalItems;
     this.loading = true;
-    let data = []
+    const data = [];
     this.finYearService.queryData(tParams).subscribe((items) => {
 
       items.forEach((element: any) => {
-        const temp = [element.name, element.code, element.startDate,element.endDate,element.branch.name];
+        const temp = [element.name, element.code, element.startDate, element.endDate, element.branch.name];
 
-        data.push(temp)
+        data.push(temp);
     });
-    const result = {
-      eheader:this.xheaders,
-      header:this.columnHeaders,
+      const result = {
+      eheader: this.xheaders,
+      header: this.columnHeaders,
       rowData: data
-    }
-  this.mainservice.setExport(result)
+    };
+      this.mainservice.setExport(result);
 
       this.dialog.open(ExportPopupComponent, {
         height: '500px',

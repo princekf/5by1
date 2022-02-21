@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { LedgerService } from '@fboservices/accounting/ledger.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
@@ -16,7 +16,8 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-ledger.component.html',
   styleUrls: [ './list-ledger.component.scss' ]
 })
-export class ListLedgerComponent implements OnInit {
+// tslint:disable-next-line: whitespace
+export class ListLedgerComponent implements OnInit,AfterViewInit {
   [x: string]: any;
 
   displayedColumns: string[] = [ 'name', 'code', 'ledgerGroup.name', 'obAmount', 'obType', 'details' ];
@@ -29,7 +30,7 @@ export class ListLedgerComponent implements OnInit {
     obType: 'Opening Type',
     details: 'Details',
 
-  }
+  };
 
     xheaders = [
 
@@ -60,9 +61,9 @@ export class ListLedgerComponent implements OnInit {
 
 
   constructor(private activatedRoute: ActivatedRoute,
-    private ledgerService: LedgerService,
-    private mainservice: MainService,
-    private dialog: MatDialog) { }
+              private ledgerService: LedgerService,
+              private mainservice: MainService,
+              private dialog: MatDialog) { }
 
 
   private loadData = () => {
@@ -87,7 +88,7 @@ export class ListLedgerComponent implements OnInit {
 
     });
 
-  };
+  }
 
 
   ngOnInit(): void {
@@ -96,7 +97,7 @@ export class ListLedgerComponent implements OnInit {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -120,16 +121,16 @@ export class ListLedgerComponent implements OnInit {
     const tParams = {...this.queryParams};
     tParams.limit = this.ledgers.totalItems;
     this.loading = true;
-    let data = []
+    const data = [];
     this.ledgerService.queryData(tParams).subscribe((items) => {
-      console.log();
+
 
       items.forEach((element: any) => {
         const temp = [element.name, element.code, element.ledgerGroup.name, element.obAmount, element.obType, element.details];
-        data.push(temp)
+        data.push(temp);
 
     });
- 
+
 
       this.dialog.open(ExportPopupComponent, {
         height: '500px',
@@ -138,12 +139,12 @@ export class ListLedgerComponent implements OnInit {
           columnHeaders: this.columnHeaders}});
       this.loading = false;
       const result = {
-        eheader:this.xheaders,
-        header:this.columnHeaders,
+        eheader: this.xheaders,
+        header: this.columnHeaders,
         rowData: data
-  
-      }
-    this.mainservice.setExport(result)
+
+      };
+      this.mainservice.setExport(result);
     }
     , (error) => {
 

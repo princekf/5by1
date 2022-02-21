@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, OnInit  } from '@angular/core';
 import { ProductService } from '@fboservices/inventory/product.service';
 import { Product } from '@shared/entity/inventory/product';
 import { ActivatedRoute } from '@angular/router';
@@ -15,7 +15,7 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-product.component.html',
   styleUrls: [ './list-product.component.scss' ]
 })
-export class ListProductComponent {
+export class ListProductComponent implements AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [ 'name', 'code', 'brand', 'location', 'barcode', 'reorderLevel', 'category.name', 'status' ];
 
@@ -28,12 +28,12 @@ export class ListProductComponent {
     reorderLevel: 'Re-Order',
     'category.name': 'Category',
     status: 'Status'
-  }
+  };
   xheaders = [
     { header: 'Name', key: 'Name', width: 30 },
     { header: 'Code', key: 'Code', width: 15 },
     { header: 'Brand', key: 'Brand', width: 20 },
-    { header: 'Location', key:'Location', width: 15 },
+    { header: 'Location', key: 'Location', width: 15 },
     { header: 'Barcode', key: 'Barcode', width: 20 },
     { header: 'Re-Order', key: 'Re-Order', width: 20 },
     { header: 'Category', key: 'Category', width: 25 },
@@ -41,13 +41,13 @@ export class ListProductComponent {
 
   ];
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  rawDatas:ListQueryRespType<Product> = {
+  rawDatas: ListQueryRespType<Product> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -56,10 +56,10 @@ export class ListProductComponent {
   filterItem: FilterItem;
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly productService:ProductService,
+    private activatedRoute: ActivatedRoute,
+    private readonly productService: ProductService,
     private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private mainservice: MainService, ) { }
 
     private loadData = () => {
 
@@ -79,7 +79,7 @@ export class ListProductComponent {
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -87,7 +87,7 @@ export class ListProductComponent {
 
     }
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -111,20 +111,21 @@ export class ListProductComponent {
       const tParams = {...this.queryParams};
       tParams.limit = this.rawDatas.totalItems;
       this.loading = true;
-      let data = []
+      const data = [];
       this.productService.queryData(tParams).subscribe((items) => {
 
         items.forEach((element: any) => {
-          const temp = [element.name, element.code, element.brand,element.location,element.reorderLevel,element.category?.name,element.status];
+          const temp = [element.name, element.code, element.brand, element.location, element.reorderLevel,
+            element.category?.name, element.status];
 
-          data.push(temp)
+          data.push(temp);
       });
-      const result = {
-        eheader:this.xheaders,
-        header:this.columnHeaders,
+        const result = {
+        eheader: this.xheaders,
+        header: this.columnHeaders,
         rowData: data
-      }
-    this.mainservice.setExport(result)
+      };
+        this.mainservice.setExport(result);
 
         this.dialog.open(ExportPopupComponent, {
           height: '500px',

@@ -27,46 +27,46 @@ export class ListDebitNoteComponent {
     cledger: 'Compound Ledger',
     amount: 'Amount',
     details: 'Details',
-  }
+  };
 
 
-  export:any = []
+  export: any = [];
 
 
   constructor(private voucherService: VoucherService,
-    private mainservice: MainService,
-    private dialog: MatDialog) { }
+              private mainservice: MainService,
+              private dialog: MatDialog) { }
 
 
     handleImportClick = (file: File): void => {
 
       this.voucherService.importVouchers(file).subscribe(() => {
-  
+
         console.log('file uploaded');
-  
+
       });
-     
-  
+
+
     }
   handleExportClick = (): void => {
-    let data = []   
- 
-    
-    this.mainservice.getExport().subscribe(result1=>{
-      this.export= result1
-      console.log(result1);
-      
-    })
+    const data = [];
 
 
-  const items=this.export.items
-     this.dialog.open(ExportPopupComponent, {
+    this.mainservice.getExport().subscribe(result1 => {
+      this.export = result1;
+
+
+    });
+
+
+    const items = this.export.items;
+    this.dialog.open(ExportPopupComponent, {
       height: '500px',
-    data:{items,
+    data: {items,
     displayedColumns: this.displayedColumns,
     columnHeaders: this.columnHeaders,
-    
-       }  
+
+       }
       });
 
 }

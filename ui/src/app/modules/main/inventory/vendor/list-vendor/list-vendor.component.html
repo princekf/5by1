@@ -1,2 +1,2 @@
-<app-tool-bar createUri="/vendor/create" mainHeader="Vendor" (onExportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-tool-bar createUri="/vendor/create" mainHeader="Vendor" (exportClickEvent)="handleExportClick()"></app-tool-bar>
 <app-data-table tableHeader="List of Vendors" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="rawDatas" editUri="/vendor/create" deleteUri="/vendor/delete" [filterItem]="filterItem"></app-data-table>

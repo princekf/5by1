@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { PaymentService } from '@fboservices/inventory/payment.service';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
@@ -17,7 +17,7 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-payment.component.html',
   styleUrls: [ './list-payment.component.scss' ]
 })
-export class ListPaymentComponent {
+export class ListPaymentComponent implements AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [ 'paidDate', 'vendor.name', 'bill.billNumber',
     'bank.name', 'category', 'amount', 'description' ];
@@ -33,26 +33,26 @@ export class ListPaymentComponent {
     amount: 'Amount',
     description: 'Description',
 
-  }
+  };
   xheaders = [
     { header: 'Paid Date', key: 'Paid Date', width: 25 },
     { header: 'Vendor', key: 'Vendor', width: 20 },
     { header: 'Bill', key: 'Bill', width: 20 },
-    { header: 'Bank', key:'Bank', width: 20 },
+    { header: 'Bank', key: 'Bank', width: 20 },
     { header: 'Category', key: 'Category', width: 20 },
     { header: 'Amount', key: 'Amount', width: 15 },
     { header: 'Description', key: 'Description', width: 35 },
 
-  ]
+  ];
 
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  payments:ListQueryRespType<Payment> = {
+  payments: ListQueryRespType<Payment> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -61,7 +61,7 @@ export class ListPaymentComponent {
   filterItem: FilterItem;
 
 
-  columnParsingFn = (element:unknown, column:string) : string => {
+  columnParsingFn = (element: unknown, column: string): string => {
 
     switch (column) {
 
@@ -75,8 +75,8 @@ export class ListPaymentComponent {
 
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private paymentService:PaymentService,
+    private activatedRoute: ActivatedRoute,
+    private paymentService: PaymentService,
     private dialog: MatDialog,
     private mainservice: MainService,
   ) { }
@@ -102,7 +102,7 @@ export class ListPaymentComponent {
 
     });
 
-  };
+  }
 
   ngOnInit(): void {
 
@@ -110,7 +110,7 @@ export class ListPaymentComponent {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -135,21 +135,21 @@ export class ListPaymentComponent {
     const tParams = {...this.queryParams};
     tParams.limit = this.payments.totalItems;
     this.loading = true;
-    let data = []
+    const data = [];
     this.paymentService.queryData(tParams).subscribe((items) => {
 
-      items.forEach((element: any) =>{
-        const temp = [element.paidDate, element.vendor?.name, element.bill?.billNumber,element.bank?.name,
-          element.category,element.amount,element.description];
+      items.forEach((element: any) => {
+        const temp = [element.paidDate, element.vendor?.name, element.bill?.billNumber, element.bank?.name,
+          element.category, element.amount, element.description];
 
-        data.push(temp)
+        data.push(temp);
     });
-    const result = {
-      eheader:this.xheaders,
-      header:this.columnHeaders,
+      const result = {
+      eheader: this.xheaders,
+      header: this.columnHeaders,
       rowData: data
-    }
-  this.mainservice.setExport(result)
+    };
+      this.mainservice.setExport(result);
 
       this.dialog.open(ExportPopupComponent, {
         height: '500px',

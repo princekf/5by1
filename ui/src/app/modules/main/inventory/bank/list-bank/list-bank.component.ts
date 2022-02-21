@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Bank } from '@shared/entity/inventory/bank';
 import { BankService } from '@fboservices/inventory/bank.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
@@ -15,7 +15,7 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-bank.component.html',
   styleUrls: [ './list-bank.component.scss' ]
 })
-export class ListBankComponent {
+export class ListBankComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'type', 'name', 'openingBalance', 'description' ];
 
@@ -25,7 +25,7 @@ export class ListBankComponent {
     name: 'Name',
     openingBalance: 'OpeningBalance',
     description: 'description',
-  }
+  };
   xheaders = [
     { header: 'Type', key: 'Type', width: 15 },
     { header: 'Name', key: 'name', width: 30, },
@@ -51,9 +51,9 @@ export class ListBankComponent {
   filterItem: FilterItem;
 
   constructor(private activatedRoute: ActivatedRoute,
-    private bankService: BankService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+              private bankService: BankService,
+              private dialog: MatDialog,
+              private mainservice: MainService, ) { }
 
 
   private loadData = () => {
@@ -73,7 +73,7 @@ export class ListBankComponent {
 
     });
 
-  };
+  }
 
 
   ngOnInit(): void {
@@ -82,7 +82,7 @@ export class ListBankComponent {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -106,20 +106,20 @@ export class ListBankComponent {
     const tParams = {...this.queryParams};
     tParams.limit = this.banks.totalItems;
     this.loading = true;
-    let data = []
+    const data = [];
     this.bankService.queryData(tParams).subscribe((items) => {
 
-      items.forEach((element: any) =>{
-        const temp = [element.type, element.name, element.openingBalance,element.description,];
+      items.forEach((element: any) => {
+        const temp = [element.type, element.name, element.openingBalance, element.description, ];
 
-        data.push(temp)
+        data.push(temp);
     });
-    const result = {
-      eheader:this.xheaders,
-      header:this.columnHeaders,
+      const result = {
+      eheader: this.xheaders,
+      header: this.columnHeaders,
       rowData: data
-    }
-  this.mainservice.setExport(result)
+    };
+      this.mainservice.setExport(result);
 
       this.dialog.open(ExportPopupComponent, {
         height: '500px',

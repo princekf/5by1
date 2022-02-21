@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { UserService } from '@fboservices/user.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
@@ -18,7 +18,7 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-user.component.html',
   styleUrls: [ './list-user.component.scss' ]
 })
-export class ListUserComponent implements OnInit {
+export class ListUserComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'email', 'role' ];
 
@@ -30,7 +30,7 @@ export class ListUserComponent implements OnInit {
 
   };
 
-  xheaders :any = [
+  xheaders: any = [
     { header: 'Name', key: 'name', width: 40 },
       { header: 'Email', key: 'email', width: 50 },
       { header: 'Role', key: 'Role', width: 10 },
@@ -56,9 +56,9 @@ export class ListUserComponent implements OnInit {
   filterItem: FilterItem;
 
   constructor(private activatedRoute: ActivatedRoute,
-    private userService: UserService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+              private userService: UserService,
+              private dialog: MatDialog,
+              private mainservice: MainService, ) { }
 
 
   private loadData = () => {
@@ -80,7 +80,7 @@ export class ListUserComponent implements OnInit {
 
     });
 
-  };
+  }
 
 
   ngOnInit(): void {
@@ -89,7 +89,7 @@ export class ListUserComponent implements OnInit {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -112,20 +112,20 @@ export class ListUserComponent implements OnInit {
     const tParams = {...this.queryParams};
     tParams.limit = this.Users.totalItems;
     this.loading = true;
-    let data = []
+    const data = [];
     this.userService.queryData(tParams).subscribe((items) => {
 
       items.forEach((element: any) => {
         const temp = [element.name, element.email, element.role];
 
-        data.push(temp)
+        data.push(temp);
     });
-    const result = {
-      eheader:this.xheaders,
-      header:this.columnHeaders,
+      const result = {
+      eheader: this.xheaders,
+      header: this.columnHeaders,
       rowData: data
-    }
-  this.mainservice.setExport(result)
+    };
+      this.mainservice.setExport(result);
 
       this.dialog.open(ExportPopupComponent, {
         height: '500px',

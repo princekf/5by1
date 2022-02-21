@@ -8,25 +8,28 @@ const MOBILE_SCREEN_MAX_WIDTH = 768;
 })
 export class MainService {
 
+  constructor(@Inject(DOCUMENT) private document: Document) { }
+
   leftMenuDrawerSubject = new BehaviorSubject(true);
 
   leftMenuDrawerMobileSubject = new BehaviorSubject(false);
 
   private leftMenuLastToggleStatus = true;
 
-  constructor(@Inject(DOCUMENT) private document: Document) { }
+  private export = new BehaviorSubject<any>({});
+  private head = new BehaviorSubject<any>({});
 
-  isMobileView = ():boolean => this.document.defaultView.innerWidth <= MOBILE_SCREEN_MAX_WIDTH;
+  isMobileView = (): boolean => this.document.defaultView.innerWidth <= MOBILE_SCREEN_MAX_WIDTH;
 
-  setLeftMenuDrawerSubject = (val:boolean):void => {
+  setLeftMenuDrawerSubject = (val: boolean): void => {
 
     this.leftMenuDrawerSubject.next(val);
 
   }
 
-  getLeftMenuLastToggleStatus = ():boolean => this.leftMenuLastToggleStatus;
+  getLeftMenuLastToggleStatus = (): boolean => this.leftMenuLastToggleStatus;
 
-  toggleLeftMenuDrawer = ():void => {
+  toggleLeftMenuDrawer = (): void => {
 
     this.leftMenuDrawerSubject.next(!this.leftMenuDrawerSubject.value);
     this.leftMenuLastToggleStatus = this.leftMenuDrawerSubject.value;
@@ -34,13 +37,11 @@ export class MainService {
 
   }
 
-  showLeftMenuDrawer = ():void => {
+  showLeftMenuDrawer = (): void => {
 
     this.leftMenuDrawerMobileSubject.next(true);
 
   }
-
-  private export = new BehaviorSubject<any>({});
 
   setExport(products: any): void {
 
@@ -51,6 +52,17 @@ export class MainService {
   getExport(): Observable<any> {
 
     return this.export.asObservable();
+
+  }
+  setHd(products: any): void {
+
+    this.head.next(products);
+
+  }
+
+  getHd(): Observable<any> {
+
+    return this.head.asObservable();
 
   }
 

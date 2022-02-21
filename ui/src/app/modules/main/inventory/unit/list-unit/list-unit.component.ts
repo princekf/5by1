@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-unit.component.html',
   styleUrls: [ './list-unit.component.scss' ]
 })
-export class ListUnitComponent {
+export class ListUnitComponent implements  AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'parent.name', 'times' ];
 
@@ -25,22 +25,22 @@ export class ListUnitComponent {
     decimalPlaces: 'Decimals',
     'parent.name': 'Base Unit',
     times: 'Times'
-  }
+  };
   xheaders = [
     { header: 'Name', key: 'Name', width: 30, },
     { header: 'Code', key: 'Code', width: 15 },
     { header: 'Decimals', key: 'Decimals', width: 20 },
-    { header: 'Base Unit', key:'Base Unit', width: 15 },
+    { header: 'Base Unit', key: 'Base Unit', width: 15 },
     { header: 'Times', key: 'Times', width: 15 }
-  ]
+  ];
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  units:ListQueryRespType<Unit> = {
+  units: ListQueryRespType<Unit> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -49,10 +49,10 @@ export class ListUnitComponent {
   filterItem: FilterItem;
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly unitService:UnitService,
+    private activatedRoute: ActivatedRoute,
+    private readonly unitService: UnitService,
     private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private mainservice: MainService, ) { }
 
     private loadData = () => {
 
@@ -69,7 +69,7 @@ export class ListUnitComponent {
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -77,7 +77,7 @@ export class ListUnitComponent {
 
     }
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -99,21 +99,21 @@ export class ListUnitComponent {
       const tParams = {...this.queryParams};
       tParams.limit = this.units.totalItems;
       this.loading = true;
-      let data = []
+      const data = [];
       this.unitService.queryData(tParams).subscribe((items) => {
 
         items.forEach((element: any) => {
-          console.log(element );
-          const temp = [element.name, element.code, element.decimalPlaces,element.parent?.name,element.times];
 
-          data.push(temp)
+          const temp = [element.name, element.code, element.decimalPlaces, element.parent?.name, element.times];
+
+          data.push(temp);
       });
-      const result = {
-        eheader:this.xheaders,
-        header:this.columnHeaders,
+        const result = {
+        eheader: this.xheaders,
+        header: this.columnHeaders,
         rowData: data
-      }
-    this.mainservice.setExport(result)
+      };
+        this.mainservice.setExport(result);
 
         this.dialog.open(ExportPopupComponent, {
           height: '500px',

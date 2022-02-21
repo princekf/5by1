@@ -41,7 +41,7 @@ export class ListVoucherComponent implements OnInit {
     cledger: 'Compound Ledger',
     amount: 'Amount',
     details: 'Details',
-  }
+  };
   xheaders = [
 
     { header: 'Voucher #', key: 'number', width: 30, },
@@ -52,7 +52,7 @@ export class ListVoucherComponent implements OnInit {
     { header: 'Details', key: 'details', width: 30 }
    ];
   queryParams: QueryData = {};
-  
+
 
   loading = true;
 
@@ -65,12 +65,12 @@ export class ListVoucherComponent implements OnInit {
   filterItem: FilterItem;
 
   constructor(private activatedRoute: ActivatedRoute,
-    private voucherService: VoucherService,
-    private ledgerService: LedgerService,
-    private mainservice: MainService,) { }
+              private voucherService: VoucherService,
+              private ledgerService: LedgerService,
+              private mainservice: MainService, ) { }
 
 
-  private formatItems = (ledgerMap: Record<string, Ledger>, items: Array<Voucher>):Array<VType> => {
+  private formatItems = (ledgerMap: Record<string, Ledger>, items: Array<Voucher>): Array<VType> => {
 
     const itemsT = [];
     const maxLength = 20;
@@ -93,18 +93,18 @@ export class ListVoucherComponent implements OnInit {
       const result1 = {
 
         items: itemsT,
-        displayedColumns:this.displayedColumns,
-        columnHeaders:this.columnHeaders,
-        eheader:this.xheaders,
-        header:this.columnHeaders,
+        displayedColumns: this.displayedColumns,
+        columnHeaders: this.columnHeaders,
+        eheader: this.xheaders,
+        header: this.columnHeaders,
         rowData: itemsT
-    
-      }
+
+      };
       this.mainservice.setExport(result1);
 
     }
     return itemsT;
-  
+
 
   }
 
@@ -153,7 +153,7 @@ export class ListVoucherComponent implements OnInit {
 
       });
 
-  };
+  }
 
   ngOnInit(): void {
 

@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { TransferService } from '@fboservices/inventory/transfer.service';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ import { FilterTransferComponent } from '../filter-transfer/filter-transfer.comp
   templateUrl: './list-transfer.component.html',
   styleUrls: [ './list-transfer.component.scss' ]
 })
-export class ListTransferComponent {
+export class ListTransferComponent implements AfterViewInit, OnInit {
 
 
   displayedColumns: string[] = [ 'fromAccount.name', 'toAccount.name', 'transferDate', 'amount', 'description', ];
@@ -26,15 +26,15 @@ export class ListTransferComponent {
     amount: 'Amount',
     description: 'Description',
 
-  }
+  };
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  transfers:ListQueryRespType<Transfer> = {
+  transfers: ListQueryRespType<Transfer> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -42,8 +42,8 @@ export class ListTransferComponent {
 
 
   filterItem: FilterItem;
-  
-  columnParsingFn = (element:unknown, column:string) : string => {
+
+  columnParsingFn = (element: unknown, column: string): string => {
 
     switch (column) {
 
@@ -55,8 +55,8 @@ export class ListTransferComponent {
 
   }
 
-  constructor(private transferService : TransferService,
-    private activatedRoute : ActivatedRoute
+  constructor(private transferService: TransferService,
+              private activatedRoute: ActivatedRoute
   ) { }
 
 
@@ -81,7 +81,7 @@ export class ListTransferComponent {
 
     });
 
-  };
+  }
 
   ngOnInit(): void {
 
@@ -89,7 +89,7 @@ export class ListTransferComponent {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 

@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { RevenueService } from '@fboservices/inventory/revenue.service';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
@@ -18,9 +18,10 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-revenue.component.html',
   styleUrls: [ './list-revenue.component.scss' ]
 })
-export class ListRevenueComponent {
+export class ListRevenueComponent implements AfterViewInit, OnInit  {
 
-  displayedColumns: string[] = [ 'receivedDate', 'customer.name', 'invoice.invoiceNumber', 'bank.name', 'category', 'amount', 'description' ];
+  displayedColumns: string[] = [ 'receivedDate', 'customer.name', 'invoice.invoiceNumber', 'bank.name',
+  'category', 'amount', 'description' ];
 
   numberColumns: string[] = [ 'amount' ];
 
@@ -33,25 +34,25 @@ export class ListRevenueComponent {
     amount: 'Amount',
     description: 'Description',
 
-  }
+  };
 
   xheaders = [
     { header: 'Received Date', key: 'Received Date', width: 25 },
     { header: 'Customer', key: 'Customer', width: 30 },
     { header: 'Invoice', key: 'Invoice', width: 20 },
-    { header: 'Bank', key:'Bank', width: 20 },
+    { header: 'Bank', key: 'Bank', width: 20 },
     { header: 'Category', key: 'Category', width: 25 },
     { header: 'Amount', key: 'Amount', width: 25 },
     { header: 'Description', key: 'Description', width: 30 },
   ];
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  revenues:ListQueryRespType<Revenue> = {
+  revenues: ListQueryRespType<Revenue> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -59,7 +60,7 @@ export class ListRevenueComponent {
 
   filterItem: FilterItem;
 
-  columnParsingFn = (element:unknown, column:string): string => {
+  columnParsingFn = (element: unknown, column: string): string => {
 
     switch (column) {
 
@@ -71,10 +72,10 @@ export class ListRevenueComponent {
 
   }
 
-  constructor(private activatedRoute : ActivatedRoute,
-    private revenueService:RevenueService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+  constructor(private activatedRoute: ActivatedRoute,
+              private revenueService: RevenueService,
+              private dialog: MatDialog,
+              private mainservice: MainService, ) { }
 
 
     private loadData = () => {
@@ -97,7 +98,7 @@ export class ListRevenueComponent {
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -106,7 +107,7 @@ export class ListRevenueComponent {
     }
 
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -131,21 +132,22 @@ export class ListRevenueComponent {
     const tParams = {...this.queryParams};
     tParams.limit = this.revenues.totalItems;
     this.loading = true;
-    let data = []
+    const data = [];
     this.revenueService.queryData(tParams).subscribe((items) => {
 
       items.forEach((element: any) => {
-        const temp = [element.receivedDate, element.customer?.name, element.invoice?.invoiceNumber,element.bank?.name,element.category,element.amount,
+        const temp = [element.receivedDate, element.customer?.name, element.invoice?.invoiceNumber,
+           element.bank?.name, element.category, element.amount,
           element.description];
 
-        data.push(temp)
+        data.push(temp);
     });
-    const result = {
-      eheader:this.xheaders,
-      header:this.columnHeaders,
+      const result = {
+      eheader: this.xheaders,
+      header: this.columnHeaders,
       rowData: data
-    }
-  this.mainservice.setExport(result)
+    };
+      this.mainservice.setExport(result);
 
       this.dialog.open(ExportPopupComponent, {
         height: '500px',

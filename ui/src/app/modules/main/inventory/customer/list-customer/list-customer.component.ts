@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, OnInit  } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CustomerService } from '@fboservices/inventory/customer.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
@@ -17,7 +17,7 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-customer.component.html',
   styleUrls: [ './list-customer.component.scss' ]
 })
-export class ListCustomerComponent {
+export class ListCustomerComponent implements AfterViewInit, OnInit {
 
 
   displayedColumns: string[] = [ 'name', 'email', 'mobile', 'state', 'address', 'gstNo' ];
@@ -29,23 +29,23 @@ export class ListCustomerComponent {
     state: 'State',
     address: 'Address',
     gstNo: 'GST No'
-  }
+  };
   xheaders = [
     { header: 'Name', key: 'Name', width: 30, },
     { header: 'E-Mail', key: 'E-Mail', width: 35 },
     { header: 'Mobile', key: 'Mobile', width: 19 },
-    { header: 'State', key:'State', width: 20 },
+    { header: 'State', key: 'State', width: 20 },
     { header: 'Address', key: 'Address', width: 40 },
     { header: 'GST No', key: 'GST No', width: 25 }
-  ]
+  ];
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  rawDatas:ListQueryRespType<Customer> = {
+  rawDatas: ListQueryRespType<Customer> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -54,10 +54,10 @@ export class ListCustomerComponent {
   filterItem: FilterItem;
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly customerService:CustomerService,
+    private activatedRoute: ActivatedRoute,
+    private readonly customerService: CustomerService,
     private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private mainservice: MainService, ) { }
 
     private loadData = () => {
 
@@ -74,7 +74,7 @@ export class ListCustomerComponent {
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -82,7 +82,7 @@ export class ListCustomerComponent {
 
     }
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -106,20 +106,20 @@ export class ListCustomerComponent {
     const tParams = {...this.queryParams};
     tParams.limit = this.rawDatas.totalItems;
     this.loading = true;
-    let data = []
+    const data = [];
     this.customerService.queryData(tParams).subscribe((items) => {
 
       items.forEach((element: any) => {
-        const temp = [ element.name, element.email,element.mobile,element.state,element.address,element.gstNo];
+        const temp = [ element.name, element.email, element.mobile, element.state, element.address, element.gstNo];
 
-        data.push(temp)
+        data.push(temp);
     });
-    const result = {
-      eheader:this.xheaders,
-      header:this.columnHeaders,
+      const result = {
+      eheader: this.xheaders,
+      header: this.columnHeaders,
       rowData: data
-    }
-  this.mainservice.setExport(result)
+    };
+      this.mainservice.setExport(result);
 
       this.dialog.open(ExportPopupComponent, {
         height: '500px',

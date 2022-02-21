@@ -27,7 +27,7 @@ export class ListCompanyComponent implements OnInit {
     email: 'Email',
     address: 'Address',
 
-  }
+  };
   xheaders = [
 
     { header: 'Name', key: 'name', width: 30, },
@@ -53,9 +53,9 @@ export class ListCompanyComponent implements OnInit {
   filterItem: FilterItem;
 
   constructor(private activatedRoute: ActivatedRoute,
-    private companyService: CompanyService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+              private companyService: CompanyService,
+              private dialog: MatDialog,
+              private mainservice: MainService, ) { }
 
 
   private loadData = () => {
@@ -76,7 +76,7 @@ export class ListCompanyComponent implements OnInit {
 
     });
 
-  };
+  }
 
 
   ngOnInit(): void {
@@ -85,7 +85,7 @@ export class ListCompanyComponent implements OnInit {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -108,20 +108,20 @@ export class ListCompanyComponent implements OnInit {
     const tParams = {...this.queryParams};
     tParams.limit = this.companies.totalItems;
     this.loading = true;
-    let data = []
+    const data = [];
     this.companyService.queryData(tParams).subscribe((items) => {
 
       items.forEach((element: any) => {
-        const temp = [element.name, element.code, element.email,element.address];
+        const temp = [element.name, element.code, element.email, element.address];
 
-        data.push(temp)
+        data.push(temp);
     });
-    const result = {
-      eheader:this.xheaders,
-      header:this.columnHeaders,
+      const result = {
+      eheader: this.xheaders,
+      header: this.columnHeaders,
       rowData: data
-    }
-  this.mainservice.setExport(result)
+    };
+      this.mainservice.setExport(result);
 
       this.dialog.open(ExportPopupComponent, {
         height: '500px',

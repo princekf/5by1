@@ -1,2 +1,2 @@
-<app-tool-bar createUri="/voucher/sales/create" mainHeader="Sales" (onImportClickEvent)="handleImportClick($event)" (onExportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-tool-bar createUri="/voucher/sales/create" mainHeader="Sales" (importClickEvent)="handleImportClick($event)" (exportClickEvent)="handleExportClick()"></app-tool-bar>
 <app-list-voucher [voucherType]="voucherType" [tableHeader]="tableHeader" [editUri]="editUri"></app-list-voucher>

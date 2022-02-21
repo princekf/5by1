@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-ledgergroup.component.html',
   styleUrls: [ './list-ledgergroup.component.scss' ]
 })
-export class ListLedgergroupComponent implements OnInit {
+export class ListLedgergroupComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'parent.name', 'details' ];
 
@@ -24,7 +24,7 @@ export class ListLedgergroupComponent implements OnInit {
     code: 'Code',
     'parent.name': 'Parent Name',
     details: 'Details'
-  }
+  };
   xheaders = [
 
     { header: 'Name', key: 'name', width: 30, },
@@ -34,13 +34,13 @@ export class ListLedgergroupComponent implements OnInit {
 ];
 
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  ledgerGroups:ListQueryRespType<LedgerGroup> = {
+  ledgerGroups: ListQueryRespType<LedgerGroup> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -49,10 +49,10 @@ export class ListLedgergroupComponent implements OnInit {
   filterItem: FilterItem;
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly ledgergroupService:LedgergroupService,
+    private activatedRoute: ActivatedRoute,
+    private readonly ledgergroupService: LedgergroupService,
     private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private mainservice: MainService, ) { }
 
     private loadData = () => {
 
@@ -75,7 +75,7 @@ export class ListLedgergroupComponent implements OnInit {
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -83,7 +83,7 @@ export class ListLedgergroupComponent implements OnInit {
 
     }
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -106,22 +106,22 @@ export class ListLedgergroupComponent implements OnInit {
       const tParams = {...this.queryParams};
       tParams.limit = this.ledgerGroups.totalItems;
       this.loading = true;
-      let data = []
+      const data = [];
       this.ledgergroupService.queryData(tParams).subscribe((items) => {
 
         items.forEach((element: any) => {
-          console.log(element );
-          element.details?element.details:''
-          const temp = [element.name, element.code, element.parent?.name,element.details];
 
-          data.push(temp)
+
+          const temp = [element.name, element.code, element.parent?.name, element.details];
+
+          data.push(temp);
       });
-      const result = {
-        eheader:this.xheaders,
-        header:this.columnHeaders,
+        const result = {
+        eheader: this.xheaders,
+        header: this.columnHeaders,
         rowData: data
-      }
-    this.mainservice.setExport(result)
+      };
+        this.mainservice.setExport(result);
 
         this.dialog.open(ExportPopupComponent, {
           height: '500px',

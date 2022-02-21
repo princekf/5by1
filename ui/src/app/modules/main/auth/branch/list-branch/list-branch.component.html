@@ -1,2 +1,2 @@
-<app-tool-bar createUri="/branch/create" mainHeader="Branch" (onExportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-tool-bar createUri="/branch/create" mainHeader="Branch" (exportClickEvent)="handleExportClick()"></app-tool-bar>
 <app-data-table tableHeader="List of Branch" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="branchs" editUri="/branch/create" deleteUri="/branch/delete" [filterItem]="filterItem" [columnParsingFn]="columnParsingFn"></app-data-table>

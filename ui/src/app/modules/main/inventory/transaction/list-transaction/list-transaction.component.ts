@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { RevenueService } from '@fboservices/inventory/revenue.service';
 import { PaymentService } from '@fboservices/inventory/payment.service';
 import { QueryData } from '@shared/util/query-data';
@@ -19,9 +19,10 @@ import { FilterTransactionComponent } from '../filter-transaction/filter-transac
   styleUrls: [ './list-transaction.component.scss', '../../../../../util/styles/fbo-table-style.scss' ],
   animations: fboTableRowExpandAnimation,
 })
-export class ListTransactionComponent {
+export class ListTransactionComponent implements AfterViewInit, OnInit {
 
-  displayedColumns: string[] = [ 'receivedDate', 'customer.name', 'invoice.invoiceNumber', 'bank.name', 'category', 'amount', 'description' ];
+  displayedColumns: string[] = [ 'receivedDate', 'customer.name', 'invoice.invoiceNumber', 'bank.name',
+  'category', 'amount', 'description' ];
 
   columnHeaders = {
     receivedDate: 'Transaction Date',
@@ -32,37 +33,37 @@ export class ListTransactionComponent {
     amount: 'Amount',
     description: 'Description',
 
-  }
+  };
 
   isdelete = false;
 
 
   findColumnValue = _findColumnValue;
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  mainHeader= 'Transaction';
+  mainHeader = 'Transaction';
 
-  tableHeader = 'List of Transactions'
+  tableHeader = 'List of Transactions';
 
-  revenues:ListQueryRespType<unknown> = {
+  revenues: ListQueryRespType<unknown> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
   };
 
-  payments:ListQueryRespType<unknown> = {
+  payments: ListQueryRespType<unknown> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
   };
 
 
-  transactions:ListQueryRespType<unknown> = {
+  transactions: ListQueryRespType<unknown> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -75,16 +76,16 @@ export class ListTransactionComponent {
   extraColumns: Array<string>;
 
 
-  constructor(private activatedRoute : ActivatedRoute,
-    private revenueService:RevenueService,
-    private paymentService:PaymentService,
-    private readonly router: Router,
-    public readonly route: ActivatedRoute,
-    private readonly mainService: MainService,
+  constructor(private activatedRoute: ActivatedRoute,
+              private revenueService: RevenueService,
+              private paymentService: PaymentService,
+              private readonly router: Router,
+              public readonly route: ActivatedRoute,
+              private readonly mainService: MainService,
   ) { }
 
 
-  columnParsingFn = (element:any, column:string): string => {
+  columnParsingFn = (element: any, column: string): string => {
 
 
     switch (column) {
@@ -153,7 +154,7 @@ export class ListTransactionComponent {
 
     }
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 

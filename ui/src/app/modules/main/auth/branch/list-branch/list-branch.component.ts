@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { BranchService } from '@fboservices/auth/branch.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
@@ -17,7 +17,7 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-branch.component.html',
   styleUrls: [ './list-branch.component.scss' ]
 })
-export class ListBranchComponent implements OnInit {
+export class ListBranchComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'email', 'code', 'address', 'finYearStartDate', 'defaultFinYear.name' ];
 
@@ -28,7 +28,7 @@ export class ListBranchComponent implements OnInit {
     address: 'Address',
     finYearStartDate: 'FinYearStartDate',
     'defaultFinYear.name': 'DefaultFinYear'
-  }
+  };
   xheaders = [
     { header: 'Name', key: 'name', width: 30, },
     { header: 'Email', key: 'email', width: 40 },
@@ -54,7 +54,7 @@ export class ListBranchComponent implements OnInit {
 
   filterItem: FilterItem;
 
-  columnParsingFn = (element:unknown, column:string): string => {
+  columnParsingFn = (element: unknown, column: string): string => {
 
     switch (column) {
 
@@ -68,9 +68,9 @@ export class ListBranchComponent implements OnInit {
   }
 
   constructor(private activatedRoute: ActivatedRoute,
-    private branchService: BranchService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+              private branchService: BranchService,
+              private dialog: MatDialog,
+              private mainservice: MainService, ) { }
 
 
   private loadData = () => {
@@ -95,7 +95,7 @@ export class ListBranchComponent implements OnInit {
 
     });
 
-  };
+  }
 
 
   ngOnInit(): void {
@@ -104,7 +104,7 @@ export class ListBranchComponent implements OnInit {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -128,20 +128,20 @@ export class ListBranchComponent implements OnInit {
     const tParams = {...this.queryParams};
     tParams.limit = this.branchs.totalItems;
     this.loading = true;
-    let data = []
+    const data = [];
     this.branchService.queryData(tParams).subscribe((items) => {
 
       items.forEach((element: any) => {
-        const temp = [element.name, element.email, element.code, element.address,element.finYearStartDate];
+        const temp = [element.name, element.email, element.code, element.address, element.finYearStartDate];
 
-        data.push(temp)
+        data.push(temp);
     });
-    const result = {
-      eheader:this.xheaders,
-      header:this.columnHeaders,
+      const result = {
+      eheader: this.xheaders,
+      header: this.columnHeaders,
       rowData: data
-    }
-  this.mainservice.setExport(result)
+    };
+      this.mainservice.setExport(result);
 
       this.dialog.open(ExportPopupComponent, {
         height: '500px',

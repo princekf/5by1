@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, OnInit  } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { QueryData } from '@shared/util/query-data';
@@ -15,7 +15,7 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-vendor.component.html',
   styleUrls: [ './list-vendor.component.scss' ]
 })
-export class ListVendorComponent {
+export class ListVendorComponent implements  AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [ 'name', 'email', 'mobile', 'state', 'address', 'gstNo' ];
 
@@ -26,24 +26,24 @@ export class ListVendorComponent {
     state: 'State',
     address: 'Address',
     gstNo: 'GST No'
-  }
+  };
   xheaders = [
     { header: 'Name', key: 'Name', width: 30, },
     { header: 'E-Mail', key: 'E-Mail', width: 45 },
     { header: 'Mobile', key: 'Mobile', width: 20 },
-    { header: 'State', key:'State', width: 15 },
+    { header: 'State', key: 'State', width: 15 },
     { header: 'Address', key: 'Address', width: 45 },
     { header: 'GST No', key: 'GST No', width: 20 }
   ];
 
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  rawDatas:ListQueryRespType<Customer> = {
+  rawDatas: ListQueryRespType<Customer> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -52,10 +52,10 @@ export class ListVendorComponent {
   filterItem: FilterItem;
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly vendorService:VendorService,
+    private activatedRoute: ActivatedRoute,
+    private readonly vendorService: VendorService,
     private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private mainservice: MainService, ) { }
 
     private loadData = () => {
 
@@ -72,7 +72,7 @@ export class ListVendorComponent {
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -81,7 +81,7 @@ export class ListVendorComponent {
     }
 
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -104,21 +104,21 @@ export class ListVendorComponent {
       const tParams = {...this.queryParams};
       tParams.limit = this.rawDatas.totalItems;
       this.loading = true;
-      let data = []
+      const data = [];
       this.vendorService.queryData(tParams).subscribe((items) => {
 
         items.forEach((element: any) => {
-          console.log(element );
-          const temp = [element.name, element.email, element.mobile,element.state,element.address,element.gstNo];
 
-          data.push(temp)
+          const temp = [element.name, element.email, element.mobile, element.state, element.address, element.gstNo];
+
+          data.push(temp);
       });
-      const result = {
-        eheader:this.xheaders,
-        header:this.columnHeaders,
+        const result = {
+        eheader: this.xheaders,
+        header: this.columnHeaders,
         rowData: data
-      }
-    this.mainservice.setExport(result)
+      };
+        this.mainservice.setExport(result);
 
         this.dialog.open(ExportPopupComponent, {
           height: '500px',

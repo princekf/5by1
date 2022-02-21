@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CostCentreService } from '@fboservices/accounting/cost-centre.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
@@ -15,7 +15,7 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-cost-centre.component.html',
   styleUrls: [ './list-cost-centre.component.scss' ]
 })
-export class ListCostCentreComponent implements OnInit {
+export class ListCostCentreComponent implements OnInit, AfterViewInit  {
 
   displayedColumns: string[] = [ 'name', 'details' ];
 
@@ -24,7 +24,7 @@ export class ListCostCentreComponent implements OnInit {
     name: 'Name',
     details: 'Details',
 
-  }
+  };
   xheaders = [
 
     { header: 'Name', key: 'name', width: 30, },
@@ -50,9 +50,9 @@ export class ListCostCentreComponent implements OnInit {
 
 
   constructor(private activatedRoute: ActivatedRoute,
-    private costCentreService: CostCentreService,
-    private mainservice: MainService,
-    private dialog: MatDialog) { }
+              private costCentreService: CostCentreService,
+              private mainservice: MainService,
+              private dialog: MatDialog) { }
 
 
   private loadData = () => {
@@ -74,7 +74,7 @@ export class ListCostCentreComponent implements OnInit {
 
     });
 
-  };
+  }
 
 
   ngOnInit(): void {
@@ -83,7 +83,7 @@ export class ListCostCentreComponent implements OnInit {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -107,20 +107,20 @@ export class ListCostCentreComponent implements OnInit {
     const tParams = {...this.queryParams};
     tParams.limit = this.costCentres.totalItems;
     this.loading = true;
-    let data = []
+    const data = [];
     this.costCentreService.queryData(tParams).subscribe((items) => {
       console.log();
 
       items.forEach((element: any) => {
         const temp = [element.name, element.details];
-        data.push(temp)
+        data.push(temp);
     });
-    const result = {
-      eheader:this.xheaders,
-      header:this.columnHeaders,
+      const result = {
+      eheader: this.xheaders,
+      header: this.columnHeaders,
       rowData: data
-    }
-  this.mainservice.setExport(result)
+    };
+      this.mainservice.setExport(result);
 
       this.dialog.open(ExportPopupComponent, {
         height: '500px',
