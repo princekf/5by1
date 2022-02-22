@@ -29,7 +29,6 @@ export class ToolBarComponent implements OnInit {
   ngOnInit(): void {
     const name = {
       filename: this.mainHeader,
-      title: this.subHeader
     };
     this.mainservice.setHd(name);
 

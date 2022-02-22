@@ -26,14 +26,18 @@ export class ListUserComponent implements OnInit, AfterViewInit {
     name: 'Name',
     email: 'Email',
     role: 'Role',
-
-
   };
+    xheaders = [
+   'Name',
+     'Email',
+     'Role',
+    ];
 
-  xheaders: any = [
-    { header: 'Name', key: 'name', width: 40 },
-      { header: 'Email', key: 'email', width: 50 },
-      { header: 'Role', key: 'Role', width: 10 },
+
+  whheaders: any = [
+    {  width: 40 },
+      {  width: 50 },
+      {  width: 10 },
 
   ];
 
@@ -121,6 +125,7 @@ export class ListUserComponent implements OnInit, AfterViewInit {
         data.push(temp);
     });
       const result = {
+          wheader: this.whheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
       rowData: data

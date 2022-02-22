@@ -26,12 +26,19 @@ export class ListTaxComponent implements  AfterViewInit, OnInit  {
     appliedTo: 'Applied To (%)',
     description: 'Description'
   };
-  xheaders = [
-    { header: 'Group Name', key: 'Group Name', width: 30 },
-    { header: 'Name', key: 'Name', width: 30 },
-    { header: 'Rate (%)', key: 'Rate (%)', width: 20 },
-    { header: 'Applied To (%)', key: 'Applied To (%)', width: 15 },
-    { header: 'Description', key: 'Description', width: 30 },
+    xheaders = [
+   'Group Name',
+    'Name',
+    'Rate (%)',
+     'Applied To (%)',
+     'Description'
+    ];
+  whheaders = [
+    { width: 30 },
+    {width: 30 },
+    { width: 20 },
+    { width: 15 },
+    {width: 30 },
   ];
   queryParams: QueryData = { };
 
@@ -111,6 +118,7 @@ export class ListTaxComponent implements  AfterViewInit, OnInit  {
         data.push(temp);
     });
       const result = {
+        wheader: this.whheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
       rowData: data

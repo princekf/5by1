@@ -34,15 +34,26 @@ numberColumns: string[] = [ 'totalAmount' ];
     grandTotal: 'Grand Total',
     isReceived: 'Received'
   };
+  
   xheaders = [
-    { header: 'Customer', key: 'Customer', width: 30, },
-    { header: 'Date', key: 'Date', width: 15 },
-    { header: 'Invoice #', key: 'Invoice #', width: 20 },
-    { header: 'Amount', key: 'Amount', width: 20 },
-    { header: 'Discount', key: 'Discount', width: 20 },
-    { header: 'Tax', key: 'Tax', width: 15 },
-    { header: 'Grand Total', key: 'Grand Total', width: 25 },
-    { header: 'Received', key: 'Received', width: 25 }
+    'Customer',
+     'Date',
+     'Invoice #',
+     'Amount',
+     'Discount',
+     'Tax',
+     'Grand Total',
+     'Received'
+  ];
+  whheaders = [
+    { width: 30, },
+    {  width: 15 },
+    {  width: 20 },
+    {  width: 20 },
+    {  width: 20 },
+    { width: 15 },
+    {  width: 25 },
+    {  width: 25 }
 
   ];
 
@@ -141,6 +152,7 @@ numberColumns: string[] = [ 'totalAmount' ];
         data.push(temp);
     });
       const result = {
+        wheader: this.whheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
       rowData: data

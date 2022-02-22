@@ -26,12 +26,20 @@ export class ListUnitComponent implements  AfterViewInit, OnInit  {
     'parent.name': 'Base Unit',
     times: 'Times'
   };
+
   xheaders = [
-    { header: 'Name', key: 'Name', width: 30, },
-    { header: 'Code', key: 'Code', width: 15 },
-    { header: 'Decimals', key: 'Decimals', width: 20 },
-    { header: 'Base Unit', key: 'Base Unit', width: 15 },
-    { header: 'Times', key: 'Times', width: 15 }
+  'Name',
+   'Code',
+   'Decimals',
+   'Base Unit',
+     'Times'
+  ];
+  whheaders = [
+    {width: 30, },
+    {  width: 15 },
+    {  width: 20 },
+    { width: 15 },
+    {  width: 15 }
   ];
 
   queryParams: QueryData = { };
@@ -109,6 +117,7 @@ export class ListUnitComponent implements  AfterViewInit, OnInit  {
           data.push(temp);
       });
         const result = {
+          wheader: this.whheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,
         rowData: data

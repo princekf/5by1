@@ -53,7 +53,7 @@ export class ListPaymentComponent {
 
     this.mainservice.getExport().subscribe(result1 => {
       this.export = result1;
-      console.log(result1);
+
 
     });
 
@@ -65,11 +65,12 @@ export class ListPaymentComponent {
     displayedColumns: this.displayedColumns,
     columnHeaders: this.columnHeaders,
 
-       }
+        }
+
       });
 
 
-   }
+    }
 
 
   }

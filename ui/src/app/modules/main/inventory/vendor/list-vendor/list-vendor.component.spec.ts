@@ -7,7 +7,7 @@ describe('ListVendorComponent', () => {
   let component: ListVendorComponent;
   let fixture: ComponentFixture<ListVendorComponent>;
 
-  beforeEach(async() => {
+  beforeEach(async () => {
 
     await TestBed.configureTestingModule({
       declarations: [ ListVendorComponent ]

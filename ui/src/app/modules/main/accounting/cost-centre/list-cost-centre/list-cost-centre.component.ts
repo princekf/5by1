@@ -25,10 +25,15 @@ export class ListCostCentreComponent implements OnInit, AfterViewInit  {
     details: 'Details',
 
   };
-  xheaders = [
+    xheaders = [
+     'Name',
+    'Details',
 
-    { header: 'Name', key: 'name', width: 30, },
-    { header: 'Details', key: 'details', width: 30 }
+    ];
+  whheaders = [
+
+    {  width: 30, },
+    { width: 30 }
   ];
 
 
@@ -116,6 +121,7 @@ export class ListCostCentreComponent implements OnInit, AfterViewInit  {
         data.push(temp);
     });
       const result = {
+          wheader: this.whheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
       rowData: data

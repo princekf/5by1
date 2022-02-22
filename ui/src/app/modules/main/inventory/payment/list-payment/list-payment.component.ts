@@ -34,14 +34,25 @@ export class ListPaymentComponent implements AfterViewInit, OnInit  {
     description: 'Description',
 
   };
+  
   xheaders = [
-    { header: 'Paid Date', key: 'Paid Date', width: 25 },
-    { header: 'Vendor', key: 'Vendor', width: 20 },
-    { header: 'Bill', key: 'Bill', width: 20 },
-    { header: 'Bank', key: 'Bank', width: 20 },
-    { header: 'Category', key: 'Category', width: 20 },
-    { header: 'Amount', key: 'Amount', width: 15 },
-    { header: 'Description', key: 'Description', width: 35 },
+     'Paid Date',
+     'Vendor',
+     'Bill',
+     'Bank',
+     'Category',
+     'Amount',
+     'Description',
+
+  ];
+  whheaders = [
+    { width: 25 },
+    {  width: 20 },
+    {width: 20 },
+    {width: 20 },
+    { width: 20 },
+    { width: 15 },
+    { width: 35 },
 
   ];
 
@@ -145,6 +156,7 @@ export class ListPaymentComponent implements AfterViewInit, OnInit  {
         data.push(temp);
     });
       const result = {
+        wheader: this.whheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
       rowData: data

@@ -62,9 +62,9 @@ export class CreateVoucherComponent implements OnInit {
     private ledgerService: LedgerService,
     private costCentreService: CostCentreService,
     private readonly fBuilder: FormBuilder,
-    private readonly toastr: ToastrService,) { }
+    private readonly toastr: ToastrService, ) { }
 
-    private handleCostCentreAutoChange = (costCentreQ:unknown) => {
+    private handleCostCentreAutoChange = (costCentreQ: unknown) => {
 
       if (typeof costCentreQ !== 'string') {
 
@@ -76,9 +76,9 @@ export class CreateVoucherComponent implements OnInit {
         options: 'i'}} })
         .subscribe((costCentres) => (this.costCentresFiltered = costCentres));
 
-    };
+    }
 
-    private handleLedgerAutoChange = (ledgerQ:unknown) => {
+    private handleLedgerAutoChange = (ledgerQ: unknown) => {
 
       if (typeof ledgerQ !== 'string') {
 
@@ -87,7 +87,7 @@ export class CreateVoucherComponent implements OnInit {
       }
       this.primaryLedgerChangeEvent.emit(ledgerQ);
 
-    };
+    }
 
     private addTransactionFormToVoucher = () => {
 
@@ -102,7 +102,7 @@ export class CreateVoucherComponent implements OnInit {
 
     }
 
-    private handleLedgerCompoundAutoChange = (ledgerQ:unknown) => {
+    private handleLedgerCompoundAutoChange = (ledgerQ: unknown) => {
 
       if (typeof ledgerQ !== 'string') {
 
@@ -113,7 +113,7 @@ export class CreateVoucherComponent implements OnInit {
       }
       this.compoundLedgerChangeEvent.emit(ledgerQ);
 
-    };
+    }
 
     private createTransactionForm = (transaction?: Transaction): FormGroup => {
 
@@ -183,7 +183,7 @@ export class CreateVoucherComponent implements OnInit {
 
   }
 
-  private fillTransactionsInForm = (voucher:Voucher):void => {
+  private fillTransactionsInForm = (voucher: Voucher): void => {
 
     this.fboForm.controls.id.setValue(voucher.id ?? '');
     this.fboForm.controls.number.setValue(voucher.number ?? '');
@@ -202,13 +202,13 @@ export class CreateVoucherComponent implements OnInit {
 
   private createTrnasactionDetailsObserver = (tId: string) => {
 
-    const queryParam:QueryData = {};
+    const queryParam: QueryData = {};
     return this.voucherService.get(tId, queryParam)
       .pipe(catchError((err) => throwError(err)))
       .pipe(switchMap((voucher) => {
 
-        const ledgerIds:Array<string> = [];
-        const cCentreIds:Array<string> = [];
+        const ledgerIds: Array<string> = [];
+        const cCentreIds: Array<string> = [];
         voucher.transactions.forEach((trns) => {
 
           ledgerIds.push(trns.ledgerId);
@@ -260,9 +260,9 @@ export class CreateVoucherComponent implements OnInit {
         .subscribe(([ voucher, ledgers, cCentres ]) => {
 
           this.formHeader = `Update ${voucher.number}`;
-          const cMap:Record<string, CostCentre> = {};
+          const cMap: Record<string, CostCentre> = {};
           cCentres.forEach((ldg) => (cMap[ldg.id] = ldg));
-          const lMap:Record<string, Ledger> = {};
+          const lMap: Record<string, Ledger> = {};
           ledgers.forEach((ldg) => (lMap[ldg.id] = ldg));
           voucher.transactions.forEach((trn) => {
 
@@ -293,7 +293,7 @@ export class CreateVoucherComponent implements OnInit {
 
   }
 
-  getProperLedgers = (idx:number):Array<Ledger> => {
+  getProperLedgers = (idx: number): Array<Ledger> => {
 
     if (idx > 0) {
 
@@ -302,11 +302,11 @@ export class CreateVoucherComponent implements OnInit {
     }
     return this.ledgersFiltered;
 
-  };
+  }
 
   extractNameOfObject = (obj: {name: string}): string => obj.name;
 
-  shouldShowDelete = (idx: number):boolean => {
+  shouldShowDelete = (idx: number): boolean => {
 
     if (idx === 0) {
 
@@ -317,9 +317,9 @@ export class CreateVoucherComponent implements OnInit {
     // Don't delete the last one.
     return this.transactionsDS.data.length > minimumCount && idx < this.transactionsDS.data.length - 1;
 
-  };
+  }
 
-  removeAt = (idx: number):void => {
+  removeAt = (idx: number): void => {
 
     const formArray = this.fboForm.get('transactions') as FormArray;
     formArray.removeAt(idx);
@@ -328,7 +328,7 @@ export class CreateVoucherComponent implements OnInit {
 
   }
 
-  findTransactionType = (idx: number):string => {
+  findTransactionType = (idx: number): string => {
 
     if (idx === 0) {
 
@@ -340,7 +340,7 @@ export class CreateVoucherComponent implements OnInit {
 
   }
 
-  public findCreditDebitStyle = (idx: number):string => {
+  public findCreditDebitStyle = (idx: number): string => {
 
     if (idx === 0) {
 
@@ -349,9 +349,9 @@ export class CreateVoucherComponent implements OnInit {
     }
     return this.primaryTransactionType === TransactionType.CREDIT ? 'dr-perfix' : 'cr-perfix';
 
-  };
+  }
 
-  public changeDebitCredit = (idx: number):void => {
+  public changeDebitCredit = (idx: number): void => {
 
     if (idx > 0) {
 
@@ -366,7 +366,7 @@ export class CreateVoucherComponent implements OnInit {
     this.primaryTransactionType =
     this.primaryTransactionType === TransactionType.CREDIT ? TransactionType.DEBIT : TransactionType.CREDIT;
 
-  };
+  }
 
   private createNewCompoundTransaction = (transaction: Transaction, order: number): Transaction => {
 
@@ -389,9 +389,9 @@ export class CreateVoucherComponent implements OnInit {
 
   }
 
-  private fillTransactions = (voucher:Voucher) => {
+  private fillTransactions = (voucher: Voucher) => {
 
-    const transactions:Array<Transaction> = [];
+    const transactions: Array<Transaction> = [];
     const [ primaryTransaction, ...compoundTransactions ] = voucher.transactions;
     if (!primaryTransaction.ledger?.id) {
 

@@ -27,13 +27,21 @@ export class ListVendorComponent implements  AfterViewInit, OnInit  {
     address: 'Address',
     gstNo: 'GST No'
   };
-  xheaders = [
-    { header: 'Name', key: 'Name', width: 30, },
-    { header: 'E-Mail', key: 'E-Mail', width: 45 },
-    { header: 'Mobile', key: 'Mobile', width: 20 },
-    { header: 'State', key: 'State', width: 15 },
-    { header: 'Address', key: 'Address', width: 45 },
-    { header: 'GST No', key: 'GST No', width: 20 }
+   xheaders = [
+     'Name',
+    'E-Mail',
+   'Mobile',
+   'State',
+    'Address',
+    'GST No'
+   ];
+  whheaders = [
+    {  width: 30, },
+    {  width: 45 },
+    {width: 20 },
+    { width: 15 },
+    {  width: 45 },
+    {  width: 20 }
   ];
 
 
@@ -114,6 +122,7 @@ export class ListVendorComponent implements  AfterViewInit, OnInit  {
           data.push(temp);
       });
         const result = {
+          wheader: this.whheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,
         rowData: data

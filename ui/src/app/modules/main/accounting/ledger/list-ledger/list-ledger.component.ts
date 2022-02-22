@@ -31,15 +31,23 @@ export class ListLedgerComponent implements OnInit,AfterViewInit {
     details: 'Details',
 
   };
+   xheaders = [
+    'Name',
+   'Code',
+    'Ledger Group',
+    'Opening Balance',
+    'Opening Type',
+     'Details',
+   ];
 
-    xheaders = [
+    whheaders = [
 
-    { header: 'Name', key: 'name', width: 30, },
-    { header: 'Code', key: 'code', width: 15 },
-    { header: 'Ledger Group', key: 'Ledger Group', width: 15 },
-    { header: 'Opening Balance', key: 'Opening Balance', width: 15 },
-    { header: 'Opening Type', key: 'Opening Type', width: 15 },
-    { header: 'Details', key: 'Details', width: 25 }
+    { width: 30, },
+    {  width: 15 },
+    { width: 15 },
+    {  width: 15 },
+    {  width: 15 },
+    { width: 25 }
     ];
 
 
@@ -139,6 +147,7 @@ export class ListLedgerComponent implements OnInit,AfterViewInit {
           columnHeaders: this.columnHeaders}});
       this.loading = false;
       const result = {
+          wheader: this.whheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,
         rowData: data

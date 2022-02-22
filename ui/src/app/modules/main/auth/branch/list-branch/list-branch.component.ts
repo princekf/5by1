@@ -29,13 +29,21 @@ export class ListBranchComponent implements OnInit, AfterViewInit {
     finYearStartDate: 'FinYearStartDate',
     'defaultFinYear.name': 'DefaultFinYear'
   };
-  xheaders = [
-    { header: 'Name', key: 'name', width: 30, },
-    { header: 'Email', key: 'email', width: 40 },
-    { header: 'Code', key: 'code', width: 15 },
-    { header: 'Address', key: 'Address', width: 50 },
-    { header: 'FinYearStartDate', key: 'FinYearStartDate', width: 19 },
-    { header: 'DefaultFinYear', key: 'DefaultFinYear', width: 15 }
+   xheaders = [
+    'Name',
+     'Email',
+     'Code',
+     'Address',
+     'FinYearStartDate',
+    'DefaultFinYear'
+   ];
+  whheaders = [
+    { width: 30, },
+    { width: 40 },
+    {  width: 15 },
+    { width: 50 },
+    {  width: 19 },
+    { width: 15 }
   ];
 
   loading = true;
@@ -137,6 +145,7 @@ export class ListBranchComponent implements OnInit, AfterViewInit {
         data.push(temp);
     });
       const result = {
+          wheader: this.whheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
       rowData: data

@@ -22,15 +22,22 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
   columnHeaders = {
     name: 'Name',
     code: 'Code',
-    'parent.name': 'Parent Name',
-    details: 'Details'
+    'parent.name':  'Parent Name',
+    details: 'Details',
+
   };
   xheaders = [
+    'Name',
+    'Code',
+    'Parent Name',
+   'Details'
+  ];
+  whheaders = [
 
-    { header: 'Name', key: 'name', width: 30, },
-    { header: 'Code', key: 'code', width: 15 },
-    { header: 'Parent Name', key: 'Parent Name', width: 25 },
-    { header: 'Details', key: 'Details', width: 35 }
+    {  width: 30, },
+    {  width: 15 },
+    { width: 25 },
+    { width: 35 }
 ];
 
 
@@ -117,6 +124,7 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
           data.push(temp);
       });
         const result = {
+            wheader: this.whheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,
         rowData: data

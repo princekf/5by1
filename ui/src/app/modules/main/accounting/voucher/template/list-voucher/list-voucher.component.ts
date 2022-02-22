@@ -42,6 +42,7 @@ export class ListVoucherComponent implements OnInit {
     amount: 'Amount',
     details: 'Details',
   };
+
   xheaders = [
 
     { header: 'Voucher #', key: 'number', width: 30, },
@@ -50,7 +51,29 @@ export class ListVoucherComponent implements OnInit {
     { header: 'Compound Ledger', key: 'cledger', width: 30, },
     { header: 'Amount', key: 'amount', width: 30, },
     { header: 'Details', key: 'details', width: 30 }
-   ];
+    ];
+    iheaders = [
+      'Voucher #',
+      'Date',
+       'Primary Ledger',
+      'Compound Ledger',
+     'Amount',
+     'Details',
+    ];
+
+
+    whheaders = [
+
+      { width: 30, },
+      {  width: 15 },
+      { width: 15 },
+      {  width: 15 },
+      {  width: 15 },
+      { width: 25 }
+      ];
+
+
+
   queryParams: QueryData = {};
 
 
@@ -71,7 +94,7 @@ export class ListVoucherComponent implements OnInit {
 
 
   private formatItems = (ledgerMap: Record<string, Ledger>, items: Array<Voucher>): Array<VType> => {
-
+    const t = this.tableHeader;
     const itemsT = [];
     const maxLength = 20;
     const trimLength = 17;
@@ -91,16 +114,21 @@ export class ListVoucherComponent implements OnInit {
         cledger: cledger.name,
       });
       const result1 = {
-
+        rheader: this.iheaders,
+        title: this.tableHeader,
         items: itemsT,
         displayedColumns: this.displayedColumns,
         columnHeaders: this.columnHeaders,
+        wheader: this.whheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,
-        rowData: itemsT
+        rowData: itemsT,
+
 
       };
       this.mainservice.setExport(result1);
+
+
 
     }
     return itemsT;

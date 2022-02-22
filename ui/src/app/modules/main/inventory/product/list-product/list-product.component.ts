@@ -29,15 +29,25 @@ export class ListProductComponent implements AfterViewInit, OnInit  {
     'category.name': 'Category',
     status: 'Status'
   };
-  xheaders = [
-    { header: 'Name', key: 'Name', width: 30 },
-    { header: 'Code', key: 'Code', width: 15 },
-    { header: 'Brand', key: 'Brand', width: 20 },
-    { header: 'Location', key: 'Location', width: 15 },
-    { header: 'Barcode', key: 'Barcode', width: 20 },
-    { header: 'Re-Order', key: 'Re-Order', width: 20 },
-    { header: 'Category', key: 'Category', width: 25 },
-    { header: 'Status', key: 'Status', width: 35 }
+   xheaders = [
+     'Name',
+     'Code',
+     'Brand',
+     'Location',
+     'Barcode',
+     'Re-Order',
+     'Category',
+     'Status'
+   ];
+  whheaders = [
+    { width: 30 },
+    { width: 15 },
+    {  width: 20 },
+    {width: 15 },
+    { width: 20 },
+    {  width: 20 },
+    { width: 25 },
+    {  width: 35 }
 
   ];
 
@@ -121,6 +131,7 @@ export class ListProductComponent implements AfterViewInit, OnInit  {
           data.push(temp);
       });
         const result = {
+          wheader: this.whheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,
         rowData: data
