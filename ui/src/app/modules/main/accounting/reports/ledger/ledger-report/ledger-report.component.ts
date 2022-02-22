@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { MatRadioChange } from '@angular/material/radio';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '@fboenvironments/environment';
 import { LedgerService } from '@fboservices/accounting/ledger.service';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
@@ -23,6 +24,7 @@ interface LedgerReportFields {
   details: string;
 }
 
+interface RowSummary {name: string, credit: number, debit: number}
 @Component({
   selector: 'app-ledger-report',
   templateUrl: './ledger-report.component.html',
@@ -34,7 +36,11 @@ export class LedgerReportComponent implements OnInit {
 
   displayedColumns: string[] = [ 'number', 'date', 'type', 'ledger', 'debit', 'credit', 'details' ];
 
+  sortDisabledColumns: string[] = [ 'date' ];
+
   numberColumns: string[] = [ 'debit', 'credit' ];
+
+  reportType = '';
 
   columnHeaders = {
     number: 'Voucher #',
@@ -61,7 +67,8 @@ export class LedgerReportComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
     private voucherService: VoucherService,
-    private ledgerService: LedgerService,) { }
+    private ledgerService: LedgerService,
+    private router:Router,) { }
 
     private pushIntoItems =
     (items: Array<LedgerReportFields>, voucher: Voucher, amount: number, tType: TransactionType,
@@ -156,7 +163,9 @@ export class LedgerReportComponent implements OnInit {
 
   private loadData = (ledgerId: string, againstId?: string) => {
 
-    this.voucherService.search(this.queryParams).subscribe((vouchers) => {
+    const qParam = {...this.queryParams};
+    qParam.order = [ 'date asc', ...qParam.order ?? [] ];
+    this.voucherService.search(qParam).subscribe((vouchers) => {
 
       const [ items2, otherLids2 ] = this.extractReportItems(vouchers, ledgerId);
       // To show the details of selected ledger, fetch it from server.
@@ -184,13 +193,14 @@ export class LedgerReportComponent implements OnInit {
         this.tableHeader = `Ledger Report -- ${sLedger.name}`;
         let totalDebit = 0;
         let totalCredit = 0;
-        items.forEach((item) => {
+        items.forEach((item, idx: number) => {
 
           item.ledger = ledgerMap[item.ledger].name;
           totalDebit += Number(item.debit);
           totalCredit += Number(item.credit);
 
         });
+        items = this.createDailyOrMonthlySummary(items);
         this.createSummaryRows(items, 'Total', String(totalDebit.toFixed(environment.decimalPlaces)), String(totalCredit.toFixed(environment.decimalPlaces)));
         const [ opBalCr, opBalDr, balCrS, balDrS ] = this.findBalances(totalCredit, totalDebit, sLedger);
         this.createSummaryRows(items, 'Opening Balance', opBalDr, opBalCr);
@@ -208,14 +218,67 @@ export class LedgerReportComponent implements OnInit {
 
   }
 
+  private createDailyOrMonthlySummary = (items:Array<LedgerReportFields>,
+  ) : Array<LedgerReportFields> => {
+
+    if (![ 'daily', 'monthly' ].includes(this.reportType)) {
+
+      return items;
+
+    }
+
+    const format = this.reportType === 'monthly' ? 'MMM - YYYY' : 'DD - MMM - YYYY';
+    const monthD: RowSummary = {
+      name: '',
+      debit: 0,
+      credit: 0
+    };
+    const items2: Array<LedgerReportFields> = [];
+    const dpL = environment.decimalPlaces;
+    items.forEach((item, idx: number) => {
+
+      const cMonth = dayjs(item.date).format(format);
+      monthD.name = cMonth;
+      monthD.credit += Number(item.credit);
+      monthD.debit += Number(item.debit);
+      items2.push(item);
+
+      if (idx) {
+
+        const nMonth = dayjs(items[idx + 1]?.date)?.format(format);
+        if (monthD.name !== nMonth) {
+
+          this.createSummaryRows(items2, monthD.name, monthD.debit.toFixed(dpL), monthD.credit.toFixed(dpL));
+          monthD.credit = 0;
+          monthD.debit = 0;
+
+        }
+
+      }
+
+
+    });
+    return items2;
+
+  }
 
   ngOnInit(): void {
 
     this.filterItem = new FilterItem(FilterLedgerReportComponent, {});
     this.activatedRoute.queryParams.subscribe((value) => {
 
-      const { whereS, ...qParam } = value;
+      const { whereS, order, rtype, ...qParam } = value;
+      this.reportType = rtype;
       this.queryParams = qParam;
+      if (typeof order === 'string') {
+
+        this.queryParams.order = [ order ];
+
+      } else {
+
+        this.queryParams.order = order;
+
+      }
       if (whereS) {
 
         this.loading = true;
@@ -233,6 +296,15 @@ export class LedgerReportComponent implements OnInit {
 
   }
 
+  handleReportTypeChange = (evt: MatRadioChange):void => {
+
+    const {where, ...others} = this.queryParams;
+    const whereS = JSON.stringify(where);
+    this.router.navigate([], { queryParams: {whereS,
+      rtype: evt.value,
+      ...others} });
+
+  }
 
   columnParsingFn = (element: unknown, column: string): string => {
 

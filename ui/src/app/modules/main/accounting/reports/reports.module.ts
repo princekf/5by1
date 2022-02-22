@@ -11,6 +11,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {MatRadioModule} from '@angular/material/radio';
 
 import { MatDayjsDateModule } from '@tabuckner/material-dayjs-adapter';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -26,7 +27,7 @@ import { FilterLedgerGroupReportComponent } from './ledger-group/filter-ledger-g
   imports: [
     CommonModule, ReportsRoutingModule, DataTableModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule,
     ReactiveFormsModule, FormsModule, MatAutocompleteModule, MatSelectModule, MatFormFieldModule, MatInputModule,
-    MatDayjsDateModule, TreetableModule, NgxSkeletonLoaderModule,
+    MatDayjsDateModule, TreetableModule, NgxSkeletonLoaderModule, MatRadioModule
   ],
   providers: [ ...dayJSProviders ]
 })

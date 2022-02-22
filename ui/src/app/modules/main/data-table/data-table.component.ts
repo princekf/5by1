@@ -28,6 +28,8 @@ export class DataTableComponent {
 
   @Input() numberColumns: Array<string> = [];
 
+  @Input() sortDisabledColumns: Array<string> = [];
+
   private _tableData:ListQueryRespType<unknown>;
 
   totalItems:number;
@@ -240,6 +242,17 @@ export class DataTableComponent {
 
     }
     return '';
+
+  }
+
+  isSortingDisabled = (cName:string):boolean => {
+
+    if (this.sortDisabledColumns.includes(cName)) {
+
+      return true;
+
+    }
+    return false;
 
   }
 
