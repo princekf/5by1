@@ -34,8 +34,19 @@ numberColumns: string[] = [ 'totalAmount' ];
     grandTotal: 'Grand Total',
     isReceived: 'Received'
   };
-  
   xheaders = [
+    {key: 'customer.name', width: 30, },
+    {key: 'invoiceDate',  width: 15 },
+    {key: 'invoiceNumber',  width: 20 },
+    {key: 'totalAmount',  width: 20 },
+    { key: 'totalDiscount', width: 20 },
+    { key: 'totalTax', width: 15 },
+    {key: 'grandTotal',  width: 25 },
+    { key: 'isReceived', width: 25 }
+
+  ];
+
+  iheaders = [
     'Customer',
      'Date',
      'Invoice #',
@@ -45,17 +56,7 @@ numberColumns: string[] = [ 'totalAmount' ];
      'Grand Total',
      'Received'
   ];
-  whheaders = [
-    { width: 30, },
-    {  width: 15 },
-    {  width: 20 },
-    {  width: 20 },
-    {  width: 20 },
-    { width: 15 },
-    {  width: 25 },
-    {  width: 25 }
 
-  ];
 
   queryParams: QueryData = { };
 
@@ -152,7 +153,7 @@ numberColumns: string[] = [ 'totalAmount' ];
         data.push(temp);
     });
       const result = {
-        wheader: this.whheaders,
+        rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
       rowData: data

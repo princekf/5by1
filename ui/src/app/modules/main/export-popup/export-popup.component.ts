@@ -61,7 +61,7 @@ export class ExportPopupComponent implements OnInit {
   }
   exportExcel(): void {
     const array: Array<string> = [
-       this.head.filename + ``,
+      this.head.filename + ``,
       'Subheader:' + this.head.filename,
 
   ];
@@ -73,21 +73,12 @@ export class ExportPopupComponent implements OnInit {
 
     worksheet.getCell(`A1`, 'n').value = array.join('\n');
     worksheet.mergeCells('A1:G2');
+
     worksheet.getCell(`A1`).alignment = {vertical: 'middle', horizontal: 'center' };
     worksheet.getCell(`A2`).alignment = { horizontal: 'center' };
 
-
-    if (this.router.url === '/voucher'){
-      worksheet.addRow ( this.export.rheader, 'n');
-      worksheet.columns = this.export.eheader;
-
-   }
-   else{
-    worksheet.addRow ( this.export.eheader, 'n');
-
-    worksheet.columns = this.export.wheader;
-
-   }
+    worksheet.addRow ( this.export.rheader, 'n');
+    worksheet.columns = this.export.eheader;
 
     this.export.rowData.forEach((e: any) => {
   worksheet.addRow (e, 'n');

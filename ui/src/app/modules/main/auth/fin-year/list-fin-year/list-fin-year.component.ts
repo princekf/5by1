@@ -29,7 +29,16 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
     'branch.name': 'Branch',
 
   };
-   xheaders = [
+  xheaders = [
+
+    { key: 'name' , width: 30, },
+    { key: 'code' ,width: 15 },
+    {key: 'startDate' , width: 15 },
+    {key: 'endDate' , width: 15 },
+    {key: 'branch.name' , width: 25 },
+
+  ];
+   iheaders = [
     'Name',
      'Code',
  'StartDate',
@@ -37,15 +46,7 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
      'Branch',
 
    ];
-  whheaders = [
 
-    {  width: 30, },
-    { width: 15 },
-    { width: 15 },
-    { width: 15 },
-    { width: 25 },
-
-  ];
 
   loading = true;
 
@@ -150,7 +151,7 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
         data.push(temp);
     });
       const result = {
-          wheader: this.whheaders,
+          rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
       rowData: data

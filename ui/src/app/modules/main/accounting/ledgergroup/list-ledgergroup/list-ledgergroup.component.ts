@@ -27,18 +27,19 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
 
   };
   xheaders = [
+
+    {key:'name', width: 30, },
+    {key:'code',  width: 15 },
+    { key:'parent',width: 25 },
+    { key:'details',width: 35 }
+];
+  iheaders = [
     'Name',
     'Code',
     'Parent Name',
    'Details'
   ];
-  whheaders = [
 
-    {  width: 30, },
-    {  width: 15 },
-    { width: 25 },
-    { width: 35 }
-];
 
 
   queryParams: QueryData = { };
@@ -124,7 +125,7 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
           data.push(temp);
       });
         const result = {
-            wheader: this.whheaders,
+            rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,
         rowData: data

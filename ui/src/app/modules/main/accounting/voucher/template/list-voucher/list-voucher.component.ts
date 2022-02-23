@@ -45,12 +45,12 @@ export class ListVoucherComponent implements OnInit {
 
   xheaders = [
 
-    { header: 'Voucher #', key: 'number', width: 30, },
-    { header: 'Date', key: 'date', width: 30, },
-    { header: 'Primary Ledger', key: 'pledger', width: 30, },
-    { header: 'Compound Ledger', key: 'cledger', width: 30, },
-    { header: 'Amount', key: 'amount', width: 30, },
-    { header: 'Details', key: 'details', width: 30 }
+    { key: 'number', width: 30, },
+    { key: 'date', width: 30, },
+    {  key: 'pledger', width: 30, },
+    {  key: 'cledger', width: 30, },
+    {  key: 'amount', width: 30, },
+    {  key: 'details', width: 30 }
     ];
     iheaders = [
       'Voucher #',
@@ -62,15 +62,7 @@ export class ListVoucherComponent implements OnInit {
     ];
 
 
-    whheaders = [
 
-      { width: 30, },
-      {  width: 15 },
-      { width: 15 },
-      {  width: 15 },
-      {  width: 15 },
-      { width: 25 }
-      ];
 
 
 
@@ -119,7 +111,7 @@ export class ListVoucherComponent implements OnInit {
         items: itemsT,
         displayedColumns: this.displayedColumns,
         columnHeaders: this.columnHeaders,
-        wheader: this.whheaders,
+
         eheader: this.xheaders,
         header: this.columnHeaders,
         rowData: itemsT,

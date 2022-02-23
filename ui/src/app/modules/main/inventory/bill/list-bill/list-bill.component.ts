@@ -37,7 +37,18 @@ export class ListBillComponent implements  AfterViewInit, OnInit  {
     isPaid: 'Paid'
   };
   xheaders = [
-    
+    {key: 'vendor.name',  width: 25 },
+    { key: 'billDate', width: 30, },
+    {key: 'billNumber', width: 25 },
+    {key: 'totalAmount',  width: 20 },
+    {key: 'totalDiscount',  width: 25 },
+    {key: 'totalTax',  width: 30 },
+    {key: 'grandTotal',  width: 25 },
+    {key: 'isPaid',  width: 25 }
+
+  ];
+  iheaders = [
+
      'Vendor',
      'Bill Date',
     'bill Number #',
@@ -47,16 +58,7 @@ export class ListBillComponent implements  AfterViewInit, OnInit  {
     'Grand Total',
     'Paid'
   ];
-  whheaders = [
-    {  width: 25 },
-    {  width: 30, },
-    { width: 25 },
-    {  width: 20 },
-    {  width: 25 },
-    {  width: 30 },
-    {  width: 25 }
 
-  ];
 
   queryParams: QueryData = { };
 
@@ -164,7 +166,7 @@ export class ListBillComponent implements  AfterViewInit, OnInit  {
         data.push(temp);
     });
       const result = {
-        wheader: this.whheaders,
+        rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
       rowData: data

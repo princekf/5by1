@@ -31,12 +31,20 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
     gstNo: 'GST No'
   };
   xheaders = [
-    { header: 'Name', key: 'Name', width: 30, },
-    { header: 'E-Mail', key: 'E-Mail', width: 35 },
-    { header: 'Mobile', key: 'Mobile', width: 19 },
-    { header: 'State', key: 'State', width: 20 },
-    { header: 'Address', key: 'Address', width: 40 },
-    { header: 'GST No', key: 'GST No', width: 25 }
+    { key: 'name', width: 30, },
+    {  key: 'eMail', width: 35 },
+    {  key: 'mobile', width: 19 },
+    {  key: 'state', width: 20 },
+    {  key: 'address', width: 40 },
+    {  key: 'gstNo', width: 25 }
+  ];
+  iheaders = [
+     'Name',
+  'EMail',
+   'Mobile',
+     'State',
+    'Address',
+   'GST No'
   ];
 
   queryParams: QueryData = { };
@@ -116,6 +124,7 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
     });
       const result = {
       eheader: this.xheaders,
+      rheader: this.iheaders,
       header: this.columnHeaders,
       rowData: data
     };

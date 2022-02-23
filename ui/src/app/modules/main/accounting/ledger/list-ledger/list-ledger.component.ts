@@ -21,6 +21,7 @@ export class ListLedgerComponent implements OnInit,AfterViewInit {
   [x: string]: any;
 
   displayedColumns: string[] = [ 'name', 'code', 'ledgerGroup.name', 'obAmount', 'obType', 'details' ];
+l = this.displayedColumns.length;
 
   columnHeaders = {
     name: 'Name',
@@ -29,9 +30,17 @@ export class ListLedgerComponent implements OnInit,AfterViewInit {
     obAmount: 'Opening Balance',
     obType: 'Opening Type',
     details: 'Details',
-
   };
-   xheaders = [
+  xheaders = [
+
+    {key: 'name', width: 30, },
+    { key: 'code', width: 15 },
+    {key: 'ledgerGroup.name', width: 15 },
+    { key: 'obAmount', width: 15 },
+    { key: 'obType', width: 15 },
+    { key: 'details' , width: 25 }
+    ];
+   iheaders = [
     'Name',
    'Code',
     'Ledger Group',
@@ -40,15 +49,7 @@ export class ListLedgerComponent implements OnInit,AfterViewInit {
      'Details',
    ];
 
-    whheaders = [
 
-    { width: 30, },
-    {  width: 15 },
-    { width: 15 },
-    {  width: 15 },
-    {  width: 15 },
-    { width: 25 }
-    ];
 
 
   loading = true;
@@ -132,7 +133,6 @@ export class ListLedgerComponent implements OnInit,AfterViewInit {
     const data = [];
     this.ledgerService.queryData(tParams).subscribe((items) => {
 
-
       items.forEach((element: any) => {
         const temp = [element.name, element.code, element.ledgerGroup.name, element.obAmount, element.obType, element.details];
         data.push(temp);
@@ -147,7 +147,8 @@ export class ListLedgerComponent implements OnInit,AfterViewInit {
           columnHeaders: this.columnHeaders}});
       this.loading = false;
       const result = {
-          wheader: this.whheaders,
+        len: this.l,
+          rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,
         rowData: data

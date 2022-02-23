@@ -29,7 +29,18 @@ export class ListProductComponent implements AfterViewInit, OnInit  {
     'category.name': 'Category',
     status: 'Status'
   };
-   xheaders = [
+  xheaders = [
+    {key: 'name' , width: 30 },
+    {key: 'code' , width: 15 },
+    {key: 'brand' ,  width: 20 },
+    {key: 'location' ,width: 15 },
+    {key: 'barcode' , width: 20 },
+    {key: 'reorderLevel' ,  width: 20 },
+    {key: 'category.name' , width: 25 },
+    {key: 'status' ,  width: 35 }
+
+  ];
+   iheaders = [
      'Name',
      'Code',
      'Brand',
@@ -39,17 +50,7 @@ export class ListProductComponent implements AfterViewInit, OnInit  {
      'Category',
      'Status'
    ];
-  whheaders = [
-    { width: 30 },
-    { width: 15 },
-    {  width: 20 },
-    {width: 15 },
-    { width: 20 },
-    {  width: 20 },
-    { width: 25 },
-    {  width: 35 }
 
-  ];
 
   queryParams: QueryData = { };
 
@@ -125,13 +126,13 @@ export class ListProductComponent implements AfterViewInit, OnInit  {
       this.productService.queryData(tParams).subscribe((items) => {
 
         items.forEach((element: any) => {
-          const temp = [element.name, element.code, element.brand, element.location, element.reorderLevel,
+          const temp = [element.name, element.code, element.brand, element.location,element.barcode, element.reorderLevel,
             element.category?.name, element.status];
 
           data.push(temp);
       });
         const result = {
-          wheader: this.whheaders,
+          rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,
         rowData: data

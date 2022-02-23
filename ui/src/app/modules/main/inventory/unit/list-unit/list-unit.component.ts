@@ -28,20 +28,21 @@ export class ListUnitComponent implements  AfterViewInit, OnInit  {
   };
 
   xheaders = [
-  'Name',
-   'Code',
-   'Decimals',
-   'Base Unit',
-     'Times'
-  ];
-  whheaders = [
-    {width: 30, },
-    {  width: 15 },
-    {  width: 20 },
-    { width: 15 },
-    {  width: 15 }
-  ];
 
+    {key: 'name', width: 30, },
+    {  key: 'code', width: 30, },
+    {  key: 'decimalPlaces', width: 30, },
+    {  key: 'parent.name', width: 30, },
+    {  key: 'times', width: 30, },
+
+    ];
+    iheaders = [
+      'Name',
+     'Code',
+     'Decimals',
+       'Base Unit',
+      'Times'
+    ];
   queryParams: QueryData = { };
 
   routerSubscription: Subscription;
@@ -117,7 +118,7 @@ export class ListUnitComponent implements  AfterViewInit, OnInit  {
           data.push(temp);
       });
         const result = {
-          wheader: this.whheaders,
+          rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,
         rowData: data

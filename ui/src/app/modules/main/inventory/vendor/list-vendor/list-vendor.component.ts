@@ -27,7 +27,16 @@ export class ListVendorComponent implements  AfterViewInit, OnInit  {
     address: 'Address',
     gstNo: 'GST No'
   };
-   xheaders = [
+  xheaders = [
+    {key:'name',  width: 30, },
+    { key:'email',  width: 45 },
+    {key:'mobile', width: 20 },
+    {key:'state',  width: 15 },
+    {key:'address',   width: 45 },
+    {key:'gstNo',   width: 20 }
+  ];
+
+   iheaders = [
      'Name',
     'E-Mail',
    'Mobile',
@@ -35,14 +44,6 @@ export class ListVendorComponent implements  AfterViewInit, OnInit  {
     'Address',
     'GST No'
    ];
-  whheaders = [
-    {  width: 30, },
-    {  width: 45 },
-    {width: 20 },
-    { width: 15 },
-    {  width: 45 },
-    {  width: 20 }
-  ];
 
 
   queryParams: QueryData = { };
@@ -122,7 +123,7 @@ export class ListVendorComponent implements  AfterViewInit, OnInit  {
           data.push(temp);
       });
         const result = {
-          wheader: this.whheaders,
+          rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,
         rowData: data

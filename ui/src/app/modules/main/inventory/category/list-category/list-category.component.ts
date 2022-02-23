@@ -29,20 +29,21 @@ export class ListCategoryComponent implements AfterViewInit, OnInit {
     description: 'description',
   };
   xheaders = [
+    {key: 'parent.name' , width: 20 },
+    {key: 'name' , width: 30, },
+    {key: 'unit.name' ,  width: 20 },
+    { key: 'hsnNumber' , width: 20 },
+    { key: 'description' , width: 30 },
+
+  ];
+  iheaders = [
    'Parent',
     'Name',
     'Unit',
    'hsnNumber',
   'description',
   ];
-  whheaders = [
-    { width: 20 },
-    { width: 30, },
-    {  width: 20 },
-    {  width: 20 },
-    {  width: 30 },
 
-  ];
 
   queryParams: QueryData = { };
 
@@ -128,7 +129,7 @@ export class ListCategoryComponent implements AfterViewInit, OnInit {
           data.push(temp);
       });
         const result = {
-          wheader: this.whheaders,
+          rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,
         rowData: data

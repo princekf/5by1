@@ -26,20 +26,21 @@ export class ListTaxComponent implements  AfterViewInit, OnInit  {
     appliedTo: 'Applied To (%)',
     description: 'Description'
   };
-    xheaders = [
+  xheaders = [
+    {key : 'groupName' , width: 30 },
+    {key : 'name' , width: 30 },
+    { key : 'rate' , width: 20 },
+    { key : 'appliedTo' , width: 15 },
+    {key : 'description' , width: 30 },
+  ];
+    iheaders = [
    'Group Name',
     'Name',
     'Rate (%)',
      'Applied To (%)',
      'Description'
     ];
-  whheaders = [
-    { width: 30 },
-    {width: 30 },
-    { width: 20 },
-    { width: 15 },
-    {width: 30 },
-  ];
+
   queryParams: QueryData = { };
 
   routerSubscription: Subscription;
@@ -118,7 +119,7 @@ export class ListTaxComponent implements  AfterViewInit, OnInit  {
         data.push(temp);
     });
       const result = {
-        wheader: this.whheaders,
+        rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
       rowData: data

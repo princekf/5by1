@@ -28,19 +28,19 @@ export class ListCompanyComponent implements OnInit {
     address: 'Address',
 
   };
-   xheaders = [
+   iheaders = [
   'Name',
     'Code',
    'Email',
      'Address',
 
    ];
-  whheaders = [
+  xheaders = [
 
-    {  width: 30, },
-    {  width: 15 },
-    {  width: 35 },
-    { width: 50 },
+    {key: 'name' , width: 30, },
+    {key: 'code' ,   width: 15 },
+    { key: 'email' ,  width: 35 },
+    {key: 'address' ,  width: 50 },
   ];
 
   loading = true;
@@ -124,7 +124,7 @@ export class ListCompanyComponent implements OnInit {
         data.push(temp);
     });
       const result = {
-          wheader: this.whheaders,
+          rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
       rowData: data

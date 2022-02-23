@@ -36,6 +36,15 @@ export class ListRevenueComponent implements AfterViewInit, OnInit  {
 
   };
   xheaders = [
+    {key: 'receivedDate' ,  width: 25 },
+    {key: 'customer.name' , width: 30 },
+    {key: 'invoice.invoiceNumber' , width: 20 },
+    {key: 'bank.name' , width: 20 },
+    {key: 'category' , width: 25 },
+    {key: 'amount' , width: 25 },
+    {key: 'description' , width: 30 },
+  ];
+  iheaders = [
    'Received Date',
     'Customer',
      'Invoice',
@@ -45,15 +54,7 @@ export class ListRevenueComponent implements AfterViewInit, OnInit  {
     'Description',
 
   ];
-  whheaders = [
-    {  width: 25 },
-    { width: 30 },
-    { width: 20 },
-    { width: 20 },
-    { width: 25 },
-    { width: 25 },
-    { width: 30 },
-  ];
+
 
   queryParams: QueryData = { };
 
@@ -152,7 +153,7 @@ export class ListRevenueComponent implements AfterViewInit, OnInit  {
         data.push(temp);
     });
       const result = {
-        wheader: this.whheaders,
+        rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
       rowData: data
