@@ -18,7 +18,7 @@ import { MainService } from '../../../../../services/main.service';
 export class ListUnitComponent implements  AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'parent.name', 'times' ];
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     name: 'Name',
     code: 'Code',
@@ -118,6 +118,7 @@ export class ListUnitComponent implements  AfterViewInit, OnInit  {
           data.push(temp);
       });
         const result = {
+          cell:this.c,
           rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,

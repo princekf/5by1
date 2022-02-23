@@ -20,7 +20,7 @@ import { MainService } from '../../../../../services/main.service';
 export class ListBranchComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'email', 'code', 'address', 'finYearStartDate', 'defaultFinYear.name' ];
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     name: 'Name',
     email: 'Email',
@@ -33,7 +33,7 @@ export class ListBranchComponent implements OnInit, AfterViewInit {
     {key: 'name' , width: 30, },
     {key: 'email' , width: 40 },
     {key: 'code' ,  width: 15 },
-    { key: 'address' ,width: 50 },
+    { key: 'address' , width: 50 },
     {key: 'finYearStartDate' ,  width: 19 },
     {key: 'defaultFinYear.name' , width: 15 }
   ];
@@ -146,6 +146,7 @@ export class ListBranchComponent implements OnInit, AfterViewInit {
         data.push(temp);
     });
       const result = {
+        cell:this.c,
           rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,

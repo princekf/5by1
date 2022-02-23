@@ -19,7 +19,7 @@ export class ListCostCentreComponent implements OnInit, AfterViewInit  {
 
   displayedColumns: string[] = [ 'name', 'details' ];
 
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     name: 'Name',
     details: 'Details',
@@ -121,6 +121,7 @@ export class ListCostCentreComponent implements OnInit, AfterViewInit  {
         data.push(temp);
     });
       const result = {
+        cell:this.c,
           rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,

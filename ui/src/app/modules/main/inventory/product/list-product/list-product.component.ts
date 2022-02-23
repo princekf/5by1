@@ -18,7 +18,7 @@ import { MainService } from '../../../../../services/main.service';
 export class ListProductComponent implements AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [ 'name', 'code', 'brand', 'location', 'barcode', 'reorderLevel', 'category.name', 'status' ];
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     name: 'Name',
     code: 'Code',
@@ -33,7 +33,7 @@ export class ListProductComponent implements AfterViewInit, OnInit  {
     {key: 'name' , width: 30 },
     {key: 'code' , width: 15 },
     {key: 'brand' ,  width: 20 },
-    {key: 'location' ,width: 15 },
+    {key: 'location' , width: 15 },
     {key: 'barcode' , width: 20 },
     {key: 'reorderLevel' ,  width: 20 },
     {key: 'category.name' , width: 25 },
@@ -126,12 +126,13 @@ export class ListProductComponent implements AfterViewInit, OnInit  {
       this.productService.queryData(tParams).subscribe((items) => {
 
         items.forEach((element: any) => {
-          const temp = [element.name, element.code, element.brand, element.location,element.barcode, element.reorderLevel,
+          const temp = [element.name, element.code, element.brand, element.location, element.barcode, element.reorderLevel,
             element.category?.name, element.status];
 
           data.push(temp);
       });
         const result = {
+          cell:this.c,
           rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,

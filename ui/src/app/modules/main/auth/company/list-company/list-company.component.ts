@@ -20,7 +20,7 @@ export class ListCompanyComponent implements OnInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'email', 'address'];
 
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     name: 'Name',
     code: 'Code',
@@ -124,6 +124,7 @@ export class ListCompanyComponent implements OnInit {
         data.push(temp);
     });
       const result = {
+        cell:this.c,
           rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,

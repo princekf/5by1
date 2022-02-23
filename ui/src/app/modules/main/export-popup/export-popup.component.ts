@@ -72,7 +72,7 @@ export class ExportPopupComponent implements OnInit {
     const name = this.head.filename ;
 
     worksheet.getCell(`A1`, 'n').value = array.join('\n');
-    worksheet.mergeCells('A1:G2');
+    worksheet.mergeCells(1,1,2,this.export.cell);
 
     worksheet.getCell(`A1`).alignment = {vertical: 'middle', horizontal: 'center' };
     worksheet.getCell(`A2`).alignment = { horizontal: 'center' };

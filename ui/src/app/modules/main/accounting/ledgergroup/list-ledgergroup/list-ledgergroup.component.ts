@@ -18,7 +18,7 @@ import { MainService } from '../../../../../services/main.service';
 export class ListLedgergroupComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'parent.name', 'details' ];
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     name: 'Name',
     code: 'Code',
@@ -28,10 +28,10 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
   };
   xheaders = [
 
-    {key:'name', width: 30, },
-    {key:'code',  width: 15 },
-    { key:'parent',width: 25 },
-    { key:'details',width: 35 }
+    {key: 'name', width: 30, },
+    {key: 'code',  width: 15 },
+    { key: 'parent', width: 25 },
+    { key: 'details', width: 35 }
 ];
   iheaders = [
     'Name',
@@ -125,6 +125,7 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
           data.push(temp);
       });
         const result = {
+          cell:this.c,
             rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,

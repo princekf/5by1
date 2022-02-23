@@ -18,7 +18,7 @@ import { MainService } from '../../../../../services/main.service';
 export class ListTaxComponent implements  AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [ 'groupName', 'name', 'rate', 'appliedTo', 'description' ];
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     groupName: 'Group Name',
     name: 'Name',
@@ -119,6 +119,7 @@ export class ListTaxComponent implements  AfterViewInit, OnInit  {
         data.push(temp);
     });
       const result = {
+        cell:this.c,
         rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,

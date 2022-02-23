@@ -42,7 +42,7 @@ export class ListVoucherComponent implements OnInit {
     amount: 'Amount',
     details: 'Details',
   };
-
+  c = this.displayedColumns.length;
   xheaders = [
 
     { key: 'number', width: 30, },
@@ -87,6 +87,7 @@ export class ListVoucherComponent implements OnInit {
 
   private formatItems = (ledgerMap: Record<string, Ledger>, items: Array<Voucher>): Array<VType> => {
     const t = this.tableHeader;
+
     const itemsT = [];
     const maxLength = 20;
     const trimLength = 17;
@@ -104,8 +105,11 @@ export class ListVoucherComponent implements OnInit {
         amount: `${firstTr.amount} ${tType}`,
         pledger: pledger.name,
         cledger: cledger.name,
+
+
       });
       const result1 = {
+        cell:this.c,
         rheader: this.iheaders,
         title: this.tableHeader,
         items: itemsT,
