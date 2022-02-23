@@ -21,7 +21,7 @@ export class ListLedgerComponent implements OnInit,AfterViewInit {
   [x: string]: any;
 
   displayedColumns: string[] = [ 'name', 'code', 'ledgerGroup.name', 'obAmount', 'obType', 'details' ];
-l = this.displayedColumns.length;
+  c = this.displayedColumns.length;
 
   columnHeaders = {
     name: 'Name',
@@ -147,7 +147,7 @@ l = this.displayedColumns.length;
           columnHeaders: this.columnHeaders}});
       this.loading = false;
       const result = {
-        len: this.l,
+        cell:this.c,
           rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,

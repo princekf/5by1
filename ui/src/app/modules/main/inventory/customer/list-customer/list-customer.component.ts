@@ -21,7 +21,7 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
 
 
   displayedColumns: string[] = [ 'name', 'email', 'mobile', 'state', 'address', 'gstNo' ];
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     name: 'Name',
     email: 'EMail',
@@ -123,6 +123,7 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
         data.push(temp);
     });
       const result = {
+        cell:this.c,
       eheader: this.xheaders,
       rheader: this.iheaders,
       header: this.columnHeaders,

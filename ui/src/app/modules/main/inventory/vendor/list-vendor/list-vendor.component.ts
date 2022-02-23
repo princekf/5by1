@@ -18,7 +18,7 @@ import { MainService } from '../../../../../services/main.service';
 export class ListVendorComponent implements  AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [ 'name', 'email', 'mobile', 'state', 'address', 'gstNo' ];
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     name: 'Name',
     email: 'E-Mail',
@@ -28,12 +28,12 @@ export class ListVendorComponent implements  AfterViewInit, OnInit  {
     gstNo: 'GST No'
   };
   xheaders = [
-    {key:'name',  width: 30, },
-    { key:'email',  width: 45 },
-    {key:'mobile', width: 20 },
-    {key:'state',  width: 15 },
-    {key:'address',   width: 45 },
-    {key:'gstNo',   width: 20 }
+    {key: 'name',  width: 30, },
+    { key: 'email',  width: 45 },
+    {key: 'mobile', width: 20 },
+    {key: 'state',  width: 15 },
+    {key: 'address',   width: 45 },
+    {key: 'gstNo',   width: 20 }
   ];
 
    iheaders = [
@@ -123,6 +123,7 @@ export class ListVendorComponent implements  AfterViewInit, OnInit  {
           data.push(temp);
       });
         const result = {
+          cell:this.c,
           rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,

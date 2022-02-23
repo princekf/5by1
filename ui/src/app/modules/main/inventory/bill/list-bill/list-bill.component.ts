@@ -23,6 +23,7 @@ export class ListBillComponent implements  AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [ 'vendor.name', 'billDate', 'billNumber', 'totalAmount',
   'totalDiscount', 'totalTax', 'grandTotal', 'isPaid' ];
+  c = this.displayedColumns.length;
 
   numberColumns: string[] = [ 'totalAmount' ];
 
@@ -166,6 +167,7 @@ export class ListBillComponent implements  AfterViewInit, OnInit  {
         data.push(temp);
     });
       const result = {
+        cell:this.c,
         rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,

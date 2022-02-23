@@ -19,7 +19,7 @@ export class ListBankComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'type', 'name', 'openingBalance', 'description' ];
 
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     type: 'Type',
     name: 'Name',
@@ -33,10 +33,10 @@ export class ListBankComponent implements OnInit, AfterViewInit {
     'description',
   ];
   xheaders = [
-    {key: 'type' ,width: 15 },
-    {key: 'name' ,width: 30, },
+    {key: 'type' , width: 15 },
+    {key: 'name' , width: 30, },
     {key: 'openingBalance' , width: 20 },
-    {key: 'description' ,width: 25 }
+    {key: 'description' , width: 25 }
   ];
 
 
@@ -121,6 +121,7 @@ export class ListBankComponent implements OnInit, AfterViewInit {
         data.push(temp);
     });
       const result = {
+        cell:this.c,
         rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,

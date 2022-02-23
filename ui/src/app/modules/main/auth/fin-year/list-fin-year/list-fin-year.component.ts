@@ -20,7 +20,7 @@ import { MainService } from '../../../../../services/main.service';
 export class ListFinYearComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'startDate', 'endDate', 'branch.name' ];
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     name: 'Name',
     code: 'Code',
@@ -32,7 +32,7 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
   xheaders = [
 
     { key: 'name' , width: 30, },
-    { key: 'code' ,width: 15 },
+    { key: 'code' , width: 15 },
     {key: 'startDate' , width: 15 },
     {key: 'endDate' , width: 15 },
     {key: 'branch.name' , width: 25 },
@@ -151,6 +151,7 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
         data.push(temp);
     });
       const result = {
+        cell:this.c,
           rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,

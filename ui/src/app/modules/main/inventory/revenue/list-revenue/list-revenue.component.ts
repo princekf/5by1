@@ -22,7 +22,7 @@ export class ListRevenueComponent implements AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [ 'receivedDate', 'customer.name', 'invoice.invoiceNumber', 'bank.name',
   'category', 'amount', 'description' ];
-
+  c = this.displayedColumns.length;
   numberColumns: string[] = [ 'amount' ];
 
   columnHeaders = {
@@ -153,6 +153,7 @@ export class ListRevenueComponent implements AfterViewInit, OnInit  {
         data.push(temp);
     });
       const result = {
+        cell:this.c,
         rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,

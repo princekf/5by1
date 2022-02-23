@@ -20,7 +20,7 @@ import { MainService } from '../../../../../services/main.service';
 export class ListCategoryComponent implements AfterViewInit, OnInit {
 
   displayedColumns: string[] = [ 'parent.name', 'name', 'unit.name', 'hsnNumber', 'description' ];
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     'parent.name': 'Parent',
     name: 'Name',
@@ -129,6 +129,7 @@ export class ListCategoryComponent implements AfterViewInit, OnInit {
           data.push(temp);
       });
         const result = {
+          cell:this.c,
           rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,

@@ -21,7 +21,7 @@ import { MainService } from '../../../../../services/main.service';
 export class ListUserComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'email', 'role' ];
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     name: 'Name',
     email: 'Email',
@@ -35,9 +35,9 @@ export class ListUserComponent implements OnInit, AfterViewInit {
 
 
   xheaders: any = [
-    {key:'name',  width: 40 },
-      { key:'email',  width: 50 },
-      { key:'role',  width: 10 },
+    {key: 'name',  width: 40 },
+      { key: 'email',  width: 50 },
+      { key: 'role',  width: 10 },
 
   ];
 
@@ -125,6 +125,7 @@ export class ListUserComponent implements OnInit, AfterViewInit {
         data.push(temp);
     });
       const result = {
+        cell:this.c,
           rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
