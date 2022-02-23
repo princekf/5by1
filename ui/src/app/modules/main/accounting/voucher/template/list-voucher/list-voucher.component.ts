@@ -109,7 +109,7 @@ export class ListVoucherComponent implements OnInit {
 
       });
       const result1 = {
-        cell:this.c,
+        cell: this.c,
         rheader: this.iheaders,
         title: this.tableHeader,
         items: itemsT,

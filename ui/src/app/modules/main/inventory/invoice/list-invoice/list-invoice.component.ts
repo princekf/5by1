@@ -153,7 +153,7 @@ numberColumns: string[] = [ 'totalAmount' ];
         data.push(temp);
     });
       const result = {
-        cell:this.c,
+        cell: this.c,
         rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,

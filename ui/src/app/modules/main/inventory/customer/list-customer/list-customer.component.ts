@@ -123,7 +123,7 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
         data.push(temp);
     });
       const result = {
-        cell:this.c,
+        cell: this.c,
       eheader: this.xheaders,
       rheader: this.iheaders,
       header: this.columnHeaders,

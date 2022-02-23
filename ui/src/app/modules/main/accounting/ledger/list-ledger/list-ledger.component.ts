@@ -147,7 +147,7 @@ export class ListLedgerComponent implements OnInit,AfterViewInit {
           columnHeaders: this.columnHeaders}});
       this.loading = false;
       const result = {
-        cell:this.c,
+        cell: this.c,
           rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CompanyService } from '@fboservices/auth/company.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
@@ -16,7 +16,7 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-company.component.html',
   styleUrls: [ './list-company.component.scss' ]
 })
-export class ListCompanyComponent implements OnInit {
+export class ListCompanyComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'email', 'address'];
 
@@ -124,7 +124,7 @@ export class ListCompanyComponent implements OnInit {
         data.push(temp);
     });
       const result = {
-        cell:this.c,
+        cell: this.c,
           rheader: this.iheaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
