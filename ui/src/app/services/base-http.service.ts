@@ -70,16 +70,6 @@ export class BaseHTTPService<T> {
 
   }
 
-  public queryData(queryParams: QueryData): Observable<Array<T>> {
-
-    const filterParam = JSON.stringify(queryParams);
-    let params = new HttpParams();
-    params = params.set('filter', filterParam);
-    const itemsR$ = this.http.get<Array<T>>(this.API_URI, { params });
-    return itemsR$;
-
-  }
-
   public save(item: T): Observable<void> {
 
     return this.http.post<void>(this.API_URI, item).pipe(
