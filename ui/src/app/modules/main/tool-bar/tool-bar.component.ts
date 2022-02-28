@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
-
+import { MainService } from '../../../services/main.service';
 @Component({
   selector: 'app-tool-bar',
   templateUrl: './tool-bar.component.html',
@@ -15,14 +15,26 @@ export class ToolBarComponent implements OnInit {
 
   @Input() subHeader: string;
 
-  @Output() onImportClickEvent = new EventEmitter<File>();
+
+  @Output() importClickEvent = new EventEmitter<File>();
+
+  @Output() exportClickEvent = new EventEmitter<void>();
 
 
-  constructor(private readonly router: Router,
+  constructor(
+    private mainservice: MainService,
+    private readonly router: Router,
     @Inject(DOCUMENT) private document: Document) { }
 
   ngOnInit(): void {
+    const name = {
+      filename: this.mainHeader,
+    };
+    this.mainservice.setHd(name);
+
   }
+
+
 
   onCreateClick(): void {
 
@@ -30,7 +42,7 @@ export class ToolBarComponent implements OnInit {
 
   }
 
-  openImportFile = ():void => {
+  openImportFile = (): void => {
 
     this.document.getElementById('importFileInput').click();
 
@@ -38,7 +50,14 @@ export class ToolBarComponent implements OnInit {
 
   handleImportFileInput(files: FileList): void {
 
-    this.onImportClickEvent.emit(files[0]);
+    this.importClickEvent.emit(files[0]);
+
+  }
+
+  handleExportData(): void {
+
+
+    this.exportClickEvent.emit();
 
   }
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
@@ -7,31 +7,49 @@ import { ActivatedRoute } from '@angular/router';
 import { UnitService } from '@fboservices/inventory/unit.service';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterUnitComponent } from '../filter-unit/filter-unit.component';
-
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MainService } from '../../../../../services/main.service';
 @Component({
   selector: 'app-list-unit',
   templateUrl: './list-unit.component.html',
   styleUrls: [ './list-unit.component.scss' ]
 })
-export class ListUnitComponent {
+export class ListUnitComponent implements  AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'parent.name', 'times' ];
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     name: 'Name',
     code: 'Code',
     decimalPlaces: 'Decimals',
     'parent.name': 'Base Unit',
     times: 'Times'
-  }
+  };
 
-  queryParams:QueryData = { };
+  xheaders = [
+
+    {key: 'name', width: 30, },
+    {  key: 'code', width: 30, },
+    {  key: 'decimalPlaces', width: 30, },
+    {  key: 'parent.name', width: 30, },
+    {  key: 'times', width: 30, },
+
+    ];
+    iheaders = [
+      'Name',
+     'Code',
+     'Decimals',
+       'Base Unit',
+      'Times'
+    ];
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  units:ListQueryRespType<Unit> = {
+  units: ListQueryRespType<Unit> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -40,8 +58,10 @@ export class ListUnitComponent {
   filterItem: FilterItem;
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly unitService:UnitService) { }
+    private activatedRoute: ActivatedRoute,
+    private readonly unitService: UnitService,
+    private dialog: MatDialog,
+    private mainservice: MainService, ) { }
 
     private loadData = () => {
 
@@ -58,7 +78,7 @@ export class ListUnitComponent {
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -66,7 +86,7 @@ export class ListUnitComponent {
 
     }
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -83,4 +103,43 @@ export class ListUnitComponent {
 
     }
 
+    handleExportClick = (): void => {
+
+      const tParams = {...this.queryParams};
+      tParams.limit = this.units.totalItems;
+      this.loading = true;
+      const data = [];
+      this.unitService.queryData(tParams).subscribe((items) => {
+
+        items.forEach((element: any) => {
+
+          const temp = [element.name, element.code, element.decimalPlaces, element.parent?.name, element.times];
+
+          data.push(temp);
+      });
+        const result = {
+          cell: this.c,
+          rheader: this.iheaders,
+        eheader: this.xheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
+        this.mainservice.setExport(result);
+
+        this.dialog.open(ExportPopupComponent, {
+          height: '500px',
+          data: {items,
+            displayedColumns: this.displayedColumns,
+            columnHeaders: this.columnHeaders}});
+        this.loading = false;
+
+
+      }, (error) => {
+
+        console.error(error);
+        this.loading = false;
+
+      });
+
+    }
 }

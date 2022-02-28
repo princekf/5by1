@@ -1,7 +1,2 @@
-<app-tool-bar createUri="/voucher/payment/create"
- mainHeader="Payment" (onImportClickEvent)="handleImportClick($event)"></app-tool-bar>
-<app-list-voucher
-[voucherType]="voucherType"
-[tableHeader]="tableHeader"
-[editUri]="editUri"
-></app-list-voucher>
+<app-tool-bar createUri="/voucher/payment/create" mainHeader="Payment" (importClickEvent)="handleImportClick($event)" (exportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-list-voucher [voucherType]="voucherType" [tableHeader]="tableHeader" [editUri]="editUri"></app-list-voucher>

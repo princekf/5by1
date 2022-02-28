@@ -20,16 +20,20 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { ExportPopupComponent } from '../../export-popup/export-popup.component';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
-  declarations: [ ListLedgerComponent, CreateLedgerComponent, DeleteLedgerComponent, FilterLedgerComponent ],
+  declarations: [ ListLedgerComponent, CreateLedgerComponent, DeleteLedgerComponent,
+    FilterLedgerComponent, ExportPopupComponent ],
   imports: [
     CommonModule,
     LedgerRoutingModule,
     DataTableModule, MatTableModule, NgxSkeletonLoaderModule, MatSortModule, ToolBarModule,
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule,
-    MatInputModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule
+    MatInputModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule,
+    MatIconModule
   ]
 })
 export class LedgerModule { }

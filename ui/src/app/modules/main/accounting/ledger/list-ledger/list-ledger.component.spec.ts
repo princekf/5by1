@@ -7,7 +7,7 @@ describe('ListLedgerComponent', () => {
   let component: ListLedgerComponent;
   let fixture: ComponentFixture<ListLedgerComponent>;
 
-  beforeEach(async() => {
+  beforeEach(async () => {
 
     await TestBed.configureTestingModule({
       declarations: [ ListLedgerComponent ]

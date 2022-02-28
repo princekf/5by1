@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { BillService } from '@fboservices/inventory/bill.service';
 import { Subscription } from 'rxjs';
@@ -11,14 +11,19 @@ import { ProductService } from '@fboservices/inventory/product.service';
 import { Product } from '@shared/entity/inventory/product';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterBillComponent } from '../filter-bill/filter-bill.component';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MainService } from '../../../../../services/main.service';
 @Component({
   selector: 'app-list-bill',
   templateUrl: './list-bill.component.html',
   styleUrls: [ './list-bill.component.scss' ]
 })
-export class ListBillComponent {
+export class ListBillComponent implements  AfterViewInit, OnInit  {
 
-  displayedColumns: string[] = [ 'vendor.name', 'billDate', 'billNumber', 'totalAmount', 'totalDiscount', 'totalTax', 'grandTotal', 'isPaid' ];
+  displayedColumns: string[] = [ 'vendor.name', 'billDate', 'billNumber', 'totalAmount',
+  'totalDiscount', 'totalTax', 'grandTotal', 'isPaid' ];
+  c = this.displayedColumns.length;
 
   numberColumns: string[] = [ 'totalAmount' ];
 
@@ -31,26 +36,49 @@ export class ListBillComponent {
     totalTax: 'Tax',
     grandTotal: 'Grand Total',
     isPaid: 'Paid'
-  }
+  };
+  xheaders = [
+    {key: 'vendor.name',  width: 25 },
+    { key: 'billDate', width: 30, },
+    {key: 'billNumber', width: 25 },
+    {key: 'totalAmount',  width: 20 },
+    {key: 'totalDiscount',  width: 25 },
+    {key: 'totalTax',  width: 30 },
+    {key: 'grandTotal',  width: 25 },
+    {key: 'isPaid',  width: 25 }
 
-  queryParams:QueryData = { };
+  ];
+  iheaders = [
+
+     'Vendor',
+     'Bill Date',
+    'bill Number #',
+    'Amount',
+    'Discount',
+    'Tax',
+    'Grand Total',
+    'Paid'
+  ];
+
+
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  bills:ListQueryRespType<Bill> = {
+  bills: ListQueryRespType<Bill> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
   };
 
-  products: Array<Product> =[];
+  products: Array<Product> = [];
 
   filterItem: FilterItem;
 
 
-  columnParsingFn = (element:unknown, column:string): string => {
+  columnParsingFn = (element: unknown, column: string): string => {
 
 
     switch (column) {
@@ -66,9 +94,11 @@ export class ListBillComponent {
   }
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly billService:BillService,
-    private readonly productService:ProductService,
+    private activatedRoute: ActivatedRoute,
+    private readonly billService: BillService,
+    private readonly productService: ProductService,
+    private dialog: MatDialog,
+    private mainservice: MainService,
   ) { }
 
   private loadData = () => {
@@ -94,7 +124,7 @@ export class ListBillComponent {
 
     });
 
-  };
+  }
 
 
   ngOnInit(): void {
@@ -103,7 +133,7 @@ export class ListBillComponent {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -117,6 +147,46 @@ export class ListBillComponent {
 
       this.loadData();
 
+
+    });
+
+  }
+
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.bills.totalItems;
+    this.loading = true;
+    const data = [];
+    this.billService.queryData(tParams).subscribe((items) => {
+
+      items.forEach((element: any) => {
+        const temp = [element.vendor?.name, element.billDate, element.billNumber, element.totalAmount,
+          element.totalDiscount, element.totalTax, element.grandTotal, element.isPaid];
+
+        data.push(temp);
+    });
+      const result = {
+        cell: this.c,
+        rheader: this.iheaders,
+      eheader: this.xheaders,
+      header: this.columnHeaders,
+      rowData: data
+    };
+      this.mainservice.setExport(result);
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
 
     });
 

@@ -18,7 +18,7 @@ export class FilterLedgerReportComponent implements OnInit {
 
   ledgersFiltered: Array<Ledger> = [];
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   filterForm: FormGroup;
 
@@ -27,11 +27,11 @@ export class FilterLedgerReportComponent implements OnInit {
   maxDate: string;
 
 
-  constructor(private router:Router,
-    private activatedRoute : ActivatedRoute,
-    private ledgerService: LedgerService) { }
+  constructor(private router: Router,
+              private activatedRoute: ActivatedRoute,
+              private ledgerService: LedgerService) { }
 
-  private handleLedgerAutoChange = (ledgerQ:unknown) => {
+  private handleLedgerAutoChange = (ledgerQ: unknown) => {
 
     if (typeof ledgerQ !== 'string') {
 
@@ -44,7 +44,7 @@ export class FilterLedgerReportComponent implements OnInit {
     } })
       .subscribe((ledgers) => (this.ledgersFiltered = ledgers));
 
-  };
+  }
 
   private findStartEndDates = (): [Date, Date] => {
 
@@ -59,35 +59,28 @@ export class FilterLedgerReportComponent implements OnInit {
 
   }
 
-  ngOnInit():void {
+  ngOnInit(): void {
 
     const [ start, end ] = this.findStartEndDates();
     this.filterForm = new FormGroup({
 
       'transactions.ledgerId': new FormControl(''),
       'transactions.ledgerIdType': new FormControl(''),
-
-      againstL: new FormControl(''),
-      againstLType: new FormControl('ne'),
       date: new FormControl(''),
       dateType: new FormControl('eq'),
       dateStart: new FormControl(start),
       dateEnd: new FormControl(end),
     });
     this.filterForm.controls['transactions.ledgerId'].valueChanges.subscribe(this.handleLedgerAutoChange);
-    this.filterForm.controls.againstL.valueChanges.subscribe(this.handleLedgerAutoChange);
     const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
-    const where:Record<string, Record<string, unknown>> = JSON.parse(whereS);
-    if (where && where['transactions.ledgerId'] && where['transactions.ledgerId'].like) {
+    const where: Record<string, Record<string, unknown>> = JSON.parse(whereS);
+    if (where['transactions.ledgerId'] && where['transactions.ledgerId'].like) {
 
       const cldgId = where['transactions.ledgerId'].like as string;
-      const againstLId = where.againstL?.ne as string;
+      this.ledgerService.get(cldgId, {}).subscribe((ldgr) => {
 
-      this.ledgerService.queryData({where: {'_id': {in: [ cldgId, againstLId ]}}}).subscribe((ledgers) => {
-
-        this.ledgersFiltered.push(...ledgers);
-        this.filterForm.controls['transactions.ledgerId'].setValue(cldgId);
-        this.filterForm.controls.againstL.setValue(againstLId);
+        this.ledgersFiltered.push(ldgr);
+        this.filterForm.controls['transactions.ledgerId'].setValue(ldgr.id);
 
       });
 
@@ -96,7 +89,8 @@ export class FilterLedgerReportComponent implements OnInit {
 
   }
 
-  ngAfterViewInit():void {
+
+  ngAfterViewInit(): void {
 
 
     this.activatedRoute.queryParams.subscribe((value) => {
@@ -107,15 +101,13 @@ export class FilterLedgerReportComponent implements OnInit {
 
   }
 
-  filterItems = ():void => {
+  filterItems = (): void => {
 
 
     const formFields: Array<FilterFormField> = [
 
       {name: 'transactions.ledgerId',
         type: 'string'},
-      {name: 'againstL',
-        type: 'void'},
       {name: 'date',
         type: 'date'}
 
@@ -123,7 +115,7 @@ export class FilterLedgerReportComponent implements OnInit {
     const whereS = createQueryStringFromFilterForm(this.filterForm, formFields);
     this.router.navigate([], { queryParams: {whereS} });
 
-  };
+  }
 
   extractNameOfObject = (idS: string): string => this.ledgersFiltered.find((ldgr) => ldgr.id === idS)?.name;
 

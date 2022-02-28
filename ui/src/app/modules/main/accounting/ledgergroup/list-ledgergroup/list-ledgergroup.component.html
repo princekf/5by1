@@ -1,11 +1,2 @@
-<app-tool-bar createUri="/ledgerGroup/create" mainHeader="Ledger Group"></app-tool-bar>
-<app-data-table tableHeader="List of Ledger Groups"
-[displayedColumns]="displayedColumns"
-[columnHeaders]="columnHeaders"
-[loading]="loading"
-[tableData]="ledgerGroups"
-editUri="/voucher/create"
-deleteUri="/voucher/delete"
-[filterItem]="filterItem"
-></app-data-table>
-
+<app-tool-bar createUri="/ledgerGroup/create" mainHeader="Ledger Group" (exportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-data-table tableHeader="List of Ledger Groups" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="ledgerGroups" editUri="/ledgerGroup/create" deleteUri="/ledgerGroup/delete" [filterItem]="filterItem"></app-data-table>

@@ -11,7 +11,6 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {MatRadioModule} from '@angular/material/radio';
 
 import { MatDayjsDateModule } from '@tabuckner/material-dayjs-adapter';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -19,15 +18,14 @@ import {dayJSProviders} from '@fboutil/day-js-providers';
 import { TrialBalanceReportComponent } from './trial-balance/trial-balance-report/trial-balance-report.component';
 import { TreetableModule } from '@vaseap/ng-material-treetable';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { LedgerGroupReportComponent } from './ledger-group/ledger-group-report/ledger-group-report.component';
-import { FilterLedgerGroupReportComponent } from './ledger-group/filter-ledger-group-report/filter-ledger-group-report.component';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
-  declarations: [ LedgerReportComponent, FilterLedgerReportComponent, TrialBalanceReportComponent, LedgerGroupReportComponent, FilterLedgerGroupReportComponent ],
+  declarations: [ LedgerReportComponent, FilterLedgerReportComponent, TrialBalanceReportComponent ],
   imports: [
     CommonModule, ReportsRoutingModule, DataTableModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule,
     ReactiveFormsModule, FormsModule, MatAutocompleteModule, MatSelectModule, MatFormFieldModule, MatInputModule,
-    MatDayjsDateModule, TreetableModule, NgxSkeletonLoaderModule, MatRadioModule
+    MatDayjsDateModule, TreetableModule, NgxSkeletonLoaderModule, MatIconModule,
   ],
   providers: [ ...dayJSProviders ]
 })

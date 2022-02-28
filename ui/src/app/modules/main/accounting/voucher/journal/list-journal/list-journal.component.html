@@ -1,6 +1,2 @@
-<app-tool-bar createUri="/voucher/journal/create" mainHeader="Journal"></app-tool-bar>
-<app-list-voucher
-[voucherType]="voucherType"
-[tableHeader]="tableHeader"
-[editUri]="editUri"
-></app-list-voucher>
+<app-tool-bar createUri="/voucher/journal/create" mainHeader="Journal" (importClickEvent)="handleImportClick($event)" (exportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-list-voucher [voucherType]="voucherType" [tableHeader]="tableHeader" [editUri]="editUri"></app-list-voucher>

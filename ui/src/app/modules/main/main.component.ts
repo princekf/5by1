@@ -19,7 +19,7 @@ export class MainComponent implements OnInit {
 
   constructor(private router: Router, private readonly mainService: MainService) { }
 
-  ngOnInit():void {
+  ngOnInit(): void {
 
     if (this.mainService.isMobileView()) {
 
@@ -41,20 +41,20 @@ export class MainComponent implements OnInit {
 
   }
 
-  logout = ():void => {
+  logout = (): void => {
 
     localStorage.removeItem(ACCESS_TOKEN_ID);
     this.router.navigate([ '/login' ]);
 
   }
 
-  openLeftMenuDrawer = ():void => {
+  openLeftMenuDrawer = (): void => {
 
     this.mainService.setLeftMenuDrawerSubject(true);
 
   }
 
-  closeLeftMenuDrawer = ():void => {
+  closeLeftMenuDrawer = (): void => {
 
     this.mainService.setLeftMenuDrawerSubject(this.mainService.getLeftMenuLastToggleStatus());
 

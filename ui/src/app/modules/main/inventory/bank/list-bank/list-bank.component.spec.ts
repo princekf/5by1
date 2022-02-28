@@ -7,7 +7,7 @@ describe('ListBankComponent', () => {
   let component: ListBankComponent;
   let fixture: ComponentFixture<ListBankComponent>;
 
-  beforeEach(async() => {
+  beforeEach(async () => {
 
     await TestBed.configureTestingModule({
       declarations: [ ListBankComponent ]

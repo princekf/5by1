@@ -1,12 +1,3 @@
-<app-tool-bar createUri="/invoice/create" mainHeader="Invoice"></app-tool-bar>
-<app-data-table tableHeader="List of Invoices"
-[displayedColumns]="displayedColumns"
-[columnHeaders]="columnHeaders"
-[loading]="loading"
-[tableData]="invoices"
-editUri="/invoice/create"
-deleteUri="/invoice/delete"
-[columnParsingFn]="columnParsingFn"
-[numberColumns]="numberColumns"
-[filterItem]="filterItem"
-></app-data-table>
+<app-tool-bar createUri="/invoice/create" mainHeader="Invoice" (exportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-data-table tableHeader="List of Invoices" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="invoices" editUri="/invoice/create" deleteUri="/invoice/delete" [columnParsingFn]="columnParsingFn" [numberColumns]="numberColumns"
+    [filterItem]="filterItem"></app-data-table>
