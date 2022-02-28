@@ -28,6 +28,8 @@ export class DataTableComponent {
 
   @Input() numberColumns: Array<string> = [];
 
+  @Input() sortDisabledColumns: Array<string> = [];
+
   private _tableData:ListQueryRespType<unknown>;
 
   totalItems:number;
@@ -69,6 +71,8 @@ export class DataTableComponent {
   }
 
   @Input() loading:boolean;
+
+  @Input() showPaginator = true;
 
   @Input() editUri: string;
 
@@ -161,21 +165,25 @@ export class DataTableComponent {
 
   ngAfterViewInit():void {
 
-    // eslint-disable-next-line no-underscore-dangle
-    this.paginator._intl.itemsPerPageLabel = 'Rows per page';
-    if (this.mainService.isMobileView()) {
+    if (this.paginator) {
 
       // eslint-disable-next-line no-underscore-dangle
-      this.paginator._intl.itemsPerPageLabel = '';
+      this.paginator._intl.itemsPerPageLabel = 'Rows per page';
+      if (this.mainService.isMobileView()) {
+
+        // eslint-disable-next-line no-underscore-dangle
+        this.paginator._intl.itemsPerPageLabel = '';
+
+      }
+      this.paginator.page.subscribe((evt: PageEvent) => {
+
+        this.queryParams.limit = evt.pageSize;
+        this.queryParams.offset = evt.pageIndex * evt.pageSize;
+        this.router.navigate([], { queryParams: this.queryParams });
+
+      });
 
     }
-    this.paginator.page.subscribe((evt: PageEvent) => {
-
-      this.queryParams.limit = evt.pageSize;
-      this.queryParams.offset = evt.pageIndex * evt.pageSize;
-      this.router.navigate([], { queryParams: this.queryParams });
-
-    });
     this.sort.sortChange.subscribe((cSort:Sort) => {
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -234,6 +242,17 @@ export class DataTableComponent {
 
     }
     return '';
+
+  }
+
+  isSortingDisabled = (cName:string):boolean => {
+
+    if (this.sortDisabledColumns.includes(cName)) {
+
+      return true;
+
+    }
+    return false;
 
   }
 

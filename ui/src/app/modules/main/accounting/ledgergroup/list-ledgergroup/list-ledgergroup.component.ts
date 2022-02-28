@@ -4,7 +4,7 @@ import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
 import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 import { ActivatedRoute } from '@angular/router';
-import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service';
+import { LedgerGroupService } from '@fboservices/accounting/ledger-group.service';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterLedgergroupComponent } from '../filter-ledgergroup/filter-ledgergroup.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -66,7 +66,7 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private readonly ledgergroupService: LedgergroupService,
+    private readonly ledgerGroupService: LedgerGroupService,
     private dialog: MatDialog,
     private mainservice: MainService) { }
 
@@ -79,7 +79,7 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
           relation: 'parent',
         }
       ];
-      this.ledgergroupService.list(this.queryParams).subscribe((ledgerGroup) => {
+      this.ledgerGroupService.list(this.queryParams).subscribe((ledgerGroup) => {
 
         this.ledgerGroups = ledgerGroup;
         this.loading = false;
@@ -123,7 +123,7 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
       tParams.limit = this.ledgerGroups.totalItems;
       this.loading = true;
       const data = [];
-      this.ledgergroupService.queryData(tParams).subscribe((items) => {
+      this.ledgerGroupService.queryData(tParams).subscribe((items) => {
 
         items.forEach((element) => {
 

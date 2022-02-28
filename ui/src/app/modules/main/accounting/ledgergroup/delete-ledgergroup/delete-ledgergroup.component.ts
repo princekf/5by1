@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service';
+import { LedgerGroupService } from '@fboservices/accounting/ledger-group.service';
 import { MainService } from '@fboservices/main.service';
 import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 import { ToastrService } from 'ngx-toastr';
@@ -37,7 +37,7 @@ export class DeleteLedgergroupComponent implements OnInit {
 
   constructor(public readonly router: Router,
     public readonly route: ActivatedRoute,
-    private readonly ledgergroupService:LedgergroupService,
+    private readonly ledgergroupService:LedgerGroupService,
     private readonly mainService: MainService,
     private readonly toastr: ToastrService) { }
 

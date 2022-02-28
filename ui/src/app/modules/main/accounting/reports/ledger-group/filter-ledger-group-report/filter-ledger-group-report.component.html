@@ -3,16 +3,16 @@
         <div (click)="$event.stopPropagation()">
 
             <div class="filter-content-div">
-                <mat-label class="lable">Ledger</mat-label>
-                <mat-select formControlName="transactions.ledgerIdType" class="select">
+                <mat-label class="lable">Ledger Group</mat-label>
+                <mat-select formControlName="ledgerGroupIdType" class="select">
                     <mat-option value="">Equal to</mat-option>
                 </mat-select>
                 <mat-form-field class="ledger-transaction-field">
-                    <input type="text" matInput formControlName="transactions.ledgerId" [matAutocomplete]="autoTransactionLedger">
-                    <mat-autocomplete autoActiveFirstOption #autoTransactionLedger="matAutocomplete"
-                        [displayWith]="extractNameOfObject">
-                        <mat-option *ngFor="let ledgerS of ledgersFiltered" [value]="ledgerS.id">
-                            {{ledgerS.name}}
+                    <input type="text" matInput formControlName="ledgerGroupId" [matAutocomplete]="autoLedgerGroup">
+                    <mat-autocomplete autoActiveFirstOption #autoLedgerGroup="matAutocomplete"
+                        [displayWith]="extractNameOfLedgerGroup">
+                        <mat-option *ngFor="let ledgerGroupS of ledgerGroupsFiltered" [value]="ledgerGroupS.id">
+                            {{ledgerGroupS.name}}
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>

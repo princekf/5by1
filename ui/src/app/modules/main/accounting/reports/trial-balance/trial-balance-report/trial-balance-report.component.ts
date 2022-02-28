@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
 import { Node, Options } from '@vaseap/ng-material-treetable';
 import { environment } from '@fboenvironments/environment';
-import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service';
+import { LedgerGroupService } from '@fboservices/accounting/ledger-group.service';
 import { forkJoin } from 'rxjs';
 import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 import { LedgerSummaryTB } from '@shared/util/trial-balance-ledger-summary';
@@ -68,7 +68,7 @@ export class TrialBalanceReportComponent implements OnInit {
   tbData: Node<TBType>[] = [ ];
 
   constructor(private voucherService: VoucherService,
-              private ledgergroupService: LedgergroupService) { }
+              private ledgerGroupService: LedgerGroupService) { }
 
     private createNodes =
     (lgs: LedgerSummaryTB, nodeMap: Record<string, Node<TBType>>)
@@ -182,7 +182,7 @@ export class TrialBalanceReportComponent implements OnInit {
 
 
       const ldgSummary$ = this.voucherService.fetchLedgerSummary();
-      const ldGroup$ = this.ledgergroupService.search({});
+      const ldGroup$ = this.ledgerGroupService.search({});
 
       forkJoin([ ldgSummary$, ldGroup$ ]).subscribe((results) => {
 
