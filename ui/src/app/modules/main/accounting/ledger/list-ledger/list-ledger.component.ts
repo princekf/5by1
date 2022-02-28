@@ -16,11 +16,12 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-ledger.component.html',
   styleUrls: [ './list-ledger.component.scss' ]
 })
-// tslint:disable-next-line: whitespace
-export class ListLedgerComponent implements OnInit,AfterViewInit {
-  [x: string]: any;
+
+export class ListLedgerComponent implements OnInit, AfterViewInit {
+
 
   displayedColumns: string[] = [ 'name', 'code', 'ledgerGroup.name', 'obAmount', 'obType', 'details' ];
+
   c = this.displayedColumns.length;
 
   columnHeaders = {
@@ -31,25 +32,31 @@ export class ListLedgerComponent implements OnInit,AfterViewInit {
     obType: 'Opening Type',
     details: 'Details',
   };
+
   xheaders = [
 
-    {key: 'name', width: 30, },
-    { key: 'code', width: 15 },
-    {key: 'ledgerGroup.name', width: 15 },
-    { key: 'obAmount', width: 15 },
-    { key: 'obType', width: 15 },
-    { key: 'details' , width: 25 }
-    ];
+    {key: 'name',
+      width: 30, },
+    { key: 'code',
+      width: 25 },
+    {key: 'ledgerGroup.name',
+      width: 25 },
+    { key: 'obAmount',
+      width: 25 },
+    { key: 'obType',
+      width: 25 },
+    { key: 'details',
+      width: 30 }
+  ];
+
    iheaders = [
-    'Name',
-   'Code',
-    'Ledger Group',
-    'Opening Balance',
-    'Opening Type',
+     'Name',
+     'Code',
+     'Ledger Group',
+     'Opening Balance',
+     'Opening Type',
      'Details',
    ];
-
-
 
 
   loading = true;
@@ -133,29 +140,32 @@ export class ListLedgerComponent implements OnInit,AfterViewInit {
     const data = [];
     this.ledgerService.queryData(tParams).subscribe((items) => {
 
-      items.forEach((element: any) => {
-        const temp = [element.name, element.code, element.ledgerGroup.name, element.obAmount, element.obType, element.details];
+      items.forEach((element) => {
+
+        const temp = [ element.name, element.code, element.ledgerGroup.name, element.obAmount, element.obType,
+          element.details ];
         data.push(temp);
 
-    });
+      });
 
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
+      this.dialog.open(ExportPopupComponent, {height: '500px',
         data: {items,
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});
       this.loading = false;
       const result = {
         cell: this.c,
-          rheader: this.iheaders,
+        rheader: this.iheaders,
         eheader: this.xheaders,
         header: this.columnHeaders,
         rowData: data
 
       };
       this.mainservice.setExport(result);
+
     }
+    // eslint-disable-next-line function-call-argument-newline
     , (error) => {
 
       console.error(error);

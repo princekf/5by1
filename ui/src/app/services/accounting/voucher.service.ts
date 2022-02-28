@@ -13,7 +13,7 @@ export class VoucherService extends BaseHTTPService<Voucher> {
 
   public API_URI = VOUCHER_API_URI;
 
-  public upsert(voucher:Voucher):Observable<void> {
+  public upsert(voucher: Voucher): Observable<void> {
 
     const {id, ...voucher2} = voucher;
     if (id) {
@@ -26,7 +26,7 @@ export class VoucherService extends BaseHTTPService<Voucher> {
 
   }
 
-  public importVouchers(file: File):Observable<void> {
+  public importVouchers(file: File): Observable<void> {
 
     const formData: FormData = new FormData();
     formData.append('fileKey', file, file.name);
@@ -36,7 +36,7 @@ export class VoucherService extends BaseHTTPService<Voucher> {
 
   }
 
-  public fetchLedgerSummary():Observable<Array<LedgerSummaryTB>> {
+  public fetchLedgerSummary(): Observable<Array<LedgerSummaryTB>> {
 
     return this.http.get<Array<LedgerSummaryTB>>(`${this.API_URI}/ledgerSummary`).pipe(
       catchError((err) => throwError(err))

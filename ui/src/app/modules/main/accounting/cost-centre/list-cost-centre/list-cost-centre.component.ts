@@ -15,25 +15,30 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-cost-centre.component.html',
   styleUrls: [ './list-cost-centre.component.scss' ]
 })
-export class ListCostCentreComponent implements OnInit, AfterViewInit  {
+export class ListCostCentreComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'details' ];
 
   c = this.displayedColumns.length;
+
   columnHeaders = {
     name: 'Name',
     details: 'Details',
 
   };
+
   iheaders = [
     'Name',
     'Details',
 
   ];
+
   xheaders = [
 
-    { key: 'name' , width: 30, },
-    { key: 'details', width: 30 }
+    { key: 'name',
+      width: 30, },
+    { key: 'details',
+      width: 30 }
   ];
 
 
@@ -114,23 +119,24 @@ export class ListCostCentreComponent implements OnInit, AfterViewInit  {
     this.loading = true;
     const data = [];
     this.costCentreService.queryData(tParams).subscribe((items) => {
-      console.log();
 
-      items.forEach((element: any) => {
-        const temp = [element.name, element.details];
+
+      items.forEach((element) => {
+
+        const temp = [ element.name, element.details ];
         data.push(temp);
-    });
+
+      });
       const result = {
         cell: this.c,
-          rheader: this.iheaders,
-      eheader: this.xheaders,
-      header: this.columnHeaders,
-      rowData: data
-    };
+        rheader: this.iheaders,
+        eheader: this.xheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
       this.mainservice.setExport(result);
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
+      this.dialog.open(ExportPopupComponent, {height: '500px',
         data: {items,
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});

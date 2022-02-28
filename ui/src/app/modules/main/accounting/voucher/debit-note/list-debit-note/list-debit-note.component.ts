@@ -30,7 +30,7 @@ export class ListDebitNoteComponent {
   };
 
 
-  export: any = [];
+  exports: Record<string, unknown> ;
 
 
   constructor(private voucherService: VoucherService,
@@ -48,27 +48,26 @@ export class ListDebitNoteComponent {
 
 
     }
+
   handleExportClick = (): void => {
-    const data = [];
 
 
-    this.mainservice.getExport().subscribe(result1 => {
-      this.export = result1;
+    this.mainservice.getExport().subscribe((result1) => {
+
+      this.exports = result1;
 
 
     });
 
 
-    const items = this.export.items;
+    const {items} = this.exports;
     this.dialog.open(ExportPopupComponent, {
       height: '500px',
-    data: {items,
-    displayedColumns: this.displayedColumns,
-    columnHeaders: this.columnHeaders,
+      data: {items,
+        displayedColumns: this.displayedColumns,
+        columnHeaders: this.columnHeaders, }
+    });
 
-       }
-      });
-
-}
+  }
 
 }
