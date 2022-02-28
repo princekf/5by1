@@ -18,7 +18,7 @@ export class FilterLedgerReportComponent implements OnInit {
 
   ledgersFiltered: Array<Ledger> = [];
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   filterForm: FormGroup;
 
@@ -27,11 +27,11 @@ export class FilterLedgerReportComponent implements OnInit {
   maxDate: string;
 
 
-  constructor(private router:Router,
-    private activatedRoute : ActivatedRoute,
-    private ledgerService: LedgerService) { }
+  constructor(private router: Router,
+              private activatedRoute: ActivatedRoute,
+              private ledgerService: LedgerService) { }
 
-  private handleLedgerAutoChange = (ledgerQ:unknown) => {
+  private handleLedgerAutoChange = (ledgerQ: unknown) => {
 
     if (typeof ledgerQ !== 'string') {
 
@@ -44,7 +44,7 @@ export class FilterLedgerReportComponent implements OnInit {
     } })
       .subscribe((ledgers) => (this.ledgersFiltered = ledgers));
 
-  };
+  }
 
   private findStartEndDates = (): [Date, Date] => {
 
@@ -59,7 +59,7 @@ export class FilterLedgerReportComponent implements OnInit {
 
   }
 
-  ngOnInit():void {
+  ngOnInit(): void {
 
     const [ start, end ] = this.findStartEndDates();
     this.filterForm = new FormGroup({
@@ -73,7 +73,7 @@ export class FilterLedgerReportComponent implements OnInit {
     });
     this.filterForm.controls['transactions.ledgerId'].valueChanges.subscribe(this.handleLedgerAutoChange);
     const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
-    const where:Record<string, Record<string, unknown>> = JSON.parse(whereS);
+    const where: Record<string, Record<string, unknown>> = JSON.parse(whereS);
     if (where['transactions.ledgerId'] && where['transactions.ledgerId'].like) {
 
       const cldgId = where['transactions.ledgerId'].like as string;
@@ -89,7 +89,8 @@ export class FilterLedgerReportComponent implements OnInit {
 
   }
 
-  ngAfterViewInit():void {
+
+  ngAfterViewInit(): void {
 
 
     this.activatedRoute.queryParams.subscribe((value) => {
@@ -100,7 +101,7 @@ export class FilterLedgerReportComponent implements OnInit {
 
   }
 
-  filterItems = ():void => {
+  filterItems = (): void => {
 
 
     const formFields: Array<FilterFormField> = [
@@ -114,7 +115,7 @@ export class FilterLedgerReportComponent implements OnInit {
     const whereS = createQueryStringFromFilterForm(this.filterForm, formFields);
     this.router.navigate([], { queryParams: {whereS} });
 
-  };
+  }
 
   extractNameOfObject = (idS: string): string => this.ledgersFiltered.find((ldgr) => ldgr.id === idS)?.name;
 

@@ -12,6 +12,14 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "paths": {
+        "exceljs": [
+          "node_modules/exceljs/dist/exceljs.min"
+        ]
+      }
     }
+
 ]
 }

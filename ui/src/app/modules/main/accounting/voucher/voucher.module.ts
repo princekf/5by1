@@ -23,7 +23,8 @@ import { DeleteVoucherComponent } from './delete-voucher/delete-voucher.componen
     CommonModule, VoucherRoutingModule,
     DataTableModule, MatTableModule, NgxSkeletonLoaderModule, MatSortModule, ToolBarModule,
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule,
-    MatInputModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatIconModule
+    MatInputModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatIconModule,
+
   ]
 })
 export class VoucherModule { }

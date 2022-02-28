@@ -1,6 +1,2 @@
-<app-tool-bar createUri="/voucher/credit-note/create" mainHeader="Credit Note"></app-tool-bar>
-<app-list-voucher
-[voucherType]="voucherType"
-[tableHeader]="tableHeader"
-[editUri]="editUri"
-></app-list-voucher>
+<app-tool-bar createUri="/voucher/credit-note/create" mainHeader="Credit Note" (importClickEvent)="handleImportClick($event)" (exportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-list-voucher [voucherType]="voucherType" [tableHeader]="tableHeader" [editUri]="editUri"></app-list-voucher>

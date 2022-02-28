@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
@@ -7,30 +7,48 @@ import { ActivatedRoute } from '@angular/router';
 import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterLedgergroupComponent } from '../filter-ledgergroup/filter-ledgergroup.component';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MainService } from '../../../../../services/main.service';
 @Component({
   selector: 'app-list-ledgergroup',
   templateUrl: './list-ledgergroup.component.html',
   styleUrls: [ './list-ledgergroup.component.scss' ]
 })
-export class ListLedgergroupComponent implements OnInit {
+export class ListLedgergroupComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'parent.name', 'details' ];
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     name: 'Name',
     code: 'Code',
-    'parent.name': 'Parent Name',
-    details: 'Details'
-  }
+    'parent.name':  'Parent Name',
+    details: 'Details',
 
-  queryParams:QueryData = { };
+  };
+  xheaders = [
+
+    {key: 'name', width: 30, },
+    {key: 'code',  width: 15 },
+    { key: 'parent', width: 25 },
+    { key: 'details', width: 35 }
+];
+  iheaders = [
+    'Name',
+    'Code',
+    'Parent Name',
+   'Details'
+  ];
+
+
+
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  ledgerGroups:ListQueryRespType<LedgerGroup> = {
+  ledgerGroups: ListQueryRespType<LedgerGroup> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -39,8 +57,10 @@ export class ListLedgergroupComponent implements OnInit {
   filterItem: FilterItem;
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly ledgergroupService:LedgergroupService) { }
+    private activatedRoute: ActivatedRoute,
+    private readonly ledgergroupService: LedgergroupService,
+    private dialog: MatDialog,
+    private mainservice: MainService, ) { }
 
     private loadData = () => {
 
@@ -63,7 +83,7 @@ export class ListLedgergroupComponent implements OnInit {
 
       });
 
-    };
+    }
 
     ngOnInit(): void {
 
@@ -71,7 +91,7 @@ export class ListLedgergroupComponent implements OnInit {
 
     }
 
-    ngAfterViewInit():void {
+    ngAfterViewInit(): void {
 
       this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -86,6 +106,47 @@ export class ListLedgergroupComponent implements OnInit {
 
       });
 
+
     }
 
+    handleExportClick = (): void => {
+
+      const tParams = {...this.queryParams};
+      tParams.limit = this.ledgerGroups.totalItems;
+      this.loading = true;
+      const data = [];
+      this.ledgergroupService.queryData(tParams).subscribe((items) => {
+
+        items.forEach((element: any) => {
+
+
+          const temp = [element.name, element.code, element.parent?.name, element.details];
+
+          data.push(temp);
+      });
+        const result = {
+          cell: this.c,
+            rheader: this.iheaders,
+        eheader: this.xheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
+        this.mainservice.setExport(result);
+
+        this.dialog.open(ExportPopupComponent, {
+          height: '500px',
+          data: {items,
+            displayedColumns: this.displayedColumns,
+            columnHeaders: this.columnHeaders}});
+        this.loading = false;
+
+
+      }, (error) => {
+
+        console.error(error);
+        this.loading = false;
+
+      });
+
+    }
 }

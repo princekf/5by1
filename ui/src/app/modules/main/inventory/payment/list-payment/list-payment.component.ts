@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { PaymentService } from '@fboservices/inventory/payment.service';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
@@ -9,16 +9,19 @@ import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterPaymentComponent } from '../filter-payment/filter-payment.component';
-
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MainService } from '../../../../../services/main.service';
 @Component({
   selector: 'app-list-payment',
   templateUrl: './list-payment.component.html',
   styleUrls: [ './list-payment.component.scss' ]
 })
-export class ListPaymentComponent {
+export class ListPaymentComponent implements AfterViewInit, OnInit  {
 
-  displayedColumns: string[] = [ 'paidDate', 'vendor.name', 'bill.billNumber', 'bank.name', 'category', 'amount', 'description' ];
-
+  displayedColumns: string[] = [ 'paidDate', 'vendor.name', 'bill.billNumber',
+    'bank.name', 'category', 'amount', 'description' ];
+    c = this.displayedColumns.length;
   numberColumns: string[] = [ 'amount' ];
 
   columnHeaders = {
@@ -30,16 +33,38 @@ export class ListPaymentComponent {
     amount: 'Amount',
     description: 'Description',
 
-  }
+  };
+  xheaders = [
+    {key: 'paidDate' , width: 25 },
+    {key: 'vendor.name' ,  width: 20 },
+    {key: 'bill.billNumber' , width: 20 },
+    {key: 'bank.name' , width: 20 },
+    {key: 'category' , width: 20 },
+    { key: 'amount' , width: 15 },
+    {key: 'description' , width: 35 },
+
+  ];
 
 
-  queryParams:QueryData = { };
+  iheaders = [
+     'Paid Date',
+     'Vendor',
+     'Bill',
+     'Bank',
+     'Category',
+     'Amount',
+     'Description',
+
+  ];
+
+
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  payments:ListQueryRespType<Payment> = {
+  payments: ListQueryRespType<Payment> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -48,7 +73,7 @@ export class ListPaymentComponent {
   filterItem: FilterItem;
 
 
-  columnParsingFn = (element:unknown, column:string) : string => {
+  columnParsingFn = (element: unknown, column: string): string => {
 
     switch (column) {
 
@@ -62,8 +87,10 @@ export class ListPaymentComponent {
 
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private paymentService:PaymentService
+    private activatedRoute: ActivatedRoute,
+    private paymentService: PaymentService,
+    private dialog: MatDialog,
+    private mainservice: MainService,
   ) { }
 
 
@@ -87,7 +114,7 @@ export class ListPaymentComponent {
 
     });
 
-  };
+  }
 
   ngOnInit(): void {
 
@@ -95,7 +122,7 @@ export class ListPaymentComponent {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -112,6 +139,46 @@ export class ListPaymentComponent {
 
     });
 
+
+  }
+
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.payments.totalItems;
+    this.loading = true;
+    const data = [];
+    this.paymentService.queryData(tParams).subscribe((items) => {
+
+      items.forEach((element: any) => {
+        const temp = [element.paidDate, element.vendor?.name, element.bill?.billNumber, element.bank?.name,
+          element.category, element.amount, element.description];
+
+        data.push(temp);
+    });
+      const result = {
+        cell: this.c,
+        rheader: this.iheaders,
+      eheader: this.xheaders,
+      header: this.columnHeaders,
+      rowData: data
+    };
+      this.mainservice.setExport(result);
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
 
   }
 

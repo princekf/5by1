@@ -6,7 +6,11 @@ import { LedgergroupService } from '@fboservices/accounting/ledgergroup.service'
 import { forkJoin } from 'rxjs';
 import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 import { LedgerSummaryTB } from '@shared/util/trial-balance-ledger-summary';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
+import * as Excel from 'exceljs';
+import * as saveAs from 'file-saver';
 interface TBType {
   ledger: string;
   debit: string;
@@ -15,15 +19,33 @@ interface TBType {
 
 type LedgerGroupExtra = LedgerGroup & {credit?: number, debit?: 0};
 const dcp = environment.decimalPlaces;
-
+const str = '';
+const len = str.length;
+const  space = 4;
+const space1 = 8;
+const space2 = 12;
 @Component({
   selector: 'app-trial-balance-report',
   templateUrl: './trial-balance-report.component.html',
   styleUrls: [ './trial-balance-report.component.scss' ]
 })
 export class TrialBalanceReportComponent implements OnInit {
+  [x: string]: any;
 
   loading = true;
+  columnHeaders = {
+
+   ledger: 'Ledger', debit: 'Debit', credit: 'Credit'
+  };
+  customColumnOrder1 = [
+    'Ledger', 'Debit', 'Credit'
+  ];
+
+  xheaders = [
+
+    {key: 'ledger', width: 30, },
+    {key: 'debit',  width: 30 },
+    { key: 'credit', width: 30 }];
 
   treeOptions: Options<TBType> = {
     capitalisedHeader: true,
@@ -36,11 +58,11 @@ export class TrialBalanceReportComponent implements OnInit {
   tbData: Node<TBType>[] = [ ];
 
   constructor(private voucherService: VoucherService,
-    private ledgergroupService: LedgergroupService) { }
+              private ledgergroupService: LedgergroupService) { }
 
     private createNodes =
-    (lgs: LedgerSummaryTB, nodeMap:Record<string, Node<TBType>>)
-    :Array<number> => {
+    (lgs: LedgerSummaryTB, nodeMap: Record<string, Node<TBType>>)
+    : Array<number> => {
 
       const {ledger, credit, debit, ledgerGroupId} = lgs;
       const creditS = credit > debit ? (credit - debit).toFixed(dcp) : '';
@@ -50,7 +72,7 @@ export class TrialBalanceReportComponent implements OnInit {
         return [ 0, 0 ];
 
       }
-      const node:Node<TBType> = {
+      const node: Node<TBType> = {
         value: {ledger,
           credit: creditS,
           debit: debitS},
@@ -61,14 +83,14 @@ export class TrialBalanceReportComponent implements OnInit {
 
     }
 
-    private createEmptyNode = (ldg:{name?: string, id?: string}): Node<TBType> => ({
+    private createEmptyNode = (ldg: {name?: string, id?: string}): Node<TBType> => ({
       value: {
         ledger: ldg.name,
         credit: '',
         debit: '',
       },
       children: [],
-    });
+    })
 
     private removeRowWithoutData = (node: Node<TBType>) => {
 
@@ -92,7 +114,7 @@ export class TrialBalanceReportComponent implements OnInit {
 
     }
 
-    private fillCrDr = (node: Node<TBType>):Array<number> => {
+    private fillCrDr = (node: Node<TBType>): Array<number> => {
 
       if (node.children.length) {
 
@@ -114,7 +136,7 @@ export class TrialBalanceReportComponent implements OnInit {
     }
 
     private createLGMap =
-    (ldg: LedgerGroup, nodeLGMap:Record<string, Node<TBType>>, ldGrpMap:Record<string, LedgerGroupExtra>) => {
+    (ldg: LedgerGroup, nodeLGMap: Record<string, Node<TBType>>, ldGrpMap: Record<string, LedgerGroupExtra>) => {
 
       ldGrpMap[ldg.id] = {...ldg,
         credit: 0,
@@ -147,8 +169,8 @@ export class TrialBalanceReportComponent implements OnInit {
       forkJoin([ ldgSummary$, ldGroup$ ]).subscribe((results) => {
 
         const [ lgsArr, ldGroups ] = results;
-        const ldGrpMap:Record<string, LedgerGroupExtra> = {};
-        const nodeLGMap:Record<string, Node<TBType>> = {};
+        const ldGrpMap: Record<string, LedgerGroupExtra> = {};
+        const nodeLGMap: Record<string, Node<TBType>> = {};
         ldGroups.forEach((ldg) => this.createLGMap(ldg, nodeLGMap, ldGrpMap));
         let totalDebit = 0;
         let totalCredit = 0;
@@ -186,10 +208,114 @@ export class TrialBalanceReportComponent implements OnInit {
           },
           children: []
         });
+        console.log( tbData2);
         this.loading = false;
 
       });
 
     }
+    exportExcel(): void {
 
-}
+  const EXCEL_EXTENSION = '.xlsx';
+  const workbook = new Excel.Workbook();
+  const worksheet = workbook.addWorksheet();
+
+  const rowData = this.tbData;
+
+  const j = [];
+  const k = [];
+  const l = [];
+  const m = [];
+
+  rowData.forEach((e: any) => {
+        l.push([ e.value.ledger, e.value.debit, e.value.credit]);
+
+        e.children.forEach((e: any) => {
+          j.push([ str.padStart(len + space, ' ') + e.value.ledger, e.value.debit, e.value.credit]);
+          e.children.forEach((e: any) => {
+            k.push([str.padStart(len + space1, ' ') + e.value.ledger, e.value.debit, e.value.credit]);
+            e.children.forEach((e: any) => {
+              m.push([str.padStart(len + space2, ' ') + e.value.ledger, e.value.debit, e.value.credit]);
+
+
+          });
+
+        });
+
+
+      });
+
+    });
+
+
+
+  const t = [l[0], j[0], k[0], m[0], l[1], j[1], l[2], l[3], l[4]];
+  console.log(k);
+
+
+  worksheet.addRow ( this.customColumnOrder1, 'n');
+  worksheet.columns = this.xheaders;
+
+  t.forEach((e: any) => {
+        worksheet.addRow (e, 'n');
+      });
+
+
+
+  workbook.xlsx.writeBuffer().then((data) => {
+        const blob = new Blob([data]);
+
+        saveAs(blob, 'Trial-Balance' + EXCEL_EXTENSION);
+      });
+
+    }
+    convert(): void {
+      const rowData = this.tbData;
+
+      const j = [];
+      const k = [];
+      const l = [];
+      const m = [];
+
+      rowData.forEach((e: any) => {
+        l.push([e.value.ledger, e.value.debit, e.value.credit]);
+
+
+        e.children.forEach((e: any) => {
+          j.push([  str.padStart(len + space, ' ') + e.value.ledger, e.value.debit, e.value.credit]);
+
+          e.children.forEach((e: any) => {
+            k.push([  str.padStart(len + space1, ' ') + e.value.ledger, e.value.debit, e.value.credit]);
+            e.children.forEach((e: any) => {
+              m.push([  str.padStart(len + space2, ' ') + e.value.ledger, e.value.debit, e.value.credit]);
+
+
+          });
+
+        });
+
+
+      });
+
+    });
+      const t = [l[0], j[0], k[0], m[0], l[1], j[1], l[2], l[3], l[4]];
+
+
+      const doc = new jsPDF();
+      const col = this.columnHeaders;
+
+      doc.setFontSize(20);
+
+
+      autoTable(
+
+        doc, {
+    head: [col],
+    body: t,
+
+   });
+
+      doc.save('Trial-Balance');
+      }}
+
+

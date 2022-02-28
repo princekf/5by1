@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, OnInit  } from '@angular/core';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -7,30 +7,47 @@ import { Tax } from '@shared/entity/inventory/tax';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterTaxComponent } from '../filter-tax/filter-tax.component';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MainService } from '../../../../../services/main.service';
 @Component({
   selector: 'app-list-tax',
   templateUrl: './list-tax.component.html',
   styleUrls: [ './list-tax.component.scss' ],
 })
-export class ListTaxComponent {
+export class ListTaxComponent implements  AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [ 'groupName', 'name', 'rate', 'appliedTo', 'description' ];
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     groupName: 'Group Name',
     name: 'Name',
     rate: 'Rate (%)',
     appliedTo: 'Applied To (%)',
     description: 'Description'
-  }
+  };
+  xheaders = [
+    {key : 'groupName' , width: 30 },
+    {key : 'name' , width: 30 },
+    { key : 'rate' , width: 20 },
+    { key : 'appliedTo' , width: 15 },
+    {key : 'description' , width: 30 },
+  ];
+    iheaders = [
+   'Group Name',
+    'Name',
+    'Rate (%)',
+     'Applied To (%)',
+     'Description'
+    ];
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   routerSubscription: Subscription;
 
   loading = true;
 
-  taxes:ListQueryRespType<Tax> = {
+  taxes: ListQueryRespType<Tax> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -39,8 +56,10 @@ export class ListTaxComponent {
   filterItem: FilterItem;
 
   constructor(
-    private activatedRoute : ActivatedRoute,
-    private readonly taxService:TaxService) { }
+    private activatedRoute: ActivatedRoute,
+    private readonly taxService: TaxService,
+    private dialog: MatDialog,
+    private mainservice: MainService, ) { }
 
   private loadData = () => {
 
@@ -58,7 +77,7 @@ export class ListTaxComponent {
 
     });
 
-  };
+  }
 
   ngOnInit(): void {
 
@@ -66,7 +85,7 @@ export class ListTaxComponent {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -86,4 +105,42 @@ export class ListTaxComponent {
 
   }
 
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.taxes.totalItems;
+    this.loading = true;
+    const data = [];
+    this.taxService.queryData(tParams).subscribe((items) => {
+
+      items.forEach((element: any) => {
+        const temp = [element.groupName, element.name, element.rate, element.appliedTo, element.description];
+
+        data.push(temp);
+    });
+      const result = {
+        cell: this.c,
+        rheader: this.iheaders,
+      eheader: this.xheaders,
+      header: this.columnHeaders,
+      rowData: data
+    };
+      this.mainservice.setExport(result);
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
+
+    });
+
+  }
 }

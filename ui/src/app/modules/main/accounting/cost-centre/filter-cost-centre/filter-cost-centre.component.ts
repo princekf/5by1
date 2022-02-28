@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryData } from '@shared/util/query-data';
@@ -10,9 +10,9 @@ import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from
   templateUrl: './filter-cost-centre.component.html',
   styleUrls: [ './filter-cost-centre.component.scss', '../../../../../util/styles/fbo-filter-style.scss' ]
 })
-export class FilterCostCentreComponent implements OnInit {
+export class FilterCostCentreComponent implements OnInit, AfterViewInit {
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = { };
 
   filterForm: FormGroup = new FormGroup({
     name: new FormControl(''),
@@ -24,17 +24,17 @@ export class FilterCostCentreComponent implements OnInit {
 
   });
 
-  constructor(private router:Router,
-    private activatedRoute : ActivatedRoute,) { }
+  constructor(private router: Router,
+              private activatedRoute: ActivatedRoute, ) { }
 
-  ngOnInit():void {
+  ngOnInit(): void {
 
     const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
     fillFilterForm(this.filterForm, whereS);
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
 
     this.activatedRoute.queryParams.subscribe((value) => {
@@ -45,7 +45,7 @@ export class FilterCostCentreComponent implements OnInit {
 
   }
 
-  filterItems = ():void => {
+  filterItems = (): void => {
 
 
     const formFields: Array<FilterFormField> = [
@@ -58,7 +58,7 @@ export class FilterCostCentreComponent implements OnInit {
     const whereS = createQueryStringFromFilterForm(this.filterForm, formFields);
     this.router.navigate([], { queryParams: {whereS} });
 
-  };
+  }
 
 
 }

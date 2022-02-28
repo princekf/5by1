@@ -1,10 +1,2 @@
-<app-tool-bar createUri="/product/create" mainHeader="Product"></app-tool-bar>
-<app-data-table tableHeader="List of Products"
-[displayedColumns]="displayedColumns"
-[columnHeaders]="columnHeaders"
-[loading]="loading"
-[tableData]="rawDatas"
-editUri="/product/create"
-deleteUri="/product/delete"
-[filterItem]="filterItem"
-></app-data-table>
+<app-tool-bar createUri="/product/create" mainHeader="Product" (exportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-data-table tableHeader="List of Products" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="rawDatas" editUri="/product/create" deleteUri="/product/delete" [filterItem]="filterItem"></app-data-table>

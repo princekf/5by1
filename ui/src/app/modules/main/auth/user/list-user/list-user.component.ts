@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { UserService } from '@fboservices/user.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
@@ -9,24 +9,39 @@ import { FilterUserComponent } from '../filter-user/filter-user.component';
 import { User } from '@shared/entity/auth/user';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
+import { MainService } from '../../../../../services/main.service';
 
 @Component({
   selector: 'app-list-user',
   templateUrl: './list-user.component.html',
   styleUrls: [ './list-user.component.scss' ]
 })
-export class ListUserComponent implements OnInit {
+export class ListUserComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'email', 'role' ];
-
-
+  c = this.displayedColumns.length;
   columnHeaders = {
     name: 'Name',
-    email: 'email',
+    email: 'Email',
     role: 'Role',
+  };
+    iheaders = [
+   'Name',
+     'Email',
+     'Role',
+    ];
 
 
-  }
+  xheaders: any = [
+    {key: 'name',  width: 40 },
+      { key: 'email',  width: 50 },
+      { key: 'role',  width: 10 },
+
+  ];
+
+
 
   loading = true;
 
@@ -45,7 +60,9 @@ export class ListUserComponent implements OnInit {
   filterItem: FilterItem;
 
   constructor(private activatedRoute: ActivatedRoute,
-    private userService: UserService) { }
+              private userService: UserService,
+              private dialog: MatDialog,
+              private mainservice: MainService, ) { }
 
 
   private loadData = () => {
@@ -67,7 +84,7 @@ export class ListUserComponent implements OnInit {
 
     });
 
-  };
+  }
 
 
   ngOnInit(): void {
@@ -76,7 +93,7 @@ export class ListUserComponent implements OnInit {
 
   }
 
-  ngAfterViewInit():void {
+  ngAfterViewInit(): void {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -90,6 +107,44 @@ export class ListUserComponent implements OnInit {
 
       this.loadData();
 
+
+    });
+
+  }
+  handleExportClick = (): void => {
+
+    const tParams = {...this.queryParams};
+    tParams.limit = this.Users.totalItems;
+    this.loading = true;
+    const data = [];
+    this.userService.queryData(tParams).subscribe((items) => {
+
+      items.forEach((element: any) => {
+        const temp = [element.name, element.email, element.role];
+
+        data.push(temp);
+    });
+      const result = {
+        cell:  this.c,
+          rheader: this.iheaders,
+      eheader: this.xheaders,
+      header: this.columnHeaders,
+      rowData: data
+    };
+      this.mainservice.setExport(result);
+
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders}});
+      this.loading = false;
+
+
+    }, (error) => {
+
+      console.error(error);
+      this.loading = false;
 
     });
 
