@@ -346,18 +346,27 @@ export class TrialBalanceReportComponent implements OnInit {
       });
       const rowdata = maintree;
 
+      const array: Array<string> = [
+        'XPEDITIONS',
+        'Trial Balance',
+        'Date:'
 
+      ];
       const doc = new JSPDF();
       const col = this.columnHeaders;
+
+      const FontSize = 16;
+      doc.setFontSize(FontSize);
+      const headerhorizontal = 80;
+      const headervertical = 10;
+      doc.text(array.join('\n'), headerhorizontal, headervertical);
 
 
       autoTable(
 
-        doc, {
-          head: [ col ],
+        doc, {head: [ col ],
           body: rowdata,
-
-        });
+          startY: 25, });
 
       doc.save('Trial-Balance');
 

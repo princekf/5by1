@@ -434,7 +434,7 @@ export class LedgerReportComponent implements OnInit {
       rData1.push(rData);
 
     });
-    const fname = this.tableHeader;
+    const filename = this.tableHeader;
     const header = this.tableHeader;
     const doc = new JSPDF();
     const col = this.columnHeaders;
@@ -451,9 +451,10 @@ export class LedgerReportComponent implements OnInit {
         head: [ col ],
         body: rData1,
 
+
       });
 
-    doc.save(fname);
+    doc.save(filename);
 
   }
 
