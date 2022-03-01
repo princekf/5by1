@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import { Component, OnInit } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,11 +13,14 @@ import { QueryData } from '@shared/util/query-data';
 import * as dayjs from 'dayjs';
 import { FilterItem } from '../../../../directives/table-filter/filter-item';
 import { FilterLedgerReportComponent } from '../filter-ledger-report/filter-ledger-report.component';
-
+import * as Excel from 'exceljs';
+import * as saveAs from 'file-saver';
+import JSPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 interface LedgerReportFields {
   id: string;
   number: string;
-  type: VoucherType,
+  type: VoucherType;
   date: Date;
   ledger: string;
   debit: string;
@@ -24,7 +28,7 @@ interface LedgerReportFields {
   details: string;
 }
 
-interface RowSummary {name: string, credit: number, debit: number}
+interface RowSummary {name: string; credit: number; debit: number; }
 @Component({
   selector: 'app-ledger-report',
   templateUrl: './ledger-report.component.html',
@@ -36,11 +40,17 @@ export class LedgerReportComponent implements OnInit {
 
   displayedColumns: string[] = [ 'number', 'date', 'type', 'ledger', 'debit', 'credit', 'details' ];
 
+  lengthofcolumn = this.displayedColumns.length;
+
   sortDisabledColumns: string[] = [ 'date' ];
 
   numberColumns: string[] = [ 'debit', 'credit' ];
 
   reportType = '';
+
+  customColumnOrder1 = [
+    'Number', 'Date', 'Type', 'Ledger', 'Debit', 'Credit', 'Details'
+  ];
 
   columnHeaders = {
     number: 'Voucher #',
@@ -50,7 +60,26 @@ export class LedgerReportComponent implements OnInit {
     ledger: 'Ledger',
     debit: 'Debit',
     credit: 'Credit',
-  }
+  };
+
+  xheaders = [
+
+    {key: 'number',
+      width: 30, },
+    {key: 'type',
+      width: 30 },
+    { key: 'date',
+      width: 30 },
+    { key: 'details',
+      width: 30 },
+    { key: 'ledger',
+      width: 30 },
+    { key: 'debit',
+      width: 30 },
+    { key: 'credit',
+      width: 30 }
+
+  ];
 
   queryParams: QueryData = {};
 
@@ -66,9 +95,9 @@ export class LedgerReportComponent implements OnInit {
 
 
   constructor(private activatedRoute: ActivatedRoute,
-    private voucherService: VoucherService,
-    private ledgerService: LedgerService,
-    private router:Router,) { }
+              private voucherService: VoucherService,
+              private ledgerService: LedgerService,
+              private router: Router) { }
 
     private pushIntoItems =
     (items: Array<LedgerReportFields>, voucher: Voucher, amount: number, tType: TransactionType,
@@ -93,10 +122,10 @@ export class LedgerReportComponent implements OnInit {
     }
 
   private extractReportItems =
-  (vouchers: Array<Voucher>, ledgerId: string):[Array<LedgerReportFields>, Array<string>] => {
+  (vouchers: Array<Voucher>, ledgerId: string): [Array<LedgerReportFields>, Array<string>] => {
 
     const items: Array<LedgerReportFields> = [];
-    const otherLids:Array<string> = [];
+    const otherLids: Array<string> = [];
     for (const voucher of vouchers) {
 
       const [ pTran, ...cTrans ] = voucher.transactions;
@@ -138,7 +167,7 @@ export class LedgerReportComponent implements OnInit {
   }
 
 
-  private findBalances = (totalCredit: number, totalDebit: number, sLedger: Ledger):Array<string> => {
+  private findBalances = (totalCredit: number, totalDebit: number, sLedger: Ledger): Array<string> => {
 
     let opBalCr = '';
     let opBalDr = '';
@@ -187,7 +216,7 @@ export class LedgerReportComponent implements OnInit {
       };
       this.ledgerService.search(queryDataL).subscribe((ledgers) => {
 
-        const ledgerMap:Record<string, Ledger> = {};
+        const ledgerMap: Record<string, Ledger> = {};
         ledgers.forEach((ldg) => (ledgerMap[ldg.id] = ldg));
         const sLedger = ledgerMap[ledgerId];
         this.tableHeader = `Ledger Report -- ${sLedger.name}`;
@@ -201,7 +230,8 @@ export class LedgerReportComponent implements OnInit {
 
         });
         items = this.createDailyOrMonthlySummary(items);
-        this.createSummaryRows(items, 'Total', String(totalDebit.toFixed(environment.decimalPlaces)), String(totalCredit.toFixed(environment.decimalPlaces)));
+        const str = String(totalDebit.toFixed(environment.decimalPlaces));
+        this.createSummaryRows(items, 'Total', str, String(totalCredit.toFixed(environment.decimalPlaces)));
         const [ opBalCr, opBalDr, balCrS, balDrS ] = this.findBalances(totalCredit, totalDebit, sLedger);
         this.createSummaryRows(items, 'Opening Balance', opBalDr, opBalCr);
         this.createSummaryRows(items, 'Balance', balDrS, balCrS);
@@ -218,8 +248,8 @@ export class LedgerReportComponent implements OnInit {
 
   }
 
-  private createDailyOrMonthlySummary = (items:Array<LedgerReportFields>,
-  ) : Array<LedgerReportFields> => {
+  private createDailyOrMonthlySummary = (items: Array<LedgerReportFields>,
+  ): Array<LedgerReportFields> => {
 
     if (![ 'daily', 'monthly' ].includes(this.reportType)) {
 
@@ -235,6 +265,7 @@ export class LedgerReportComponent implements OnInit {
     };
     const items2: Array<LedgerReportFields> = [];
     const dpL = environment.decimalPlaces;
+
     items.forEach((item, idx: number) => {
 
       const cMonth = dayjs(item.date).format(format);
@@ -242,6 +273,7 @@ export class LedgerReportComponent implements OnInit {
       monthD.credit += Number(item.credit);
       monthD.debit += Number(item.debit);
       items2.push(item);
+
 
       if (idx) {
 
@@ -261,6 +293,7 @@ export class LedgerReportComponent implements OnInit {
     return items2;
 
   }
+
 
   ngOnInit(): void {
 
@@ -296,7 +329,7 @@ export class LedgerReportComponent implements OnInit {
 
   }
 
-  handleReportTypeChange = (evt: MatRadioChange):void => {
+  handleReportTypeChange = (evt: MatRadioChange): void => {
 
     const {where, ...others} = this.queryParams;
     const whereS = JSON.stringify(where);
@@ -319,7 +352,108 @@ export class LedgerReportComponent implements OnInit {
       return dayjs(element[column]).format(environment.dateFormat);
 
     }
+
     return null;
+
+  }
+
+  exportExcel(): void {
+
+    const array: Array<string> = [
+      this.tableHeader,
+      ''
+
+    ];
+    const items = [];
+    const filename = this.tableHeader;
+    const EXCEL_EXTENSION = '.xlsx';
+    const workbook = new Excel.Workbook();
+    const worksheet = workbook.addWorksheet();
+    worksheet.getCell('A1', 'n').value = array.join('\n');
+
+    worksheet.getCell('A1').alignment = {vertical: 'middle',
+      horizontal: 'center' };
+    worksheet.getCell('A1').font = {
+      size: 12,
+      bold: true
+    };
+    const rownumber = 3;
+    worksheet.mergeCells(1, 1, rownumber, this.lengthofcolumn);
+
+
+    const rowData = this.ledgerRows;
+    items.push(rowData.items);
+    const rData1 = [];
+
+
+    items[0].forEach((element) => {
+
+
+      const rData = [ element.number, element.date, element.type, element.ledger, element.debit,
+        element.credit, element.details ];
+      rData1.push(rData);
+
+    });
+
+    worksheet.addRow(this.customColumnOrder1, 'n');
+    worksheet.columns = this.xheaders;
+    const headerrownumber = 4;
+    worksheet.getRow(headerrownumber).font = {bold: true };
+    worksheet.getRow(headerrownumber).alignment = {horizontal: 'center' };
+    rData1.forEach((element) => {
+
+      worksheet.addRow(element, 'n');
+
+    });
+
+
+    workbook.xlsx.writeBuffer().then((data) => {
+
+      const blob = new Blob([ data ]);
+
+      saveAs(blob, `${filename}${EXCEL_EXTENSION}`);
+
+    });
+
+  }
+
+  convert(): void {
+
+    const items = [];
+
+    const rowData = this.ledgerRows;
+    items.push(rowData.items);
+    const rData1 = [];
+
+
+    items[0].forEach((element) => {
+
+
+      const rData = [ element.number, element.date, element.type, element.ledger, element.debit,
+        element.credit, element.details ];
+      rData1.push(rData);
+
+    });
+    const fname = this.tableHeader;
+    const header = this.tableHeader;
+    const doc = new JSPDF();
+    const col = this.columnHeaders;
+    const FontSize = 14;
+    doc.setFontSize(FontSize);
+    const headerhorizontal = 70;
+    const headervertical = 10;
+    doc.text(header, headerhorizontal, headervertical);
+
+
+    autoTable(
+
+      doc, {
+        head: [ col ],
+        body: rData1,
+
+      });
+
+    doc.save(fname);
 
   }
 

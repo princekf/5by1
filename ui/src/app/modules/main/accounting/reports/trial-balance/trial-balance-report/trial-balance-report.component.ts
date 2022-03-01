@@ -350,8 +350,6 @@ export class TrialBalanceReportComponent implements OnInit {
       const doc = new JSPDF();
       const col = this.columnHeaders;
 
-      // Doc.setFontSize(20);
-
 
       autoTable(
 
