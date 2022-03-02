@@ -1,43 +1,71 @@
-table {
-  width: 100%;
-    padding-left: 2%;
-    padding-right: 5%;
-    margin-top: 5%;
-    margin-bottom: 5%;
-
-}
-
- .mat-header-row{
-  background-color: #0062FF22;
-  width: 50%;
-  height: 35px;
-}
-
-th{
-  border-left: 0.5px solid  #0062FF22;
-}
-
-td{
-  border-left: 0.5px solid  #0062FF22;
-  height: 25px;
-  width: 2%;
-}
-
-
- td.mat-cell:last-of-type {
-  border-right: 0.5px solid #0062FF22;
-  width: 1%;
-  text-align: center;
-}
-button {
-
-  background-color: Transparent;
-  border: none;
-  color:#0772d6;
-
-}
-
-
-
-
-
+        .header {
+            background-color: #0062FF22;
+            width: 99%;
+        }
+        
+        .htext {
+            margin-left: 40%;
+        }
+        
+        .details {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            margin-left: 25%;
+            width: 50%;
+            margin-top: 40px;
+        }
+        
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 10px;
+        }
+        
+        .branchname {
+            margin-left: 30px;
+        }
+        
+        table {
+            width: 100%;
+            padding-left: 2%;
+            padding-right: 5%;
+            margin-top: 1%;
+            margin-bottom: 3%;
+        }
+        
+        .mat-header-row {
+            background-color: #0062FF22;
+            width: 50%;
+            height: 35px;
+        }
+        
+        th {
+            border-left: 0.5px solid #0062FF22;
+        }
+        
+        td {
+            border-left: 0.5px solid #0062FF22;
+            height: 25px;
+            width: 2%;
+        }
+        
+        .data {
+            margin-left: 10px;
+        }
+        
+        .head {
+            margin-left: 30%;
+        }
+        
+        td.mat-cell:last-of-type {
+            border-right: 0.5px solid #0062FF22;
+            width: 1%;
+            text-align: center;
+        }
+        
+        button {
+            background-color: Transparent;
+            border: none;
+            color: #0772d6;
+        }
