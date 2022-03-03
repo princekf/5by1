@@ -17,6 +17,7 @@ export class ListPurchaseComponent {
   tableHeader = 'List of Purchases';
 
   editUri = '/voucher/purchase/create';
+
   displayedColumns: string[] = [ 'number', 'date', 'pledger', 'cledger', 'amount', 'details' ];
 
 
@@ -48,27 +49,25 @@ export class ListPurchaseComponent {
 
 
     }
+
   handleExportClick = (): void => {
-    const data = [];
 
+    this.mainservice.getExport().subscribe((result1) => {
 
-    this.mainservice.getExport().subscribe(result1 => {
-      this.export = result1;
+      this['export'] = result1;
 
 
     });
 
 
-    const items = this.export.items;
+    const {items} = this['export'];
     this.dialog.open(ExportPopupComponent, {
       height: '500px',
-    data: {items,
-    displayedColumns: this.displayedColumns,
-    columnHeaders: this.columnHeaders,
+      data: {items,
+        displayedColumns: this.displayedColumns,
+        columnHeaders: this.columnHeaders, }
+    });
 
-       }
-      });
-
-   }
+  }
 
 }
