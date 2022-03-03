@@ -46,11 +46,13 @@ export class CreateVendorComponent {
       .pipe(map((distinctResp) => distinctResp.data));
 
     const tId = this.route.snapshot.queryParamMap.get('id');
+
     if (tId) {
 
       this.formHeader = 'Update Vendors';
       this.loading = true;
       this.vendorService.get(tId, {}).subscribe((itemC) => {
+
 
         this.fboForm.setValue({id: itemC.id,
           name: itemC.name,
@@ -63,6 +65,7 @@ export class CreateVendorComponent {
         this.loading = false;
 
       });
+
 
     }
 
@@ -91,5 +94,6 @@ export class CreateVendorComponent {
     });
 
   }
+
 
 }

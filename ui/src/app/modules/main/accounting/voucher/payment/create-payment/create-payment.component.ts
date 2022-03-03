@@ -39,6 +39,7 @@ export class CreatePaymentComponent implements OnInit {
 
     });
 
+
   }
 
   public handlePrimaryLedgerChangeEvent = (ledgerQ: string):void => {
@@ -63,5 +64,6 @@ export class CreatePaymentComponent implements OnInit {
       .subscribe((ledgers) => (this.ledgersCompoundFiltered = ledgers));
 
   };
+
 
 }
