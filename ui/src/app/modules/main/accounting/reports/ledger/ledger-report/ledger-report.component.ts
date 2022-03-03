@@ -1,4 +1,4 @@
-/* eslint-disable max-statements */
+
 import { Component, OnInit } from '@angular/core';
 import { MatRadioChange } from '@angular/material/radio';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -365,8 +365,6 @@ export class LedgerReportComponent implements OnInit {
 
     ];
     const items = [];
-    const filename = this.tableHeader;
-    const EXCEL_EXTENSION = '.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet();
     worksheet.getCell('A1', 'n').value = array.join('\n');
@@ -411,7 +409,7 @@ export class LedgerReportComponent implements OnInit {
 
       const blob = new Blob([ data ]);
 
-      saveAs(blob, `${filename}${EXCEL_EXTENSION}`);
+      saveAs(blob, `${this.tableHeader}.xlsx`);
 
     });
 
