@@ -64,7 +64,7 @@ export class UserService extends BaseHTTPService<User> {
 
   }
 
-  public upsert(user:User):Observable<void> {
+  public upsert(user: User): Observable<void> {
 
     const {id, password, ...user2} = user;
     if (id) {

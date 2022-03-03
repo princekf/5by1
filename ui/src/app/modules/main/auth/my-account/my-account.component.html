@@ -2,65 +2,122 @@
     <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
 </div>
 <div *ngIf="!loading">
-    <h3>Personal details</h3>
-    Name : {{user.name}}
-    <br/>
-    E-Mail : {{user.email}}
-    <br/>
-    Role : {{user.role}}
-
-    <h3>Company details</h3>
-    Company Name : {{company.name}}
-    <br/>
-    Company Code : {{company.code}}
-    <br/>
-    E-mail : {{company.email}}
-    <br/>
-    Address : {{company.address}}
-    <br/>
-    Branch Name : {{branch?.name}}
-    <br/>
-    Financial Year : {{finYear?.name}}
-
-    <h3>Change Financial Year</h3>
-
-    <div *ngFor="let branchC of branches">
-        <h3>{{branchC.name}}</h3>
-        <table mat-table [dataSource]="createDataSource(branchC.id)">
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Name</th>
-                <td mat-cell *matCellDef="let element">{{element.name}}</td>
-              </ng-container>
-            
-              <ng-container matColumnDef="code">
-                <th mat-header-cell *matHeaderCellDef>Code</th>
-                <td mat-cell *matCellDef="let element">{{element.code}}</td>
-              </ng-container>
-            
-              <ng-container matColumnDef="startDate">
-                <th mat-header-cell *matHeaderCellDef>Start Date</th>
-                <td mat-cell *matCellDef="let element">{{parseDate(element.startDate)}}</td>
-              </ng-container>
-            
-              <ng-container matColumnDef="endDate">
-                <th mat-header-cell *matHeaderCellDef>End Date</th>
-                <td mat-cell *matCellDef="let element">{{parseDate(element.endDate)}}</td>
-              </ng-container>
-
-
-            <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-                <td mat-cell *matCellDef="let element; let i = dataIndex">
-                    <button mat-icon-button type="button" color="warn" focusable="true" (click)="changeFinYear(element)">
-                        <mat-icon>browser_updated</mat-icon>
-                    </button>
-                </td>
-            </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-
+    <div class="header">
+        <h3 class="htext"> <b>Personal Details</b>
+        </h3>
     </div>
 
-</div>
+    <table class="details"> <b>
+      <tr>
+        <td> Name :</td>
+        <td>{{user.name}}</td>
+      </tr>
+      <tr>
+        <td> E-Mail :</td>
+        <td> {{user.email}}</td>
+      </tr>
+      <tr>
+        <td> Role :</td>
+        <td>  {{user.role}}</td>
+      </tr>
+        </b>
+    </table>
+
+    <div class="header">
+        <h3 class="htext"><b>Company Details</b></h3>
+    </div>
+    <div>
+
+        <table class="details"> <b>
+      <tr>
+        <td> Company Name :</td>
+        <td>{{company.name}}</td>
+      </tr>
+      <tr>
+        <td>  Company Code : </td>
+        <td>{{company.code}}</td>
+      </tr>
+      <tr>
+        <td> E-mail :</td>
+        <td> {{company.email}}</td>
+      </tr>
+      <tr>
+        <td>Address :</td>
+        <td> {{company.address}}</td>
+      </tr>
+      <tr>
+        <td> Branch Name :</td>
+        <td>  {{branch?.name}}</td>
+      </tr>
+      <tr>
+        <td>Financial Year :</td>
+        <td>{{finYear?.name}}</td>
+      </tr>
+        </b>
+        </table>
+
+
+        <div class="header">
+            <h3 class="htext"><b>Change Financial Year</b></h3>
+        </div>
+
+        <div *ngFor="let branchC of branches">
+
+            <h3 class=" branchname"><b>{{branchC.name}}</b></h3>
+            <table mat-table [dataSource]="createDataSource(branchC.id)">
+
+
+
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="head">Name</div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.name}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="code">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="head"> Code</div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="data">{{element.code}}</div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="startDate">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="head">Start Date</div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="data">{{parseDate(element.startDate)}}</div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="endDate">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <div class="head">End Date</div>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="data">{{parseDate(element.endDate)}}</div>
+                    </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+                    <td mat-cell *matCellDef="let element; let i = dataIndex">
+                        <button mat-icon-button type="button" color="warn" focusable="true" (click)="changeFinYear(element)">
+                        <mat-icon>browser_updated</mat-icon>
+                    </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+        </div>
+
+    </div>
