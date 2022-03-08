@@ -213,6 +213,10 @@ export class DataTableComponent {
 
     }
     const [ selectedTax ] = <Array<Tax>> this.selection.selected;
+    this.router.navigate([ this.editUri ], { queryParams: {id: selectedTax.id,
+      burl: this.router.url} });
+
+
     const newstr = selectedTax.type.toLowerCase();
     const editUri = `/voucher/${newstr}/create`;
     this.router.navigate([ editUri ], { queryParams: {id: selectedTax.id,
