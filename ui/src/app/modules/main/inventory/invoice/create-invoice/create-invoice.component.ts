@@ -155,7 +155,7 @@ export class CreateInvoiceComponent implements OnInit {
         if (!this[element.value.product.name]) {
 
           this[element.value.product.name] = { name: element.value.product.name,
-            quantity: 0 };
+            quantity: -1 };
           addquantity.push(this[element.value.product.name]);
 
         }
@@ -182,7 +182,7 @@ export class CreateInvoiceComponent implements OnInit {
       }, []);
 
 
-      const newArray = [];
+      const result = [];
 
       for (const item of filtered) {
 
@@ -190,12 +190,12 @@ export class CreateInvoiceComponent implements OnInit {
 
           if (item.value.product.name === each.name && item.value.quantity === each.quantity) {
 
-            newArray.push(item);
+            result.push(item);
 
           } else if (item.value.product.name === each.name && item.value.quantity !== each.quantity) {
 
             item.value.quantity = each.quantity;
-            newArray.push(item);
+            result.push(item);
 
           }
 
@@ -204,13 +204,13 @@ export class CreateInvoiceComponent implements OnInit {
       }
 
 
-      newArray.push(this.createSaleItemForm());
+      result.push(this.createSaleItemForm());
 
 
-      this.dataSource = new MatTableDataSource(newArray);
-
+      this.dataSource = new MatTableDataSource(result);
 
     }
+
 
     private createSaleItemForm = (saleItem?: SaleItem): FormGroup => {
 
