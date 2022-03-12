@@ -1,0 +1,113 @@
+<div class="filter-item-card">
+    <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
+        <div (click)="$event.stopPropagation()">
+
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Name</mat-label>
+                <mat-select formControlName="nameType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="name">
+                </mat-form-field>
+            </div>
+
+
+            
+            <div class="filter-content-div">
+                <mat-label class="lable">StartDate</mat-label>
+                <mat-select formControlName="startDateType" class="select">
+                    <mat-option value="eq">Equal to</mat-option>
+                    <mat-option value="lt">Lesser than</mat-option>
+                    <mat-option value="gt">Greater than</mat-option>
+                    <mat-option value="between">Between</mat-option>
+                </mat-select>
+
+            <mat-form-field *ngIf="filterForm.controls.startDateType.value !== 'between'">
+                    
+             <input matInput [matDatepicker]="picker" formControlName="startDate" >
+             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+             <mat-datepicker #picker></mat-datepicker>
+           </mat-form-field>
+
+         
+
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.startDateType.value === 'between'">
+                    <mat-form-field class="inputPrimary">
+                       <input matInput [matDatepicker]="pickerStart" formControlName="startDateStart" >
+                       <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                       <mat-datepicker #pickerStart></mat-datepicker>
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+
+                   <mat-form-field class="inputPrimary">
+                      
+                        <input matInput [matDatepicker]="pickerEnd" formControlName="startDateEnd" >
+                        <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerEnd></mat-datepicker>
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+               
+            <div class="filter-content-div">
+                <mat-label class="lable">EndDate</mat-label>
+                <mat-select formControlName="endDateType" class="select">
+                    <mat-option value="eq">Equal to</mat-option>
+                    <mat-option value="lt">Lesser than</mat-option>
+                    <mat-option value="gt">Greater than</mat-option>
+                    <mat-option value="between">Between</mat-option>
+                </mat-select>
+
+            <mat-form-field *ngIf="filterForm.controls.endDateType.value !== 'between'">
+                    
+             <input matInput [matDatepicker]="endDatepicker" formControlName="endDate" >
+             <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+             <mat-datepicker #endDatepicker></mat-datepicker>
+           </mat-form-field>
+
+         
+
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.endDateType.value === 'between'">
+                    <mat-form-field class="inputPrimary">
+                       <input matInput [matDatepicker]="endDatepickerStart" formControlName="endDateStart" >
+                       <mat-datepicker-toggle matSuffix [for]="endDatepickerStart"></mat-datepicker-toggle>
+                       <mat-datepicker #endDatepickerStart></mat-datepicker>
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+
+                   <mat-form-field class="inputPrimary">
+                      
+                        <input matInput [matDatepicker]="endDatepickerEnd" formControlName="endDateEnd" >
+                        <mat-datepicker-toggle matSuffix [for]="endDatepickerEnd"></mat-datepicker-toggle>
+                        <mat-datepicker #endDatepickerEnd></mat-datepicker>
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Branch</mat-label>
+                <mat-select formControlName="branchType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="branch">
+                </mat-form-field>
+            </div>
+      
+        </div>
+
+        <div class='filter-actions-container'>
+            <button mat-button type="button" class="filtercancelbutton">Cancel</button>
+            <button mat-button type="submit" class="filtersavebutton">Submit</button>
+        </div>
+    </form>
+</div>

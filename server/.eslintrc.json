@@ -1,6 +1,6 @@
 {
     "root": false,
     "rules": {
-        "no-useless-constructor": "error"
+        "new-cap": ["error", { "newIsCap": true, "capIsNewExceptionPattern" : "BootMixin|ServiceMixin|RepositoryMixin"}]
     }
 }

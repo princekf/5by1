@@ -1,0 +1,64 @@
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertCategory()">
+  <p>
+    <mat-form-field>
+      <mat-label>Parent Name</mat-label>
+      <input type="text" matInput placeholder="Enter Parent Name Ex. Mobile" formControlName="parent"
+                [matAutocomplete]="autoCategory">
+            <mat-autocomplete autoActiveFirstOption #autoCategory="matAutocomplete"
+                [displayWith]="extractNameOfObject">
+                <mat-option *ngFor="let categoryS of categoriesFiltered" [value]="categoryS">
+                    {{categoryS.name}}
+                </mat-option>
+            </mat-autocomplete>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input formControlName="name" type="text" matInput placeholder="Enter name">
+      <mat-error *ngIf="form.controls['name'].hasError('required')">Please Enter Name</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Unit</mat-label>
+      <input type="text" matInput placeholder="Enter Unit Name Ex. Kilogram" formControlName="unit"
+                [matAutocomplete]="autoUnit">
+            <mat-autocomplete autoActiveFirstOption #autoUnit="matAutocomplete"
+                [displayWith]="extractNameOfObject">
+                <mat-option *ngFor="let unitS of unitsFiltered" [value]="unitS">
+                    {{unitS.name}}
+                </mat-option>
+            </mat-autocomplete>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>HSN Number</mat-label>
+      <input formControlName="hsnNumber" type="text" matInput placeholder="Enter HSN Number">
+      <mat-error *ngIf="form.controls['hsnNumber'].hasError('required')">Please Enter HSN Number</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <input formControlName="description" type="text" matInput placeholder="Enter description">
+      <mat-error *ngIf="form.controls['description'].hasError('required')">Please write description</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
+    <button class="submit-button" mat-button>save</button>
+  </p>
+
+</form>

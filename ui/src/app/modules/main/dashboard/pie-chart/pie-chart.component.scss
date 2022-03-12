@@ -1,0 +1,45 @@
+:host ::ng-deep {
+  
+    .chart-legend {
+      transform: translateX(calc(-100%));
+      .legend-labels {
+        background-color: transparent;
+        .legend-label-text {
+          color: rgba(#1E3354, .8);
+          font-size: 13px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  .pie-chart-5by1{
+    transform: translateX(calc(-50% + 72px));
+  }
+.pie-chart-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.pie-chart-area{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 85%;
+    height: 200px;
+}
+
+.dashboard-5by1-card-title-container{
+    display: flex;
+    align-content:center;
+    line-height: 2;
+    span {
+        padding-left: 10px;
+    }
+}
+.dashboard-5by1-card-title-text{
+  font-size: 15px;
+  color: rgba(#1E3354, .8);
+}
+.dashboard-5by1-card-summary-container{
+  padding-top: 10px;
+}

@@ -1,0 +1,65 @@
+<div class="filter-item-card">
+    <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
+        <div (click)="$event.stopPropagation()">
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Parent</mat-label>
+                <mat-select class="select" formControlName="parentType">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field class="forminput">
+                    <input matInput formControlName="parent">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Name</mat-label>
+                <mat-select formControlName="nameType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field >
+                    <input matInput formControlName="name">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Unit</mat-label>
+                <mat-select  formControlName="unitType"  class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+         
+                <mat-form-field class="forminput">
+                    <input matInput formControlName="unit">
+                </mat-form-field>
+         
+
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">HSN Number</mat-label>
+                <mat-select  formControlName="hsnNumberType"  class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+         
+                <mat-form-field class="forminput">
+                    <input matInput formControlName="hsnNumber">
+                </mat-form-field>
+         
+
+            </div>
+        </div>
+
+        <div class='filter-actions-container'>
+            <button mat-button type="button" class="filtercancelbutton">Cancel</button>
+            <button mat-button type="submit" class="filtersavebutton">Submit</button>
+        </div>
+    </form>
+</div>

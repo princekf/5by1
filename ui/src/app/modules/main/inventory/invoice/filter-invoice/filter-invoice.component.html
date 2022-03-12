@@ -1,0 +1,192 @@
+<div class="filter-item-card">
+    <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
+        <div (click)="$event.stopPropagation()">
+
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Customer</mat-label>
+                <mat-select formControlName="customerType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="customer">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Invoice Date</mat-label>
+                <mat-select formControlName="invoiceDateType" class="select">
+                    <mat-option value="eq">Equal to</mat-option>
+                    <mat-option value="lt">Lesser than</mat-option>
+                    <mat-option value="gt">Greater than</mat-option>
+                    <mat-option value="between">Between</mat-option>
+                </mat-select>
+
+
+              
+                    <mat-form-field *ngIf="filterForm.controls.invoiceDateType.value !== 'between'">
+       
+                        <input matInput [matDatepicker]="picker" formControlName="invoiceDate" >
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                   
+
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.invoiceDateType.value === 'between'">
+                    <mat-form-field class="inputPrimary">
+
+                        <input matInput [matDatepicker]="pickerStart" formControlName="invoiceDateStart" >
+                        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerStart></mat-datepicker>
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                       
+                        <input matInput [matDatepicker]="pickerEnd" formControlName="invoiceDateEnd" >
+                        <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerEnd></mat-datepicker>
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Invoice No</mat-label>
+                <mat-select formControlName="invoiceNumberType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="invoiceNumber">
+                </mat-form-field>
+            </div>
+
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Amount</mat-label>
+                <mat-select formControlName="totalAmountType" class="select">
+                    <mat-option value="eq">Equal to</mat-option>
+                    <mat-option value="lt">Lesser than</mat-option>
+                    <mat-option value="gt">Greater than</mat-option>
+                    <mat-option value="between">Between</mat-option>
+                </mat-select>
+
+
+              
+                    <mat-form-field  *ngIf="filterForm.controls.totalAmountType.value !== 'between'">
+                        <input matInput type="number" formControlName="totalAmount">
+                    </mat-form-field>
+             
+
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.totalAmountType.value === 'between'">
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="totalAmountStart">
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="totalAmountEnd">
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Discount</mat-label>
+                <mat-select formControlName="totalDisountType" class="select">
+                    <mat-option value="eq">Equal to</mat-option>
+                    <mat-option value="lt">Lesser than</mat-option>
+                    <mat-option value="gt">Greater than</mat-option>
+                    <mat-option value="between">Between</mat-option>
+                </mat-select>
+
+
+                    <mat-form-field *ngIf="filterForm.controls.totalDisountType.value !== 'between'">
+                        <input matInput type="number" formControlName="totalDisount">
+                    </mat-form-field>
+              
+                    <mat-form-field  *ngIf="filterForm.controls.totalDisountType.value === 'between'">
+                        <input matInput type="number" formControlName="totalDisountStart">
+                    </mat-form-field>
+
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Tax</mat-label>
+                <mat-select formControlName="totalTaxType" class="select">
+                    <mat-option value="eq">Equal to</mat-option>
+                    <mat-option value="lt">Lesser than</mat-option>
+                    <mat-option value="gt">Greater than</mat-option>
+                    <mat-option value="between">Between</mat-option>
+                </mat-select>
+
+
+                
+                    <mat-form-field *ngIf="filterForm.controls.totalTaxType.value !== 'between'">
+                        <input matInput type="number" formControlName="totalTax">
+                    </mat-form-field>
+           
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.totalTaxType.value === 'between'">
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="totalTaxStart">
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="totalTaxEnd">
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Grand Total</mat-label>
+                <mat-select formControlName="grandTotalType" class="select">
+                    <mat-option value="eq">Equal to</mat-option>
+                    <mat-option value="lt">Lesser than</mat-option>
+                    <mat-option value="gt">Greater than</mat-option>
+                    <mat-option value="between">Between</mat-option>
+                </mat-select>
+
+
+                    <mat-form-field *ngIf="filterForm.controls.grandTotalType.value !== 'between'">
+                        <input matInput type="number" formControlName="grandTotal">
+                    </mat-form-field>
+               
+
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls.grandTotalType.value === 'between'">
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="grandTotalStart">
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="grandTotalEnd">
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+
+            <div class="filter-content-div">
+                <mat-label class="lable">Received</mat-label>
+                <mat-select formControlName="isReceivedType" class="select">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-form-field>
+                    <input matInput formControlName="isReceived">
+                </mat-form-field>
+            </div>
+
+        </div>
+
+        <div class='filter-actions-container'>
+            <button mat-button type="button" class="filtercancelbutton">Cancel</button>
+            <button mat-button type="submit" class="filtersavebutton">Submit</button>
+        </div>
+    </form>
+</div>

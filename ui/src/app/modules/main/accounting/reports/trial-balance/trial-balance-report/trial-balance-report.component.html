@@ -1,0 +1,16 @@
+<div *ngIf="loading">
+    <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<div class="head">
+    <div class="empy-space"></div>
+    <button mat-flat-button class="button" (click)="convert()">
+      <mat-icon>ios_share</mat-icon> PDF
+
+  </button>
+    <button mat-flat-button class="button" (click)="exportExcel()">
+      <mat-icon>ios_share</mat-icon>  EXCEL
+  </button>
+
+</div>
+
+<treetable *ngIf="!loading" [tree]="tbData" [options]="treeOptions"></treetable>

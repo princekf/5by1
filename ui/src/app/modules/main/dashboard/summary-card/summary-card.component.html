@@ -1,0 +1,22 @@
+<mat-card>
+    <mat-card-header class="summary-header">
+        <mat-card-title class="dashboard-5by1-card-title-container">
+            <mat-icon class="mat-5by1-white">{{summary.title.icon}}</mat-icon>
+            <span class="dashboard-5by1-card-title-text">
+                {{summary.title.value}}
+            </span>
+        </mat-card-title>
+        <div>
+            <button mat-icon-button aria-label="Horizontal menu">
+                <mat-icon class="mat-5by1-white">more_horiz</mat-icon>
+            </button>
+        </div>
+    </mat-card-header>
+    <mat-card-content class="dashboard-5by1-card-summary-container">
+        <span class="summary-content-text">{{summary.content}}</span>
+        <div class="d-flex justify-content-between summary-content-footer">
+            <span>{{summary.footer.left}}</span>
+            <span>{{summary.footer.right}}</span>
+        </div>
+    </mat-card-content>
+</mat-card>

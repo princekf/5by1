@@ -1,0 +1,82 @@
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertPayment()">
+  <p>
+
+    <mat-form-field>
+      <mat-label>Paid date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="paidDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="form.controls['paidDate'].hasError('required')">Please Enter Paid Date</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Vendor</mat-label>
+
+      <input type="text" matInput placeholder="Type vendor name" formControlName="vendor"
+        [matAutocomplete]="autoVendor">
+      <mat-autocomplete autoActiveFirstOption #autoVendor="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let vendorS of vendors$ | async" [value]="vendorS">
+          {{vendorS.name}}
+        </mat-option>
+      </mat-autocomplete>
+
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Bill</mat-label>
+
+      <input type="text" matInput placeholder="Type bill number" formControlName="bill" [matAutocomplete]="autoBill">
+      <mat-autocomplete autoActiveFirstOption #autoBill="matAutocomplete" [displayWith]="extractBillNumber">
+        <mat-option *ngFor="let billS of bills$ | async" [value]="billS">
+          {{billS.billNumber}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label> Bank</mat-label>
+
+      <input type="text" matInput placeholder="Type bank name" formControlName="bank" [matAutocomplete]="autoBank">
+      <mat-autocomplete autoActiveFirstOption #autoBank="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let bankS of banks$ | async" [value]="bankS">
+          {{bankS.name}}
+        </mat-option>
+      </mat-autocomplete>
+
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Category</mat-label>
+      <input type="text" placeholder="Enter Category Name" matInput formControlName="category">
+      <mat-error *ngIf="form.controls['category'].hasError('required')"> Category is required</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label> Amount</mat-label>
+      <input type="number" matInput placeholder="Enter Amount" formControlName="amount">
+      <mat-error *ngIf="form.controls['amount'].hasError('required')"> Amount is required</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label> Description</mat-label>
+      <input type="text" matInput placeholder="Enter description" formControlName="description">
+      <mat-error *ngIf="form.controls['description'].hasError('required')"> Description is required</mat-error>
+    </mat-form-field>
+  </p>
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
+    <button type="submit" class="submit-button" mat-button>Save</button>
+  </p>
+</form>

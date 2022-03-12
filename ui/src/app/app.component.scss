@@ -1,4 +1,11 @@
 .main {
+    background-color: #12284B;
     height: 100%;
     width: 100%;
+}
+
+@media only screen and (max-width: 768px) {
+    .main {
+        background-color: #FFFFFF;
+    }
 }

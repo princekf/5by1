@@ -1,0 +1,11 @@
+<app-tool-bar createUri="/transfer/create" mainHeader="Transfer"></app-tool-bar>
+<app-data-table tableHeader="List of Transfers"
+[displayedColumns]="displayedColumns"
+[columnHeaders]="columnHeaders"
+[loading]="loading"
+[tableData]="transfers"
+editUri="/transfer/create"
+deleteUri="/transfer/delete"
+[columnParsingFn]="columnParsingFn"
+[filterItem]="filterItem"
+></app-data-table> 

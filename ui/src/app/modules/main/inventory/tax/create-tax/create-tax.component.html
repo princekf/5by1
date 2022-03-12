@@ -1,0 +1,65 @@
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertTax()">
+  <p>
+    <mat-form-field>
+      <mat-label>Group name</mat-label>
+      <input type="text" matInput placeholder="Ex. CGST, SGST etc" formControlName="groupName"
+      [matAutocomplete]="autoGroupName">
+      <mat-autocomplete autoActiveFirstOption #autoGroupName="matAutocomplete">
+        <mat-option *ngFor="let option of groupNameOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="form.controls['groupName'].hasError('required')">
+        Group name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input type="text" matInput placeholder="Ex. CGST-9%" formControlName="name">
+      <mat-error *ngIf="form.controls['name'].hasError('required')">
+        Name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Rate</mat-label>
+      <input type="number" matInput placeholder="Ex. 9" formControlName="rate">
+      <mat-error *ngIf="form.controls['rate'].hasError('required')">
+        Rate is <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="form.controls['rate'].hasError('min')">
+        Rate should be greater than or equal to <strong>0</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Applied to</mat-label>
+      <input type="number" matInput placeholder="Ex. 50" formControlName="appliedTo">
+      <mat-error *ngIf="form.controls['appliedTo'].hasError('required')">
+        Applied to is <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="form.controls['appliedTo'].hasError('min') || form.controls['appliedTo'].hasError('max')">
+        Rate should be between <strong>0</strong> and <strong>100</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+  </p>
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
+    <button type="submit" class="submit-button" mat-button>Save</button>
+  </p>
+</form>

@@ -3,12 +3,12 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": [],
+    "types": ["node"],
     "baseUrl": ".",
     "paths": {
-      "@sharedui/*" :["src/app/shared/*"],
-      "@services/*" :["src/app/services/*"],
-      "@environments/*" :["src/environments/*"]
+      "@fboservices/*" :["src/app/services/*"],
+      "@fboenvironments/*" :["src/environments/*"],
+      "@fboutil/*" :["src/app/util/*"]
     }
   },
   "files": [

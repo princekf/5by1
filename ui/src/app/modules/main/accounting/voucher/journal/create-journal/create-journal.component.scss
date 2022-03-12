@@ -1,0 +1,116 @@
+.fbo-form-field-multi {
+    margin-left: 2%;
+}
+.fbo-form-field-details {
+    margin-left: 2%;
+    width: 40%;
+}
+.form-submit-container {
+    float: right;
+    width: 50%;
+}
+// Transaction table styles.
+.primayamount{
+    background-color: rgba(0, 98, 255, 0.3);
+    font-weight: 700;
+}
+.create-form-table{
+    width: 100%;
+    padding-left: 2%;
+    padding-right: 5%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+:host ::ng-deep .mat-header-row{
+    background-color: #0062FF22;
+    width: 50%;
+    height: 35px;
+}
+
+th{
+    border-left: 0.5px solid  #0062FF22;
+}
+
+td{
+    border-left: 0.5px solid  #0062FF22;
+    height: 35px;
+    width: 2%;
+}
+
+:host ::ng-deep td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+    padding-right: 0px !important;
+    border-right: 0.5px solid #0062FF22;
+    width: 1%;
+    text-align: center;
+}
+
+:host ::ng-deep th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+    padding-right: 0px;
+}
+
+:host ::ng-deep  td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+    padding-left: 0px;
+}
+
+:host ::ng-deep .mat-row.ng-star-inserted { 
+    height: 35px !important; 
+}
+
+:host ::ng-deep .create-form-table{
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+        text-align: right;
+    }
+
+    .mat-form-field-underline {
+        display: none;
+        position: absolute;
+        width: 100%;
+        pointer-events: none;
+        transform: scale3d(1, 1.0001, 1);
+    }
+
+    .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+        padding-bottom: 0em; 
+    }
+
+    .mat-sort-header{
+        padding-left:3%;
+    }
+
+    .ledger-transaction-field{
+        min-width: 300px;
+        width: 100%;
+    }
+    .costCentre-transaction-field{
+        padding-left: 2%;
+    }
+    .details-transaction-field {
+        min-width: 200px;
+        width: 100%;
+    }
+    .mat-form-field-infix  {
+        display: block;
+        position: relative;
+        flex: auto;
+        width: 100%;
+        padding: 0 3%;
+    }
+}
+.cr-dr-perfix{
+    padding: 0;
+    line-height: 20px;
+}
+.cr-dr-perfix[disabled]{
+    background-color: #FF4081;
+    color: #FFFFFF;
+}

@@ -1,0 +1,65 @@
+.logo {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+  
+    svg {
+      display: block;
+      width: 45px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  .tree-5b1{
+    background-color: #12284B;
+  }
+  .tree-invisible-5b1 {
+    display: none;
+  }
+  .left-nav-a{
+    text-decoration: none !important;
+    width: 100%;
+  }
+  .tree-5b1 ul,
+  .tree-5b1 li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+  }
+  
+  .tree-label {
+    color: #FFFFFF;
+    cursor: pointer;
+    padding-left: .2em;
+  }
+  .parent-label{
+    @extend .tree-label;
+    display: block;
+    min-width: 100px;
+  }
+  .menu-expand-icon{
+    color: #0062FF;
+  }
+  .menu-right-icon{
+    color: #0062FF;
+    cursor: pointer;
+  }
+  .menu-drawer-closed{
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+  }
+  .menu-selected{
+      background-color: #0062FF;
+      border-radius: 8px;
+  }
+  .menu-selected .menu-right-icon{
+      color: #FFFFFF;
+  }
+  /*
+   * This padding sets alignment of the nested nodes.
+   */
+  .tree-5b1 .mat-nested-tree-node div[role=group] span {
+      padding-left: 20px;
+  }
+  

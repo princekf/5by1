@@ -1,0 +1,49 @@
+.home {
+    text-align: center;
+    margin-top: 10%;
+    font-weight: bolder;
+}
+
+.main-container {
+    background-color: #FFFFFF;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  
+ .sidenav {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: #12284B;
+    border-right: 0px;
+    padding-left: .25em;
+    overflow-x: hidden;
+    padding-right: .25em;
+  }
+  :host ::ng-deep {
+    .mat-drawer-inner-container {
+      overflow-y: scroll;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    }
+    .mat-drawer-inner-container::-webkit-scrollbar { /* WebKit */
+      width: 0;
+      height: 0;
+    }
+  }
+
+  .main-content{
+    background-color: #FFFFFF;
+
+    padding-left: 20px;
+    padding-top: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+  }
+
+
+  

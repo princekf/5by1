@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import '~ngx-toastr/toastr';
 html, body { height: 100%; }
-body { margin: 0; font-family: "Montserrat-Regular"; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
 .d-flex {
@@ -27,6 +27,93 @@ body { margin: 0; font-family: "Montserrat-Regular"; }
 .justify-content-end {
     justify-content: flex-end;
 }
+
+.form-submit-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 5%;
+}
+
+.form-submit-container button{
+  width: 22%;
+  margin-left: 4%;
+}
+
+.cancel-button{
+  background-color: rgba(0,98,255, .3);
+  color: #0062FF;
+}
+
+.submit-button{
+  background-color: #0062FF;
+  color: #FFFFFF;
+}
+
+.delete-submit-container {
+  padding-top: 3%;
+  width: 100%;
+  display: flex;
+  justify-content:left;
+}
+
+.delete-submit-container button {
+  width: 12%;
+  margin-right: 4%;
+}
+
+.delete-cancel-button {
+  background-color: rgba(0,98,255, .3);
+  color: #0062FF;
+}
+
+.delete-submit-button{
+  background-color: #FF5722;
+  color: #FFFFFF;
+}
+
+
+.lable{
+  min-width: 80px;
+  padding-right: 10px;
+  overflow: hidden;
+}
+.select{
+  min-width: 90px;
+  padding-right: 10px;
+ 
+}
+
+.filtercancelbutton{
+    background-color: rgba(0,98,255, .3);
+    color: #0062FF;
+  
+  }
+  .filtersavebutton{
+    background-color: #0062FF;
+    color: #FFFFFF;
+    margin-left: 30px !important;
+  
+  }
+  .filter-item-card{
+  
+    padding:20px;
+  }
+  .filter-actions-container{
+    text-align: center;
+  }
+  .filter-content-div{
+  display: flex;
+    margin-bottom: 40px;
+    align-items: flex-end;
+    font: -webkit-small-control !important;
+ 
+  
+  }
+
+  
+
+
 
 @keyframes slide {
     100% { top: 4%; }
@@ -118,4 +205,24 @@ cursor: pointer;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+.mat-5by1-blue{
+  background-color: #0062FF;
+  color: #FFFFFF;
+}
+.mat-5by1-white{
+  background-color: #FFFFFF;
+  color: #0062FF;
+}
+
+
+
+
+@media only screen and (max-width: 768px) {
+  
+  .delete-submit-container button {
+    width: 35%;
+    margin-right: 4%;
+  }
+
 }

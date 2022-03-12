@@ -1,0 +1,240 @@
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="fboForm" (ngSubmit)="upsertInvoice()">
+
+
+  <mat-form-field class="fbo-create-formTwo">
+    <mat-label>Customer</mat-label>
+    <input type="text" matInput placeholder="Select a customer" formControlName="customer"
+      [matAutocomplete]="autoCustomer">
+    <mat-autocomplete autoActiveFirstOption #autoCustomer="matAutocomplete" [displayWith]="extractNameOfObject">
+      <mat-option *ngFor="let customerS of customerFiltered" [value]="customerS">
+        {{customerS.name}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error *ngIf="fboForm.controls['customer'].hasError('required')"> Customer is required </mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="fbo-create-formTwo">
+    <mat-label>Invoice date</mat-label>
+    <input matInput [matDatepicker]="invoiceDatePicker" formControlName="invoiceDate">
+    <mat-datepicker-toggle matSuffix [for]="invoiceDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #invoiceDatePicker></mat-datepicker>
+    <mat-error *ngIf="fboForm.controls['invoiceDate'].hasError('required')"> Invoice date is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="fbo-create-formTwo">
+    <mat-label>Due date</mat-label>
+    <input matInput [matDatepicker]="dueDatePicker" formControlName="dueDate">
+    <mat-datepicker-toggle matSuffix [for]="dueDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #dueDatePicker></mat-datepicker>
+    <mat-error *ngIf="fboForm.controls['invoiceDate'].hasError('required')"> Invoice date is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="fbo-create-formTwo">
+    <mat-label>Invoice Number</mat-label>
+    <input matInput formControlName="invoiceNumber" type="text">
+    <mat-error *ngIf="fboForm.controls['invoiceDate'].hasError('required')"> Invoice date is required</mat-error>
+  </mat-form-field>
+
+
+  <table [style.display]="loading ? 'none': ''" formArrayName="saleItems" mat-table [dataSource]="dataSource" matSort
+    multiTemplateDataRows class="create-form-table" id="search-form">
+
+    <ng-container matColumnDef="product">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Product </th>
+      <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+        <span class="mobile-label">Product</span>
+        <mat-form-field class="fbo-create-form-first">
+          <input type="text" matInput formControlName="product" [matAutocomplete]="autoProduct">
+          <mat-autocomplete autoActiveFirstOption #autoProduct="matAutocomplete" [displayWith]="extractNameOfObject">
+            <mat-option *ngFor="let productS of productsFiltered" [value]="productS">
+              {{productS.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="unitPrice">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Price </th>
+      <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+        <span class="mobile-label">Price</span>
+        <mat-form-field class="fbo-create-form-number">
+          <input matInput type="number" formControlName="unitPrice">
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="quantity">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Qty </th>
+      <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+        <span class="mobile-label">Qty</span>
+        <mat-form-field class="fbo-create-form-number">
+          <input matInput type="number" formControlName="quantity">
+          <span matSuffix>{{findUnitCode(element)}}</span>
+
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="discount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Disc </th>
+      <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+        <span class="mobile-label">Disc</span>
+        <mat-form-field class="fbo-create-form-number">
+          <input matInput type="number" formControlName="discount">
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="totalAmount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns">Total</th>
+      <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+        <span class="mobile-label">Total</span>
+        <mat-form-field class="fbo-create-form-number">
+          <input matInput type="number" formControlName="totalAmount" readonly>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="batchNumber">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Batch </th>
+      <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+        <span class="mobile-label">Batch </span>
+        <mat-form-field class="fbo-create-form-number">
+          <input matInput type="text" formControlName="batchNumber">
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expiryDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Expiry </th>
+      <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+        <span class="mobile-label">Expiry</span>
+        <mat-form-field class="fbo-create-form-number">
+          <input matInput [matDatepicker]="picker" formControlName="expiryDate" data-date-format='dd:mm:yyyy'>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="mfgDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns">MFG</th>
+      <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+        <span class="mobile-label">MFG</span>
+        <mat-form-field class="fbo-create-form-number">
+          <input matInput [matDatepicker]="picker" formControlName="mfgDate" data-date-format='dd:mm:yyyy'>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="mrp">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns">MRP</th>
+      <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+        <span class="mobile-label">MRP</span>
+        <mat-form-field class="fbo-create-form-number">
+          <input matInput type="number" formControlName="mrp">
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="rrp">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns">RRP</th>
+      <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+        <span class="mobile-label">RRP</span>
+        <mat-form-field class="fbo-create-form-number">
+          <input matInput type="number" formControlName="rrp">
+
+        </mat-form-field>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"></th>
+      <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
+        <span class="fbo-create-form-numberdelete">
+          <button mat-icon-button type="button" color="warn" focusable="true" (click)="removeAt(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </span>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns" class="displayedColumns" class="fiveby1-table-header"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="fiveby1-element-row"></tr>
+
+  </table>
+
+
+
+
+  <div class="bottom-form">
+    <mat-card class="card-one">
+      <mat-card-title>Total Amount</mat-card-title>
+
+      <mat-card-subtitle class="mat-subtitle-card">
+        {{fboForm.controls.totalAmount.value}}
+
+      </mat-card-subtitle>
+    </mat-card>
+
+    <mat-card class="card-two">
+      <mat-card-title>Total Discount</mat-card-title>
+
+      <mat-card-subtitle class="mat-subtitle-card">
+        {{fboForm.controls.totalDiscount.value}}
+
+      </mat-card-subtitle>
+    </mat-card>
+    <mat-card class="card-three">
+      <mat-card-title>Total Tax</mat-card-title>
+      <mat-card-subtitle class="mat-subtitle-card">
+        {{fboForm.controls.totalTax.value}}
+
+      </mat-card-subtitle>
+    </mat-card>
+
+    <mat-card class="card-one">
+      <mat-card-title>Round Off</mat-card-title>
+      <mat-card-subtitle class="mat-subtitle-card">
+        {{fboForm.controls.roundOff.value}}
+
+      </mat-card-subtitle>
+    </mat-card>
+    <mat-card class="card-two">
+      <mat-card-title>Grand Total</mat-card-title>
+
+      <mat-card-subtitle class="mat-subtitle-card">
+        {{fboForm.controls.grandTotal.value}}
+
+      </mat-card-subtitle>
+    </mat-card>
+
+  </div>
+  <div class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
+    <div class='submit-bank-button'>
+      <button class="paidBy-button" mat-button>
+
+        <mat-lable *ngIf="fboForm.controls.isReceived.value === true "> Received By {{fboForm.controls.bank.value}}</mat-lable>
+        <mat-lable *ngIf="fboForm.controls.isReceived.value === false ">Not Received</mat-lable>
+      </button>
+
+      <mat-select formControlName="bank" (selectionChange)="saveWithBank($event)">
+        <mat-option value='notRecieved'>Not Received</mat-option>
+        <mat-option *ngFor="let bankS of bankFiltered" [displayWith]="extractNameOfObject" [value]="bankS.name">
+          {{bankS.name}}
+        </mat-option>
+      </mat-select>
+    </div>
+
+  </div>
+</form>

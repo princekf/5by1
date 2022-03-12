@@ -1,0 +1,64 @@
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertTransfer()">
+  <p>
+    <mat-form-field>
+      <mat-label>From Account</mat-label>
+
+      <input type="text" matInput placeholder="Type From Account name" formControlName="fromAccount" [matAutocomplete]="autofromAccount">
+      <mat-autocomplete autoActiveFirstOption #autofromAccount="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let fromAccountS of fromAccount$ | async" [value]="fromAccountS">
+          {{fromAccountS.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>To Account</mat-label>
+    
+      <input type="text" matInput placeholder="Type From Account name" formControlName="toAccount" [matAutocomplete]="autoToAccount">
+      <mat-autocomplete autoActiveFirstOption #autoToAccount="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let toAccountS of toAccount$ | async" [value]="toAccountS">
+          {{toAccountS.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </p>
+
+  <p>
+    
+    <mat-form-field >
+      <mat-label>Choose a Transfer date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="transferDate" >
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="form.controls['transferDate'].hasError('required')">Please Enter Transfer Date</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Amount</mat-label>
+      <input formControlName="amount" type="number" matInput placeholder="Enter Transfer Amount">
+      <mat-error *ngIf="form.controls['amount'].hasError('required')">Please Enter Transfer Amount</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p> 
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <input formControlName="description" type="text" matInput placeholder="Enter description">
+      <mat-error *ngIf="form.controls['description'].hasError('required')">Please write description</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
+    <button class="submit-button" mat-button>save</button>
+  </p>
+
+</form>

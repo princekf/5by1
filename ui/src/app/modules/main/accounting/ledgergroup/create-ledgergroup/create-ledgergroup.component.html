@@ -1,0 +1,49 @@
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" 
+[formGroup]="fboForm" class="fbo-create-form" (ngSubmit)="upsertLedgerGroup()">
+  <p>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input type="text" matInput placeholder="Enter Name" formControlName="name">
+      <mat-error *ngIf="fboForm.controls['name'].hasError('required')">
+        Name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Code</mat-label>
+      <input type="text" matInput placeholder="Enter Code" formControlName="code">
+      <mat-error *ngIf="fboForm.controls['code'].hasError('required')">
+        Code is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Parent</mat-label>
+
+      <input type="text" matInput placeholder="Type parent name" formControlName="parent" [matAutocomplete]="autoParent">
+      <mat-autocomplete autoActiveFirstOption #autoParent="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let ledgerGroupS of ledgerGroups$ | async" [value]="ledgerGroupS">
+          {{ledgerGroupS.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Details</mat-label>
+      <textarea matInput formControlName="details" placeholder="Type details" ></textarea>
+    </mat-form-field>
+  </p>
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
+    <button type="submit" class="submit-button" mat-button>Save</button>
+  </p>
+</form>

@@ -1,0 +1,3 @@
+<app-tool-bar createUri="/payment/create" mainHeader="Payment" (exportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-data-table tableHeader="List of Payments" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="payments" editUri="/payment/create" deleteUri="/payment/delete" [columnParsingFn]="columnParsingFn" [numberColumns]="numberColumns"
+    [filterItem]="filterItem"></app-data-table>

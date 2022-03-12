@@ -1,0 +1,55 @@
+<div [class.overlay]="loading" [class.spinner]="loading" (click)="$event.stopPropagation();"></div>
+<div class="login-content-wraper logo-container">
+  <div class="logo-wrapper">
+    <app-logo-main></app-logo-main>
+  </div>
+</div>
+<div class="login-content-wraper">
+  <mat-card>
+    <mat-card-title>Sign up</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <p>
+          <mat-form-field>
+            <input type="text" matInput placeholder="Your Name" formControlName="name">
+            <mat-error *ngIf="form.controls['name'].hasError('required')"> Your Name is required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field>
+            <input type="text" matInput placeholder="Your E-Mail" formControlName="email">
+            <mat-error *ngIf="form.controls['email'].hasError('required')"> Email Address is required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field>
+            <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+            
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-error *ngIf="form.controls['password'].hasError('required')"> Password is required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field>
+            <mat-label>Re-Enter your password</mat-label>
+            <input matInput [type]="hide1 ? 'password' : 'text'" formControlName="password">
+            
+            <mat-icon matSuffix (click)="hide1 = !hide1">{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
+             <mat-error *ngIf="form.controls['cPassword'].hasError('required')">Confirm Password is required</mat-error>
+          </mat-form-field>
+        </p>
+        <p *ngIf="error" class="error">
+          {{ error }}
+        </p>
+
+
+        <p class="submit-container">
+          <button type="submit" mat-button>Register</button>
+        </p>
+        <p class="bottom">
+          Already have an Account? <a routerLink="/">Login</a>
+        </p>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

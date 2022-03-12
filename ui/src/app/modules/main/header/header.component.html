@@ -1,0 +1,44 @@
+<header>
+  <mat-toolbar class="toolbar">
+    <button mat-icon-button aria-label="Menu">
+      <mat-icon class="mat-5by1-white menu-icon-large-screen" (click)="toggleLeftMenuDrawer()">{{leftMenuDrawerOpened ? 'menu_open' : 'menu'}}
+      </mat-icon>
+      <mat-icon class="mat-5by1-white menu-icon-mobile-screen" (click)="showLeftMenuDrawer()">menu</mat-icon>
+    </button>
+
+    <div class="header-search">
+      <mat-form-field appearance="outline">
+        <mat-icon style="background-color: transparent;" class="mat-5by1-white" matPrefix>search</mat-icon>
+        <mat-label>Search here</mat-label>
+        <input matInput>
+      </mat-form-field>
+    </div>
+
+    <div class="d-flex ml-auto">
+      <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+        <mat-icon class="mat-5by1-white">add_box</mat-icon>
+      </button>
+      <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+        <mat-icon class="mat-5by1-white">notifications</mat-icon>
+      </button>
+      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+        <mat-icon class="mat-5by1-white">contact_support</mat-icon>
+      </button>
+
+      <div class="profile">
+        <p class="user">{{displayName}}</p>
+        <div class="avatar" [ngStyle]="{'background-image': 'url(assets/images/profile.png)'}"
+        [matMenuTriggerFor]="profileMenu"></div>
+      </div>
+      <mat-menu #profileMenu="matMenu">
+        <button type="button" mat-menu-item (click)="goToMyAccount()">
+          My Account
+        </button>
+        <button type="button" mat-menu-item (click)="doLogout()">
+          Logout
+        </button>
+      </mat-menu>
+    </div>
+  </mat-toolbar>
+  <mat-divider class="header-divider"></mat-divider>
+</header>

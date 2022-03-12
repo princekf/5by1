@@ -1,0 +1,75 @@
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+
+<form [style.display]="loading ? 'none': ''" [formGroup]="form" class="fbo-create-form" (ngSubmit)="upsertLedger()">
+
+  <p>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input formControlName="name" matInput placeholder="Enter Name">
+      <mat-error *ngIf="form.controls['name'].hasError('required')">Please Enter Name</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Code</mat-label>
+      <input formControlName="code" matInput placeholder="Enter Code">
+      <mat-error *ngIf="form.controls['code'].hasError('required')">Please Enter Code</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>LedgerGroup</mat-label>
+      <input formControlName="ledgerGroup" matInput placeholder="Enter ledgerGroup" [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="extractNameOfObject">
+        <mat-option *ngFor="let ledgerGroupS of ledgerGroupFiltered" [value]="ledgerGroupS">
+          {{ledgerGroupS.name}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="form.controls['ledgerGroup'].hasError('required')">Please Enter Ledger Group</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Opening Balance </mat-label>
+      <input formControlName="obAmount" matInput placeholder="Opening Balance" type="number">
+      <mat-error *ngIf="form.controls['obAmount'].hasError('required')">Please enter opening balance</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select formControlName="obType">
+        <mat-option value="Credit">Credit</mat-option>
+        <mat-option value="Debit">Debit</mat-option>
+        </mat-select>
+      <mat-error *ngIf="form.controls['obType'].hasError('required')">Please select opening balance type</mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field>
+      <mat-label>Details</mat-label>
+      <input formControlName="details" matInput placeholder="Enter details">
+    </mat-form-field>
+  </p>
+
+  <div class=extras *ngIf="form.controls['ledgerGroup'].value.extras" formGroupName="extras">
+    Extras
+    <br/>
+    <mat-form-field *ngFor="let extra of extrasControls()">
+      <mat-label>{{getFormName(extra)}}</mat-label>
+      <input [formControlName]="extra" matInput >
+    </mat-form-field>
+  </div>
+
+
+  <p class="form-submit-container">
+    <button class="cancel-button" type="button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
+    <button class="submit-button" mat-button>save</button>
+  </p>
+
+</form>
+

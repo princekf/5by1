@@ -1,0 +1,127 @@
+<div class="filter-item-card" id="filter-dialog">
+    <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
+    <div (click)="$event.stopPropagation()">
+
+        <div class="filter-content-div">
+            <mat-label class="lable">Name</mat-label>
+            <mat-select  class="select" formControlName="nameType">
+                <mat-option value="^">Starts with</mat-option>
+                <mat-option value="">Contains</mat-option>
+                <mat-option value="eq">Equal to</mat-option>
+            </mat-select>
+            <mat-form-field class="forminput">
+
+                <input matInput  formControlName="name">
+            </mat-form-field>
+        </div>
+
+        <div class="filter-content-div">
+            <mat-label class="lable">Code</mat-label>
+            <mat-select  class="select" formControlName="codeType">
+                    <mat-option value="^">Starts with</mat-option>
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+            </mat-select>
+            <mat-form-field class="forminput" >
+                <input matInput formControlName="code">
+            </mat-form-field>
+        </div>
+
+        <div class="filter-content-div">
+            <mat-label class="lable">Brand</mat-label>
+            <mat-select class="select" formControlName="brandType">
+                <mat-option value="^">Starts with</mat-option>
+                <mat-option value="">Contains</mat-option>
+                <mat-option value="eq">Equal to</mat-option>
+            </mat-select>
+            <mat-form-field class="forminput" >
+
+                <input matInput formControlName="brand">
+            </mat-form-field>
+        </div>
+
+        <div class="filter-content-div">
+            <mat-label class="lable">Location</mat-label>
+            <mat-select class="select" formControlName="locationType">
+                <mat-option value="^">Starts with</mat-option>
+                <mat-option value="">Contains</mat-option>
+                <mat-option value="eq">Equal to</mat-option>
+            </mat-select>
+            <mat-form-field class="forminput" >
+
+                <input matInput formControlName="location">
+            </mat-form-field>
+        </div>
+        <div class="filter-content-div">
+            <mat-label class="lable">Barcode</mat-label>
+            <mat-select  class="select" formControlName="barcodeType">
+                <mat-option value="^">Starts with</mat-option>
+                <mat-option value="">Contains</mat-option>
+                <mat-option value="eq">Equal to</mat-option>
+            </mat-select>
+            <mat-form-field class="forminput">
+
+                <input matInput formControlName="barcode">
+            </mat-form-field>
+        </div>
+
+        <div class="filter-content-div">
+            <mat-label class="lable">Re-Order</mat-label>
+            <mat-select class="select" formControlName="reorderLevelType">
+                <mat-option value="eq">Equal to</mat-option>
+                <mat-option value="lt">Lesser than</mat-option>
+                <mat-option value="gt">Greater than</mat-option>
+                <mat-option value="between">Between</mat-option>
+            </mat-select>
+      
+                <mat-form-field *ngIf="filterForm.controls.reorderLevelType.value !== 'between'">
+                    <input matInput type="number" formControlName="reorderLevel">
+                </mat-form-field>
+                
+
+            <div class="betweenKeyInputs" *ngIf="filterForm.controls.reorderLevelType.value === 'between'">
+                <mat-form-field class="inputPrimary">
+                    <input matInput type="number" formControlName="reorderLevelStart">
+                </mat-form-field>
+                <mat-label class="betweenlable">and</mat-label>
+                <mat-form-field class="inputPrimary" >
+                    <input matInput type="number" formControlName="reorderLevelEnd">
+                </mat-form-field>
+              
+             </div>
+        </div>
+
+
+
+        <div class="filter-content-div">
+            <mat-label class="lable">Category</mat-label>
+            <mat-select  class="select" formControlName="CategoryType">
+                <mat-option value="^">Starts with</mat-option>
+                <mat-option value="">Contains</mat-option>
+                <mat-option value="eq">Equal to</mat-option>
+            </mat-select>
+            <mat-form-field class="forminput">
+                <input matInput type="text" formControlName="Category">
+            </mat-form-field>
+        </div>
+        <div class="filter-content-div">
+            <mat-label class="lable">Status</mat-label>
+            <mat-select  class="select"  formControlName="StatusType" >
+                <mat-option value="^">Starts with</mat-option>
+                <mat-option value="">Contains</mat-option>
+                <mat-option value="eq">Equal to</mat-option>
+            </mat-select>
+            <mat-form-field class="forminput">
+                <input matInput type="text" formControlName="Status">
+            </mat-form-field>
+       
+        </div>
+    </div>
+
+    <div class='filter-actions-container'>
+        <button mat-button class="filtercancelbutton">Cancel</button>
+        <button mat-button class="filtersavebutton">Submit</button>
+
+    </div>
+    </form>
+</div>

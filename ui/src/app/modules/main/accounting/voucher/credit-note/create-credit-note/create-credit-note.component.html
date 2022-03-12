@@ -1,0 +1,10 @@
+<app-create-voucher
+formHeader='Create Credit Note'
+[primaryTransactionType]='primaryTransactionType'
+[voucherType]='voucherType'
+[canChangeTransactionType]='false'
+(primaryLedgerChangeEvent)="handlePrimaryLedgerChangeEvent($event)"
+[ledgersFiltered]='ledgersFiltered'
+(compoundLedgerChangeEvent)="handleCompoundLedgerChangeEvent($event)"
+[ledgersCompoundFiltered]='ledgersCompoundFiltered'
+></app-create-voucher>

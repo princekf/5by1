@@ -1,0 +1,23 @@
+.form-header {
+    margin-top: 3%;
+    margin-left: 10%;
+  }
+  .fbo-create-form{
+      width: 35%;
+      margin-left: 10%;
+  }
+  
+  .fbo-create-form .mat-form-field {
+      width: 100%;
+     
+  }
+  
+    @media only screen and (max-width: 768px) {
+      .form-header {
+        margin-left: 0%;
+      }
+      .fbo-create-form{
+          width: 100%;
+          margin-left: 0%;
+      }
+    }

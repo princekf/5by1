@@ -1,0 +1,59 @@
+<h2 class="form-header">{{formHeader}} </h2>
+
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<form [style.display]="loading ? 'none': ''" [formGroup]="fboForm" class="fbo-create-form" (ngSubmit)="upsertCustomer()">
+  <p>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input type="text" matInput placeholder="Ex. CGST-9%" formControlName="name">
+      <mat-error *ngIf="fboForm.controls['name'].hasError('required')">
+        Name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>E-Mail</mat-label>
+      <input type="text" matInput placeholder="Ex. someone@example.com" formControlName="email">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Mobile</mat-label>
+      <input type="text" matInput placeholder="Ex. +91-9132547623" formControlName="mobile">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>GST No</mat-label>
+      <input type="text" matInput placeholder="Ex. GST-001" formControlName="gstNo">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>State</mat-label>
+      <input type="text" matInput placeholder="Ex. Kerala, TamilNadu etc" formControlName="state"
+      [matAutocomplete]="autoState">
+      <mat-autocomplete autoActiveFirstOption #autoState="matAutocomplete">
+        <mat-option *ngFor="let option of statesOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="fboForm.controls['state'].hasError('required')">
+        State is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label>Address</mat-label>
+      <textarea matInput formControlName="address"></textarea>
+    </mat-form-field>
+  </p>
+  <p class="form-submit-container">
+    <button class="cancel-button" mat-button (click)="goToPreviousPage(route, router)">Cancel</button>
+    <button type="submit" class="submit-button" mat-button>Save</button>
+  </p>
+</form>
