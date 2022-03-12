@@ -62,7 +62,7 @@ export class CreateVoucherComponent implements OnInit {
     private ledgerService: LedgerService,
     private costCentreService: CostCentreService,
     private readonly fBuilder: FormBuilder,
-    private readonly toastr: ToastrService, ) { }
+    private readonly toastr: ToastrService) { }
 
     private handleCostCentreAutoChange = (costCentreQ: unknown) => {
 
@@ -253,6 +253,8 @@ export class CreateVoucherComponent implements OnInit {
     this.transactionsDS = new MatTableDataSource(formArray.controls);
     this.loading = true;
     const tId = this.route.snapshot.queryParamMap.get('id');
+
+
     if (tId) {
 
       this.loading = true;
@@ -410,6 +412,7 @@ export class CreateVoucherComponent implements OnInit {
       amount,
       details,
       costCentreId});
+
     for (let idx = 0; idx < compoundTransactions.length; idx++) {
 
       const transaction = compoundTransactions[idx];

@@ -10,5 +10,6 @@ export interface Tax {
     appliedTo: number;
     // Descriptions like : For other state customers, etc
     description?: string;
+    type?:string;
 }
 
