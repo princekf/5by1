@@ -17,6 +17,7 @@ export class ListPaymentComponent {
   tableHeader = 'List of Payments';
 
   editUri = '/voucher/payment/create';
+
   displayedColumns: string[] = [ 'number', 'date', 'pledger', 'cledger', 'amount', 'details' ];
 
 
@@ -37,7 +38,6 @@ export class ListPaymentComponent {
               private mainservice: MainService,
               private dialog: MatDialog) { }
 
-
     handleImportClick = (file: File): void => {
 
       this.voucherService.importVouchers(file).subscribe(() => {
@@ -48,37 +48,30 @@ export class ListPaymentComponent {
 
 
     }
-  handleExportClick = (): void => {
-    const data = [];
 
-    this.mainservice.getExport().subscribe(result1 => {
-      this.export = result1;
+  handleExportClick = (): void => {
+
+
+    this.mainservice.getExport().subscribe((result1) => {
+
+      this['export'] = result1;
 
 
     });
 
 
-    const items = this.export.items;
+    const {items} = this['export'];
     this.dialog.open(ExportPopupComponent, {
       height: '500px',
-    data: {items,
-    displayedColumns: this.displayedColumns,
-    columnHeaders: this.columnHeaders,
+      data: {items,
+        displayedColumns: this.displayedColumns,
+        columnHeaders: this.columnHeaders, }
 
-        }
-
-      });
-
-
-    }
+    });
 
 
   }
 
 
-
-
-
-
-
+}
 

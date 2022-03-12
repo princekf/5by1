@@ -33,9 +33,9 @@ export class MyAccountComponent implements OnInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'startDate', 'endDate', 'action' ];
 
-  constructor(private userService:UserService,
-    private readonly toastr: ToastrService,
-    private readonly router: Router,) { }
+  constructor(private userService: UserService,
+              private readonly toastr: ToastrService,
+              private readonly router: Router) { }
 
   ngOnInit(): void {
 
@@ -55,11 +55,11 @@ export class MyAccountComponent implements OnInit {
 
   }
 
-  createDataSource = (branchId: string):Array<FinYear> => this.finYears.filter((fYear) => fYear.branchId === branchId);
+  createDataSource = (branchId: string): Array<FinYear> => this.finYears.filter((fYear) => fYear.branchId === branchId);
 
-  parseDate = (cValue: string):string => dayjs(cValue).format(environment.dateFormat);
+  parseDate = (cValue: string): string => dayjs(cValue).format(environment.dateFormat);
 
-  changeFinYear = (finYearC: FinYear):void => {
+  changeFinYear = (finYearC: FinYear): void => {
 
     this.loading = true;
     this.userService.changeFinYear(finYearC.id).subscribe((authResp) => {

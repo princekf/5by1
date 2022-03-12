@@ -16,8 +16,9 @@ export class MainService {
 
   private leftMenuLastToggleStatus = true;
 
-  private export = new BehaviorSubject<any>({});
-  private head = new BehaviorSubject<any>({});
+  private exports = new BehaviorSubject<Record<string, unknown>>({});
+
+  private head = new BehaviorSubject<Record<string, unknown>>({});
 
   isMobileView = (): boolean => this.document.defaultView.innerWidth <= MOBILE_SCREEN_MAX_WIDTH;
 
@@ -43,24 +44,25 @@ export class MainService {
 
   }
 
-  setExport(products: any): void {
+  setExport(products: Record<string, unknown>): void {
 
-    this.export.next(products);
+    this.exports.next(products);
+
+  }
+
+  getExport(): Observable<Record<string, unknown>> {
+
+    return this.exports.asObservable();
 
   }
 
-  getExport(): Observable<any> {
-
-    return this.export.asObservable();
-
-  }
-  setHd(products: any): void {
+  setHd(products: Record<string, unknown>): void {
 
     this.head.next(products);
 
   }
 
-  getHd(): Observable<any> {
+  getHd(): Observable<Record<string, unknown>> {
 
     return this.head.asObservable();
 

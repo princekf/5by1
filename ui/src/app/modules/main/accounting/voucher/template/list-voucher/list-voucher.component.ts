@@ -42,28 +42,33 @@ export class ListVoucherComponent implements OnInit {
     amount: 'Amount',
     details: 'Details',
   };
-  c = this.displayedColumns.length;
+
+  lengthofcolumn = this.displayedColumns.length;
+
   xheaders = [
 
-    { key: 'number', width: 30, },
-    { key: 'date', width: 30, },
-    {  key: 'pledger', width: 30, },
-    {  key: 'cledger', width: 30, },
-    {  key: 'amount', width: 30, },
-    {  key: 'details', width: 30 }
-    ];
+    { key: 'number',
+      width: 30, },
+    { key: 'date',
+      width: 30, },
+    { key: 'pledger',
+      width: 30, },
+    { key: 'cledger',
+      width: 30, },
+    { key: 'amount',
+      width: 30, },
+    { key: 'details',
+      width: 30 }
+  ];
+
     iheaders = [
       'Voucher #',
       'Date',
-       'Primary Ledger',
+      'Primary Ledger',
       'Compound Ledger',
-     'Amount',
-     'Details',
+      'Amount',
+      'Details',
     ];
-
-
-
-
 
 
   queryParams: QueryData = {};
@@ -82,11 +87,12 @@ export class ListVoucherComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
               private voucherService: VoucherService,
               private ledgerService: LedgerService,
-              private mainservice: MainService, ) { }
+              private mainservice: MainService) { }
 
 
   private formatItems = (ledgerMap: Record<string, Ledger>, items: Array<Voucher>): Array<VType> => {
-    const t = this.tableHeader;
+
+    const table = this.tableHeader;
 
     const itemsT = [];
     const maxLength = 20;
@@ -109,9 +115,9 @@ export class ListVoucherComponent implements OnInit {
 
       });
       const result1 = {
-        cell: this.c,
+        cell: this.lengthofcolumn,
         rheader: this.iheaders,
-        title: this.tableHeader,
+        title: table,
         items: itemsT,
         displayedColumns: this.displayedColumns,
         columnHeaders: this.columnHeaders,
@@ -123,7 +129,6 @@ export class ListVoucherComponent implements OnInit {
 
       };
       this.mainservice.setExport(result1);
-
 
 
     }

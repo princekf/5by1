@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
-import jsPDF from 'jspdf';
+import JSPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { MainService } from '../../../services/main.service';
 import * as Excel from 'exceljs';
@@ -14,12 +14,15 @@ import { Router } from '@angular/router';
   styleUrls: [ './export-popup.component.scss' ]
 })
 export class ExportPopupComponent implements OnInit {
-  [x: string]: any;
+
 
   dataSource = new MatTableDataSource<unknown>([]);
+
   title = 'exportExcelInAngular';
-  export: any = [];
-  head: any;
+
+  exports;
+
+  head;
 
 
   constructor(
@@ -34,82 +37,99 @@ export class ExportPopupComponent implements OnInit {
 
   ngOnInit(): void {
 
-  this.dataSource.data = this.data.items;
+    this.dataSource.data = this.data.items;
 
 
-
-  this.mainservice.getExport().subscribe(result => {
-
-
-      this.export = result;
+    this.mainservice.getExport().subscribe((result) => {
 
 
-    });
-  this.mainservice.getExport().subscribe(result1 => {
-
-      this.export = result1;
+      this.exports = result;
 
 
     });
-  this.mainservice.getHd().subscribe(name => {
+    this.mainservice.getExport().subscribe((result1) => {
+
+      this.exports = result1;
+
+
+    });
+    this.mainservice.getHd().subscribe((name) => {
 
       this.head = name;
-    });
 
+    });
 
 
   }
-  exportExcel(): void {
-    const array: Array<string> = [
-      this.head.filename + ``,
-      'Subheader:' + this.head.filename,
 
-  ];
+  exportExcel(): void {
+
+    const array: Array<string> = [
+      this.head.filename,
+      this.head.filename,
+
+    ];
 
     const EXCEL_EXTENSION = '.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet();
-    const name = this.head.filename ;
+    const name = this.head.filename;
 
-    worksheet.getCell(`A1`, 'n').value = array.join('\n');
-    worksheet.mergeCells(1, 1, 2, this.export.cell);
+    worksheet.getCell('A1', 'n').value = array.join('\n');
+    worksheet.getCell('A1').font = {
+      size: 12,
+      bold: true
+    };
+    const rownumber = 2;
+    worksheet.mergeCells(1, 1, rownumber, this.exports.cell);
 
-    worksheet.getCell(`A1`).alignment = {vertical: 'middle', horizontal: 'center' };
-    worksheet.getCell(`A2`).alignment = { horizontal: 'center' };
+    worksheet.getCell('A1').alignment = {vertical: 'middle',
+      horizontal: 'center' };
+    worksheet.getCell('A2').alignment = { horizontal: 'center' };
 
-    worksheet.addRow ( this.export.rheader, 'n');
-    worksheet.columns = this.export.eheader;
+    worksheet.addRow(this.exports.rheader, 'n');
+    worksheet.columns = this.exports.eheader;
+    const headerrownumber = 3;
+    worksheet.getRow(headerrownumber).font = {bold: true };
+    worksheet.getRow(headerrownumber).alignment = {horizontal: 'center' };
 
-    this.export.rowData.forEach((e: any) => {
-  worksheet.addRow (e, 'n');
-});
+    this.exports.rowData.forEach((element) => {
+
+      worksheet.addRow(element, 'n');
+
+    });
 
 
     workbook.xlsx.writeBuffer().then((data) => {
-      const blob = new Blob([data]);
+
+      const blob = new Blob([ data ]);
 
       saveAs(blob, name + EXCEL_EXTENSION);
+
     });
 
   }
 
   convert(): void {
-    const fn = this.head.filename ;
-    const doc = new jsPDF();
-    const col = this.export.header;
-    const rows = this.export.rowData;
 
-    doc.setFontSize(20);
-    doc.text(fn, 95, 10);
-
+    const fname = this.head.filename;
+    const doc = new JSPDF();
+    const col = this.exports.header;
+    const rows = this.exports.rowData;
+    const FontSize = 20;
+    doc.setFontSize(FontSize);
+    const headerhorizontal = 95;
+    const headervertical = 10;
+    doc.text(fname, headerhorizontal, headervertical);
 
 
     autoTable(
 
-      doc, {
-  head: [col],
-  body: rows, });
+      doc, {head: [ col ],
+        body: rows, });
 
-    doc.save(fn);
-    }
+    doc.save(fname);
+
+  }
+
 }

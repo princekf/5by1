@@ -10,6 +10,7 @@ import { FilterLedgergroupComponent } from '../filter-ledgergroup/filter-ledgerg
 import { MatDialog } from '@angular/material/dialog';
 import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 import { MainService } from '../../../../../services/main.service';
+
 @Component({
   selector: 'app-list-ledgergroup',
   templateUrl: './list-ledgergroup.component.html',
@@ -18,28 +19,35 @@ import { MainService } from '../../../../../services/main.service';
 export class ListLedgergroupComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'parent.name', 'details' ];
+
   c = this.displayedColumns.length;
+
   columnHeaders = {
     name: 'Name',
     code: 'Code',
-    'parent.name':  'Parent Name',
+    'parent.name': 'Parent Name',
     details: 'Details',
 
   };
+
   xheaders = [
 
-    {key: 'name', width: 30, },
-    {key: 'code',  width: 15 },
-    { key: 'parent', width: 25 },
-    { key: 'details', width: 35 }
-];
+    {key: 'name',
+      width: 30, },
+    {key: 'code',
+      width: 15 },
+    { key: 'parent',
+      width: 25 },
+    { key: 'details',
+      width: 35 }
+  ];
+
   iheaders = [
     'Name',
     'Code',
     'Parent Name',
-   'Details'
+    'Details'
   ];
-
 
 
   queryParams: QueryData = { };
@@ -60,7 +68,7 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
     private activatedRoute: ActivatedRoute,
     private readonly ledgerGroupService: LedgerGroupService,
     private dialog: MatDialog,
-    private mainservice: MainService, ) { }
+    private mainservice: MainService) { }
 
     private loadData = () => {
 
@@ -117,24 +125,24 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
       const data = [];
       this.ledgerGroupService.queryData(tParams).subscribe((items) => {
 
-        items.forEach((element: any) => {
+        items.forEach((element) => {
 
 
-          const temp = [element.name, element.code, element.parent?.name, element.details];
+          const temp = [ element.name, element.code, element.parent?.name, element.details ];
 
           data.push(temp);
-      });
+
+        });
         const result = {
           cell: this.c,
-            rheader: this.iheaders,
-        eheader: this.xheaders,
-        header: this.columnHeaders,
-        rowData: data
-      };
+          rheader: this.iheaders,
+          eheader: this.xheaders,
+          header: this.columnHeaders,
+          rowData: data
+        };
         this.mainservice.setExport(result);
 
-        this.dialog.open(ExportPopupComponent, {
-          height: '500px',
+        this.dialog.open(ExportPopupComponent, {height: '500px',
           data: {items,
             displayedColumns: this.displayedColumns,
             columnHeaders: this.columnHeaders}});
@@ -149,4 +157,5 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
       });
 
     }
+
 }

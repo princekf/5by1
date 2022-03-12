@@ -1,18 +1,18 @@
-<mat-radio-group aria-label="Select a report type" [value]="reportType"
-(change)="handleReportTypeChange($event)">
+<mat-radio-group aria-label="Select a report type" [value]="reportType" (change)="handleReportTypeChange($event)">
     <mat-radio-button value="">None</mat-radio-button>
     <mat-radio-button value="daily">Daily Summary</mat-radio-button>
     <mat-radio-button value="monthly">Monthly Summary</mat-radio-button>
 </mat-radio-group>
-<app-data-table [tableHeader]=tableHeader
-[displayedColumns]="displayedColumns"
-[columnHeaders]="columnHeaders"
-[loading]="loading"
-[tableData]="ledgerRows"
-[filterItem]="filterItem"
-[columnParsingFn]="columnParsingFn"
-[numberColumns]="numberColumns"
-deleteUri="/voucher/delete"
-[showPaginator]="false"
-[sortDisabledColumns]="sortDisabledColumns"
-></app-data-table>
+<div class="head">
+    <div class="empy-space"></div>
+    <button mat-flat-button class="button" (click)="convert()">
+    <mat-icon>ios_share</mat-icon> PDF
+
+</button>
+    <button mat-flat-button class="button" (click)="exportExcel()">
+    <mat-icon>ios_share</mat-icon>  EXCEL
+</button>
+
+</div>
+<app-data-table [tableHeader]=tableHeader [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="ledgerRows" [filterItem]="filterItem" [columnParsingFn]="columnParsingFn" [numberColumns]="numberColumns"
+    deleteUri="/voucher/delete" [editUri]="editUri"[showPaginator]="false" [sortDisabledColumns]="sortDisabledColumns"></app-data-table>
