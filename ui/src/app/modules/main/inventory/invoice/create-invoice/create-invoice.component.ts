@@ -84,7 +84,7 @@ export class CreateInvoiceComponent implements OnInit {
       const product = this.fBuilder.control(sItem?.product ?? '', [ Validators.required ]);
       const unitPrice = this.fBuilder.control(sItem?.unitPrice ?? 0, [ Validators.required ]);
       const unit = this.fBuilder.control(sItem?.unit ?? '', [ Validators.required ]);
-      const quantity = this.fBuilder.control(sItem?.quantity ?? 1, [ Validators.required ]);
+      const quantity = this.fBuilder.control(sItem?.quantity ?? '', [ Validators.required ]);
       const discount = this.fBuilder.control(sItem?.discount ?? 0, [ Validators.required ]);
       const totalAmount = this.fBuilder.control(sItem?.totalAmount ?? 0, [ Validators.required ]);
       const mrp = this.fBuilder.control(sItem?.mrp ?? 0, [ Validators.required ]);
@@ -140,6 +140,75 @@ export class CreateInvoiceComponent implements OnInit {
         mrp,
         rrp
       });
+
+    }
+
+    clickFunction() {
+
+      const formArray = this.fboForm.get('saleItems') as FormArray;
+
+
+      const addquantity = [];
+
+      formArray.controls.forEach(function(element) {
+
+        if (!this[element.value.product.name]) {
+
+          this[element.value.product.name] = { name: element.value.product.name,
+            quantity: 0 };
+          addquantity.push(this[element.value.product.name]);
+
+        }
+        this[element.value.product.name].quantity += 1;
+
+      }, Object.create(null));
+
+
+      const filtered = formArray.controls.reduce((acc, current) => {
+
+        const filter = acc.find((item) => item.value.product.id === current.value.product.id);
+
+
+        if (!filter) {
+
+          return acc.concat([ current ]);
+
+        }
+
+
+        return acc;
+
+
+      }, []);
+
+
+      const newArray = [];
+
+      for (const item of filtered) {
+
+        for (const each of addquantity) {
+
+          if (item.value.product.name === each.name && item.value.quantity === each.quantity) {
+
+            newArray.push(item);
+
+          } else if (item.value.product.name === each.name && item.value.quantity !== each.quantity) {
+
+            item.value.quantity = each.quantity;
+            newArray.push(item);
+
+          }
+
+        }
+
+      }
+
+
+      newArray.push(this.createSaleItemForm());
+
+
+      this.dataSource = new MatTableDataSource(newArray);
+
 
     }
 
@@ -336,7 +405,7 @@ export class CreateInvoiceComponent implements OnInit {
 
     }
 
-    saveWithBank(event):void {
+    saveWithBank(event: { value: string; }):void {
 
       if (event.value === 'notRecieved') {
 
@@ -362,6 +431,8 @@ export class CreateInvoiceComponent implements OnInit {
     extractNameOfObject = (obj: {name: string}): string => obj.name;
 
     findUnitCode = (elm:FormGroup):string => elm.controls?.unit?.value?.code;
+
+    quantity = (elm:FormGroup):string => elm.value?.quantity;
 
     upsertInvoice(): void {
 

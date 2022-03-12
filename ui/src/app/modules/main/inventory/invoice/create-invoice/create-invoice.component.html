@@ -51,7 +51,7 @@
         <mat-form-field class="fbo-create-form-first">
           <input type="text" matInput formControlName="product" [matAutocomplete]="autoProduct">
           <mat-autocomplete autoActiveFirstOption #autoProduct="matAutocomplete" [displayWith]="extractNameOfObject">
-            <mat-option *ngFor="let productS of productsFiltered" [value]="productS">
+            <mat-option *ngFor="let productS of productsFiltered" [value]="productS" (click)="clickFunction()">
               {{productS.name}}
             </mat-option>
           </mat-autocomplete>
@@ -75,7 +75,7 @@
         <span class="mobile-label">Qty</span>
         <mat-form-field class="fbo-create-form-number">
           <input matInput type="number" formControlName="quantity">
-          <span matSuffix>{{findUnitCode(element)}}</span>
+          <span matSuffix>{{quantity(element)}}{{findUnitCode(element)}}</span>
 
         </mat-form-field>
       </td>
