@@ -183,6 +183,54 @@ export class VoucherController {
 
   }
 
+  private createLedgersByVTypeAggr = (vType: string) => [
+    {
+      '$match': { type: vType }
+    },
+
+    { '$project': { 'ledgerId': '$transactions.ledgerId',
+      '_id': 0 }},
+    { '$unwind': '$ledgerId' },
+    {'$group': {_id: '$ledgerId'}},
+    {
+      $lookup: {
+        'from': 'Ledger',
+        'localField': '_id',
+        'foreignField': '_id',
+        'as': 'ledgers'
+      }
+    },
+    { '$unwind': '$ledgers' },
+    { '$project': {
+      'id': '$ledgers._id',
+      'name': '$ledgers.name',
+      'code': '$ledgers.code'
+    }}
+
+  ]
+
+  @get(`${VOUCHER_API}/ledgers-used/{vType}`)
+  @response(200, {
+    description: 'List of ledgers used by voucher type',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(Ledger, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
+  async ledgersUsed(@param.path.string('vType') vType: string,): Promise<Ledger[]> {
+
+    const pQuery = await this.voucherRepository.execute(this.voucherRepository.modelClass.name, 'aggregate', this.createLedgersByVTypeAggr(vType));
+    const toArr = await pQuery.toArray();
+    return toArr;
+
+  }
+
   @patch(VOUCHER_API)
   @response(200, {
     description: 'Voucher PATCH success count',

@@ -5,6 +5,7 @@ import { LedgerSummaryTB } from '@shared/util/trial-balance-ledger-summary';
 import { BaseHTTPService } from '@fboservices/base-http.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Ledger } from '@shared/entity/accounting/ledger';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,14 @@ export class VoucherService extends BaseHTTPService<Voucher> {
   public fetchLedgerSummary(): Observable<Array<LedgerSummaryTB>> {
 
     return this.http.get<Array<LedgerSummaryTB>>(`${this.API_URI}/ledgerSummary`).pipe(
+      catchError((err) => throwError(err))
+    );
+
+  }
+
+  public fetchLedgersUsed(vType: string):Observable<Array<Ledger>> {
+
+    return this.http.get<Array<Ledger>>(`${this.API_URI}/ledgers-used/${vType}`).pipe(
       catchError((err) => throwError(err))
     );
 
