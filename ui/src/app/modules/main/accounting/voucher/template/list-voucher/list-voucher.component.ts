@@ -9,8 +9,7 @@ import { TransactionType } from '@shared/entity/accounting/transaction';
 import { Voucher, VoucherType } from '@shared/entity/accounting/voucher';
 import { QueryData } from '@shared/util/query-data';
 import * as dayjs from 'dayjs';
-import { of, throwError, zip } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { forkJoin} from 'rxjs';
 import { FilterItem } from 'src/app/modules/main/directives/table-filter/filter-item';
 import { FilterVoucherComponent } from '../filter-voucher/filter-voucher.component';
 import { MainService } from '../../../../../../services/main.service';
@@ -140,28 +139,9 @@ export class ListVoucherComponent implements OnInit {
   private loadData = () => {
 
     this.loading = true;
-    this.voucherService.list(this.queryParams)
-      .pipe(catchError((err) => throwError(err)))
-      .pipe(switchMap((voucherListData) => {
-
-        const ledgerIds: Array<string> = [];
-        for (const pItem of voucherListData.items) {
-
-          ledgerIds.push(pItem.transactions[0].ledgerId);
-          ledgerIds.push(pItem.transactions[1].ledgerId);
-
-        }
-        const queryDataL: QueryData = {
-          where: {
-            id: {
-              inq: ledgerIds
-            }
-          }
-        };
-        const findLedgersL$ = this.ledgerService.search(queryDataL);
-        return zip(of(voucherListData), findLedgersL$);
-
-      }))
+    const voucherS$ = this.voucherService.list(this.queryParams);
+    const ledgerS$ = this.voucherService.fetchLedgersUsed(this.voucherType);
+    forkJoin([ voucherS$, ledgerS$ ])
       .subscribe(([ voucherListData, ledgers ]) => {
 
         const ledgerMap: Record<string, Ledger> = {};

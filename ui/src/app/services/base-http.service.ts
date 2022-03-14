@@ -49,8 +49,9 @@ export class BaseHTTPService<T> {
 
   public list(queryParams: QueryData): Observable<ListQueryRespType<T>> {
 
-    const limit = queryParams.limit ?? DEFAULT_MAX_ROWS;
-    const offset = queryParams.offset ?? 0;
+    queryParams.limit = queryParams.limit ?? DEFAULT_MAX_ROWS;
+    queryParams.offset = queryParams.offset ?? 0;
+    const {limit, offset} = queryParams;
     const pageIndex = Math.ceil(offset / limit);
     const filterParam = JSON.stringify(queryParams);
     let params = new HttpParams();
