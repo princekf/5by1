@@ -142,7 +142,7 @@ export class ListLedgerComponent implements OnInit, AfterViewInit {
 
   handleImportClick = (file: File): void => {
 
-    this.ledgerService.importVouchers(file).subscribe(() => {
+    this.ledgerService.importLedger(file).subscribe(() => {
 
       console.log('file uploaded');
 

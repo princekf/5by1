@@ -119,7 +119,7 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
 
     handleImportClick = (file: File): void => {
 
-      this.ledgerGroupService.importVouchers(file).subscribe(() => {
+      this.ledgerGroupService.importLedgerGroup(file).subscribe(() => {
 
         console.log('file uploaded');
 

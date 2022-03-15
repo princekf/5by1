@@ -32,7 +32,7 @@ export class LedgerService extends BaseHTTPService<Ledger> {
 
   }
 
-  public importVouchers(file: File): Observable<void> {
+  public importLedger(file: File): Observable<void> {
 
     const formData: FormData = new FormData();
     formData.append('fileKey', file, file.name);

@@ -27,7 +27,7 @@ export class LedgerGroupService extends BaseHTTPService<LedgerGroup> {
 
   }
 
-  public importVouchers(file: File): Observable<void> {
+  public importLedgerGroup(file: File): Observable<void> {
 
     const formData: FormData = new FormData();
     formData.append('fileKey', file, file.name);
