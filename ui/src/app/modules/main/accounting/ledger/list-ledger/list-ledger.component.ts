@@ -20,7 +20,7 @@ import { MainService } from '../../../../../services/main.service';
 export class ListLedgerComponent implements OnInit, AfterViewInit {
 
 
-  displayedColumns: string[] = [ 'name', 'code', 'ledgerGroup.name', 'obAmount', 'obType', 'details' ];
+  displayedColumns: string[] = [ 'name', 'code', 'ledgerGroup.name', 'ledgerGroup.code', 'obAmount', 'obType', 'details' ];
 
   c = this.displayedColumns.length;
 
@@ -28,6 +28,7 @@ export class ListLedgerComponent implements OnInit, AfterViewInit {
     name: 'Name',
     code: 'Code',
     'ledgerGroup.name': 'Ledger Group',
+    'ledgerGroup.code': 'Group Code',
     obAmount: 'Opening Balance',
     obType: 'Opening Type',
     details: 'Details',
@@ -41,8 +42,10 @@ export class ListLedgerComponent implements OnInit, AfterViewInit {
       width: 25 },
     {key: 'ledgerGroup.name',
       width: 25 },
-    { key: 'obAmount',
+    { key: 'ledgerGroup.code',
       width: 25 },
+    { key: 'obAmount',
+      width: 20 },
     { key: 'obType',
       width: 25 },
     { key: 'details',
@@ -53,6 +56,7 @@ export class ListLedgerComponent implements OnInit, AfterViewInit {
      'Name',
      'Code',
      'Ledger Group',
+     'Group Code',
      'Opening Balance',
      'Opening Type',
      'Details',
@@ -89,10 +93,13 @@ export class ListLedgerComponent implements OnInit, AfterViewInit {
     this.queryParams.include = [ {
       relation: 'ledgerGroup'
     } ];
+
+
     this.ledgerService.list(this.queryParams).subscribe((ledger) => {
 
 
       this.ledgers = ledger;
+
 
       this.loading = false;
 
@@ -127,7 +134,20 @@ export class ListLedgerComponent implements OnInit, AfterViewInit {
 
       this.loadData();
 
+
     });
+
+
+  }
+
+  handleImportClick = (file: File): void => {
+
+    this.ledgerService.importLedger(file).subscribe(() => {
+
+      console.log('file uploaded');
+
+    });
+
 
   }
 
@@ -142,7 +162,8 @@ export class ListLedgerComponent implements OnInit, AfterViewInit {
 
       items.forEach((element) => {
 
-        const temp = [ element.name, element.code, element.ledgerGroup.name, element.obAmount, element.obType,
+        const temp = [ element.name, element.code, element.ledgerGroup.name, element.ledgerGroup.code,
+          element.obAmount, element.obType,
           element.details ];
         data.push(temp);
 
