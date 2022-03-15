@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Ledger } from '@shared/entity/accounting/ledger';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { BaseHTTPService } from '../base-http.service';
 import { LEDGER_API_URI } from '@shared/server-apis';
 
@@ -28,6 +29,16 @@ export class LedgerService extends BaseHTTPService<Ledger> {
 
     }
     return super.save(ledger2);
+
+  }
+
+  public importVouchers(file: File): Observable<void> {
+
+    const formData: FormData = new FormData();
+    formData.append('fileKey', file, file.name);
+    return this.http.post<void>(`${this.API_URI}/import`, formData).pipe(
+      catchError((err) => throwError(err))
+    );
 
   }
 
