@@ -5,7 +5,7 @@ export interface LedgerGroupImport {
     id?: string;
     Name: string;
     Code: string;
-    parentId: string;
+    ParentCode:string;
     Details: string;
 
 

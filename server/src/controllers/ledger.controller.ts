@@ -51,19 +51,8 @@ export class LedgerController {
       finYearRepository : FinYearRepository,
   ): Promise<Ledger> {
 
-    const finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
-    if (!finYear) {
 
-      throw new HttpErrors.UnprocessableEntity('Please select a proper financial year.');
-
-    }
-    const otherDetails = finYear.extras as {lastVNo:number};
-    const lastVNo = otherDetails?.lastVNo ?? 0;
-    const nextVNo = lastVNo + 1;
-    const nextVNoS = `${uProfile.company}/${uProfile.branch}/${uProfile.finYear}/${nextVNo}`.toUpperCase();
-    ledger.number = nextVNoS;
     const lgR = await this.ledgerRepository.create(ledger);
-    await finYearRepository.updateById(finYear.id, {extras: {lastVNo: nextVNo}});
     return lgR;
 
   }
@@ -275,25 +264,11 @@ export class LedgerController {
         throw new HttpErrors.UnprocessableEntity('Please select a proper financial year.');
 
       }
-      const otherDetails = finYear.extras as {lastVNo:number};
-      const lastVNo = otherDetails?.lastVNo ?? 0;
-      const nextVNo = lastVNo + 1;
-      const nextVNoS = `${uProfile.company}/${uProfile.branch}/${uProfile.finYear}/${nextVNo}`.toUpperCase();
-
-      if (!finYear) {
-
-        throw new HttpErrors.UnprocessableEntity('Please select a proper financial year.');
-
-      }
-
-
       await this.ledgerRepository.create({
         name,
         code,
-
         obAmount,
         obType,
-        number: nextVNoS,
         details,
       });
 

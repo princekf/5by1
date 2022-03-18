@@ -53,19 +53,8 @@ export class LedgerGroupController {
       finYearRepository : FinYearRepository,
   ): Promise<LedgerGroup> {
 
-    const finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
-    if (!finYear) {
 
-      throw new HttpErrors.UnprocessableEntity('Please select a proper financial year.');
-
-    }
-    const otherDetails = finYear.extras as {lastVNo:number};
-    const lastVNo = otherDetails?.lastVNo ?? 0;
-    const nextVNo = lastVNo + 1;
-    const nextVNoS = `${uProfile.company}/${uProfile.branch}/${uProfile.finYear}/${nextVNo}`.toUpperCase();
-    ledgerGroup.number = nextVNoS;
     const ledgergroupR = await this.ledgerGroupRepository.create(ledgerGroup);
-    await finYearRepository.updateById(finYear.id, {extras: {lastVNo: nextVNo}});
     return ledgergroupR;
 
   }
@@ -144,6 +133,8 @@ export class LedgerGroupController {
         {'code': {'$in': lgCodes}}
       ]}},
     ]);
+
+
     const lgsR = <Array<LedgerGroup>> await pQuery.toArray();
     return lgsR;
 
@@ -182,6 +173,8 @@ export class LedgerGroupController {
 
     }
     const lgsR = await this.fetchChilds(whereC.code.inq);
+
+
     return lgsR;
 
   }
@@ -270,6 +263,7 @@ export class LedgerGroupController {
 
   }
 
+
   @del(`${LEDGER_GROUP_API}/{id}`)
   @response(204, {
     description: 'LedgerGroup DELETE success',
@@ -331,6 +325,7 @@ export class LedgerGroupController {
 
     })
 
+
     private createLedgerGroup = async(ledgergroupData:Array<LedgerGroupImport>,
       uProfile: ProfileUser, finYearRepository : FinYearRepository)
       :Promise<void> => {
@@ -341,19 +336,17 @@ export class LedgerGroupController {
 
         const code = lgData.Code;
         const name = lgData.Name;
-        const parentid = lgData.parentId;
+        const parentCode = lgData.ParentCode;
         const details = lgData.Details;
+        let parentId;
+        if (parentCode) {
 
-        const finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
-        if (!finYear) {
-
-          throw new HttpErrors.UnprocessableEntity('Please select a proper financial year.');
+          const pLGroup = await this.ledgerGroupRepository.findOne({where: {code: parentCode}});
+          parentId = pLGroup?.id;
 
         }
-        const otherDetails = finYear.extras as {lastVNo:number};
-        const lastVNo = otherDetails?.lastVNo ?? 0;
-        const nextVNo = lastVNo + 1;
-        const nextVNoS = `${uProfile.company}/${uProfile.branch}/${uProfile.finYear}/${nextVNo}`.toUpperCase();
+        const finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
+
 
         if (!finYear) {
 
@@ -364,8 +357,7 @@ export class LedgerGroupController {
         await this.ledgerGroupRepository.create({
           code,
           name,
-          parentid,
-          number: nextVNoS,
+          parentId,
           details,
         });
 
