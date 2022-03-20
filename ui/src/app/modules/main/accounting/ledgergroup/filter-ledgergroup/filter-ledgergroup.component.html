@@ -1,4 +1,6 @@
-<div class="filter-item-card">
+
+<div class="filter-item-card" >
+
     <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
         <div (click)="$event.stopPropagation();$event.preventDefault()">
 
@@ -29,10 +31,13 @@
          
 
         </div>
-
+      
+ 
         <div class='filter-actions-container'>
             <button mat-button type="button" class="filtercancelbutton">Cancel</button>
+            <button mat-button type="reset" class="filterresetbutton">Reset</button>
             <button mat-button type="submit" class="filtersavebutton">Submit</button>
         </div>
+  
     </form>
 </div>

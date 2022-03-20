@@ -14,6 +14,7 @@ export class FilterLedgergroupComponent implements OnInit {
 
   queryParams:QueryData = { };
 
+
   filterForm: FormGroup = new FormGroup({
     name: new FormControl(''),
     nameType: new FormControl('^'),
@@ -57,5 +58,6 @@ export class FilterLedgergroupComponent implements OnInit {
     this.router.navigate([], { queryParams: {whereS} });
 
   };
+
 
 }
