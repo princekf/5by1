@@ -255,8 +255,17 @@ export class LedgerController {
       const obType = lgData.OpeningType;
 
       const details = lgData.Details;
+      const ledgerGroupCode = lgData.LedgerGroupCode;
+      let ledgerGroupId;
 
 
+      if (ledgerGroupCode) {
+
+        const pLGroup = await this.ledgerRepository.findOne({where: {code: ledgerGroupCode}});
+        ledgerGroupId = pLGroup?.ledgerGroupId;
+
+
+      }
       const finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
 
       if (!finYear) {
@@ -268,6 +277,7 @@ export class LedgerController {
         name,
         code,
         obAmount,
+        ledgerGroupId,
         obType,
         details,
       });

@@ -4,7 +4,7 @@ export interface LedgerImport {
     id?: string;
     Name?: string;
     Code?: string;
-    ledgerGroupId?: string;
+    LedgerGroupCode:string;
     OpeningBalance: number;
     OpeningType:'Credit' | 'Debit';
     Details?: string;
