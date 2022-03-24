@@ -328,7 +328,9 @@ export class LedgerGroupController {
 
     private createLedgerGroup = async(ledgergroupData:Array<LedgerGroupImport>,
       uProfile: ProfileUser, finYearRepository : FinYearRepository)
-      :Promise<void> => {
+      :Promise<unknown> => {
+
+      const ledger:Array<LedgerGroupImport> = [];
 
 
       for (const lgData of ledgergroupData) {
@@ -344,6 +346,13 @@ export class LedgerGroupController {
           const pLGroup = await this.ledgerGroupRepository.findOne({where: {code: parentCode}});
           parentId = pLGroup?.id;
 
+        } else {
+
+          ledger.push(lgData);
+
+
+          continue;
+
         }
         const finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
 
@@ -351,6 +360,7 @@ export class LedgerGroupController {
         if (!finYear) {
 
           throw new HttpErrors.UnprocessableEntity('Please select a proper financial year.');
+
 
         }
 
@@ -363,6 +373,7 @@ export class LedgerGroupController {
 
 
       }
+      return ledger;
 
     }
 
@@ -395,8 +406,8 @@ export class LedgerGroupController {
       const workBook = xlsx.readFile(savedFilePath);
       const sheetNames = workBook.SheetNames;
       const ledgergroupData:Array<LedgerGroupImport> = xlsx.utils.sheet_to_json(workBook.Sheets[sheetNames[0]]);
-      await this.createLedgerGroup(ledgergroupData, uProfile, finYearRepository);
-      return ledgergroupData;
+      const ledgergroupi = await this.createLedgerGroup(ledgergroupData, uProfile, finYearRepository);
+      return ledgergroupi;
 
     }
 

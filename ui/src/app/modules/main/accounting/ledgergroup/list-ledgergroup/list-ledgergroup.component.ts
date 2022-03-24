@@ -10,7 +10,7 @@ import { FilterLedgergroupComponent } from '../filter-ledgergroup/filter-ledgerg
 import { MatDialog } from '@angular/material/dialog';
 import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 import { MainService } from '../../../../../services/main.service';
-
+import { ImportErrordataPopupComponent } from '../../../import-errordata-popup/import-errordata-popup.component';
 @Component({
   selector: 'app-list-ledgergroup',
   templateUrl: './list-ledgergroup.component.html',
@@ -49,6 +49,13 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
     'Details'
   ];
 
+  displayedColumns1: string[] = [ 'Name', 'Code', 'Details' ];
+
+  columnHeaders1 = {
+    Name: 'Name',
+    Code: 'Code',
+    Details: 'Details',
+  };
 
   queryParams: QueryData = { };
 
@@ -119,9 +126,12 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
 
     handleImportClick = (file: File): void => {
 
-      this.ledgerGroupService.importLedgerGroup(file).subscribe(() => {
+      this.ledgerGroupService.importLedgerGroup(file).subscribe((items) => {
 
-        console.log('file uploaded');
+        this.dialog.open(ImportErrordataPopupComponent, {height: '500px',
+          data: {items,
+            displayedColumns: this.displayedColumns1,
+            columnHeaders: this.columnHeaders1}});
 
       });
 
