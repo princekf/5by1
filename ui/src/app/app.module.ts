@@ -14,6 +14,7 @@ import { httpInterceptorProviders } from '@fboutil/auth';
 @NgModule({
   declarations: [
     AppComponent,
+
   ],
   imports: [
     AuthModule,

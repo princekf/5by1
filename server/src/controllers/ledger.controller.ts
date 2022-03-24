@@ -1,3 +1,4 @@
+
 import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
 import {post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, Request, Response, RestBindings} from '@loopback/rest';
 import {Ledger} from '../models';
@@ -17,6 +18,7 @@ import { FileUploadHandler } from '../types';
 import xlsx from 'xlsx';
 import { BindingKeys } from '../binding.keys';
 import { LedgerImport } from '../utils/ledger-import-specs';
+
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
 export class LedgerController {
@@ -242,7 +244,9 @@ export class LedgerController {
 
   private createLedger = async(ledgerData:Array<LedgerImport>,
     uProfile: ProfileUser, finYearRepository : FinYearRepository)
-    :Promise<void> => {
+    :Promise<unknown> => {
+
+    const ledger:Array<LedgerImport> = [];
 
     for (const lgData of ledgerData) {
 
@@ -265,7 +269,17 @@ export class LedgerController {
         ledgerGroupId = pLGroup?.ledgerGroupId;
 
 
+      } else {
+
+        ledger.push(lgData);
+
+
+        continue;
+
+
       }
+
+
       const finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
 
       if (!finYear) {
@@ -284,6 +298,8 @@ export class LedgerController {
 
 
     }
+
+    return ledger;
 
   }
 
@@ -316,8 +332,12 @@ export class LedgerController {
     const workBook = xlsx.readFile(savedFilePath);
     const sheetNames = workBook.SheetNames;
     const ledgerData:Array<LedgerImport> = xlsx.utils.sheet_to_json(workBook.Sheets[sheetNames[0]]);
-    await this.createLedger(ledgerData, uProfile, finYearRepository);
-    return ledgerData;
+
+    const ledgeri = await this.createLedger(ledgerData, uProfile, finYearRepository);
+
+
+    return ledgeri;
+
 
   }
 
