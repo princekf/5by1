@@ -15,10 +15,12 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-unit.component.html',
   styleUrls: [ './list-unit.component.scss' ]
 })
-export class ListUnitComponent implements  AfterViewInit, OnInit  {
+export class ListUnitComponent implements AfterViewInit, OnInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'decimalPlaces', 'parent.name', 'times' ];
+
   c = this.displayedColumns.length;
+
   columnHeaders = {
     name: 'Name',
     code: 'Code',
@@ -29,20 +31,27 @@ export class ListUnitComponent implements  AfterViewInit, OnInit  {
 
   xheaders = [
 
-    {key: 'name', width: 30, },
-    {  key: 'code', width: 30, },
-    {  key: 'decimalPlaces', width: 30, },
-    {  key: 'parent.name', width: 30, },
-    {  key: 'times', width: 30, },
+    {key: 'name',
+      width: 30, },
+    { key: 'code',
+      width: 30, },
+    { key: 'decimalPlaces',
+      width: 30, },
+    { key: 'parent.name',
+      width: 30, },
+    { key: 'times',
+      width: 30, },
 
-    ];
+  ];
+
     iheaders = [
       'Name',
-     'Code',
-     'Decimals',
-       'Base Unit',
+      'Code',
+      'Decimals',
+      'Base Unit',
       'Times'
     ];
+
   queryParams: QueryData = { };
 
   routerSubscription: Subscription;
@@ -61,7 +70,7 @@ export class ListUnitComponent implements  AfterViewInit, OnInit  {
     private activatedRoute: ActivatedRoute,
     private readonly unitService: UnitService,
     private dialog: MatDialog,
-    private mainservice: MainService, ) { }
+    private mainservice: MainService,) { }
 
     private loadData = () => {
 
@@ -111,23 +120,23 @@ export class ListUnitComponent implements  AfterViewInit, OnInit  {
       const data = [];
       this.unitService.queryData(tParams).subscribe((items) => {
 
-        items.forEach((element: any) => {
+        items.forEach((element) => {
 
-          const temp = [element.name, element.code, element.decimalPlaces, element.parent?.name, element.times];
+          const temp = [ element.name, element.code, element.decimalPlaces, element.parent?.name, element.times ];
 
           data.push(temp);
-      });
+
+        });
         const result = {
           cell: this.c,
           rheader: this.iheaders,
-        eheader: this.xheaders,
-        header: this.columnHeaders,
-        rowData: data
-      };
+          eheader: this.xheaders,
+          header: this.columnHeaders,
+          rowData: data
+        };
         this.mainservice.setExport(result);
 
-        this.dialog.open(ExportPopupComponent, {
-          height: '500px',
+        this.dialog.open(ExportPopupComponent, {height: '500px',
           data: {items,
             displayedColumns: this.displayedColumns,
             columnHeaders: this.columnHeaders}});
@@ -142,4 +151,5 @@ export class ListUnitComponent implements  AfterViewInit, OnInit  {
       });
 
     }
+
 }
