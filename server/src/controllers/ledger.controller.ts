@@ -244,7 +244,7 @@ export class LedgerController {
 
   private createLedger = async(ledgerData:Array<LedgerImport>,
     uProfile: ProfileUser, finYearRepository : FinYearRepository)
-    :Promise<unknown> => {
+    :Promise<LedgerImport[]> => {
 
     const ledger:Array<LedgerImport> = [];
 

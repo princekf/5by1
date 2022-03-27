@@ -328,7 +328,7 @@ export class LedgerGroupController {
 
     private createLedgerGroup = async(ledgergroupData:Array<LedgerGroupImport>,
       uProfile: ProfileUser, finYearRepository : FinYearRepository)
-      :Promise<unknown> => {
+      :Promise<LedgerGroupImport[]> => {
 
       const ledger:Array<LedgerGroupImport> = [];
 
