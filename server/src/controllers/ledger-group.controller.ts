@@ -398,7 +398,7 @@ export class LedgerGroupController {
     @inject(BindingKeys.FILE_UPLOAD_SERVICE) fileUploadHandler: FileUploadHandler,
     @inject(SecurityBindings.USER) uProfile: ProfileUser,
     @repository(FinYearRepository) finYearRepository : FinYearRepository,
-    ): Promise<unknown> {
+    ): Promise<LedgerGroupImport[]> {
 
       await this.saveUploadedFile(fileUploadHandler, request, response2);
       const [ fileDetails ] = request.files as Array<{path: string}>;
