@@ -15,19 +15,21 @@
                     <input matInput formControlName="name">
                 </mat-form-field>
             </div>
-
-            <div class="filter-content-div">
-                <mat-label class="lable">LedgerGroup</mat-label>
-                <mat-select formControlName="parentType" class="select">
-                    <mat-option value="^">Starts with</mat-option>
-                    <mat-option value="">Contains</mat-option>
-                    <mat-option value="eq">Equal to</mat-option>
+           <div class="filter-content-div">
+                <mat-label class="lable">Ledger Group</mat-label>
+                <mat-select formControlName="parentIdType" class="select">
+                    <mat-option value="">Equal to</mat-option>
                 </mat-select>
                 <mat-form-field>
-                    <input matInput formControlName="parent">
+                    <input type="text" matInput formControlName="parentId" [matAutocomplete]="autoLedgerGroup">
+                    <mat-autocomplete autoActiveFirstOption #autoLedgerGroup="matAutocomplete"
+                        [displayWith]="extractNameOfLedgerGroup">
+                        <mat-option *ngFor="let ledgerGroupS of ledgerGroupsFiltered" [value]="ledgerGroupS.id">
+                            {{ledgerGroupS.name}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
             </div>
-
          
 
         </div>
