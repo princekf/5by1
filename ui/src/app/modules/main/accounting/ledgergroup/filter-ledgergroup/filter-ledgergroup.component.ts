@@ -3,6 +3,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryData } from '@shared/util/query-data';
 import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from '@fboutil/filter.util';
+import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
+import { LedgerGroupService } from '@fboservices/accounting/ledger-group.service';
 
 
 @Component({
@@ -14,42 +16,62 @@ export class FilterLedgergroupComponent implements OnInit {
 
   queryParams:QueryData = { };
 
+  ledgerGroupsFiltered: Array<LedgerGroup> = [];
 
   filterForm: FormGroup = new FormGroup({
     name: new FormControl(''),
     nameType: new FormControl('^'),
+    parentId: new FormControl(''),
+    parentIdType: new FormControl(''),
 
-    parent: new FormControl(''),
-    parentType: new FormControl('^'),
 
   });
 
   constructor(private router:Router,
-    private activatedRoute : ActivatedRoute,) { }
+    private activatedRoute : ActivatedRoute,
+    private ledgergroupService: LedgerGroupService) { }
 
-  ngOnInit():void {
+    private handleLedgerGroupAutoChange = (ledgerGQ:unknown) => {
 
-    const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
-    fillFilterForm(this.filterForm, whereS);
+      if (typeof ledgerGQ !== 'string') {
 
-  }
+        return;
 
-  ngAfterViewInit():void {
+      }
+      this.ledgergroupService.search({ where: {
+        name: {like: ledgerGQ,
+          options: 'i'},
+      } })
+        .subscribe((ledgerGs) => (this.ledgerGroupsFiltered = ledgerGs));
+
+    };
+
+    ngOnInit():void {
+
+      this.filterForm.controls.parentId.valueChanges.subscribe(this.handleLedgerGroupAutoChange);
+      const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
+      fillFilterForm(this.filterForm, whereS);
+
+    }
+
+    ngAfterViewInit():void {
 
 
-    this.activatedRoute.queryParams.subscribe((value) => {
+      this.activatedRoute.queryParams.subscribe((value) => {
 
-      this.queryParams = { ...value };
+        this.queryParams = { ...value };
 
-    });
+      });
 
-  }
+    }
 
   filterItems = ():void => {
 
 
     const formFields: Array<FilterFormField> = [
       {name: 'name',
+        type: 'string'},
+      {name: 'parentId',
         type: 'string'},
 
 
@@ -59,5 +81,6 @@ export class FilterLedgergroupComponent implements OnInit {
 
   };
 
+  extractNameOfLedgerGroup = (idS: string): string => this.ledgerGroupsFiltered.find((ldgr) => ldgr.id === idS)?.name;
 
 }
