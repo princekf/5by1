@@ -18,7 +18,7 @@ import { FileUploadHandler } from '../types';
 import xlsx from 'xlsx';
 import { BindingKeys } from '../binding.keys';
 import { LedgerImport } from '../utils/ledger-import-specs';
-
+import { Save } from '../utils/save-spec';
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
 export class LedgerController {
@@ -223,7 +223,7 @@ export class LedgerController {
   }
 
   private saveUploadedFile = (fileUploadHandler: FileUploadHandler, request: Request, response2: Response) =>
-    new Promise<unknown>((resolve, reject) => {
+    new Promise<Save>((resolve, reject) => {
 
       fileUploadHandler(request, response2, (err: unknown) => {
 
