@@ -225,7 +225,7 @@ export class LedgerController {
   private saveUploadedFile = (fileUploadHandler: FileUploadHandler, request: Request, response2: Response) =>
     new Promise<Save>((resolve, reject) => {
 
-      fileUploadHandler(request, response2, (err: unknown) => {
+      fileUploadHandler(request, response2, (err: string) => {
 
         if (err) {
 

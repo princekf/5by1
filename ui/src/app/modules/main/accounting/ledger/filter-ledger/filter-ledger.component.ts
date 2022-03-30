@@ -82,3 +82,4 @@ export class FilterLedgerComponent implements OnInit {
   extractNameOfLedgerGroup = (idS: string): string => this.ledgerGroupsFiltered.find((ldgr) => ldgr.id === idS)?.name;
 
 }
+
