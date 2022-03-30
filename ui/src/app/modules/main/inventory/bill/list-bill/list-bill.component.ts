@@ -19,10 +19,11 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-bill.component.html',
   styleUrls: [ './list-bill.component.scss' ]
 })
-export class ListBillComponent implements  AfterViewInit, OnInit  {
+export class ListBillComponent implements AfterViewInit, OnInit {
 
   displayedColumns: string[] = [ 'vendor.name', 'billDate', 'billNumber', 'totalAmount',
-  'totalDiscount', 'totalTax', 'grandTotal', 'isPaid' ];
+    'totalDiscount', 'totalTax', 'grandTotal', 'isPaid' ];
+
   c = this.displayedColumns.length;
 
   numberColumns: string[] = [ 'totalAmount' ];
@@ -37,21 +38,31 @@ export class ListBillComponent implements  AfterViewInit, OnInit  {
     grandTotal: 'Grand Total',
     isPaid: 'Paid'
   };
+
   xheaders = [
-    {key: 'vendor.name',  width: 25 },
-    { key: 'billDate', width: 30, },
-    {key: 'billNumber', width: 25 },
-    {key: 'totalAmount',  width: 20 },
-    {key: 'totalDiscount',  width: 25 },
-    {key: 'totalTax',  width: 30 },
-    {key: 'grandTotal',  width: 25 },
-    {key: 'isPaid',  width: 25 }
+    {key: 'vendor.name',
+      width: 25 },
+    { key: 'billDate',
+      width: 30, },
+    {key: 'billNumber',
+      width: 25 },
+    {key: 'totalAmount',
+      width: 20 },
+    {key: 'totalDiscount',
+      width: 25 },
+    {key: 'totalTax',
+      width: 30 },
+    {key: 'grandTotal',
+      width: 25 },
+    {key: 'isPaid',
+      width: 25 }
 
   ];
+
   iheaders = [
 
-     'Vendor',
-     'Bill Date',
+    'Vendor',
+    'Bill Date',
     'bill Number #',
     'Amount',
     'Discount',
@@ -160,23 +171,24 @@ export class ListBillComponent implements  AfterViewInit, OnInit  {
     const data = [];
     this.billService.queryData(tParams).subscribe((items) => {
 
-      items.forEach((element: any) => {
-        const temp = [element.vendor?.name, element.billDate, element.billNumber, element.totalAmount,
-          element.totalDiscount, element.totalTax, element.grandTotal, element.isPaid];
+      items.forEach((element) => {
+
+        const temp = [ element.vendor?.name, element.billDate, element.billNumber, element.totalAmount,
+          element.totalDiscount, element.totalTax, element.grandTotal, element.isPaid ];
 
         data.push(temp);
-    });
+
+      });
       const result = {
         cell: this.c,
         rheader: this.iheaders,
-      eheader: this.xheaders,
-      header: this.columnHeaders,
-      rowData: data
-    };
+        eheader: this.xheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
       this.mainservice.setExport(result);
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
+      this.dialog.open(ExportPopupComponent, {height: '500px',
         data: {items,
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});

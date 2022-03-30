@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit  } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -15,10 +15,12 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-tax.component.html',
   styleUrls: [ './list-tax.component.scss' ],
 })
-export class ListTaxComponent implements  AfterViewInit, OnInit  {
+export class ListTaxComponent implements AfterViewInit, OnInit {
 
   displayedColumns: string[] = [ 'groupName', 'name', 'rate', 'appliedTo', 'description' ];
+
   c = this.displayedColumns.length;
+
   columnHeaders = {
     groupName: 'Group Name',
     name: 'Name',
@@ -26,19 +28,26 @@ export class ListTaxComponent implements  AfterViewInit, OnInit  {
     appliedTo: 'Applied To (%)',
     description: 'Description'
   };
+
   xheaders = [
-    {key : 'groupName' , width: 30 },
-    {key : 'name' , width: 30 },
-    { key : 'rate' , width: 20 },
-    { key : 'appliedTo' , width: 15 },
-    {key : 'description' , width: 30 },
+    {key: 'groupName',
+      width: 30 },
+    {key: 'name',
+      width: 30 },
+    { key: 'rate',
+      width: 20 },
+    { key: 'appliedTo',
+      width: 15 },
+    {key: 'description',
+      width: 30 },
   ];
+
     iheaders = [
-   'Group Name',
-    'Name',
-    'Rate (%)',
-     'Applied To (%)',
-     'Description'
+      'Group Name',
+      'Name',
+      'Rate (%)',
+      'Applied To (%)',
+      'Description'
     ];
 
   queryParams: QueryData = { };
@@ -59,7 +68,7 @@ export class ListTaxComponent implements  AfterViewInit, OnInit  {
     private activatedRoute: ActivatedRoute,
     private readonly taxService: TaxService,
     private dialog: MatDialog,
-    private mainservice: MainService, ) { }
+    private mainservice: MainService,) { }
 
   private loadData = () => {
 
@@ -113,22 +122,23 @@ export class ListTaxComponent implements  AfterViewInit, OnInit  {
     const data = [];
     this.taxService.queryData(tParams).subscribe((items) => {
 
-      items.forEach((element: any) => {
-        const temp = [element.groupName, element.name, element.rate, element.appliedTo, element.description];
+      items.forEach((element) => {
+
+        const temp = [ element.groupName, element.name, element.rate, element.appliedTo, element.description ];
 
         data.push(temp);
-    });
+
+      });
       const result = {
         cell: this.c,
         rheader: this.iheaders,
-      eheader: this.xheaders,
-      header: this.columnHeaders,
-      rowData: data
-    };
+        eheader: this.xheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
       this.mainservice.setExport(result);
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
+      this.dialog.open(ExportPopupComponent, {height: '500px',
         data: {items,
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});
@@ -143,4 +153,5 @@ export class ListTaxComponent implements  AfterViewInit, OnInit  {
     });
 
   }
+
 }

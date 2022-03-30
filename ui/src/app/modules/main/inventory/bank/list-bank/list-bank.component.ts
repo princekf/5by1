@@ -20,23 +20,30 @@ export class ListBankComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [ 'type', 'name', 'openingBalance', 'description' ];
 
   c = this.displayedColumns.length;
+
   columnHeaders = {
     type: 'Type',
     name: 'Name',
     openingBalance: 'OpeningBalance',
     description: 'description',
   };
+
   iheaders = [
-   'Type',
+    'Type',
     'Name',
-   'OpeningBalance',
+    'OpeningBalance',
     'description',
   ];
+
   xheaders = [
-    {key: 'type' , width: 15 },
-    {key: 'name' , width: 30, },
-    {key: 'openingBalance' , width: 20 },
-    {key: 'description' , width: 25 }
+    {key: 'type',
+      width: 15 },
+    {key: 'name',
+      width: 30, },
+    {key: 'openingBalance',
+      width: 20 },
+    {key: 'description',
+      width: 25 }
   ];
 
 
@@ -59,7 +66,7 @@ export class ListBankComponent implements OnInit, AfterViewInit {
   constructor(private activatedRoute: ActivatedRoute,
               private bankService: BankService,
               private dialog: MatDialog,
-              private mainservice: MainService, ) { }
+              private mainservice: MainService,) { }
 
 
   private loadData = () => {
@@ -115,22 +122,23 @@ export class ListBankComponent implements OnInit, AfterViewInit {
     const data = [];
     this.bankService.queryData(tParams).subscribe((items) => {
 
-      items.forEach((element: any) => {
-        const temp = [element.type, element.name, element.openingBalance, element.description, ];
+      items.forEach((element) => {
+
+        const temp = [ element.type, element.name, element.openingBalance, element.description, ];
 
         data.push(temp);
-    });
+
+      });
       const result = {
         cell: this.c,
         rheader: this.iheaders,
-      eheader: this.xheaders,
-      header: this.columnHeaders,
-      rowData: data
-    };
+        eheader: this.xheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
       this.mainservice.setExport(result);
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
+      this.dialog.open(ExportPopupComponent, {height: '500px',
         data: {items,
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});

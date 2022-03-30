@@ -1,5 +1,5 @@
 
-import { Component , AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CategoryService } from '@fboservices/inventory/category.service';
 import { QueryData } from '@shared/util/query-data';
@@ -20,7 +20,9 @@ import { MainService } from '../../../../../services/main.service';
 export class ListCategoryComponent implements AfterViewInit, OnInit {
 
   displayedColumns: string[] = [ 'parent.name', 'name', 'unit.name', 'hsnNumber', 'description' ];
+
   c = this.displayedColumns.length;
+
   columnHeaders = {
     'parent.name': 'Parent',
     name: 'Name',
@@ -28,20 +30,27 @@ export class ListCategoryComponent implements AfterViewInit, OnInit {
     hsnNumber: 'hsnNumber',
     description: 'description',
   };
+
   xheaders = [
-    {key: 'parent.name' , width: 20 },
-    {key: 'name' , width: 30, },
-    {key: 'unit.name' ,  width: 20 },
-    { key: 'hsnNumber' , width: 20 },
-    { key: 'description' , width: 30 },
+    {key: 'parent.name',
+      width: 20 },
+    {key: 'name',
+      width: 30, },
+    {key: 'unit.name',
+      width: 20 },
+    { key: 'hsnNumber',
+      width: 20 },
+    { key: 'description',
+      width: 30 },
 
   ];
+
   iheaders = [
-   'Parent',
+    'Parent',
     'Name',
     'Unit',
-   'hsnNumber',
-  'description',
+    'hsnNumber',
+    'description',
   ];
 
 
@@ -63,7 +72,7 @@ export class ListCategoryComponent implements AfterViewInit, OnInit {
   constructor(private activatedRoute: ActivatedRoute,
               private categoryService: CategoryService,
               private dialog: MatDialog,
-              private mainservice: MainService, ) { }
+              private mainservice: MainService,) { }
 
     private loadData = () => {
 
@@ -123,22 +132,24 @@ export class ListCategoryComponent implements AfterViewInit, OnInit {
       const data = [];
       this.categoryService.queryData(tParams).subscribe((items) => {
 
-        items.forEach((element: any) => {
-          const temp = [element.parent?.name, element.name, element.unit?.name, element.hsnNumber, element.description];
+        items.forEach((element) => {
+
+          const temp = [ element.parent?.name, element.name, element.unit?.name, element.hsnNumber,
+            element.description ];
 
           data.push(temp);
-      });
+
+        });
         const result = {
           cell: this.c,
           rheader: this.iheaders,
-        eheader: this.xheaders,
-        header: this.columnHeaders,
-        rowData: data
-      };
+          eheader: this.xheaders,
+          header: this.columnHeaders,
+          rowData: data
+        };
         this.mainservice.setExport(result);
 
-        this.dialog.open(ExportPopupComponent, {
-          height: '500px',
+        this.dialog.open(ExportPopupComponent, {height: '500px',
           data: {items,
             displayedColumns: this.displayedColumns,
             columnHeaders: this.columnHeaders}});

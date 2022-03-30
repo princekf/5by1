@@ -3,6 +3,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryData } from '@shared/util/query-data';
 import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from '@fboutil/filter.util';
+import { Category } from '@shared/entity/inventory/category';
+import { CategoryService } from '@fboservices/inventory/category.service';
+import { Unit } from '@shared/entity/inventory/unit';
+import { UnitService } from '@fboservices/inventory/unit.service';
 
 @Component({
   selector: 'app-filter-category',
@@ -13,14 +17,18 @@ export class FilterCategoryComponent {
 
   queryParams:QueryData = { };
 
+  parentFiltered: Array<Category> = [];
+
+  unitFiltered: Array<Unit> = [];
+
   filterForm: FormGroup = new FormGroup({
-    parent: new FormControl(''),
-    parentType: new FormControl('^'),
+    parentId: new FormControl(''),
+    parentIdType: new FormControl('^'),
     name: new FormControl(''),
     nameType: new FormControl('^'),
 
-    unit: new FormControl(''),
-    unitType: new FormControl('^'),
+    unitId: new FormControl(''),
+    unitIdType: new FormControl('^'),
 
 
     hsnNumber: new FormControl(''),
@@ -30,35 +38,69 @@ export class FilterCategoryComponent {
 
 
   constructor(private router:Router,
-    private activatedRoute : ActivatedRoute,) { }
+    private activatedRoute : ActivatedRoute,
+    private categoryService: CategoryService,
+    private unitService: UnitService,) { }
 
-  ngOnInit():void {
+    private handleparentAutoChange = (parentQ:string) => {
 
-    const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
-    fillFilterForm(this.filterForm, whereS);
+      if (typeof parentQ !== 'string') {
 
-  }
+        return;
 
-  ngAfterViewInit():void {
+      }
+      this.categoryService.search({ where: {
+        name: {like: parentQ,
+          options: 'i'},
+      } })
+        .subscribe((parents) => (this.parentFiltered = parents));
+
+    };
+
+    private handleunitAutoChange = (unitQ:string) => {
+
+      if (typeof unitQ !== 'string') {
+
+        return;
+
+      }
+      this.unitService.search({ where: {
+        name: {like: unitQ,
+          options: 'i'},
+      } })
+        .subscribe((units) => (this.unitFiltered = units));
+
+    };
+
+    ngOnInit():void {
+
+      this.filterForm.controls.parentId.valueChanges.subscribe(this.handleparentAutoChange);
+      this.filterForm.controls.unitId.valueChanges.subscribe(this.handleunitAutoChange);
+      const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
+      fillFilterForm(this.filterForm, whereS);
+
+    }
+
+    ngAfterViewInit():void {
 
 
-    this.activatedRoute.queryParams.subscribe((value) => {
+      this.activatedRoute.queryParams.subscribe((value) => {
 
-      this.queryParams = { ...value };
+        this.queryParams = { ...value };
 
-    });
+      });
 
-  }
+    }
 
   filterItems = ():void => {
 
 
     const formFields: Array<FilterFormField> = [
-      {name: 'parent',
+      {name: 'parentId',
         type: 'string'},
       {name: 'name',
         type: 'string'},
-      {name: 'unit',
+      {name: 'unitId',
         type: 'string'},
       {name: 'hsnNumber',
         type: 'string'}
@@ -68,5 +110,8 @@ export class FilterCategoryComponent {
 
   };
 
+  extractNameOfparent= (idS: string): string => this.parentFiltered.find((prt) => prt.id === idS)?.name;
+
+  extractNameOfunit= (idS: string): string => this.unitFiltered.find((unit) => unit.id === idS)?.name;
 
 }

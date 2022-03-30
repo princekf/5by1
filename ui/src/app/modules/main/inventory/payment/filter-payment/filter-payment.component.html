@@ -34,37 +34,49 @@
 
             <div class="filter-content-div">
                 <mat-label class="lable">Vendor</mat-label>
-                <mat-select formControlName="vendorType" class="select">
-                    <mat-option value="^">Starts with</mat-option>
-                    <mat-option value="">Contains</mat-option>
-                    <mat-option value="eq">Equal to</mat-option>
+                <mat-select formControlName="vendorIdType" class="select">
+                    <mat-option value="^">Equal to</mat-option>
                 </mat-select>
                 <mat-form-field>
-                    <input matInput formControlName="vendor">
+                    <input matInput formControlName="vendorId"[matAutocomplete]="autoVendor">
+                    <mat-autocomplete autoActiveFirstOption #autoVendor="matAutocomplete"
+                        [displayWith]="extractNameOfvendor">
+                        <mat-option *ngFor="let  vendor of vendorFiltered" [value]=" vendor.id">
+                            {{ vendor.name}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
             </div>
 
             <div class="filter-content-div">
                 <mat-label class="lable">Bill</mat-label>
-                <mat-select formControlName="billType" class="select">
-                    <mat-option value="^">Starts with</mat-option>
-                    <mat-option value="">Contains</mat-option>
-                    <mat-option value="eq">Equal to</mat-option>
+                <mat-select formControlName="billIdType" class="select">
+                    <mat-option value="^">Equal to</mat-option>
                 </mat-select>
                 <mat-form-field>
-                    <input matInput formControlName="bill">
+                    <input matInput type = "number"formControlName="billId"[matAutocomplete]="autoBill">
+                    <mat-autocomplete autoActiveFirstOption #autoBill="matAutocomplete"
+                        [displayWith]="extractNameOfbill">
+                        <mat-option *ngFor="let  bill of billfiltered" [value]=" bill.id">
+                            {{ bill.billNumber}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
             </div>
 
             <div class="filter-content-div">
                 <mat-label class="lable">Bank</mat-label>
-                <mat-select formControlName="bankType" class="select">
-                    <mat-option value="^">Starts with</mat-option>
-                    <mat-option value="">Contains</mat-option>
-                    <mat-option value="eq">Equal to</mat-option>
+                <mat-select formControlName="bankIdType" class="select">
+                    <mat-option value="^">Equal to</mat-option>
                 </mat-select>
                 <mat-form-field>
-                    <input matInput formControlName="bank">
+                    <input matInput formControlName="bankId"[matAutocomplete]="autoBank">
+                    <mat-autocomplete autoActiveFirstOption #autoBank="matAutocomplete"
+                        [displayWith]="extractNameOfbank">
+                        <mat-option *ngFor="let  bank of bankFiltered" [value]=" bank.id">
+                            {{ bank.name}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
             </div>
 

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit  } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { QueryData } from '@shared/util/query-data';
@@ -15,10 +15,12 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-vendor.component.html',
   styleUrls: [ './list-vendor.component.scss' ]
 })
-export class ListVendorComponent implements  AfterViewInit, OnInit  {
+export class ListVendorComponent implements AfterViewInit, OnInit {
 
   displayedColumns: string[] = [ 'name', 'email', 'mobile', 'state', 'address', 'gstNo' ];
+
   c = this.displayedColumns.length;
+
   columnHeaders = {
     name: 'Name',
     email: 'E-Mail',
@@ -27,22 +29,29 @@ export class ListVendorComponent implements  AfterViewInit, OnInit  {
     address: 'Address',
     gstNo: 'GST No'
   };
+
   xheaders = [
-    {key: 'name',  width: 30, },
-    { key: 'email',  width: 45 },
-    {key: 'mobile', width: 20 },
-    {key: 'state',  width: 15 },
-    {key: 'address',   width: 45 },
-    {key: 'gstNo',   width: 20 }
+    {key: 'name',
+      width: 30, },
+    { key: 'email',
+      width: 45 },
+    {key: 'mobile',
+      width: 20 },
+    {key: 'state',
+      width: 15 },
+    {key: 'address',
+      width: 45 },
+    {key: 'gstNo',
+      width: 20 }
   ];
 
    iheaders = [
      'Name',
-    'E-Mail',
-   'Mobile',
-   'State',
-    'Address',
-    'GST No'
+     'E-Mail',
+     'Mobile',
+     'State',
+     'Address',
+     'GST No'
    ];
 
 
@@ -64,7 +73,7 @@ export class ListVendorComponent implements  AfterViewInit, OnInit  {
     private activatedRoute: ActivatedRoute,
     private readonly vendorService: VendorService,
     private dialog: MatDialog,
-    private mainservice: MainService, ) { }
+    private mainservice: MainService,) { }
 
     private loadData = () => {
 
@@ -108,6 +117,7 @@ export class ListVendorComponent implements  AfterViewInit, OnInit  {
       });
 
     }
+
     handleExportClick = (): void => {
 
       const tParams = {...this.queryParams};
@@ -116,23 +126,23 @@ export class ListVendorComponent implements  AfterViewInit, OnInit  {
       const data = [];
       this.vendorService.queryData(tParams).subscribe((items) => {
 
-        items.forEach((element: any) => {
+        items.forEach((element) => {
 
-          const temp = [element.name, element.email, element.mobile, element.state, element.address, element.gstNo];
+          const temp = [ element.name, element.email, element.mobile, element.state, element.address, element.gstNo ];
 
           data.push(temp);
-      });
+
+        });
         const result = {
           cell: this.c,
           rheader: this.iheaders,
-        eheader: this.xheaders,
-        header: this.columnHeaders,
-        rowData: data
-      };
+          eheader: this.xheaders,
+          header: this.columnHeaders,
+          rowData: data
+        };
         this.mainservice.setExport(result);
 
-        this.dialog.open(ExportPopupComponent, {
-          height: '500px',
+        this.dialog.open(ExportPopupComponent, {height: '500px',
           data: {items,
             displayedColumns: this.displayedColumns,
             columnHeaders: this.columnHeaders}});
