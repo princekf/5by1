@@ -18,12 +18,15 @@ import { HeaderComponent } from './header/header.component';
 import { LeftNavComponent } from './left-nav/left-nav.component';
 
 import {FormsModule} from '@angular/forms';
+import { ImportErrordataPopupComponent } from './import-errordata-popup/import-errordata-popup.component';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
     MainComponent,
     LeftNavComponent,
     HeaderComponent,
+    ImportErrordataPopupComponent,
 
   ],
   imports: [
@@ -40,6 +43,7 @@ import {FormsModule} from '@angular/forms';
     MatButtonModule,
     MatInputModule,
     FormsModule,
+    MatTableModule,
 
   ],
 })

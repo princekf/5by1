@@ -20,7 +20,9 @@ import { MainService } from '../../../../../services/main.service';
 export class ListBranchComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'email', 'code', 'address', 'finYearStartDate', 'defaultFinYear.name' ];
+
   c = this.displayedColumns.length;
+
   columnHeaders = {
     name: 'Name',
     email: 'Email',
@@ -29,22 +31,29 @@ export class ListBranchComponent implements OnInit, AfterViewInit {
     finYearStartDate: 'FinYearStartDate',
     'defaultFinYear.name': 'DefaultFinYear'
   };
+
   xheaders = [
-    {key: 'name' , width: 30, },
-    {key: 'email' , width: 40 },
-    {key: 'code' ,  width: 15 },
-    { key: 'address' , width: 50 },
-    {key: 'finYearStartDate' ,  width: 19 },
-    {key: 'defaultFinYear.name' , width: 15 }
+    {key: 'name',
+      width: 30, },
+    {key: 'email',
+      width: 40 },
+    {key: 'code',
+      width: 15 },
+    { key: 'address',
+      width: 50 },
+    {key: 'finYearStartDate',
+      width: 19 },
+    {key: 'defaultFinYear.name',
+      width: 15 }
   ];
 
    iheaders = [
-    'Name',
+     'Name',
      'Email',
      'Code',
      'Address',
      'FinYearStartDate',
-    'DefaultFinYear'
+     'DefaultFinYear'
    ];
 
   loading = true;
@@ -79,7 +88,7 @@ export class ListBranchComponent implements OnInit, AfterViewInit {
   constructor(private activatedRoute: ActivatedRoute,
               private branchService: BranchService,
               private dialog: MatDialog,
-              private mainservice: MainService, ) { }
+              private mainservice: MainService,) { }
 
 
   private loadData = () => {
@@ -140,22 +149,24 @@ export class ListBranchComponent implements OnInit, AfterViewInit {
     const data = [];
     this.branchService.queryData(tParams).subscribe((items) => {
 
-      items.forEach((element: any) => {
-        const temp = [element.name, element.email, element.code, element.address, element.finYearStartDate];
+      items.forEach((element) => {
+
+        const temp = [ element.name, element.email, element.code, element.address,
+          element.finYearStartDate, element.defaultFinYear.name ];
 
         data.push(temp);
-    });
+
+      });
       const result = {
         cell: this.c,
-          rheader: this.iheaders,
-      eheader: this.xheaders,
-      header: this.columnHeaders,
-      rowData: data
-    };
+        rheader: this.iheaders,
+        eheader: this.xheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
       this.mainservice.setExport(result);
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
+      this.dialog.open(ExportPopupComponent, {height: '500px',
         data: {items,
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});

@@ -10,6 +10,7 @@ import { Ledger } from '@shared/entity/accounting/ledger';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 import { MainService } from '../../../../../services/main.service';
+import { ImportErrordataPopupComponent } from '../../../import-errordata-popup/import-errordata-popup.component';
 
 @Component({
   selector: 'app-list-ledger',
@@ -61,6 +62,16 @@ export class ListLedgerComponent implements OnInit, AfterViewInit {
      'Opening Type',
      'Details',
    ];
+
+displayedColumns1: string[] = [ 'Name', 'Code', 'OpeningBalance', 'OpeningType', 'Details' ];
+
+  columnHeaders1 = {
+    Name: 'Name',
+    Code: 'Code',
+    OpeningBalance: 'OpeningBalance',
+    OpeningType: 'OpeningType',
+    Details: 'Details',
+  };
 
 
   loading = true;
@@ -142,12 +153,15 @@ export class ListLedgerComponent implements OnInit, AfterViewInit {
 
   handleImportClick = (file: File): void => {
 
-    this.ledgerService.importLedger(file).subscribe(() => {
+    this.ledgerService.importLedger(file).subscribe((items) => {
 
-      console.log('file uploaded');
+
+      this.dialog.open(ImportErrordataPopupComponent, {height: '500px',
+        data: {items,
+          displayedColumns: this.displayedColumns1,
+          columnHeaders: this.columnHeaders1}});
 
     });
-
 
   }
 
@@ -160,12 +174,14 @@ export class ListLedgerComponent implements OnInit, AfterViewInit {
     const data = [];
     this.ledgerService.queryData(tParams).subscribe((items) => {
 
+
       items.forEach((element) => {
 
         const temp = [ element.name, element.code, element.ledgerGroup.name, element.ledgerGroup.code,
           element.obAmount, element.obType,
           element.details ];
         data.push(temp);
+
 
       });
 
