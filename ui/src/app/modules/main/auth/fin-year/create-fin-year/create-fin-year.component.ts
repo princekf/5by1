@@ -12,6 +12,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FinYear } from '@shared/entity/auth/fin-year';
 import { QueryData } from '@shared/util/query-data';
 import { MAT_DATE_RANGE_SELECTION_STRATEGY } from '@angular/material/datepicker';
+import * as dayjs from 'dayjs';
 
 @Component({
   selector: 'app-create-fin-year',
@@ -127,18 +128,25 @@ export class CreateFinYearComponent implements OnInit {
 
     }
     this.loading = true;
-    const FinyearP = <FinYear> this.form.value;
+    const finyearT = <FinYear> this.form.value;
+    const finyearP = {...finyearT};
+    const {startDate, endDate} = finyearP;
+    const format = 'DD/MM/YYYY';
+    const sDateF = dayjs(startDate).format(format);
+    const eDateF = dayjs(endDate).format(format);
+    const sDateP = dayjs.utc(sDateF, format);
+    const eDateP = dayjs.utc(eDateF, format);
+    finyearP.startDate = sDateP.toDate();
+    finyearP.endDate = eDateP.toDate();
+    this.finYearService.upsert(finyearP).subscribe(() => {
 
-
-    this.finYearService.upsert(FinyearP).subscribe(() => {
-
-      this.toastr.success(`Fin-year ${FinyearP.name} is saved successfully`, 'Fin-year saved');
+      this.toastr.success(`Fin-year ${finyearP.name} is saved successfully`, 'Fin-year saved');
       this.goToPreviousPage(this.route, this.router);
 
     }, (error) => {
 
       this.loading = false;
-      this.toastr.error(`Error in saving Fin-year ${FinyearP.name}. ${error.error?.message}`, 'Fin-year not saved');
+      this.toastr.error(`Error in saving Fin-year ${finyearP.name}. ${error.error?.message}`, 'Fin-year not saved');
       console.error(error);
 
     });
