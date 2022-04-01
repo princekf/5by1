@@ -77,6 +77,8 @@ export class ListTaxComponent implements AfterViewInit, OnInit {
     this.taxService.list(this.queryParams).subscribe((taxes) => {
 
       this.taxes = taxes;
+
+
       this.loading = false;
 
     }, (error) => {
@@ -108,6 +110,17 @@ export class ListTaxComponent implements AfterViewInit, OnInit {
 
       this.loadData();
 
+
+    });
+
+
+  }
+
+  handleImportClick = (file: File): void => {
+
+    this.taxService.importTax(file).subscribe(() => {
+
+      console.log('file uploaded');
 
     });
 

@@ -131,6 +131,17 @@ export class ListProductComponent implements AfterViewInit, OnInit {
 
     }
 
+    handleImportClick = (file: File): void => {
+
+      this.productService.importProduct(file).subscribe(() => {
+
+        console.log('file uploaded');
+
+      });
+
+
+    }
+
     handleExportClick = (): void => {
 
       const tParams = {...this.queryParams};

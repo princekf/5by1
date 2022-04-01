@@ -25,14 +25,14 @@ export class ListBankComponent implements OnInit, AfterViewInit {
     type: 'Type',
     name: 'Name',
     openingBalance: 'OpeningBalance',
-    description: 'description',
+    description: 'Description',
   };
 
   iheaders = [
     'Type',
     'Name',
     'OpeningBalance',
-    'description',
+    'Description',
   ];
 
   xheaders = [
@@ -111,6 +111,17 @@ export class ListBankComponent implements OnInit, AfterViewInit {
 
 
     });
+
+  }
+
+  handleImportClick = (file: File): void => {
+
+    this.bankService.importBank(file).subscribe(() => {
+
+      console.log('file uploaded');
+
+    });
+
 
   }
 

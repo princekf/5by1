@@ -28,7 +28,7 @@ export class ListCategoryComponent implements AfterViewInit, OnInit {
     name: 'Name',
     'unit.name': 'Unit',
     hsnNumber: 'hsnNumber',
-    description: 'description',
+    description: 'Description',
   };
 
   xheaders = [
@@ -50,7 +50,7 @@ export class ListCategoryComponent implements AfterViewInit, OnInit {
     'Name',
     'Unit',
     'hsnNumber',
-    'description',
+    'Description',
   ];
 
 
@@ -81,7 +81,6 @@ export class ListCategoryComponent implements AfterViewInit, OnInit {
       this.categoryService.list(this.queryParams).subscribe((categories) => {
 
         this.categories = categories;
-
 
         this.loading = false;
 
@@ -118,6 +117,17 @@ export class ListCategoryComponent implements AfterViewInit, OnInit {
         }
 
         this.loadData();
+
+      });
+
+
+    }
+
+    handleImportClick = (file: File): void => {
+
+      this.categoryService.importCategory(file).subscribe(() => {
+
+        console.log('file uploaded');
 
       });
 

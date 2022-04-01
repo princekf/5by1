@@ -112,6 +112,17 @@ export class ListUnitComponent implements AfterViewInit, OnInit {
 
     }
 
+    handleImportClick = (file: File): void => {
+
+      this.unitService.importUnit(file).subscribe(() => {
+
+        console.log('file uploaded');
+
+      });
+
+
+    };
+
     handleExportClick = (): void => {
 
       const tParams = {...this.queryParams};
