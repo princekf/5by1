@@ -54,7 +54,7 @@
                     <mat-option value="^">Equal to</mat-option>
                 </mat-select>
                 <mat-form-field>
-                    <input matInput type = "number"formControlName="billId"[matAutocomplete]="autoBill">
+                    <input matInput formControlName="billId"[matAutocomplete]="autoBill">
                     <mat-autocomplete autoActiveFirstOption #autoBill="matAutocomplete"
                         [displayWith]="extractNameOfbill">
                         <mat-option *ngFor="let  bill of billfiltered" [value]=" bill.id">

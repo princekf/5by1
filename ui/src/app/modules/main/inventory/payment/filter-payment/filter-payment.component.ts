@@ -94,7 +94,7 @@ export class FilterPaymentComponent {
 
       }
       this.billService.search({ where: {
-        name: {like: billQ,
+        billNumber: {like: billQ,
           options: 'i'},
       } })
         .subscribe((bills) => (this.billfiltered = bills));
@@ -141,6 +141,7 @@ export class FilterPaymentComponent {
     ];
     const whereS = createQueryStringFromFilterForm(this.filterForm, formFields);
     this.router.navigate([], { queryParams: {whereS} });
+
 
   };
 

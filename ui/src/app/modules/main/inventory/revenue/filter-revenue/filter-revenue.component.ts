@@ -95,7 +95,7 @@ export class FilterRevenueComponent {
 
       }
       this.invoiceService.search({ where: {
-        name: {like: invoiceQ,
+        invoiceNumber: {like: invoiceQ,
           options: 'i'},
       } })
         .subscribe((invoices) => (this.invoicefiltered = invoices));
