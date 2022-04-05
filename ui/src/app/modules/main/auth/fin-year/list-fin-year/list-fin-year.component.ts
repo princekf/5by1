@@ -20,7 +20,9 @@ import { MainService } from '../../../../../services/main.service';
 export class ListFinYearComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'startDate', 'endDate', 'branch.name' ];
+
   c = this.displayedColumns.length;
+
   columnHeaders = {
     name: 'Name',
     code: 'Code',
@@ -29,19 +31,26 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
     'branch.name': 'Branch',
 
   };
+
   xheaders = [
 
-    { key: 'name' , width: 30, },
-    { key: 'code' , width: 15 },
-    {key: 'startDate' , width: 15 },
-    {key: 'endDate' , width: 15 },
-    {key: 'branch.name' , width: 25 },
+    { key: 'name',
+      width: 30, },
+    { key: 'code',
+      width: 15 },
+    {key: 'startDate',
+      width: 15 },
+    {key: 'endDate',
+      width: 15 },
+    {key: 'branch.name',
+      width: 25 },
 
   ];
+
    iheaders = [
-    'Name',
+     'Name',
      'Code',
- 'StartDate',
+     'StartDate',
      'EndDate',
      'Branch',
 
@@ -84,7 +93,7 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
   constructor(private activatedRoute: ActivatedRoute,
               private finYearService: FinYearService,
               private dialog: MatDialog,
-              private mainservice: MainService, ) { }
+              private mainservice: MainService,) { }
 
 
   private loadData = () => {
@@ -137,6 +146,7 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
     });
 
   }
+
   handleExportClick = (): void => {
 
     const tParams = {...this.queryParams};
@@ -145,22 +155,23 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
     const data = [];
     this.finYearService.queryData(tParams).subscribe((items) => {
 
-      items.forEach((element: any) => {
-        const temp = [element.name, element.code, element.startDate, element.endDate, element.branch.name];
+      items.forEach((element) => {
+
+        const temp = [ element.name, element.code, element.startDate, element.endDate, element.branch.name ];
 
         data.push(temp);
-    });
+
+      });
       const result = {
         cell: this.c,
-          rheader: this.iheaders,
-      eheader: this.xheaders,
-      header: this.columnHeaders,
-      rowData: data
-    };
+        rheader: this.iheaders,
+        eheader: this.xheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
       this.mainservice.setExport(result);
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
+      this.dialog.open(ExportPopupComponent, {height: '500px',
         data: {items,
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});

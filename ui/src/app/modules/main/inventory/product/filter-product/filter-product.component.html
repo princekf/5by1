@@ -1,4 +1,4 @@
-<div class="filter-item-card" id="filter-dialog">
+<div class="filter-item-card" id="filter-dialog" (keydown.tab)="$event.stopPropagation()" >
     <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
     <div (click)="$event.stopPropagation()">
 
@@ -95,13 +95,17 @@
 
         <div class="filter-content-div">
             <mat-label class="lable">Category</mat-label>
-            <mat-select  class="select" formControlName="CategoryType">
-                <mat-option value="^">Starts with</mat-option>
-                <mat-option value="">Contains</mat-option>
-                <mat-option value="eq">Equal to</mat-option>
+            <mat-select  class="select" formControlName="categoryIdType">
+                <mat-option value="^">Equal to</mat-option>
             </mat-select>
             <mat-form-field class="forminput">
-                <input matInput type="text" formControlName="Category">
+                <input matInput type="text" formControlName="categoryId"[matAutocomplete]="autocategory">
+                <mat-autocomplete autoActiveFirstOption #autocategory="matAutocomplete"
+                    [displayWith]="extractNameOfcategory">
+                    <mat-option *ngFor="let category of categoryFiltered" [value]=" category.id">
+                        {{ category.name}}
+                    </mat-option>
+                </mat-autocomplete>
             </mat-form-field>
         </div>
         <div class="filter-content-div">
@@ -120,6 +124,7 @@
 
     <div class='filter-actions-container'>
         <button mat-button class="filtercancelbutton">Cancel</button>
+        <button mat-button type="reset" class="filterresetbutton"(click)="$event.stopPropagation()">Reset</button>
         <button mat-button class="filtersavebutton">Submit</button>
 
     </div>

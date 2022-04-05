@@ -1,4 +1,4 @@
-<div class="filter-item-card">
+<div class="filter-item-card" (keydown.tab)="$event.stopPropagation()" >
     <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
         <div (click)="$event.stopPropagation()">
 
@@ -90,16 +90,19 @@
                 </div>
             </div>
 
-
             <div class="filter-content-div">
                 <mat-label class="lable">Branch</mat-label>
-                <mat-select formControlName="branchType" class="select">
-                    <mat-option value="^">Starts with</mat-option>
-                    <mat-option value="">Contains</mat-option>
-                    <mat-option value="eq">Equal to</mat-option>
+                <mat-select formControlName="branchIdType" class="select">
+                    <mat-option value="^">Equal to</mat-option>
                 </mat-select>
                 <mat-form-field>
-                    <input matInput formControlName="branch">
+                    <input matInput formControlName="branchId"[matAutocomplete]="autoBranch">
+                    <mat-autocomplete autoActiveFirstOption #autoBranch="matAutocomplete"
+                        [displayWith]="extractNameOfbranch">
+                        <mat-option *ngFor="let  branch of branchFiltered" [value]=" branch.id">
+                            {{ branch.name}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
             </div>
       
@@ -107,6 +110,7 @@
 
         <div class='filter-actions-container'>
             <button mat-button type="button" class="filtercancelbutton">Cancel</button>
+            <button mat-button type="reset" class="filterresetbutton"(click)="$event.stopPropagation()">Reset</button>
             <button mat-button type="submit" class="filtersavebutton">Submit</button>
         </div>
     </form>

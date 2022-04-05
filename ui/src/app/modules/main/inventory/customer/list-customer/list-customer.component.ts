@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit  } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CustomerService } from '@fboservices/inventory/customer.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
@@ -21,7 +21,9 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
 
 
   displayedColumns: string[] = [ 'name', 'email', 'mobile', 'state', 'address', 'gstNo' ];
+
   c = this.displayedColumns.length;
+
   columnHeaders = {
     name: 'Name',
     email: 'EMail',
@@ -30,21 +32,29 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
     address: 'Address',
     gstNo: 'GST No'
   };
+
   xheaders = [
-    { key: 'name', width: 30, },
-    {  key: 'eMail', width: 35 },
-    {  key: 'mobile', width: 19 },
-    {  key: 'state', width: 20 },
-    {  key: 'address', width: 40 },
-    {  key: 'gstNo', width: 25 }
+    { key: 'name',
+      width: 30, },
+    { key: 'eMail',
+      width: 35 },
+    { key: 'mobile',
+      width: 19 },
+    { key: 'state',
+      width: 20 },
+    { key: 'address',
+      width: 40 },
+    { key: 'gstNo',
+      width: 25 }
   ];
+
   iheaders = [
-     'Name',
-  'EMail',
-   'Mobile',
-     'State',
+    'Name',
+    'EMail',
+    'Mobile',
+    'State',
     'Address',
-   'GST No'
+    'GST No'
   ];
 
   queryParams: QueryData = { };
@@ -65,7 +75,7 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
     private activatedRoute: ActivatedRoute,
     private readonly customerService: CustomerService,
     private dialog: MatDialog,
-    private mainservice: MainService, ) { }
+    private mainservice: MainService,) { }
 
     private loadData = () => {
 
@@ -117,22 +127,23 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
     const data = [];
     this.customerService.queryData(tParams).subscribe((items) => {
 
-      items.forEach((element: any) => {
-        const temp = [ element.name, element.email, element.mobile, element.state, element.address, element.gstNo];
+      items.forEach((element) => {
+
+        const temp = [ element.name, element.email, element.mobile, element.state, element.address, element.gstNo ];
 
         data.push(temp);
-    });
+
+      });
       const result = {
         cell: this.c,
-      eheader: this.xheaders,
-      rheader: this.iheaders,
-      header: this.columnHeaders,
-      rowData: data
-    };
+        eheader: this.xheaders,
+        rheader: this.iheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
       this.mainservice.setExport(result);
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
+      this.dialog.open(ExportPopupComponent, {height: '500px',
         data: {items,
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});

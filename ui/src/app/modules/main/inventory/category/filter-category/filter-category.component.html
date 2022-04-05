@@ -1,16 +1,20 @@
-<div class="filter-item-card">
+<div class="filter-item-card" (keydown.tab)="$event.stopPropagation()" >
     <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
         <div (click)="$event.stopPropagation()">
 
             <div class="filter-content-div">
                 <mat-label class="lable">Parent</mat-label>
-                <mat-select class="select" formControlName="parentType">
-                    <mat-option value="^">Starts with</mat-option>
-                    <mat-option value="">Contains</mat-option>
-                    <mat-option value="eq">Equal to</mat-option>
+                <mat-select class="select" formControlName="parentIdType">
+                    <mat-option value="^">Equal to</mat-option>
                 </mat-select>
                 <mat-form-field class="forminput">
-                    <input matInput formControlName="parent">
+                    <input matInput formControlName="parentId"[matAutocomplete]="autoParent">
+                    <mat-autocomplete autoActiveFirstOption #autoParent="matAutocomplete"
+                        [displayWith]="extractNameOfparent">
+                        <mat-option *ngFor="let  parent of parentFiltered" [value]=" parent.id">
+                            {{ parent.name}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
             </div>
 
@@ -28,14 +32,18 @@
 
             <div class="filter-content-div">
                 <mat-label class="lable">Unit</mat-label>
-                <mat-select  formControlName="unitType"  class="select">
-                    <mat-option value="^">Starts with</mat-option>
-                    <mat-option value="">Contains</mat-option>
-                    <mat-option value="eq">Equal to</mat-option>
+                <mat-select  formControlName="unitIdType"  class="select">
+                    <mat-option value="^">Equal to</mat-option>
                 </mat-select>
          
                 <mat-form-field class="forminput">
-                    <input matInput formControlName="unit">
+                    <input matInput formControlName="unitId"[matAutocomplete]="autoUnit">
+                    <mat-autocomplete autoActiveFirstOption #autoUnit="matAutocomplete"
+                        [displayWith]="extractNameOfunit">
+                        <mat-option *ngFor="let  unit of unitFiltered" [value]=" unit.id">
+                            {{ unit.name}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
          
 
@@ -59,6 +67,7 @@
 
         <div class='filter-actions-container'>
             <button mat-button type="button" class="filtercancelbutton">Cancel</button>
+            <button mat-button type="reset" class="filterresetbutton"(click)="$event.stopPropagation()">Reset</button>
             <button mat-button type="submit" class="filtersavebutton">Submit</button>
         </div>
     </form>

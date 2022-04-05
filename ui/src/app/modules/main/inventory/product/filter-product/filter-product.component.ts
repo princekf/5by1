@@ -3,6 +3,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryData } from '@shared/util/query-data';
 import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from '@fboutil/filter.util';
+import { Category } from '@shared/entity/inventory/category';
+import { CategoryService } from '@fboservices/inventory/category.service';
 
 
 @Component({
@@ -13,6 +15,8 @@ import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from
 export class FilterProductComponent {
 
   queryParams:QueryData = { };
+
+  categoryFiltered: Array<Category> = [];
 
   filterForm: FormGroup = new FormGroup({
     name: new FormControl(''),
@@ -30,8 +34,9 @@ export class FilterProductComponent {
     reorderLevelType: new FormControl('eq'),
     reorderLevelStart: new FormControl(''),
     reorderLevelEnd: new FormControl(''),
-    Category: new FormControl(''),
-    CategoryType: new FormControl('^'),
+
+    categoryId: new FormControl(''),
+    categoryIdType: new FormControl('^'),
     Status: new FormControl(''),
     StatusType: new FormControl('^'),
 
@@ -39,25 +44,42 @@ export class FilterProductComponent {
 
 
   constructor(private router:Router,
-    private activatedRoute : ActivatedRoute,) { }
+    private activatedRoute : ActivatedRoute,
+    private categoryService: CategoryService,) { }
 
-  ngOnInit():void {
+    private handlecategoryAutoChange = (categoryQ:string) => {
 
-    const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
-    fillFilterForm(this.filterForm, whereS);
+      if (typeof categoryQ !== 'string') {
 
-  }
+        return;
 
-  ngAfterViewInit():void {
+      }
+      this.categoryService.search({ where: {
+        name: {like: categoryQ,
+          options: 'i'},
+      } })
+        .subscribe((categorys) => (this.categoryFiltered = categorys));
+
+    };
+
+    ngOnInit():void {
+
+      this.filterForm.controls.categoryId.valueChanges.subscribe(this.handlecategoryAutoChange);
+      const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
+      fillFilterForm(this.filterForm, whereS);
+
+    }
+
+    ngAfterViewInit():void {
 
 
-    this.activatedRoute.queryParams.subscribe((value) => {
+      this.activatedRoute.queryParams.subscribe((value) => {
 
-      this.queryParams = { ...value };
+        this.queryParams = { ...value };
 
-    });
+      });
 
-  }
+    }
 
   filterItems = ():void => {
 
@@ -75,7 +97,7 @@ export class FilterProductComponent {
         type: 'string'},
       {name: 'reorderLevel',
         type: 'number'},
-      {name: 'Category',
+      {name: 'categoryId',
         type: 'string'},
       {name: 'Status',
         type: 'string'},
@@ -84,5 +106,7 @@ export class FilterProductComponent {
     this.router.navigate([], { queryParams: {whereS} });
 
   };
+
+  extractNameOfcategory= (idS: string): string => this.categoryFiltered.find((cat) => cat.id === idS)?.name;
 
 }

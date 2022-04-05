@@ -1,4 +1,4 @@
-<div class="filter-item-card">
+<div class="filter-item-card" (keydown.tab)="$event.stopPropagation()" > 
     <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
         <div (click)="$event.stopPropagation()">
 
@@ -32,6 +32,7 @@
 
         <div class='filter-actions-container'>
             <button mat-button type="button" class="filtercancelbutton">Cancel</button>
+            <button mat-button type="reset" class="filterresetbutton"(click)="$event.stopPropagation()">Reset</button>
             <button mat-button type="submit" class="filtersavebutton">Submit</button>
         </div>
     </form>

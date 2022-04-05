@@ -18,9 +18,10 @@ import { MainService } from '../../../../../services/main.service';
 })
 export class ListCompanyComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = [ 'name', 'code', 'email', 'address'];
+  displayedColumns: string[] = [ 'name', 'code', 'email', 'address' ];
 
   c = this.displayedColumns.length;
+
   columnHeaders = {
     name: 'Name',
     code: 'Code',
@@ -28,19 +29,25 @@ export class ListCompanyComponent implements OnInit, AfterViewInit {
     address: 'Address',
 
   };
+
    iheaders = [
-  'Name',
-    'Code',
-   'Email',
+     'Name',
+     'Code',
+     'Email',
      'Address',
 
    ];
+
   xheaders = [
 
-    {key: 'name' , width: 30, },
-    {key: 'code' ,   width: 15 },
-    { key: 'email' ,  width: 35 },
-    {key: 'address' ,  width: 50 },
+    {key: 'name',
+      width: 30, },
+    {key: 'code',
+      width: 15 },
+    { key: 'email',
+      width: 35 },
+    {key: 'address',
+      width: 50 },
   ];
 
   loading = true;
@@ -62,7 +69,7 @@ export class ListCompanyComponent implements OnInit, AfterViewInit {
   constructor(private activatedRoute: ActivatedRoute,
               private companyService: CompanyService,
               private dialog: MatDialog,
-              private mainservice: MainService, ) { }
+              private mainservice: MainService,) { }
 
 
   private loadData = () => {
@@ -110,6 +117,7 @@ export class ListCompanyComponent implements OnInit, AfterViewInit {
     });
 
   }
+
   handleExportClick = (): void => {
 
     const tParams = {...this.queryParams};
@@ -118,22 +126,23 @@ export class ListCompanyComponent implements OnInit, AfterViewInit {
     const data = [];
     this.companyService.queryData(tParams).subscribe((items) => {
 
-      items.forEach((element: any) => {
-        const temp = [element.name, element.code, element.email, element.address];
+      items.forEach((element) => {
+
+        const temp = [ element.name, element.code, element.email, element.address ];
 
         data.push(temp);
-    });
+
+      });
       const result = {
         cell: this.c,
-          rheader: this.iheaders,
-      eheader: this.xheaders,
-      header: this.columnHeaders,
-      rowData: data
-    };
+        rheader: this.iheaders,
+        eheader: this.xheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
       this.mainservice.setExport(result);
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
+      this.dialog.open(ExportPopupComponent, {height: '500px',
         data: {items,
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit  } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { InvoiceService } from '@fboservices/inventory/invoice.service';
 import { Subscription } from 'rxjs';
@@ -21,7 +21,9 @@ import { MainService } from '../../../../../services/main.service';
 export class ListInvoiceComponent implements AfterViewInit, OnInit {
 
   displayedColumns: string[] = [ 'customer.name', 'invoiceDate', 'invoiceNumber', 'totalAmount', 'totalDiscount', 'totalTax', 'grandTotal', 'isReceived' ];
+
   c = this.displayedColumns.length;
+
 numberColumns: string[] = [ 'totalAmount' ];
 
   columnHeaders = {
@@ -34,27 +36,36 @@ numberColumns: string[] = [ 'totalAmount' ];
     grandTotal: 'Grand Total',
     isReceived: 'Received'
   };
+
   xheaders = [
-    {key: 'customer.name', width: 30, },
-    {key: 'invoiceDate',  width: 15 },
-    {key: 'invoiceNumber',  width: 20 },
-    {key: 'totalAmount',  width: 20 },
-    { key: 'totalDiscount', width: 20 },
-    { key: 'totalTax', width: 15 },
-    {key: 'grandTotal',  width: 25 },
-    { key: 'isReceived', width: 25 }
+    {key: 'customer.name',
+      width: 30, },
+    {key: 'invoiceDate',
+      width: 15 },
+    {key: 'invoiceNumber',
+      width: 20 },
+    {key: 'totalAmount',
+      width: 20 },
+    { key: 'totalDiscount',
+      width: 20 },
+    { key: 'totalTax',
+      width: 15 },
+    {key: 'grandTotal',
+      width: 25 },
+    { key: 'isReceived',
+      width: 25 }
 
   ];
 
   iheaders = [
     'Customer',
-     'Date',
-     'Invoice #',
-     'Amount',
-     'Discount',
-     'Tax',
-     'Grand Total',
-     'Received'
+    'Date',
+    'Invoice #',
+    'Amount',
+    'Discount',
+    'Tax',
+    'Grand Total',
+    'Received'
   ];
 
 
@@ -91,7 +102,7 @@ numberColumns: string[] = [ 'totalAmount' ];
     private activatedRoute: ActivatedRoute,
     private readonly invoiceService: InvoiceService,
     private dialog: MatDialog,
-    private mainservice: MainService, ) { }
+    private mainservice: MainService,) { }
 
     private loadData = () => {
 
@@ -146,23 +157,24 @@ numberColumns: string[] = [ 'totalAmount' ];
     const data = [];
     this.invoiceService.queryData(tParams).subscribe((items) => {
 
-      items.forEach((element: any) => {
-        const temp = [element.customer?.name, element.invoiceDate, element.invoiceNumber, element.totalAmount,
-          element.totalDiscount, element.totalTax, element.grandTotal, element.isReceived];
+      items.forEach((element) => {
+
+        const temp = [ element.customer?.name, element.invoiceDate, element.invoiceNumber, element.totalAmount,
+          element.totalDiscount, element.totalTax, element.grandTotal, element.isReceived ];
 
         data.push(temp);
-    });
+
+      });
       const result = {
         cell: this.c,
         rheader: this.iheaders,
-      eheader: this.xheaders,
-      header: this.columnHeaders,
-      rowData: data
-    };
+        eheader: this.xheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
       this.mainservice.setExport(result);
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
+      this.dialog.open(ExportPopupComponent, {height: '500px',
         data: {items,
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});

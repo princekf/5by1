@@ -3,20 +3,24 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryData } from '@shared/util/query-data';
 import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from '@fboutil/filter.util';
+import { Vendor } from '@shared/entity/inventory/vendor';
+import { VendorService } from '@fboservices/inventory/vendor.service';
 
 @Component({
   selector: 'app-filter-bill',
   templateUrl: './filter-bill.component.html',
-  styleUrls: [ './filter-bill.component.scss', '../../../../../util/styles/fbo-filter-style.scss']
+  styleUrls: [ './filter-bill.component.scss', '../../../../../util/styles/fbo-filter-style.scss' ]
 })
 export class FilterBillComponent {
 
   queryParams:QueryData = { };
 
+  vendorFiltered: Array<Vendor> = [];
+
   filterForm: FormGroup = new FormGroup({
 
-    vendor: new FormControl(''),
-    vendorType: new FormControl('^'),
+    vendorId: new FormControl(''),
+    vendorIdType: new FormControl('^'),
 
     billDate: new FormControl(''),
     billDateType: new FormControl('eq'),
@@ -55,32 +59,50 @@ export class FilterBillComponent {
 
 
   constructor(private router:Router,
-    private activatedRoute : ActivatedRoute,) { }
-
-  ngOnInit():void {
-
-    const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
-    fillFilterForm(this.filterForm, whereS);
-
-  }
-
-  ngAfterViewInit():void {
+    private activatedRoute : ActivatedRoute,
+    private vendorService: VendorService,) { }
 
 
-    this.activatedRoute.queryParams.subscribe((value) => {
+    private handlevendorAutoChange = (vendorQ:string) => {
 
-      this.queryParams = { ...value };
+      if (typeof vendorQ !== 'string') {
 
-    });
+        return;
 
-  }
+      }
+      this.vendorService.search({ where: {
+        name: {like: vendorQ,
+          options: 'i'},
+      } })
+        .subscribe((vendors) => (this.vendorFiltered = vendors));
+
+    };
+
+    ngOnInit():void {
+
+      this.filterForm.controls.vendorId.valueChanges.subscribe(this.handlevendorAutoChange);
+      const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
+      fillFilterForm(this.filterForm, whereS);
+
+    }
+
+    ngAfterViewInit():void {
+
+
+      this.activatedRoute.queryParams.subscribe((value) => {
+
+        this.queryParams = { ...value };
+
+      });
+
+    }
 
   filterItems = ():void => {
 
 
     const formFields: Array<FilterFormField> = [
 
-      {name: 'vendor',
+      {name: 'vendorId',
         type: 'string'},
       {name: 'billDate',
         type: 'number'},
@@ -101,5 +123,7 @@ export class FilterBillComponent {
     this.router.navigate([], { queryParams: {whereS} });
 
   };
+
+  extractNameOfvendor= (idS: string): string => this.vendorFiltered.find((vendor) => vendor.id === idS)?.name;
 
 }

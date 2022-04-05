@@ -7,8 +7,6 @@ import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterUserComponent } from '../filter-user/filter-user.component';
 import { User } from '@shared/entity/auth/user';
-import * as dayjs from 'dayjs';
-import { environment } from '@fboenvironments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 import { MainService } from '../../../../../services/main.service';
@@ -21,26 +19,31 @@ import { MainService } from '../../../../../services/main.service';
 export class ListUserComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'email', 'role' ];
+
   c = this.displayedColumns.length;
+
   columnHeaders = {
     name: 'Name',
     email: 'Email',
     role: 'Role',
   };
+
     iheaders = [
-   'Name',
-     'Email',
-     'Role',
+      'Name',
+      'Email',
+      'Role',
     ];
 
 
-  xheaders: any = [
-    {key: 'name',  width: 40 },
-      { key: 'email',  width: 50 },
-      { key: 'role',  width: 10 },
+  xheaders = [
+    {key: 'name',
+      width: 40 },
+    { key: 'email',
+      width: 50 },
+    { key: 'role',
+      width: 10 },
 
   ];
-
 
 
   loading = true;
@@ -62,7 +65,7 @@ export class ListUserComponent implements OnInit, AfterViewInit {
   constructor(private activatedRoute: ActivatedRoute,
               private userService: UserService,
               private dialog: MatDialog,
-              private mainservice: MainService, ) { }
+              private mainservice: MainService,) { }
 
 
   private loadData = () => {
@@ -111,6 +114,7 @@ export class ListUserComponent implements OnInit, AfterViewInit {
     });
 
   }
+
   handleExportClick = (): void => {
 
     const tParams = {...this.queryParams};
@@ -120,21 +124,22 @@ export class ListUserComponent implements OnInit, AfterViewInit {
     this.userService.queryData(tParams).subscribe((items) => {
 
       items.forEach((element: any) => {
-        const temp = [element.name, element.email, element.role];
+
+        const temp = [ element.name, element.email, element.role ];
 
         data.push(temp);
-    });
+
+      });
       const result = {
-        cell:  this.c,
-          rheader: this.iheaders,
-      eheader: this.xheaders,
-      header: this.columnHeaders,
-      rowData: data
-    };
+        cell: this.c,
+        rheader: this.iheaders,
+        eheader: this.xheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
       this.mainservice.setExport(result);
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
+      this.dialog.open(ExportPopupComponent, {height: '500px',
         data: {items,
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});

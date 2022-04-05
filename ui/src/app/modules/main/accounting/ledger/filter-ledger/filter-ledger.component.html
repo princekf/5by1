@@ -1,4 +1,4 @@
-<div class="filter-item-card">
+<div class="filter-item-card"(keydown.tab)="$event.stopPropagation()">
     <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
         <div (click)="$event.stopPropagation();$event.preventDefault()">
 
@@ -14,21 +14,28 @@
                 </mat-form-field>
             </div>
 
+       
             <div class="filter-content-div">
-                <mat-label class="lable">LedgerGroup</mat-label>
-                <mat-select formControlName="ledgerGroupType" class="select">
-                    <mat-option value="^">Starts with</mat-option>
-                    <mat-option value="">Contains</mat-option>
-                    <mat-option value="eq">Equal to</mat-option>
+                <mat-label class="lable">Ledger Group</mat-label>
+                <mat-select formControlName="ledgerGroupIdType" class="select">
+                    <mat-option value="">Equal to</mat-option>
                 </mat-select>
                 <mat-form-field>
-                    <input matInput formControlName="ledgerGroup">
+                    <input type="text" matInput formControlName="ledgerGroupId" [matAutocomplete]="autoLedgerGroup">
+                    <mat-autocomplete autoActiveFirstOption #autoLedgerGroup="matAutocomplete"
+                        [displayWith]="extractNameOfLedgerGroup">
+                        <mat-option *ngFor="let ledgerGroupS of ledgerGroupsFiltered" [value]="ledgerGroupS.id">
+                            {{ledgerGroupS.name}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
             </div>
+
         </div>
 
         <div class='filter-actions-container'>
             <button mat-button type="button" class="filtercancelbutton">Cancel</button>
+            <button mat-button type="reset" class="filterresetbutton"(click)="$event.stopPropagation()">Reset</button>
             <button mat-button type="submit" class="filtersavebutton">Submit</button>
         </div>
     </form>

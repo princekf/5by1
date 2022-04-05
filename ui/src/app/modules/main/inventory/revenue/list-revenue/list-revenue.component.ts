@@ -18,11 +18,13 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-revenue.component.html',
   styleUrls: [ './list-revenue.component.scss' ]
 })
-export class ListRevenueComponent implements AfterViewInit, OnInit  {
+export class ListRevenueComponent implements AfterViewInit, OnInit {
 
   displayedColumns: string[] = [ 'receivedDate', 'customer.name', 'invoice.invoiceNumber', 'bank.name',
-  'category', 'amount', 'description' ];
+    'category', 'amount', 'description' ];
+
   c = this.displayedColumns.length;
+
   numberColumns: string[] = [ 'amount' ];
 
   columnHeaders = {
@@ -35,22 +37,31 @@ export class ListRevenueComponent implements AfterViewInit, OnInit  {
     description: 'Description',
 
   };
+
   xheaders = [
-    {key: 'receivedDate' ,  width: 25 },
-    {key: 'customer.name' , width: 30 },
-    {key: 'invoice.invoiceNumber' , width: 20 },
-    {key: 'bank.name' , width: 20 },
-    {key: 'category' , width: 25 },
-    {key: 'amount' , width: 25 },
-    {key: 'description' , width: 30 },
+    {key: 'receivedDate',
+      width: 25 },
+    {key: 'customer.name',
+      width: 30 },
+    {key: 'invoice.invoiceNumber',
+      width: 20 },
+    {key: 'bank.name',
+      width: 20 },
+    {key: 'category',
+      width: 25 },
+    {key: 'amount',
+      width: 25 },
+    {key: 'description',
+      width: 30 },
   ];
+
   iheaders = [
-   'Received Date',
+    'Received Date',
     'Customer',
-     'Invoice',
+    'Invoice',
     'Bank',
-   'Category',
-   'Amount',
+    'Category',
+    'Amount',
     'Description',
 
   ];
@@ -85,7 +96,7 @@ export class ListRevenueComponent implements AfterViewInit, OnInit  {
   constructor(private activatedRoute: ActivatedRoute,
               private revenueService: RevenueService,
               private dialog: MatDialog,
-              private mainservice: MainService, ) { }
+              private mainservice: MainService,) { }
 
 
     private loadData = () => {
@@ -145,24 +156,25 @@ export class ListRevenueComponent implements AfterViewInit, OnInit  {
     const data = [];
     this.revenueService.queryData(tParams).subscribe((items) => {
 
-      items.forEach((element: any) => {
-        const temp = [element.receivedDate, element.customer?.name, element.invoice?.invoiceNumber,
-           element.bank?.name, element.category, element.amount,
-          element.description];
+      items.forEach((element) => {
+
+        const temp = [ element.receivedDate, element.customer?.name, element.invoice?.invoiceNumber,
+          element.bank?.name, element.category, element.amount,
+          element.description ];
 
         data.push(temp);
-    });
+
+      });
       const result = {
         cell: this.c,
         rheader: this.iheaders,
-      eheader: this.xheaders,
-      header: this.columnHeaders,
-      rowData: data
-    };
+        eheader: this.xheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
       this.mainservice.setExport(result);
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
+      this.dialog.open(ExportPopupComponent, {height: '500px',
         data: {items,
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});
