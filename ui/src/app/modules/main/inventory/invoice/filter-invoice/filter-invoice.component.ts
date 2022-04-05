@@ -3,6 +3,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryData } from '@shared/util/query-data';
 import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from '@fboutil/filter.util';
+import { Customer } from '@shared/entity/inventory/customer';
+import { CustomerService } from '@fboservices/inventory/customer.service';
 
 @Component({
   selector: 'app-filter-invoice',
@@ -14,10 +16,12 @@ export class FilterInvoiceComponent {
 
   queryParams:QueryData = { };
 
+  customerFiltered: Array<Customer> = [];
+
   filterForm: FormGroup = new FormGroup({
 
-    customer: new FormControl(''),
-    customerType: new FormControl('^'),
+    customerId: new FormControl(''),
+    customerIdType: new FormControl('^'),
 
     invoiceDate: new FormControl(''),
     invoiceDateType: new FormControl('eq'),
@@ -56,32 +60,49 @@ export class FilterInvoiceComponent {
 
 
   constructor(private router:Router,
-    private activatedRoute : ActivatedRoute,) { }
+    private activatedRoute : ActivatedRoute,
+    private customerService: CustomerService,) { }
 
-  ngOnInit():void {
+    private handleCustomerAutoChange = (customerQ:string) => {
 
-    const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
-    fillFilterForm(this.filterForm, whereS);
+      if (typeof customerQ !== 'string') {
 
-  }
+        return;
 
-  ngAfterViewInit():void {
+      }
+      this.customerService.search({ where: {
+        name: {like: customerQ,
+          options: 'i'},
+      } })
+        .subscribe((customers) => (this.customerFiltered = customers));
+
+    };
+
+    ngOnInit():void {
+
+      this.filterForm.controls.customerId.valueChanges.subscribe(this.handleCustomerAutoChange);
+      const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
+      fillFilterForm(this.filterForm, whereS);
+
+    }
+
+    ngAfterViewInit():void {
 
 
-    this.activatedRoute.queryParams.subscribe((value) => {
+      this.activatedRoute.queryParams.subscribe((value) => {
 
-      this.queryParams = { ...value };
+        this.queryParams = { ...value };
 
-    });
+      });
 
-  }
+    }
 
   filterItems = ():void => {
 
 
     const formFields: Array<FilterFormField> = [
 
-      {name: 'customer',
+      {name: 'customerId',
         type: 'string'},
       {name: 'invoiceDate',
         type: 'number'},
@@ -102,5 +123,7 @@ export class FilterInvoiceComponent {
     this.router.navigate([], { queryParams: {whereS} });
 
   };
+
+  extractNameOfcustomer= (idS: string): string => this.customerFiltered.find((customer) => customer.id === idS)?.name;
 
 }

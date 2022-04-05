@@ -17,11 +17,13 @@ import { MainService } from '../../../../../services/main.service';
   templateUrl: './list-payment.component.html',
   styleUrls: [ './list-payment.component.scss' ]
 })
-export class ListPaymentComponent implements AfterViewInit, OnInit  {
+export class ListPaymentComponent implements AfterViewInit, OnInit {
 
   displayedColumns: string[] = [ 'paidDate', 'vendor.name', 'bill.billNumber',
     'bank.name', 'category', 'amount', 'description' ];
+
     c = this.displayedColumns.length;
+
   numberColumns: string[] = [ 'amount' ];
 
   columnHeaders = {
@@ -34,26 +36,34 @@ export class ListPaymentComponent implements AfterViewInit, OnInit  {
     description: 'Description',
 
   };
+
   xheaders = [
-    {key: 'paidDate' , width: 25 },
-    {key: 'vendor.name' ,  width: 20 },
-    {key: 'bill.billNumber' , width: 20 },
-    {key: 'bank.name' , width: 20 },
-    {key: 'category' , width: 20 },
-    { key: 'amount' , width: 15 },
-    {key: 'description' , width: 35 },
+    {key: 'paidDate',
+      width: 25 },
+    {key: 'vendor.name',
+      width: 20 },
+    {key: 'bill.billNumber',
+      width: 20 },
+    {key: 'bank.name',
+      width: 20 },
+    {key: 'category',
+      width: 20 },
+    { key: 'amount',
+      width: 15 },
+    {key: 'description',
+      width: 35 },
 
   ];
 
 
   iheaders = [
-     'Paid Date',
-     'Vendor',
-     'Bill',
-     'Bank',
-     'Category',
-     'Amount',
-     'Description',
+    'Paid Date',
+    'Vendor',
+    'Bill',
+    'Bank',
+    'Category',
+    'Amount',
+    'Description',
 
   ];
 
@@ -150,23 +160,24 @@ export class ListPaymentComponent implements AfterViewInit, OnInit  {
     const data = [];
     this.paymentService.queryData(tParams).subscribe((items) => {
 
-      items.forEach((element: any) => {
-        const temp = [element.paidDate, element.vendor?.name, element.bill?.billNumber, element.bank?.name,
-          element.category, element.amount, element.description];
+      items.forEach((element) => {
+
+        const temp = [ element.paidDate, element.vendor?.name, element.bill?.billNumber, element.bank?.name,
+          element.category, element.amount, element.description ];
 
         data.push(temp);
-    });
+
+      });
       const result = {
         cell: this.c,
         rheader: this.iheaders,
-      eheader: this.xheaders,
-      header: this.columnHeaders,
-      rowData: data
-    };
+        eheader: this.xheaders,
+        header: this.columnHeaders,
+        rowData: data
+      };
       this.mainservice.setExport(result);
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
+      this.dialog.open(ExportPopupComponent, {height: '500px',
         data: {items,
           displayedColumns: this.displayedColumns,
           columnHeaders: this.columnHeaders}});

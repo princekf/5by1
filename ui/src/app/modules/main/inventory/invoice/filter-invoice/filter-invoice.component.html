@@ -5,13 +5,17 @@
 
             <div class="filter-content-div">
                 <mat-label class="lable">Customer</mat-label>
-                <mat-select formControlName="customerType" class="select">
-                    <mat-option value="^">Starts with</mat-option>
-                    <mat-option value="">Contains</mat-option>
-                    <mat-option value="eq">Equal to</mat-option>
+                <mat-select formControlName="customerIdType" class="select">
+                    <mat-option value="^">Equal to</mat-option>
                 </mat-select>
                 <mat-form-field>
-                    <input matInput formControlName="customer">
+                    <input matInput formControlName="customerId"[matAutocomplete]="autoCustomer">
+                    <mat-autocomplete autoActiveFirstOption #autoCustomer="matAutocomplete"
+                        [displayWith]="extractNameOfcustomer">
+                        <mat-option *ngFor="let  customer of customerFiltered" [value]=" customer.id">
+                            {{ customer.name}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
             </div>
 

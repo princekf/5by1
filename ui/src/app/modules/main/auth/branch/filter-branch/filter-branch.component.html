@@ -77,16 +77,20 @@
                 </div>
             </div>
 
-
+    
             <div class="filter-content-div">
                 <mat-label class="lable">DefaultFinYear</mat-label>
-                <mat-select formControlName="defaultFinYearType" class="select">
-                    <mat-option value="^">Starts with</mat-option>
-                    <mat-option value="">Contains</mat-option>
-                    <mat-option value="eq">Equal to</mat-option>
+                <mat-select formControlName="defaultFinYearIdType" class="select">
+                    <mat-option value="^">Equal to</mat-option>
                 </mat-select>
                 <mat-form-field>
-                    <input matInput formControlName="defaultFinYear">
+                    <input type="text" matInput formControlName="defaultFinYearId" [matAutocomplete]="autoDefaultFinYear">
+                    <mat-autocomplete autoActiveFirstOption #autoDefaultFinYear="matAutocomplete"
+                        [displayWith]="extractNameOfdefaultFY">
+                        <mat-option *ngFor="let  defaultfinyear of defaultfinyearFiltered" [value]=" defaultfinyear.id">
+                            {{ defaultfinyear.name}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
             </div>
       

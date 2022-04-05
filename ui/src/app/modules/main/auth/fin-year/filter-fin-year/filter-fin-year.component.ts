@@ -3,6 +3,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryData } from '@shared/util/query-data';
 import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from '@fboutil/filter.util';
+import { Branch } from '@shared/entity/auth/branch';
+import { BranchService } from '@fboservices/auth/branch.service';
 
 @Component({
   selector: 'app-filter-fin-year',
@@ -12,6 +14,8 @@ import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from
 export class FilterFinYearComponent implements OnInit {
 
   queryParams:QueryData = { };
+
+  branchFiltered: Array<Branch> = [];
 
   filterForm: FormGroup = new FormGroup({
 
@@ -30,31 +34,48 @@ export class FilterFinYearComponent implements OnInit {
     endDateEnd: new FormControl(''),
 
 
-    branch: new FormControl(''),
-    branchType: new FormControl('^'),
+    branchId: new FormControl(''),
+    branchIdType: new FormControl('^'),
   });
 
 
   constructor(private router:Router,
-    private activatedRoute : ActivatedRoute,) { }
+    private activatedRoute : ActivatedRoute,
+    private branchService: BranchService,) { }
 
-  ngOnInit():void {
+    private handlebranchAutoChange = (branchQ:string) => {
 
-    const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
-    fillFilterForm(this.filterForm, whereS);
+      if (typeof branchQ !== 'string') {
 
-  }
+        return;
 
-  ngAfterViewInit():void {
+      }
+      this.branchService.search({ where: {
+        name: {like: branchQ,
+          options: 'i'},
+      } })
+        .subscribe((branchs) => (this.branchFiltered = branchs));
+
+    };
+
+    ngOnInit():void {
+
+      this.filterForm.controls.branchId.valueChanges.subscribe(this.handlebranchAutoChange);
+      const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
+      fillFilterForm(this.filterForm, whereS);
+
+    }
+
+    ngAfterViewInit():void {
 
 
-    this.activatedRoute.queryParams.subscribe((value) => {
+      this.activatedRoute.queryParams.subscribe((value) => {
 
-      this.queryParams = { ...value };
+        this.queryParams = { ...value };
 
-    });
+      });
 
-  }
+    }
 
   filterItems = ():void => {
 
@@ -66,7 +87,7 @@ export class FilterFinYearComponent implements OnInit {
         type: 'number'},
       {name: 'endDate',
         type: 'number'},
-      {name: 'branch',
+      {name: 'branchId',
         type: 'string'}
 
 
@@ -76,5 +97,6 @@ export class FilterFinYearComponent implements OnInit {
 
   };
 
+  extractNameOfbranch= (idS: string): string => this.branchFiltered.find((branch) => branch.id === idS)?.name;
 
 }
