@@ -8,7 +8,6 @@ import { PAGE_SIZE_OPTIONS } from '@fboutil/constants';
 import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Tax } from '@shared/entity/inventory/tax';
 import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
 import { TableFilterDirective } from '../directives/table-filter/table-filter.directive';
 import { FilterItem } from '../directives/table-filter/filter-item';
@@ -212,14 +211,8 @@ export class DataTableComponent {
       return;
 
     }
-    const [ selectedTax ] = <Array<Tax>> this.selection.selected;
-    this.router.navigate([ this.editUri ], { queryParams: {id: selectedTax.id,
-      burl: this.router.url} });
-
-
-    const newstr = selectedTax.type.toLowerCase();
-    const editUri = `/voucher/${newstr}/create`;
-    this.router.navigate([ editUri ], { queryParams: {id: selectedTax.id,
+    const [ selectedObj ] = <Array<{id: string}>> this.selection.selected;
+    this.router.navigate([ this.editUri ], { queryParams: {id: selectedObj.id,
       burl: this.router.url} });
 
   }
@@ -232,9 +225,9 @@ export class DataTableComponent {
 
     }
 
-    const selectedTaxes = <Array<Tax>> this.selection.selected;
+    const selectedObjs = <Array<{id: string}>> this.selection.selected;
     const ids = [];
-    selectedTaxes.forEach((taxP) => ids.push(taxP.id));
+    selectedObjs.forEach((objP) => ids.push(objP.id));
     this.router.navigate([ this.deleteUri ], { queryParams: {ids: ids.join(),
       burl: this.router.url} });
 
