@@ -18,7 +18,7 @@ import { ImportErrordataPopupComponent } from '../../../import-errordata-popup/i
 })
 export class ListLedgergroupComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = [ 'name', 'code', 'parent.name', 'details' ];
+  displayedColumns: string[] = [ 'name', 'code', 'parent.name', 'parent.code', 'details' ];
 
   c = this.displayedColumns.length;
 
@@ -26,6 +26,7 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
     name: 'Name',
     code: 'Code',
     'parent.name': 'Parent Name',
+    'parent.code': 'Parent Code',
     details: 'Details',
 
   };
@@ -36,7 +37,9 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
       width: 30, },
     {key: 'code',
       width: 15 },
-    { key: 'parent',
+    { key: 'parent.name',
+      width: 25 },
+    { key: 'parent.code',
       width: 25 },
     { key: 'details',
       width: 35 }
@@ -46,6 +49,7 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
     'Name',
     'Code',
     'Parent Name',
+    'Parent Code',
     'Details'
   ];
 
@@ -149,7 +153,7 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
         items.forEach((element) => {
 
 
-          const temp = [ element.name, element.code, element.parent?.name, element.details ];
+          const temp = [ element.name, element.code, element.parent?.name, element.parent?.code, element.details ];
 
           data.push(temp);
 
