@@ -2,7 +2,7 @@
 import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
 import {post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, Request, Response, RestBindings} from '@loopback/rest';
 import {Ledger} from '../models';
-import {FinYearRepository, LedgerRepository} from '../repositories';
+import {FinYearRepository, LedgerGroupRepository, LedgerRepository} from '../repositories';
 import { LEDGER_API} from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
@@ -26,6 +26,8 @@ export class LedgerController {
   constructor(
     @repository(LedgerRepository)
     public ledgerRepository : LedgerRepository,
+    @repository(LedgerGroupRepository)
+    public ledgerGroupRepository : LedgerGroupRepository,
   ) {}
 
   @intercept(ValidateLedgerInterceptor.BINDING_KEY)
@@ -265,8 +267,8 @@ export class LedgerController {
 
       if (ledgerGroupCode) {
 
-        const pLGroup = await this.ledgerRepository.findOne({where: {code: ledgerGroupCode}});
-        ledgerGroupId = pLGroup?.ledgerGroupId;
+        const pLGroup = await this.ledgerGroupRepository.findOne({where: {code: ledgerGroupCode}});
+        ledgerGroupId = pLGroup?.id;
 
 
       } else {
