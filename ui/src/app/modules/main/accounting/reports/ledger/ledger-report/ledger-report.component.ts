@@ -222,7 +222,7 @@ export class LedgerReportComponent implements OnInit {
         const ledgerMap: Record<string, Ledger> = {};
         ledgers.forEach((ldg) => (ledgerMap[ldg.id] = ldg));
         const sLedger = ledgerMap[ledgerId];
-        this.tableHeader = `Ledger Report -- ${sLedger.name}`;
+        this.tableHeader = `Ledger Report -- ${sLedger?.name}`;
         let totalDebit = 0;
         let totalCredit = 0;
         items.forEach((item, idx: number) => {

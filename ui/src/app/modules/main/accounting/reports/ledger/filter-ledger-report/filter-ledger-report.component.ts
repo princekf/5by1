@@ -66,6 +66,8 @@ export class FilterLedgerReportComponent implements OnInit {
 
       'transactions.ledgerId': new FormControl(''),
       'transactions.ledgerIdType': new FormControl(''),
+      againstL: new FormControl(''),
+      againstLType: new FormControl('ne'),
       date: new FormControl(''),
       dateType: new FormControl('eq'),
       dateStart: new FormControl(start),
@@ -74,7 +76,7 @@ export class FilterLedgerReportComponent implements OnInit {
     this.filterForm.controls['transactions.ledgerId'].valueChanges.subscribe(this.handleLedgerAutoChange);
     const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
     const where: Record<string, Record<string, unknown>> = JSON.parse(whereS);
-    if (where['transactions.ledgerId'] && where['transactions.ledgerId'].like) {
+    if (where?.['transactions?.ledgerId'] && where?.['transactions?.ledgerId'].like) {
 
       const cldgId = where['transactions.ledgerId'].like as string;
       this.ledgerService.get(cldgId, {}).subscribe((ldgr) => {
@@ -108,6 +110,8 @@ export class FilterLedgerReportComponent implements OnInit {
 
       {name: 'transactions.ledgerId',
         type: 'string'},
+      {name: 'againstL',
+        type: 'void'},
       {name: 'date',
         type: 'date'}
 
