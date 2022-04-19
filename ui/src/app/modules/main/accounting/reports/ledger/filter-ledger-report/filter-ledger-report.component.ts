@@ -74,6 +74,7 @@ export class FilterLedgerReportComponent implements OnInit {
       dateEnd: new FormControl(end),
     });
     this.filterForm.controls['transactions.ledgerId'].valueChanges.subscribe(this.handleLedgerAutoChange);
+    this.filterForm.controls.againstL.valueChanges.subscribe(this.handleLedgerAutoChange);
     const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
     const where: Record<string, Record<string, unknown>> = JSON.parse(whereS);
     if (where?.['transactions?.ledgerId'] && where?.['transactions?.ledgerId'].like) {
