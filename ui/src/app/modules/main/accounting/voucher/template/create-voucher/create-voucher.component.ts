@@ -17,6 +17,9 @@ import { of, throwError, zip } from 'rxjs';
 import { LOCAL_USER_KEY } from '@fboutil/constants';
 import { SessionUser } from '@shared/util/session-user';
 import { FinYear } from '@shared/entity/auth/fin-year';
+import * as utc from 'dayjs/plugin/utc';
+import * as dayjs from 'dayjs';
+dayjs.extend(utc);
 
 @Component({
   selector: 'app-create-voucher',
@@ -446,6 +449,13 @@ export class CreateVoucherComponent implements OnInit {
 
     }
     const {...voucher} = this.fboForm.value as Voucher;
+    const vdate = dayjs(voucher.date).utc(true)
+      .format();
+
+
+    voucher.date = new Date(vdate);
+
+
     try {
 
       this.fillTransactions(voucher);
