@@ -84,9 +84,9 @@ export class FilterFinYearComponent implements OnInit {
       {name: 'name',
         type: 'string'},
       {name: 'startDate',
-        type: 'number'},
+        type: 'date'},
       {name: 'endDate',
-        type: 'number'},
+        type: 'date'},
       {name: 'branchId',
         type: 'string'}
 

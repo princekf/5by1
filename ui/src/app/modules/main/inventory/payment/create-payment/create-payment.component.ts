@@ -14,6 +14,7 @@ import { Bill } from '@shared/entity/inventory/bill';
 import { Bank } from '@shared/entity/inventory/bank';
 import { BillService } from '@fboservices/inventory/bill.service';
 import { BankService } from '@fboservices/inventory/bank.service';
+import * as dayjs from 'dayjs';
 
 @Component({
   selector: 'app-create-payment',
@@ -160,6 +161,11 @@ export class CreatePaymentComponent {
     }
     this.loading = true;
     const paymentP = <Payment> this.form.value;
+    const pdate = dayjs(paymentP.paidDate).utc(true)
+      .format();
+
+
+    paymentP.paidDate = new Date(pdate);
 
     this.paymentService.upsert(paymentP).subscribe(() => {
 

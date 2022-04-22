@@ -127,7 +127,7 @@ export class FilterPaymentComponent {
 
     const formFields: Array<FilterFormField> = [
       {name: 'paidDate',
-        type: 'number'},
+        type: 'date'},
       {name: 'vendorId',
         type: 'string'},
       {name: 'billId',

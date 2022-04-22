@@ -128,7 +128,7 @@ export class FilterRevenueComponent {
 
     const formFields: Array<FilterFormField> = [
       {name: 'receivedDate',
-        type: 'number'},
+        type: 'date'},
       {name: 'customerId',
         type: 'string'},
       {name: 'invoiceId',
