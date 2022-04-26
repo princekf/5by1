@@ -46,8 +46,6 @@ export class LedgerGroupReportComponent implements OnInit {
 
   numberColumns: string[] = [ 'debit', 'credit' ];
 
-  editUri = '/voucher/payment/create';
-
   reportType = '';
 
   customColumnOrder1 = [
