@@ -20,6 +20,7 @@ import { map, catchError } from 'rxjs/internal/operators';
 import { Unit } from '@shared/entity/inventory/unit';
 import { Bank } from '@shared/entity/inventory/bank';
 import { BankService } from '@fboservices/inventory/bank.service';
+import * as dayjs from 'dayjs';
 @Component({
   selector: 'app-create-invoice',
   templateUrl: './create-invoice.component.html',
@@ -385,6 +386,16 @@ export class CreateInvoiceComponent implements OnInit {
       this.loading = true;
 
       const invoiceP = <Invoice> this.fboForm.value;
+      const idate = dayjs(invoiceP.invoiceDate).utc(true)
+        .format();
+
+
+      invoiceP.invoiceDate = new Date(idate);
+      const ivdate = dayjs(invoiceP.dueDate).utc(true)
+        .format();
+
+
+      invoiceP.dueDate = new Date(ivdate);
       this.invoiceService.upsert(invoiceP).subscribe(() => {
 
         this.toastr.success(`Invoice ${invoiceP.invoiceNumber} is saved successfully`, 'Invoice saved');

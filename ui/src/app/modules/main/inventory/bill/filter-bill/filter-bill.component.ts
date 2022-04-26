@@ -105,7 +105,7 @@ export class FilterBillComponent {
       {name: 'vendorId',
         type: 'string'},
       {name: 'billDate',
-        type: 'number'},
+        type: 'date'},
       {name: 'billNumber',
         type: 'string'},
       {name: 'totalAmount',

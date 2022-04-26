@@ -9,6 +9,7 @@ import { BranchService } from '@fboservices/auth/branch.service';
 import { FinYearService } from '@fboservices/auth/fin-year.service';
 import { FinYear } from '@shared/entity/auth/fin-year';
 import { QueryData } from '@shared/util/query-data';
+import * as dayjs from 'dayjs';
 
 const FYS = 1990;
 const FMS = 3;
@@ -118,7 +119,11 @@ export class CreateBranchComponent implements OnInit {
     }
     this.loading = true;
     const branchP = <Branch> this.form.value;
+    const fysdate = dayjs(branchP.finYearStartDate).utc(true)
+      .format();
 
+
+    branchP.finYearStartDate = new Date(fysdate);
 
     this.branchService.upsert(branchP).subscribe(() => {
 

@@ -14,6 +14,7 @@ import { InvoiceService } from '@fboservices/inventory/invoice.service';
 import { QueryData } from '@shared/util/query-data';
 import { Observable } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
+import * as dayjs from 'dayjs';
 @Component({
   selector: 'app-create-revenue',
   templateUrl: './create-revenue.component.html',
@@ -164,6 +165,11 @@ export class CreateRevenueComponent implements OnInit {
     }
     this.loading = true;
     const revenueP = <Revenue> this.form.value;
+    const rdate = dayjs(revenueP.receivedDate).utc(true)
+      .format();
+
+
+    revenueP.receivedDate = new Date(rdate);
 
 
     this.revenueService.upsert(revenueP).subscribe(() => {

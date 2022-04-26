@@ -88,7 +88,7 @@ export class FilterBranchComponent implements OnInit {
       {name: 'address',
         type: 'string'},
       {name: 'finYearStartDate',
-        type: 'number'},
+        type: 'date'},
       {name: 'defaultFinYearId',
         type: 'string'},
 

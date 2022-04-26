@@ -105,7 +105,7 @@ export class FilterInvoiceComponent {
       {name: 'customerId',
         type: 'string'},
       {name: 'invoiceDate',
-        type: 'number'},
+        type: 'date'},
       {name: 'invoiceNumber',
         type: 'string'},
       {name: 'totalAmount',
