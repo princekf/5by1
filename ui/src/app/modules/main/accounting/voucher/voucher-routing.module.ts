@@ -1,12 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DeleteVoucherComponent } from './delete-voucher/delete-voucher.component';
+import { EditVoucherComponent } from './edit-voucher/edit-voucher.component';
 
 const routes: Routes = [
   {
     path: 'delete',
     pathMatch: 'full',
     component: DeleteVoucherComponent
+  },
+  {
+    path: 'edit',
+    pathMatch: 'full',
+    component: EditVoucherComponent
   },
   {
     path: 'journal',

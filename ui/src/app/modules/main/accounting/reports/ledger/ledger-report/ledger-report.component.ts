@@ -39,8 +39,6 @@ export class LedgerReportComponent implements OnInit {
   tableHeader = 'Ledger Report';
 
 
-  editUri = '/voucher/payment/create';
-
   displayedColumns: string[] = [ 'number', 'date', 'type', 'ledger', 'debit', 'credit', 'details' ];
 
   lengthofcolumn = this.displayedColumns.length;

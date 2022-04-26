@@ -18,6 +18,7 @@ import { CategoryService } from '@fboservices/inventory/category.service';
 import { QueryData } from '@shared/util/query-data';
 import { BankService } from '@fboservices/inventory/bank.service';
 import { Bank } from '@shared/entity/inventory/bank';
+import * as dayjs from 'dayjs';
 
 
 @Component({
@@ -377,6 +378,15 @@ export class CreateBillComponent implements OnInit {
 
     this.loading = true;
     const billP = <Bill> this.fboForm.value;
+    const bdate = dayjs(billP.billDate).utc(true)
+      .format();
+    billP.billDate = new Date(bdate);
+    const ddate = dayjs(billP.dueDate).utc(true)
+      .format();
+    billP.dueDate = new Date(ddate);
+    const odate = dayjs(billP.orderDate).utc(true)
+      .format();
+    billP.orderDate = new Date(odate);
 
     this.billService.upsert(billP).subscribe(() => {
 

@@ -43,6 +43,7 @@ export class FilterVoucherComponent implements OnInit {
     const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
     fillFilterForm(this.filterForm, whereS);
 
+
   }
 
   ngAfterViewInit():void {
@@ -68,7 +69,7 @@ export class FilterVoucherComponent implements OnInit {
       {name: 'transactions.amount',
         type: 'number'},
       {name: 'date',
-        type: 'number'}
+        type: 'date'}
 
     ];
     const whereS = createQueryStringFromFilterForm(this.filterForm, formFields);
