@@ -26,11 +26,11 @@ export class FBOUserService implements UserService<ProfileUser, Credentials> {
 
     let branch = '';
     let finYear = '';
+    
     if (foundUser.branchIds?.length) {
 
       const branchF = await this.branchRepository.findById(foundUser.branchIds[0]);
       branch = branchF.code;
-
       const finYearF = await this.finYearRepository.findOne({
         where: {branchId: branchF.id},
       });
@@ -39,7 +39,13 @@ export class FBOUserService implements UserService<ProfileUser, Credentials> {
     } else if (foundUser.role === 'admin') {
 
       const branchF = await this.branchRepository.findOne();
-      if (branchF) {
+      if(branchF?.defaultFinYearId){
+
+        branch = branchF.code;
+        const finYearF = await this.finYearRepository.findById(branchF?.defaultFinYearId);
+        finYear = finYearF?.code ?? '';
+
+      } else if (branchF) {
 
         branch = branchF.code;
 
@@ -89,7 +95,6 @@ export class FBOUserService implements UserService<ProfileUser, Credentials> {
     }
 
     const brFs = await this.findBranchAndFinYear(foundUser);
-
     return {
       [securityId]: foundUser.id,
       id: foundUser.id,
