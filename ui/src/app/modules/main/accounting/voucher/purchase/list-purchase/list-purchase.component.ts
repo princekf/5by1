@@ -4,6 +4,7 @@ import { ExportPopupComponent } from '../../../../export-popup/export-popup.comp
 import { MatDialog } from '@angular/material/dialog';
 import { MainService } from '../../../../../../services/main.service';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
+import { handleImportVouchers } from '../../voucher.util';
 
 @Component({
   selector: 'app-list-purchase',
@@ -33,6 +34,8 @@ export class ListPurchaseComponent {
 
   export: any = [];
 
+  loading = { status: false };
+
 
   constructor(private voucherService: VoucherService,
               private mainservice: MainService,
@@ -41,12 +44,7 @@ export class ListPurchaseComponent {
 
     handleImportClick = (file: File): void => {
 
-      this.voucherService.importVouchers(file).subscribe(() => {
-
-        console.log('file uploaded');
-
-      });
-
+      handleImportVouchers(file, this.loading, this.voucherService);
 
     }
 
