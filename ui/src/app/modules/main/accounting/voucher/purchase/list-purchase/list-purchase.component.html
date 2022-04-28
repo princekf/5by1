@@ -1,2 +1,6 @@
 <app-tool-bar createUri="/voucher/purchase/create" mainHeader="Purchase" (importClickEvent)="handleImportClick($event)" (exportClickEvent)="handleExportClick()"></app-tool-bar>
-<app-list-voucher [voucherType]="voucherType" [tableHeader]="tableHeader" [editUri]="editUri"></app-list-voucher>
+
+<div *ngIf="loading.status">
+    <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<app-list-voucher *ngIf="!loading.status" [voucherType]="voucherType" [tableHeader]="tableHeader" [editUri]="editUri"></app-list-voucher>

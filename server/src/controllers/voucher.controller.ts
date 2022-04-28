@@ -462,11 +462,25 @@ export class VoucherController {
     cCentreMap:Record<string, CostCentre>, uProfile: ProfileUser, finYearRepository : FinYearRepository)
     :Promise<void> => {
 
+    const finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
+    if (!finYear) {
+
+      throw new HttpErrors.UnprocessableEntity('Please select a proper financial year.');
+
+    }
+    const {startDate, endDate} = finYear;
+    
     for (const vData of vouchersData) {
 
       const details = vData.Details;
       const date = dayjs.utc(vData.Date, 'DD-MM-YYYY')
         .toDate();
+      if(date < startDate || date > endDate){
+
+        continue;
+        
+      }
+      
       const type = this.findVoucherType(vData.VoucherType);
       const pType = vData.Credit > 0 ? TransactionType.CREDIT : TransactionType.DEBIT;
       const cType = vData.Credit > 0 ? TransactionType.DEBIT : TransactionType.CREDIT;
@@ -485,12 +499,7 @@ export class VoucherController {
         amount,
       };
 
-      const finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
-      if (!finYear) {
-
-        throw new HttpErrors.UnprocessableEntity('Please select a proper financial year.');
-
-      }
+      
       const otherDetails = finYear.extras as {lastVNo:number};
       const lastVNo = otherDetails?.lastVNo ?? 0;
       const nextVNo = lastVNo + 1;

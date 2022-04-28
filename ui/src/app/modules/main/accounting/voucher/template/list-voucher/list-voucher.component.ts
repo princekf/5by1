@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '@fboenvironments/environment';
-import { LedgerService } from '@fboservices/accounting/ledger.service';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { Ledger } from '@shared/entity/accounting/ledger';
@@ -12,7 +11,7 @@ import * as dayjs from 'dayjs';
 import { forkJoin} from 'rxjs';
 import { FilterItem } from 'src/app/modules/main/directives/table-filter/filter-item';
 import { FilterVoucherComponent } from '../filter-voucher/filter-voucher.component';
-import { MainService } from '../../../../../../services/main.service';
+import { MainService } from '@fboservices/main.service';
 
 type VType = Voucher & { amount: string; pledger: string; cledger: string; };
 
@@ -85,7 +84,6 @@ export class ListVoucherComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
               private voucherService: VoucherService,
-              private ledgerService: LedgerService,
               private mainservice: MainService) { }
 
 
