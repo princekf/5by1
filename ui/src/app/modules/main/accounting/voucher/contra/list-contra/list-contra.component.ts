@@ -19,8 +19,8 @@ export class ListContraComponent {
   tableHeader = 'List of Contras';
 
   editUri = '/voucher/contra/create';
-  displayedColumns: string[] = ['number', 'date', 'pledger', 'cledger', 'amount', 'details'];
 
+  displayedColumns: string[] = ['number', 'date', 'pledger', 'cledger', 'amount', 'details'];
 
   columnHeaders = {
     number: 'Voucher #',

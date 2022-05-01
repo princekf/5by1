@@ -452,9 +452,11 @@ export class VoucherController {
       return VoucherType.JOURNAL;
     case 'Credit Note':
       return VoucherType.CREDIT_NOTE;
+    case 'Debit Note':
+      return VoucherType.CREDIT_NOTE;
 
     }
-    return VoucherType.DEBIT_NOTE;
+    throw new HttpErrors.UnprocessableEntity(`Invalid voucher type ${vType}`);
 
   }
 
@@ -470,14 +472,25 @@ export class VoucherController {
     }
     const {startDate, endDate} = finYear;
     
-    for (const vData of vouchersData) {
+    const newVouchers:Array<{details: string,
+      date: Date,
+      type: VoucherType,
+      number?: string,
+      transactions: Array<Partial<Transaction>>}> = [];
+
+    for (const [rowNum, vData] of vouchersData.entries()) {
 
       const details = vData.Details;
-      const date = dayjs.utc(vData.Date, 'DD-MM-YYYY')
-        .toDate();
+      const dayJsDate = dayjs.utc(vData.Date, 'DD-MM-YYYY');
+      if(!dayJsDate.isValid()){
+
+        throw new HttpErrors.UnprocessableEntity(`Please select a proper date for ${vData.Date}, ${vData.PrimaryLedger} at row ${rowNum + 1}.`);
+
+      }
+      const date = dayJsDate.toDate();
       if(date < startDate || date > endDate){
 
-        continue;
+        throw new HttpErrors.UnprocessableEntity(`Please select a proper date for ${vData.Date}, ${vData.PrimaryLedger} at row ${rowNum + 1}.`);
         
       }
       
@@ -499,21 +512,26 @@ export class VoucherController {
         amount,
       };
 
+      newVouchers.push({
+        details,
+        date,
+        type,
+        transactions: [ pTransaction, cTransaction ]
+      })
+
+    }
+
+    newVouchers.forEach(async (voucher) => {
       
       const otherDetails = finYear.extras as {lastVNo:number};
       const lastVNo = otherDetails?.lastVNo ?? 0;
       const nextVNo = lastVNo + 1;
       const nextVNoS = `${uProfile.company}/${uProfile.branch}/${uProfile.finYear}/${nextVNo}`.toUpperCase();
-      await this.voucherRepository.create({
-        details,
-        date,
-        type,
-        number: nextVNoS,
-        transactions: [ pTransaction, cTransaction ]
-      });
+      voucher.number = nextVNoS;
+      await this.voucherRepository.create(voucher);
       await finYearRepository.updateById(finYear.id, {extras: {lastVNo: nextVNo}});
 
-    }
+    })
 
   }
 
