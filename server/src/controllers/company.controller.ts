@@ -10,7 +10,7 @@ import {Getter, inject, intercept} from '@loopback/context';
 import { BindingKeys } from '../binding.keys';
 import { PasswordHasher } from '../services';
 import { permissions } from '@shared/util/permissions';
-import { superAdminAuthDetails } from '../utils/autherize-details';
+import { superAdminAuthDetails } from '../utils/authorize-details';
 import { ValidateCompanyForUniqueCodeInterceptor } from '../interceptors/validate-company-for-unique-code.interceptor';
 
 @authenticate('jwt')

@@ -6,7 +6,7 @@ import { BRANCH_API } from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
 import { authorize, } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
-import { adminOnlyAuthDetails } from '../utils/autherize-details';
+import { adminOnlyAuthDetails } from '../utils/authorize-details';
 import { ValidateBranchForUniqueCodeInterceptor } from '../interceptors/validate-branch-for-unique-code.interceptor';
 import { intercept } from '@loopback/context';
 

@@ -51,14 +51,13 @@
 
   <p>
     <mat-form-field>
-      <mat-label>DefaultFinYear</mat-label>
-      <input formControlName="defaultFinYear" matInput placeholder="Enter DefaultFinYear" [matAutocomplete]="autoFinyear">
+      <mat-label>Default FinYear</mat-label>
+      <input formControlName="defaultFinYear" matInput placeholder="Enter Default FinYear" [matAutocomplete]="autoFinyear">
       <mat-autocomplete autoActiveFirstOption #autoFinyear="matAutocomplete" [displayWith]="extractNameOfObject">
         <mat-option *ngFor="let finyearS of finyearFiltered" [value]="finyearS">
           {{finyearS.name}}
         </mat-option>
       </mat-autocomplete>
-      <mat-error *ngIf="form.controls['defaultFinYear'].hasError('required')">Please Enter DefaultFinYear</mat-error>
     </mat-form-field>
   </p>
 
