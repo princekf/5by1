@@ -47,6 +47,18 @@
     </mat-form-field>
   </p>
 
+  <p>
+    <mat-form-field>
+      <mat-label>Reference FinYear</mat-label>
+      <input formControlName="refFinYearId" matInput placeholder="Enter Reference FinYear" [matAutocomplete]="autoFinyear">
+      <mat-autocomplete autoActiveFirstOption #autoFinyear="matAutocomplete" [displayWith]="findNameById">
+        <mat-option *ngFor="let finyearS of finyearFiltered" [value]="finyearS.id">
+          {{finyearS.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </p>
+
 
   <p class="form-submit-container">
     <button class="cancel-button" type="button"  mat-button (click)="goToPreviousPage(route,router)">Cancel</button>

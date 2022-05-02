@@ -1,4 +1,4 @@
-import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where} from '@loopback/repository';
+import {Count, CountSchema, Filter, FilterExcludingWhere, property, repository, Where} from '@loopback/repository';
 import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, RequestContext } from '@loopback/rest';
 import {FinYear} from '../models/fin-year.model';
 import {FinYearRepository} from '../repositories/fin-year.repository';
@@ -6,7 +6,7 @@ import { FIN_YEAR_API } from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
-import { adminAndUserAuthDetails } from '../utils/autherize-details';
+import { adminAndUserAuthDetails } from '../utils/authorize-details';
 import { Getter, inject, intercept } from '@loopback/context';
 import { ValidateFinYearForUniqueCodeInterceptor } from '../interceptors/validate-finyear-for-unique-code.interceptor';
 import {SecurityBindings} from '@loopback/security';
@@ -18,6 +18,16 @@ import { Ledger, LedgerGroup } from '../models';
 import { defalutLedgerGroupCodes as dlgc } from '@shared/util/ledger-group-codes';
 import { defaultLedgers } from '../install/default.ledgers';
 import { TransactionType } from '@shared/entity/accounting/transaction';
+
+class FinYearTC extends FinYear {
+
+  @property({
+    type: 'string',
+    required: false,
+  })
+  refFinYearId? : string;
+
+}
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
@@ -115,14 +125,14 @@ export class FinYearController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(FinYear, {
+          schema: getModelSchemaRef(FinYearTC, {
             title: 'NewFinYear',
             exclude: [ 'id' ],
           }),
         },
       },
     })
-      finYear: Omit<FinYear, 'id'>,
+      finYear: Omit<FinYearTC, 'id'>,
 
     @inject.context() context: RequestContext,
     @repository(BranchRepository)
@@ -140,17 +150,75 @@ export class FinYearController {
 
     }
     const finYearR = await this.finYearRepository.create(finYear);
+    if(finYear.refFinYearId){
+      const refFinYearId = finYear.refFinYearId as string;
+      const refFinYear = await this.finYearRepository.findById(refFinYearId);
+      const refDbName = `${uProfile.company?.toLowerCase()}_${branch.code?.toLowerCase()}_${refFinYear.code.toLowerCase()}`;
+      context.bind(BindingKeys.SESSION_DB_NAME).to(refDbName);
+      let ledgerGroupRepository = await ledgerGroupRepositoryGetter();
+      let ledgerRepository = await ledgerRepositoryGetter();
+      const refLGsM = await ledgerGroupRepository.find();
+      const refLedgsM = await ledgerRepository.find();
+      const refLGs:Array<LedgerGroup> = [];
+      const codePIdMap:Record<string, string> = {};
+      const idCodeMap:Record<string, string> = {};
+      const newCodeLGMap:Record<string, string> = {};
+  
+      const finYearCode = finYear.code as string;
+      const dbName = `${uProfile.company?.toLowerCase()}_${branch.code?.toLowerCase()}_${finYearCode.toLowerCase()}`;
+      context.bind(BindingKeys.SESSION_DB_NAME).to(dbName);
+      ledgerGroupRepository = await ledgerGroupRepositoryGetter();
+      ledgerRepository = await ledgerRepositoryGetter();
+      for(const refLGT of refLGsM) {
+        
+        const {id, name, code, details, parentId} = refLGT;
+        idCodeMap[id] = code;
+        if(parentId){
+  
+          codePIdMap[code] = parentId;
+        
+        }
+        const nLG = await ledgerGroupRepository.create({name, code, details});
+        newCodeLGMap[nLG.code] = nLG.id;
+  
+      };
+      
+      for(const code in codePIdMap){
+  
+        const oParent = codePIdMap[code];
+        const nLGId = newCodeLGMap[code];
+        const parentCode = idCodeMap[oParent];
+        const newParentLG = newCodeLGMap[parentCode];
+        await ledgerGroupRepository.updateById(nLGId, {parentId: newParentLG})
+  
+      }
+  
+      for(const refLdg of refLedgsM){
+  
+        const {name, code, details, ledgerGroupId} = refLdg;
+        const obAmount = 0;
+        const obType = 'Credit';
+        const lGCode = idCodeMap[ledgerGroupId];
+        const newLGId = newCodeLGMap[lGCode];
+        ledgerRepository.create({
+          name, code, details,
+          ledgerGroupId: newLGId,
+          obAmount, obType
+        });
+  
+      }
 
-    /*
-     * Now install default data, like ledger groups, ledgers etc.
-     */
-    const finYearCode = finYear.code as string;
-    const dbName = `${uProfile.company?.toLowerCase()}_${branch.code?.toLowerCase()}_${finYearCode.toLowerCase()}`;
-    context.bind(BindingKeys.SESSION_DB_NAME).to(dbName);
-    const ledgerGroupRepository = await ledgerGroupRepositoryGetter();
-    await this.installLedgerGroups(ledgerGroupRepository);
-    const ledgerRepository = await ledgerRepositoryGetter();
-    await this.installLedgers(ledgerRepository, ledgerGroupRepository);
+    } else {
+
+      const finYearCode = finYear.code as string;
+      const dbName = `${uProfile.company?.toLowerCase()}_${branch.code?.toLowerCase()}_${finYearCode.toLowerCase()}`;
+      context.bind(BindingKeys.SESSION_DB_NAME).to(dbName);
+      const ledgerGroupRepository = await ledgerGroupRepositoryGetter();
+      const ledgerRepository = await ledgerRepositoryGetter();
+      await this.installLedgerGroups(ledgerGroupRepository);
+      await this.installLedgers(ledgerRepository, ledgerGroupRepository);
+
+    }
     return finYearR;
 
   }

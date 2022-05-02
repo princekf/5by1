@@ -6,7 +6,7 @@ import { LEDGER_GROUP_API} from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
-import { adminAndUserAuthDetails } from '../utils/autherize-details';
+import { adminAndUserAuthDetails } from '../utils/authorize-details';
 import { inject, intercept } from '@loopback/context';
 import { ValidateLedgerGroupInterceptor } from '../interceptors/validate-ledgergroup.interceptor';
 import { DenyDeletionOfDefaultLedgerGroup } from '../interceptors';

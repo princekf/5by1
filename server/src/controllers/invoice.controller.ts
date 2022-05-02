@@ -6,7 +6,7 @@ import { INVOICE_API } from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
-import { adminAndUserAuthDetails } from '../utils/autherize-details';
+import { adminAndUserAuthDetails } from '../utils/authorize-details';
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)

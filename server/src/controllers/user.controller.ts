@@ -14,7 +14,7 @@ import { AuthResponseSchema, CredentialsRequestBody, InstallRequestBody,
 import {SecurityBindings, securityId} from '@loopback/security';
 import { ME_API, MY_ACCOUNT_API, USER_API, SWITCH_FIN_YEAR_API } from '@shared/server-apis';
 import { resourcePermissions } from '../utils/resource-permissions';
-import { adminAndUserAuthDetails, allRoleAuthDetails, superAdminAuthDetails } from '../utils/autherize-details';
+import { adminAndUserAuthDetails, allRoleAuthDetails, superAdminAuthDetails } from '../utils/authorize-details';
 import { MyAccountResp } from '@shared/util/my-account-resp';
 import { SessionUser } from '@shared/util/session-user';
 
