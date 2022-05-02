@@ -458,29 +458,82 @@ export class VoucherController {
 
   }
 
-  private createVoucher = async(vouchersData:Array<VoucherImport>, ledgerMap: Record<string, Ledger>,
+  private createVouchers = async(vouchersData:Array<VoucherImport>, ledgerMap: Record<string, Ledger>,
     cCentreMap:Record<string, CostCentre>, uProfile: ProfileUser, finYearRepository : FinYearRepository)
     :Promise<void> => {
 
-    const finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
+    let finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
     if (!finYear) {
 
       throw new HttpErrors.UnprocessableEntity('Please select a proper financial year.');
 
     }
     const {startDate, endDate} = finYear;
-    
-    for (const vData of vouchersData) {
+    const compoundVData:Record<string, Array<VoucherImport>> = {};
+    const simepleVData:Array<VoucherImport> = [];
+    for (const [rowNum, vData] of vouchersData.entries()) {
 
-      const details = vData.Details;
       const date = dayjs.utc(vData.Date, 'DD-MM-YYYY')
         .toDate();
       if(date < startDate || date > endDate){
 
-        continue;
+        throw new HttpErrors.UnprocessableEntity(`Date should be within the fin year, ${vData.Date} a row ${rowNum + 1}`);
         
       }
-      
+      if(vData.Credit > 0 && vData.Debit > 0){
+
+        throw new HttpErrors.UnprocessableEntity(`Both credit and debit cannot be greater than 0 at a time, ${vData.Date} a row ${rowNum + 1}`);
+
+      }
+      if(vData.Credit <= 0 && vData.Debit <= 0){
+
+        throw new HttpErrors.UnprocessableEntity(`One and only one of debit or credit should be greater than 0, ${vData.Date} a row ${rowNum + 1}`);
+
+      }
+
+      if(vData.GroupCode){
+
+        
+        if(!compoundVData[vData.GroupCode]){
+
+          compoundVData[vData.GroupCode] = [];
+          compoundVData[vData.GroupCode].push(vData);
+
+        } else {
+
+          const [ vData0 ] = compoundVData[vData.GroupCode];
+          if(vData0.Date !== vData.Date || vData0.PrimaryLedger !== vData.PrimaryLedger){
+            
+            throw new HttpErrors.UnprocessableEntity(`Date and primary ledger should be same for compound ledgers, ${vData.Date} a row ${rowNum + 1}`);
+            
+          }
+          if(!vData.Credit && vData0.Credit){
+            
+            throw new HttpErrors.UnprocessableEntity(`Compound ledgers can have either debit value or credit value, ${vData.Date} a row ${rowNum + 1}`);
+            
+          }
+          if(!vData.Debit && vData0.Debit){
+            
+            throw new HttpErrors.UnprocessableEntity(`Compound ledgers can have either debit value or credit value, ${vData.Date} a row ${rowNum + 1}`);
+            
+          }
+          compoundVData[vData.GroupCode].push(vData);
+          
+        }
+
+      } else {
+
+        simepleVData.push(vData);
+
+      }
+
+    }
+
+    simepleVData.forEach(async (vData) => {
+
+      const date = dayjs.utc(vData.Date, 'DD-MM-YYYY')
+        .toDate();
+      const details = vData.Details;
       const type = this.findVoucherType(vData.VoucherType);
       const pType = vData.Credit > 0 ? TransactionType.CREDIT : TransactionType.DEBIT;
       const cType = vData.Credit > 0 ? TransactionType.DEBIT : TransactionType.CREDIT;
@@ -499,8 +552,8 @@ export class VoucherController {
         amount,
       };
 
-      
-      const otherDetails = finYear.extras as {lastVNo:number};
+      finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
+      const otherDetails = finYear?.extras as {lastVNo:number};
       const lastVNo = otherDetails?.lastVNo ?? 0;
       const nextVNo = lastVNo + 1;
       const nextVNoS = `${uProfile.company}/${uProfile.branch}/${uProfile.finYear}/${nextVNo}`.toUpperCase();
@@ -511,8 +564,56 @@ export class VoucherController {
         number: nextVNoS,
         transactions: [ pTransaction, cTransaction ]
       });
-      await finYearRepository.updateById(finYear.id, {extras: {lastVNo: nextVNo}});
+      await finYearRepository.updateById(finYear?.id ?? '', {extras: {lastVNo: nextVNo}});
+    });
 
+    for(const groupId in compoundVData){
+
+      const compVDatas = compoundVData[groupId];
+      let totalCredit = 0;
+      let totalDebit = 0;
+      const cTransactions:Array<Partial<Transaction>> = [];
+      for(const compVData of compVDatas){
+
+        totalCredit += compVData.Credit;
+        totalDebit += compVData.Debit;
+        const cType = compVData.Credit > 0 ? TransactionType.CREDIT : TransactionType.DEBIT;
+        const amount = compVData.Credit > 0 ? compVData.Credit : compVData.Debit;
+        const cTransaction:Partial<Transaction> = {
+          type: cType,
+          order: 2,
+          ledgerId: ledgerMap[compVData.CompoundLedger].id,
+          amount,
+        };
+        cTransactions.push(cTransaction);
+      }
+      const [ vData ] = compVDatas;
+      const date = dayjs.utc(vData.Date, 'DD-MM-YYYY')
+        .toDate();
+      const details = vData.Details;
+      const type = this.findVoucherType(vData.VoucherType);
+      const pType = totalCredit > 0 ? TransactionType.DEBIT : TransactionType.CREDIT;
+      const amount = totalCredit > 0 ? totalCredit : totalDebit;
+      const pTransaction:Partial<Transaction> = {
+        type: pType,
+        order: 1,
+        ledgerId: ledgerMap[vData.PrimaryLedger].id,
+        amount,
+        costCentreId: cCentreMap[vData.CostCentre]?.id ?? null
+      };
+      finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});
+      const otherDetails = finYear?.extras as {lastVNo:number};
+      const lastVNo = otherDetails?.lastVNo ?? 0;
+      const nextVNo = lastVNo + 1;
+      const nextVNoS = `${uProfile.company}/${uProfile.branch}/${uProfile.finYear}/${nextVNo}`.toUpperCase();
+      await this.voucherRepository.create({
+        details,
+        date,
+        type,
+        number: nextVNoS,
+        transactions: [ pTransaction, ...cTransactions ]
+      });
+      await finYearRepository.updateById(finYear?.id ?? '', {extras: {lastVNo: nextVNo}});
     }
 
   }
@@ -551,7 +652,7 @@ export class VoucherController {
     const [ lCodes, ccCodes ] = this.extractVoucherData(vouchersData);
     const ledgerMap = await this.findLedgerMap(ledgerRepository, lCodes);
     const cCentreMap = await this.costCentreMap(costCentreRepository, ccCodes);
-    await this.createVoucher(vouchersData, ledgerMap, cCentreMap, uProfile, finYearRepository);
+    await this.createVouchers(vouchersData, ledgerMap, cCentreMap, uProfile, finYearRepository);
     return vouchersData;
 
   }
