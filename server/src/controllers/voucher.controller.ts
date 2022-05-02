@@ -9,7 +9,7 @@ import { LedgerSummaryTB } from '@shared/util/trial-balance-ledger-summary';
 import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
-import { adminAndUserAuthDetails } from '../utils/autherize-details';
+import { adminAndUserAuthDetails } from '../utils/authorize-details';
 import { ValidateVoucherInterceptor } from '../interceptors/validate-voucher.interceptor';
 import { inject, intercept } from '@loopback/context';
 import { ProfileUser } from '../services';

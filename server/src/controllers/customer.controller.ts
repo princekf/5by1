@@ -9,7 +9,7 @@ import { ArrayResponse as ArrayReponseInft } from '@shared/util/array-resp';
 import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
-import { adminAndUserAuthDetails } from '../utils/autherize-details';
+import { adminAndUserAuthDetails } from '../utils/authorize-details';
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)

@@ -7,7 +7,7 @@ import { LEDGER_API} from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { resourcePermissions } from '../utils/resource-permissions';
-import { adminAndUserAuthDetails } from '../utils/autherize-details';
+import { adminAndUserAuthDetails } from '../utils/authorize-details';
 import { ValidateLedgerInterceptor } from '../interceptors/validate-ledger.interceptor';
 import { intercept } from '@loopback/context';
 import { inject } from '@loopback/core';

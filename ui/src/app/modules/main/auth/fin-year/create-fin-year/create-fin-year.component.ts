@@ -33,6 +33,8 @@ export class CreateFinYearComponent implements OnInit {
 
   branchFiltered: Array<Branch> = [];
 
+  finyearFiltered: Array<FinYear> = [];
+
   form: FormGroup = new FormGroup({
 
     id: new FormControl(null),
@@ -41,6 +43,7 @@ export class CreateFinYearComponent implements OnInit {
     startDate: new FormControl('', [ Validators.required ]),
     endDate: new FormControl('', [ Validators.required ]),
     branch: new FormControl('', [ Validators.required ]),
+    refFinYearId: new FormControl(''),
 
 
   });
@@ -114,10 +117,36 @@ export class CreateFinYearComponent implements OnInit {
         .subscribe((branch) => (this.branchFiltered = branch));
 
     });
+    this.form.controls.refFinYearId.valueChanges.subscribe((customerQ:unknown) => {
+
+      if (typeof customerQ !== 'string') {
+
+        return;
+
+      }
+      const branch = this.form.controls.branch.value;
+      if(!branch){
+
+        this.toastr.error('Please select a branch', 'Select Branch');
+        return;
+
+      }
+      
+      this.finYearService.search({ where: {name: {like: customerQ,
+        options: 'i'},
+        branchId: branch?.id ?? ''} })
+        .subscribe((defaultFinYears) => (this.finyearFiltered = defaultFinYears));
+
+    });
 
   };
 
   extractNameOfObject = (obj: {name: string}): string => obj.name;
+
+  findNameById = (id: string): string => {
+    const fFinYear = this.finyearFiltered.find((fObj) => fObj.id === id);
+    return fFinYear?.name ?? '';
+  };
 
   upsertFinyear(): void {
 
