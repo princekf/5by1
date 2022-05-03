@@ -85,7 +85,7 @@ export class ExportPopupComponent implements OnInit {
   convert(): void {
 
     const doc = new JSPDF();
-    const col = this.data.header as RowInput;
+    const col = this.data.columnHeaders;
     const rows = this.data.items as Array<RowInput>;
     const FontSize = 20;
     doc.setFontSize(FontSize);
@@ -98,8 +98,18 @@ export class ExportPopupComponent implements OnInit {
       doc, {head: [ col ],
         body: rows, 
       didParseCell: (cData) => {
-        const columnVal = this.findColumnValue(cData.row.raw, cData.column.dataKey.toString(), this.data.columnParsingFn);
+
+        const dataKey = cData.column.dataKey.toString();
+        if(dataKey.indexOf('.') > -1){
+          // Parsing header value
+          if(cData.row.raw[dataKey]){
+            cData.cell.text = [cData.row.raw[dataKey]];
+            return;
+          }
+        }
+        const columnVal = this.findColumnValue(cData.row.raw, dataKey, this.data.columnParsingFn);
         cData.cell.text = [columnVal];
+
       }});
 
     doc.save(this.data.fileName);

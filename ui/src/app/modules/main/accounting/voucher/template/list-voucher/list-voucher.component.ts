@@ -128,7 +128,6 @@ export class ListVoucherComponent implements OnInit {
       displayedColumns: this.displayedColumns,
       columnHeaders: this.columnHeaders,
       eheader: this.xheaders,
-      header: this.columnHeaders,
       columnParsingFn: this.columnParsingFn,
 
     };
