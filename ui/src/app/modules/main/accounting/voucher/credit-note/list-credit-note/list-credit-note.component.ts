@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MainService } from '../../../../../../services/main.service';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
 import { handleImportVouchers } from '../../voucher.util';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-credit-note',
@@ -32,8 +33,6 @@ export class ListCreditNoteComponent {
   };
 
 
-  export: any = [];
-
   loading = { status: false };
 
 
@@ -48,25 +47,23 @@ export class ListCreditNoteComponent {
 
     }
   handleExportClick = (): void => {
-    const data = [];
 
+    this.mainservice.getExport()
+    .pipe(first())
+    .subscribe((resData) => {
 
-    this.mainservice.getExport().subscribe(result1 => {
-      this.export = result1;
-
+      const {items} = resData;
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {
+          items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders,
+  
+        }
+      });
 
     });
-
-
-    const items = this.export.items;
-    this.dialog.open(ExportPopupComponent, {
-      height: '500px',
-    data: {items,
-    displayedColumns: this.displayedColumns,
-    columnHeaders: this.columnHeaders,
-
-       }
-      });
 
 }
 

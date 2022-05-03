@@ -165,7 +165,6 @@ export class ListVoucherComponent implements OnInit {
   ngOnInit(): void {
 
     this.filterItem = new FilterItem(FilterVoucherComponent, {});
-
     this.activatedRoute.queryParams.subscribe((value) => {
 
       const { whereS, ...qParam } = value;
@@ -179,7 +178,6 @@ export class ListVoucherComponent implements OnInit {
         this.queryParams.where = {};
 
       }
-
       this.queryParams.where.type = this.voucherType;
       this.loadData();
 
