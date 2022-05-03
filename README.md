@@ -7,7 +7,7 @@
 
 ### Repo details.
 * It contains 3 projects, ui, server and shared.
-* Version : 1.0.10
+* Version : 1.0.11
 
 ### How do I get set up locally? ###
 
