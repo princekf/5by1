@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MainService } from '../../../../../../services/main.service';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
 import { handleImportVouchers } from '../../voucher.util';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-purchase',
@@ -31,9 +32,6 @@ export class ListPurchaseComponent {
     details: 'Details',
   };
 
-
-  export: any = [];
-
   loading = { status: false };
 
 
@@ -50,20 +48,21 @@ export class ListPurchaseComponent {
 
   handleExportClick = (): void => {
 
-    this.mainservice.getExport().subscribe((result1) => {
+    this.mainservice.getExport()
+    .pipe(first())
+    .subscribe((resData) => {
 
-      this['export'] = result1;
+      const {items} = resData;
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {
+          items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders,
+  
+        }
+      });
 
-
-    });
-
-
-    const {items} = this['export'];
-    this.dialog.open(ExportPopupComponent, {
-      height: '500px',
-      data: {items,
-        displayedColumns: this.displayedColumns,
-        columnHeaders: this.columnHeaders, }
     });
 
   }
