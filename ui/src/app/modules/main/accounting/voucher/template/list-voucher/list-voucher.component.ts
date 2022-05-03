@@ -28,15 +28,15 @@ export class ListVoucherComponent implements OnInit {
 
   @Input() tableHeader: string;
 
-  displayedColumns: string[] = [ 'number', 'date', 'pledger', 'cledger', 'amount', 'details' ];
+  displayedColumns: string[] = [ 'number', 'date', 'pledger.name', 'cledger.name', 'amount', 'details' ];
 
   numberColumns: string[] = [ 'amount' ];
 
   columnHeaders = {
     number: 'Voucher #',
     date: 'Date',
-    pledger: 'Primary Ledger',
-    cledger: 'Compound Ledger',
+    'pledger.name': 'Primary Ledger',
+    'cledger.name': 'Compound Ledger',
     amount: 'Amount',
     details: 'Details',
   };
@@ -49,10 +49,14 @@ export class ListVoucherComponent implements OnInit {
       width: 30, },
     { key: 'date',
       width: 30, },
-    { key: 'pledger',
+    { key: 'pledger.name',
       width: 30, },
-    { key: 'cledger',
+      { key: 'pledger.code',
+        width: 30, },
+    { key: 'cledger.name',
       width: 30, },
+      { key: 'cledger.code',
+        width: 30, },
     { key: 'amount',
       width: 30, },
     { key: 'details',
@@ -63,7 +67,9 @@ export class ListVoucherComponent implements OnInit {
       'Voucher #',
       'Date',
       'Primary Ledger',
+      'Primary Ledger Code',
       'Compound Ledger',
+      'Compound Ledger Code',
       'Amount',
       'Details',
     ];
@@ -106,29 +112,26 @@ export class ListVoucherComponent implements OnInit {
         details: details2?.length < maxLength ? details2 : `${details2?.substring(0, trimLength)}...`,
         ...item2,
         amount: `${firstTr.amount} ${tType}`,
-        pledger: pledger.name,
-        cledger: cledger.name,
+        pledger: pledger,
+        cledger: cledger,
 
 
       });
-      const result1 = {
-        cell: this.lengthofcolumn,
-        rheader: this.iheaders,
-        title: table,
-        items: itemsT,
-        displayedColumns: this.displayedColumns,
-        columnHeaders: this.columnHeaders,
-
-        eheader: this.xheaders,
-        header: this.columnHeaders,
-        rowData: itemsT,
-
-
-      };
-      this.mainservice.setExport(result1);
-
 
     }
+
+    const expOptions = {
+      cell: this.lengthofcolumn,
+      rheader: this.iheaders,
+      title: table,
+      items: itemsT,
+      displayedColumns: this.displayedColumns,
+      columnHeaders: this.columnHeaders,
+      eheader: this.xheaders,
+      columnParsingFn: this.columnParsingFn,
+
+    };
+    this.mainservice.setExport(expOptions);
     return itemsT;
 
 

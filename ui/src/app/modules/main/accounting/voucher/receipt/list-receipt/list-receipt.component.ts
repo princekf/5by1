@@ -19,18 +19,6 @@ export class ListReceiptComponent {
 
   editUri = '/voucher/receipt/create';
 
-  displayedColumns: string[] = [ 'number', 'date', 'pledger', 'cledger', 'amount', 'details' ];
-
-
-  columnHeaders = {
-    number: 'Voucher #',
-    date: 'Date',
-    pledger: 'Primary Ledger',
-    cledger: 'Compound Ledger',
-    amount: 'Amount',
-    details: 'Details',
-  };
-
   loading = { status: false };
 
 
@@ -48,17 +36,11 @@ export class ListReceiptComponent {
 
     this.mainservice.getExport()
     .pipe(first())
-    .subscribe((resData) => {
+    .subscribe((data) => {
 
-      const {items} = resData;
       this.dialog.open(ExportPopupComponent, {
         height: '500px',
-        data: {
-          items,
-          displayedColumns: this.displayedColumns,
-          columnHeaders: this.columnHeaders,
-  
-        }
+        data: {...data, fileName : 'vouchers-receipt'}
       });
 
     });

@@ -44,9 +44,9 @@ export class MainService {
 
   }
 
-  setExport(products: Record<string, unknown>): void {
+  setExport(options: Record<string, unknown>): void {
 
-    this.exports.next(products);
+    this.exports.next(options);
 
   }
 
