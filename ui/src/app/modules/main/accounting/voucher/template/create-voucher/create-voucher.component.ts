@@ -196,6 +196,7 @@ export class CreateVoucherComponent implements OnInit {
     const [ pTrans, ...cTrans ] = voucher.transactions;
     const formArray = this.fboForm.get('transactions') as FormArray;
     formArray.clear();
+    this.primaryTransactionType = pTrans.type;
     formArray.push(this.createPrimaryTransactionForm(pTrans));
     cTrans.forEach((ctrn) => formArray.push(this.createCompoundTransactionForm(ctrn)));
     formArray.push(this.createCompoundTransactionForm());
@@ -368,7 +369,6 @@ export class CreateVoucherComponent implements OnInit {
       return;
 
     }
-    this.primaryTransactionType =
     this.primaryTransactionType === TransactionType.CREDIT ? TransactionType.DEBIT : TransactionType.CREDIT;
 
   }
