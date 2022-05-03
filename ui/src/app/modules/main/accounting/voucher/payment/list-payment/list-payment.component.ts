@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MainService } from '../../../../../../services/main.service';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
 import { handleImportVouchers } from '../../voucher.util';
+import { first } from 'rxjs/operators';
 @Component({
   selector: 'app-list-payment',
   templateUrl: './list-payment.component.html',
@@ -31,9 +32,6 @@ export class ListPaymentComponent {
     details: 'Details',
   };
 
-
-  export: any = [];
-
   loading = { status: false };
 
   constructor(private voucherService: VoucherService,
@@ -48,24 +46,22 @@ export class ListPaymentComponent {
 
   handleExportClick = (): void => {
 
+    this.mainservice.getExport()
+    .pipe(first())
+    .subscribe((resData) => {
 
-    this.mainservice.getExport().subscribe((result1) => {
-
-      this['export'] = result1;
-
+      const {items} = resData;
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {
+          items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders,
+  
+        }
+      });
 
     });
-
-
-    const {items} = this['export'];
-    this.dialog.open(ExportPopupComponent, {
-      height: '500px',
-      data: {items,
-        displayedColumns: this.displayedColumns,
-        columnHeaders: this.columnHeaders, }
-
-    });
-
 
   }
 

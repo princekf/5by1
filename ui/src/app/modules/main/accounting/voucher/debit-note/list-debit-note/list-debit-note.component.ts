@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MainService } from '../../../../../../services/main.service';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
 import { handleImportVouchers } from '../../voucher.util';
+import { first } from 'rxjs/operators';
 @Component({
   selector: 'app-list-debit-note',
   templateUrl: './list-debit-note.component.html',
@@ -31,8 +32,6 @@ export class ListDebitNoteComponent {
   };
 
 
-  exports: Record<string, unknown> ;
-
   loading = { status: false };
 
 
@@ -49,21 +48,21 @@ export class ListDebitNoteComponent {
 
   handleExportClick = (): void => {
 
+    this.mainservice.getExport()
+    .pipe(first())
+    .subscribe((resData) => {
 
-    this.mainservice.getExport().subscribe((result1) => {
+      const {items} = resData;
+      this.dialog.open(ExportPopupComponent, {
+        height: '500px',
+        data: {
+          items,
+          displayedColumns: this.displayedColumns,
+          columnHeaders: this.columnHeaders,
+  
+        }
+      });
 
-      this.exports = result1;
-
-
-    });
-
-
-    const {items} = this.exports;
-    this.dialog.open(ExportPopupComponent, {
-      height: '500px',
-      data: {items,
-        displayedColumns: this.displayedColumns,
-        columnHeaders: this.columnHeaders, }
     });
 
   }
