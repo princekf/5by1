@@ -3,11 +3,10 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { findColumnValue as _findColumnValue } from '@fboutil/fbo.util';
 import JSPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import autoTable, { Column, RowInput } from 'jspdf-autotable';
 import { MainService } from '../../../services/main.service';
 import * as Excel from 'exceljs';
 import * as saveAs from 'file-saver';
-import { Router } from '@angular/router';
 @Component({
   selector: 'app-export-popup',
   templateUrl: './export-popup.component.html',
@@ -18,20 +17,13 @@ export class ExportPopupComponent implements OnInit {
 
   dataSource = new MatTableDataSource<unknown>([]);
 
-  title = 'exportExcelInAngular';
-
-  exports;
-
-  head;
-
-
   constructor(
     private mainservice: MainService,
-    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: {items: Array<unknown>,
     displayedColumns: Array<string>,
     columnHeaders: Record<string, string>,
-    columnParsingFn?: unknown}) { }
+    fileName: string;
+    columnParsingFn?: (elm:unknown, clm:string)=>string} & Record<string, unknown>) { }
 
   findColumnValue = _findColumnValue;
 
@@ -39,63 +31,43 @@ export class ExportPopupComponent implements OnInit {
 
     this.dataSource.data = this.data.items;
 
-
-    this.mainservice.getExport().subscribe((result) => {
-
-
-      this.exports = result;
-
-
-    });
-    this.mainservice.getExport().subscribe((result1) => {
-
-      this.exports = result1;
-
-
-    });
-    this.mainservice.getHd().subscribe((name) => {
-
-      this.head = name;
-
-    });
-
-
   }
 
   exportExcel(): void {
 
-    const array: Array<string> = [
-      this.head.filename,
-      this.head.filename,
-
-    ];
 
     const EXCEL_EXTENSION = '.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet();
-    const name = this.head.filename;
+    const name = this.data.fileName;
 
-    worksheet.getCell('A1', 'n').value = array.join('\n');
+    worksheet.getCell('A1', 'n').value = [name, name].join('\n');
     worksheet.getCell('A1').font = {
       size: 12,
       bold: true
     };
     const rownumber = 2;
-    worksheet.mergeCells(1, 1, rownumber, this.exports.cell);
+    worksheet.mergeCells(1, 1, rownumber, this.data.cell as number);
 
     worksheet.getCell('A1').alignment = {vertical: 'middle',
       horizontal: 'center' };
     worksheet.getCell('A2').alignment = { horizontal: 'center' };
-
-    worksheet.addRow(this.exports.rheader, 'n');
-    worksheet.columns = this.exports.eheader;
+    worksheet.addRow(this.data.rheader, 'n');
+    worksheet.columns = this.data.eheader as Array<Partial<Column>>;
     const headerrownumber = 3;
     worksheet.getRow(headerrownumber).font = {bold: true };
     worksheet.getRow(headerrownumber).alignment = {horizontal: 'center' };
 
-    this.exports.rowData.forEach((element) => {
+    (this.data.items as Array<unknown>).forEach((element) => {
 
-      worksheet.addRow(element, 'n');
+      const dispVals:Array<unknown> = [];
+      for(const headerC of this.data.eheader as Array<Record<string, string>>){
+        const columnKey = headerC['key'];
+        const columnVal = this.findColumnValue(element, columnKey, this.data.columnParsingFn);
+        dispVals.push(columnVal);
+      }
+      
+      worksheet.addRow(dispVals, 'n');
 
     });
 
@@ -112,15 +84,14 @@ export class ExportPopupComponent implements OnInit {
 
   convert(): void {
 
-    const fname = this.head.filename;
     const doc = new JSPDF();
-    const col = this.exports.header;
-    const rows = this.exports.rowData;
+    const col = this.data.header as RowInput;
+    const rows = this.data.items as Array<RowInput>;
     const FontSize = 20;
     doc.setFontSize(FontSize);
     const headerhorizontal = 95;
     const headervertical = 10;
-    doc.text(fname, headerhorizontal, headervertical);
+    doc.text(this.data.fileName, headerhorizontal, headervertical);
 
 
     autoTable(
@@ -128,7 +99,7 @@ export class ExportPopupComponent implements OnInit {
       doc, {head: [ col ],
         body: rows, });
 
-    doc.save(fname);
+    doc.save(this.data.fileName);
 
   }
 
