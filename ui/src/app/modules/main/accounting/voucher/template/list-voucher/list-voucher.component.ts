@@ -120,7 +120,7 @@ export class ListVoucherComponent implements OnInit {
 
     }
 
-    const result1 = {
+    const expOptions = {
       cell: this.lengthofcolumn,
       rheader: this.iheaders,
       title: table,
@@ -129,9 +129,10 @@ export class ListVoucherComponent implements OnInit {
       columnHeaders: this.columnHeaders,
       eheader: this.xheaders,
       header: this.columnHeaders,
+      columnParsingFn: this.columnParsingFn,
 
     };
-    this.mainservice.setExport(result1);
+    this.mainservice.setExport(expOptions);
     return itemsT;
 
 

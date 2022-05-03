@@ -93,11 +93,14 @@ export class ExportPopupComponent implements OnInit {
     const headervertical = 10;
     doc.text(this.data.fileName, headerhorizontal, headervertical);
 
-
     autoTable(
 
       doc, {head: [ col ],
-        body: rows, });
+        body: rows, 
+      didParseCell: (cData) => {
+        const columnVal = this.findColumnValue(cData.row.raw, cData.column.dataKey.toString(), this.data.columnParsingFn);
+        cData.cell.text = [columnVal];
+      }});
 
     doc.save(this.data.fileName);
 
