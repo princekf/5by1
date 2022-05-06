@@ -32,7 +32,7 @@ export class CreateSalesComponent implements OnInit {
   ngOnInit(): void {
 
     const pLGNames = [ dlgn.SUNDRY_CREDITORS, dlgn.SUNDRY_DEBTORS ];
-    const cLGNames = [ dlgn.SALES_ACCOUNTS ];
+    const cLGNames = [ dlgn.SALES_ACCOUNTS, dlgn.DUTIES_AND_TAXES ];
     const where = {code: {
       inq: [ ...pLGNames, ...cLGNames ]
     }};
