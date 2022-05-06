@@ -452,9 +452,11 @@ export class VoucherController {
       return VoucherType.JOURNAL;
     case 'Credit Note':
       return VoucherType.CREDIT_NOTE;
+    case 'Debit Note':
+      return VoucherType.CREDIT_NOTE;
 
     }
-    return VoucherType.DEBIT_NOTE;
+    throw new HttpErrors.UnprocessableEntity(`Invalid voucher type ${vType}`);
 
   }
 
@@ -473,8 +475,13 @@ export class VoucherController {
     const simepleVData:Array<VoucherImport> = [];
     for (const [rowNum, vData] of vouchersData.entries()) {
 
-      const date = dayjs.utc(vData.Date, 'DD-MM-YYYY')
-        .toDate();
+      const dayJsDate = dayjs.utc(vData.Date, 'DD-MM-YYYY');
+      if(!dayJsDate.isValid()){
+
+        throw new HttpErrors.UnprocessableEntity(`Please select a proper date for ${vData.Date}, ${vData.PrimaryLedger} at row ${rowNum + 1}.`);
+
+      }
+      const date = dayJsDate.toDate();
       if(date < startDate || date > endDate){
 
         throw new HttpErrors.UnprocessableEntity(`Date should be within the fin year, ${vData.Date} a row ${rowNum + 1}`);
@@ -570,35 +577,35 @@ export class VoucherController {
     for(const groupId in compoundVData){
 
       const compVDatas = compoundVData[groupId];
+      const [ vData ] = compVDatas;
+      const pType = vData.Credit > 0 ? TransactionType.CREDIT : TransactionType.DEBIT;
+      const cType = vData.Credit > 0 ? TransactionType.DEBIT : TransactionType.CREDIT;
       let totalCredit = 0;
       let totalDebit = 0;
       const cTransactions:Array<Partial<Transaction>> = [];
-      for(const compVData of compVDatas){
+      for(const [idx, compVData] of compVDatas.entries()){
 
         totalCredit += compVData.Credit;
         totalDebit += compVData.Debit;
-        const cType = compVData.Credit > 0 ? TransactionType.CREDIT : TransactionType.DEBIT;
         const amount = compVData.Credit > 0 ? compVData.Credit : compVData.Debit;
         const cTransaction:Partial<Transaction> = {
           type: cType,
-          order: 2,
+          order: 2 + idx,
           ledgerId: ledgerMap[compVData.CompoundLedger].id,
           amount,
         };
         cTransactions.push(cTransaction);
       }
-      const [ vData ] = compVDatas;
       const date = dayjs.utc(vData.Date, 'DD-MM-YYYY')
         .toDate();
       const details = vData.Details;
       const type = this.findVoucherType(vData.VoucherType);
-      const pType = totalCredit > 0 ? TransactionType.DEBIT : TransactionType.CREDIT;
-      const amount = totalCredit > 0 ? totalCredit : totalDebit;
+      const amount: number = totalCredit > 0 ? totalCredit : totalDebit;
       const pTransaction:Partial<Transaction> = {
         type: pType,
         order: 1,
         ledgerId: ledgerMap[vData.PrimaryLedger].id,
-        amount,
+        amount: Number(amount.toFixed(2)),
         costCentreId: cCentreMap[vData.CostCentre]?.id ?? null
       };
       finYear = await finYearRepository.findOne({where: {code: {regexp: `/^${uProfile.finYear}$/i`}}});

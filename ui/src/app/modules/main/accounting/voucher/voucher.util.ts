@@ -75,10 +75,11 @@ export const handleImportVouchers = (file: File, loading: { status: boolean }, v
     console.log('file uploaded');
 
   },
-    (err) => {
+  (err) => {
+    
+    loading.status = false;
+    console.error(err);
 
-      console.error(err);
-
-    });
+  });
 
 }
