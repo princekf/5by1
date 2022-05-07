@@ -27,6 +27,7 @@ interface LedgerReportFields {
   credit?: string;
   details?: string;
   opBalance?: string;
+  balance?: string;
 }
 
 interface RowSummary {name: string; credit: number; debit: number; }
@@ -45,7 +46,7 @@ export class LedgerReportComponent implements OnInit {
 
   sortDisabledColumns: string[] = [ 'date' ];
 
-  numberColumns: string[] = [ 'debit', 'credit' ];
+  numberColumns: string[] = [ 'debit', 'credit', 'opBalance', 'balance' ];
 
   reportType = '';
 
@@ -61,7 +62,8 @@ export class LedgerReportComponent implements OnInit {
     name: 'Ledger',
     debit: 'Debit',
     credit: 'Credit',
-    opBalance: 'Opening'
+    opBalance: 'Opening',
+    balance: 'Balance'
   };
 
   xheaders = [
@@ -335,17 +337,20 @@ export class LedgerReportComponent implements OnInit {
 
         this.voucherService.fetchLedgerSummary().subscribe((result) => {
 
-          this.displayedColumns = [ 'name', 'debit', 'credit', 'opBalance' ];
+          this.displayedColumns = [ 'name', 'debit', 'credit', 'opBalance', 'balance' ];
           const items: Array<LedgerReportFields> = [];
           for(const res of result){
             const {id, name, debit, credit, obAmount, obType} = res;
             const opBalance = `${obAmount} ${obType === 'Credit' ? 'Cr' : 'Dr'}`;
+            const balanceV = debit - credit + (obAmount * (obType === 'Credit' ? -1 : 1));
+            const balance = `${(balanceV > 0 ? balanceV : -1 * balanceV).toFixed(environment.decimalPlaces)} ${balanceV > 0 ? 'Dr' : 'Cr'}`;
             items.push({
               id,
               name, 
               debit: debit.toFixed(environment.decimalPlaces),
               credit: credit.toFixed(environment.decimalPlaces),
-              opBalance
+              opBalance,
+              balance,
             })
           }
           this.ledgerRows = {
