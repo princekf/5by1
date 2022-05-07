@@ -74,7 +74,7 @@ export class TrialBalanceReportComponent implements OnInit {
     (lgs: LedgerSummaryTB, nodeMap: Record<string, Node<TBType>>)
     : Array<number> => {
 
-      const {ledger, credit, debit, ledgerGroupId} = lgs;
+      const {name, credit, debit, ledgerGroupId} = lgs;
       const creditS = credit > debit ? (credit - debit).toFixed(dcp) : '';
       const debitS = debit > credit ? (debit - credit).toFixed(dcp) : '';
       if (!creditS && !debitS) {
@@ -83,7 +83,7 @@ export class TrialBalanceReportComponent implements OnInit {
 
       }
       const node: Node<TBType> = {
-        value: {ledger,
+        value: {ledger: name,
           credit: creditS,
           debit: debitS},
         children: []
