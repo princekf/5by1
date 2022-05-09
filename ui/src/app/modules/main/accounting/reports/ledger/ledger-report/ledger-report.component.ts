@@ -48,6 +48,8 @@ export class LedgerReportComponent implements OnInit {
 
   numberColumns: string[] = [ 'debit', 'credit', 'opBalance', 'balance' ];
 
+  showSummaryType = true;
+
   reportType = '';
 
   customColumnOrder1 = [
@@ -331,9 +333,9 @@ export class LedgerReportComponent implements OnInit {
 
       }
       if (whereS) {
-
+        this.showSummaryType = true;
         this.loading = true;
-        this.displayedColumns = [ 'number', 'date', 'type', 'ledger', 'debit', 'credit', 'details' ];
+        this.displayedColumns = [ 'number', 'date', 'type', 'name', 'debit', 'credit', 'details' ];
         this.deleteUri = '/voucher/delete';
         this.editUri = '/voucher/edit';
         this.queryParams.where = JSON.parse(whereS);
@@ -346,8 +348,9 @@ export class LedgerReportComponent implements OnInit {
       } else {
 
         this.loading = true;
+        this.showSummaryType = false;
         this.voucherService.fetchLedgerSummary().subscribe((result) => {
-
+          this.tableHeader = 'Ledger Wise Summary Report';
           this.editUri = '/reports/ledger';
           this.deleteUri = null;
           this.displayedColumns = [ 'name', 'debit', 'credit', 'opBalance', 'balance' ];
