@@ -18,14 +18,16 @@ import * as saveAs from 'file-saver';
 import JSPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 interface LedgerReportFields {
-  id: string;
-  number: string;
-  type: VoucherType;
-  date: Date;
-  ledger: string;
-  debit: string;
-  credit: string;
-  details: string;
+  id?: string;
+  number?: string;
+  type?: VoucherType;
+  date?: Date;
+  name?: string;
+  debit?: string;
+  credit?: string;
+  details?: string;
+  opBalance?: string;
+  balance?: string;
 }
 
 interface RowSummary {name: string; credit: number; debit: number; }
@@ -36,16 +38,15 @@ interface RowSummary {name: string; credit: number; debit: number; }
 })
 export class LedgerReportComponent implements OnInit {
 
-  tableHeader = 'Ledger Report';
+  tableHeader = 'Ledger Wise Summary Report';
 
-
-  displayedColumns: string[] = [ 'number', 'date', 'type', 'ledger', 'debit', 'credit', 'details' ];
+  displayedColumns: string[] = [ 'number', 'date', 'type', 'name', 'debit', 'credit', 'details' ];
 
   lengthofcolumn = this.displayedColumns.length;
 
   sortDisabledColumns: string[] = [ 'date' ];
 
-  numberColumns: string[] = [ 'debit', 'credit' ];
+  numberColumns: string[] = [ 'debit', 'credit', 'opBalance', 'balance' ];
 
   reportType = '';
 
@@ -58,9 +59,11 @@ export class LedgerReportComponent implements OnInit {
     type: 'Type',
     date: 'Date',
     details: 'Details',
-    ledger: 'Ledger',
+    name: 'Ledger',
     debit: 'Debit',
     credit: 'Credit',
+    opBalance: 'Opening',
+    balance: 'Balance'
   };
 
   xheaders = [
@@ -86,6 +89,10 @@ export class LedgerReportComponent implements OnInit {
 
   loading = true;
 
+  deleteUri: string = null;
+
+  editUri: string = null;
+
   ledgerRows: ListQueryRespType<LedgerReportFields> = {
     totalItems: 0,
     pageIndex: 0,
@@ -96,13 +103,14 @@ export class LedgerReportComponent implements OnInit {
 
 
   constructor(private activatedRoute: ActivatedRoute,
+              private readonly route: ActivatedRoute,
               private voucherService: VoucherService,
               private ledgerService: LedgerService,
               private router: Router) { }
 
     private pushIntoItems =
     (items: Array<LedgerReportFields>, voucher: Voucher, amount: number, tType: TransactionType,
-      ledger: string, details: string): void => {
+      name: string, details: string): void => {
 
       const { id, number, date, type } = voucher;
       let debit = '';
@@ -116,7 +124,7 @@ export class LedgerReportComponent implements OnInit {
         type,
         debit,
         credit,
-        ledger,
+        name,
         details: details ?? voucher.details,
       });
 
@@ -152,12 +160,12 @@ export class LedgerReportComponent implements OnInit {
 
   }
 
-  private createSummaryRows = (items: Array<LedgerReportFields>, ledger: string, debit: string, credit: string) => {
+  private createSummaryRows = (items: Array<LedgerReportFields>, name: string, debit: string, credit: string) => {
 
     items.push({
       id: null,
       number: null,
-      ledger,
+      name,
       type: null,
       date: null,
       credit,
@@ -203,7 +211,7 @@ export class LedgerReportComponent implements OnInit {
       let items = items2;
       if (againstId) {
 
-        items = items2.filter((item) => item.ledger === againstId);
+        items = items2.filter((item) => item.name === againstId);
         otherLids = otherLids.filter((oId) => oId === againstId);
 
       }
@@ -225,7 +233,7 @@ export class LedgerReportComponent implements OnInit {
         let totalCredit = 0;
         items.forEach((item, idx: number) => {
 
-          item.ledger = ledgerMap[item.ledger].name;
+          item.name = ledgerMap[item.name].name;
           totalDebit += Number(item.debit);
           totalCredit += Number(item.credit);
 
@@ -299,9 +307,18 @@ export class LedgerReportComponent implements OnInit {
   ngOnInit(): void {
 
     this.filterItem = new FilterItem(FilterLedgerReportComponent, {});
+    const tId = this.route.snapshot.queryParamMap.get('id');
+    
+    
     this.activatedRoute.queryParams.subscribe((value) => {
 
-      const { whereS, order, rtype, ...qParam } = value;
+      const { id, whereS, order, rtype, ...qParam } = value;
+      if (id) {
+        
+        this.router.navigate([ '/reports/ledger' ], { queryParams: {whereS: `{"transactions.ledgerId":{"like":"${id}","options":"i"}}`} });
+        return;
+  
+      }
       this.reportType = rtype;
       this.queryParams = qParam;
       if (typeof order === 'string') {
@@ -316,6 +333,9 @@ export class LedgerReportComponent implements OnInit {
       if (whereS) {
 
         this.loading = true;
+        this.displayedColumns = [ 'number', 'date', 'type', 'ledger', 'debit', 'credit', 'details' ];
+        this.deleteUri = '/voucher/delete';
+        this.editUri = '/voucher/edit';
         this.queryParams.where = JSON.parse(whereS);
         const ledgerParam = this.queryParams.where['transactions.ledgerId'] as {like: string};
         const againstParam = this.queryParams.where.againstL as {ne: string};
@@ -323,10 +343,40 @@ export class LedgerReportComponent implements OnInit {
         const againstId = againstParam?.ne;
         this.loadData(ledgerId, againstId);
 
+      } else {
+
+        this.loading = true;
+        this.voucherService.fetchLedgerSummary().subscribe((result) => {
+
+          this.editUri = '/reports/ledger';
+          this.deleteUri = null;
+          this.displayedColumns = [ 'name', 'debit', 'credit', 'opBalance', 'balance' ];
+          const items: Array<LedgerReportFields> = [];
+          for(const res of result){
+            const {id, name, debit, credit, obAmount, obType} = res;
+            const opBalance = `${obAmount} ${obType === 'Credit' ? 'Cr' : 'Dr'}`;
+            const balanceV = debit - credit + (obAmount * (obType === 'Credit' ? -1 : 1));
+            const balance = `${(balanceV > 0 ? balanceV : -1 * balanceV).toFixed(environment.decimalPlaces)} ${balanceV > 0 ? 'Dr' : 'Cr'}`;
+            items.push({
+              id,
+              name, 
+              debit: debit.toFixed(environment.decimalPlaces),
+              credit: credit.toFixed(environment.decimalPlaces),
+              opBalance,
+              balance,
+            })
+          }
+          this.ledgerRows = {
+            items,
+            totalItems: items.length,
+            pageIndex: 0
+          };
+          this.loading = false;
+        });
+
       }
 
     });
-    this.loading = false;
 
   }
 

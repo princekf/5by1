@@ -123,48 +123,49 @@ export class VoucherController {
   }
 
   private ledgerSummaryAggregates = [
-    {'$unwind': '$transactions'},
     {
-      '$lookup':
- {
-   'from': 'Ledger',
-   'localField': 'transactions.ledgerId',
-   'foreignField': '_id',
-   'as': 'ledger'
- }
+        '$project': {
+            'transactions': 1
+        }
     },
-    {'$unwind': '$ledger'},
+    { '$unwind': '$transactions' },
     {
-      '$group': {
-        '_id': '$transactions.ledgerId',
-        'debit': {'$sum': {
-          '$switch': {
-            'branches': [
-              {
-                'case': { '$eq': [ '$transactions.type', 'Debit' ] },
-                'then': '$transactions.amount'
-              }
-            ],
-            'default': 0
-          }
-        }},
-        'credit': {'$sum': {
-          '$switch': {
-            'branches': [
-              {
-                'case': { '$eq': [ '$transactions.type', 'Credit' ] },
-                'then': '$transactions.amount'
-              }
-            ],
-            'default': 0
-          }
-        }},
-        'ledgerId': {'$first': '$ledger._id'},
-        'ledger': {'$first': '$ledger.name'},
-        'ledgerGroupId': {'$first': '$ledger.ledgerGroupId'}
+        '$project': {
+            'ledgerId': '$transactions.ledgerId',
+            'type': '$transactions.type',
+            'credit': {'$cond': [{'$eq': ['$transactions.type', 'Credit']}, '$transactions.amount', 0]},
+            'debit': {'$cond': [{'$eq': ['$transactions.type', 'Debit']}, '$transactions.amount', 0]}
+        }
+    },
+    {
+        '$group': {
+            '_id': '$ledgerId',
+            'credit': {'$sum': '$credit'},
+            'debit': {'$sum': '$debit'}
+        }
+    },
+    {
+      '$lookup': {
+        'from': 'Ledger',
+        'localField': '_id',
+        'foreignField': '_id',
+        'as': 'ledgers'
       }
     },
-  ];
+    { '$unwind': '$ledgers' },
+    {
+        '$project': {
+            'id': '$_id',
+            'credit': '$credit',
+            'debit': '$debit',
+            'name': '$ledgers.name',
+            'code': '$ledgers.code',
+            'obAmount': '$ledgers.obAmount',
+            'obType': '$ledgers.obType',
+            'ledgerGroupId': '$ledgers.ledgerGroupId',
+        }
+    },
+];
 
   @get(`${VOUCHER_API}/ledgerSummary`)
   @response(200, {

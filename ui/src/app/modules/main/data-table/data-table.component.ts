@@ -150,7 +150,6 @@ export class DataTableComponent {
     });
     this.loadComponent();
 
-
     if (this.mainService.isMobileView()) {
 
       const COLUMN_COUNT_MOBILE_VIEW = 3;
@@ -158,7 +157,6 @@ export class DataTableComponent {
       this.displayedColumns = this.extraColumns.splice(0, COLUMN_COUNT_MOBILE_VIEW);
 
     }
-
 
   }
 
@@ -211,7 +209,9 @@ export class DataTableComponent {
       return;
 
     }
+
     const [ selectedObj ] = <Array<{id: string}>> this.selection.selected;
+    this.selection.clear();
     this.router.navigate([ this.editUri ], { queryParams: {id: selectedObj.id,
       burl: this.router.url} });
 
@@ -226,6 +226,7 @@ export class DataTableComponent {
     }
 
     const selectedObjs = <Array<{id: string}>> this.selection.selected;
+    this.selection.clear()
     const ids = [];
     selectedObjs.forEach((objP) => ids.push(objP.id));
     this.router.navigate([ this.deleteUri ], { queryParams: {ids: ids.join(),

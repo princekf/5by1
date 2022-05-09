@@ -1,7 +1,10 @@
 export interface LedgerSummaryTB{
-    ledgerId: string,
-    ledger: string,
-    ledgerGroupId: string,
-    debit: number,
-    credit: number,
+    id: string;
+    name: string;
+    code: string;
+    ledgerGroupId: string;
+    debit: number;
+    obAmount: number;
+    obType: string;
+    credit: number;
 }

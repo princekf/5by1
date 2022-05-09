@@ -26,10 +26,11 @@ export class HeaderComponent implements OnInit {
     if (userS) {
 
       const sessionUser: SessionUser = JSON.parse(userS);
-      const {branch, finYear, user} = sessionUser;
+      const {branch, finYear, user, company} = sessionUser;
+      
       if (branch && finYear) {
 
-        this.displayName = `${branch.name} @ ${finYear.name}`;
+        this.displayName = `${company.name}<br/>${branch.name} @ ${finYear.name}`;
 
       } else {
 
