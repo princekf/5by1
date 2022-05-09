@@ -103,6 +103,7 @@ export class LedgerReportComponent implements OnInit {
 
 
   constructor(private activatedRoute: ActivatedRoute,
+              private readonly route: ActivatedRoute,
               private voucherService: VoucherService,
               private ledgerService: LedgerService,
               private router: Router) { }
@@ -306,9 +307,18 @@ export class LedgerReportComponent implements OnInit {
   ngOnInit(): void {
 
     this.filterItem = new FilterItem(FilterLedgerReportComponent, {});
+    const tId = this.route.snapshot.queryParamMap.get('id');
+    
+    
     this.activatedRoute.queryParams.subscribe((value) => {
 
-      const { whereS, order, rtype, ...qParam } = value;
+      const { id, whereS, order, rtype, ...qParam } = value;
+      if (id) {
+        
+        this.router.navigate([ '/reports/ledger' ], { queryParams: {whereS: `{"transactions.ledgerId":{"like":"${id}","options":"i"}}`} });
+        return;
+  
+      }
       this.reportType = rtype;
       this.queryParams = qParam;
       if (typeof order === 'string') {
@@ -335,8 +345,11 @@ export class LedgerReportComponent implements OnInit {
 
       } else {
 
+        this.loading = true;
         this.voucherService.fetchLedgerSummary().subscribe((result) => {
 
+          this.editUri = '/reports/ledger';
+          this.deleteUri = null;
           this.displayedColumns = [ 'name', 'debit', 'credit', 'opBalance', 'balance' ];
           const items: Array<LedgerReportFields> = [];
           for(const res of result){
@@ -358,13 +371,12 @@ export class LedgerReportComponent implements OnInit {
             totalItems: items.length,
             pageIndex: 0
           };
-          
+          this.loading = false;
         });
 
       }
 
     });
-    this.loading = false;
 
   }
 
