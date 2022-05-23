@@ -442,7 +442,7 @@ export class LedgerReportComponent implements OnInit {
     items[0].forEach((element) => {
 
 
-      const rData = [ element.number, element.date, element.type, element.ledger, element.debit,
+      const rData = [ element.number, dayjs(element.date).format(environment.dateFormat), element.type, element.name, element.debit,
         element.credit, element.details ];
       rData1.push(rData);
 
