@@ -5,6 +5,7 @@ import { LOCAL_USER_KEY } from '@fboutil/constants';
 import { ACCESS_TOKEN_ID } from '@shared/Constants';
 import { SessionUser } from '@shared/util/session-user';
 
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -17,7 +18,8 @@ export class HeaderComponent implements OnInit {
   displayName: string;
 
   constructor(private readonly mainService: MainService,
-    private router: Router) {}
+    private dataservice: MainService,
+    private router: Router) { }
 
   ngOnInit(): void {
 
@@ -26,11 +28,12 @@ export class HeaderComponent implements OnInit {
     if (userS) {
 
       const sessionUser: SessionUser = JSON.parse(userS);
-      const {branch, finYear, user, company} = sessionUser;
-      
+      const { branch, finYear, user, company } = sessionUser;
+
       if (branch && finYear) {
 
         this.displayName = `${company.name}<br/>${branch.name} @ ${finYear.name}`;
+
 
       } else {
 
@@ -39,32 +42,59 @@ export class HeaderComponent implements OnInit {
       }
 
     }
+    this.getData();
 
   }
 
-  toggleLeftMenuDrawer = ():void => {
+  getData(): void {
+
+    this.dataservice.getData().subscribe((response) => {
+
+      if (response) {
+
+        const sessionUser: SessionUser = JSON.parse(response);
+        const { branch, finYear, user, company } = sessionUser;
+        if (branch && finYear) {
+
+          this.displayName = `${company.name}<br/>${branch.name} @ ${finYear.name}`;
+
+
+        } else {
+
+          this.displayName = user.name;
+
+        }
+
+      }
+
+    });
+
+  }
+
+  toggleLeftMenuDrawer = (): void => {
 
     this.mainService.toggleLeftMenuDrawer();
 
   }
 
-  showLeftMenuDrawer = ():void => {
+  showLeftMenuDrawer = (): void => {
 
     this.mainService.showLeftMenuDrawer();
 
   }
 
-  doLogout = ():void => {
+  doLogout = (): void => {
 
     localStorage.removeItem(ACCESS_TOKEN_ID);
     this.router.navigate([ '/login' ]);
 
   };
 
-  goToMyAccount = ():void => {
+  goToMyAccount = (): void => {
 
     this.router.navigate([ '/my-account' ]);
 
   };
+
 
 }

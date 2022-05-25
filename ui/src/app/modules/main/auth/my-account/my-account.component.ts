@@ -9,13 +9,19 @@ import * as dayjs from 'dayjs';
 import { ToastrService } from 'ngx-toastr';
 import { ACCESS_TOKEN_ID } from '@shared/Constants';
 import { Router } from '@angular/router';
+import { MainService } from '@fboservices/main.service';
+import { LOCAL_USER_KEY } from '@fboutil/constants';
+
 
 @Component({
   selector: 'app-my-account',
   templateUrl: './my-account.component.html',
   styleUrls: [ './my-account.component.scss' ]
 })
+
+
 export class MyAccountComponent implements OnInit {
+
 
   loading = true;
 
@@ -31,11 +37,14 @@ export class MyAccountComponent implements OnInit {
 
   finYears: Array<FinYear>;
 
+  sendNewData: string
+
   displayedColumns: string[] = [ 'name', 'code', 'startDate', 'endDate', 'action' ];
 
   constructor(private userService: UserService,
-              private readonly toastr: ToastrService,
-              private readonly router: Router) { }
+    private dataservice: MainService,
+    private readonly toastr: ToastrService,
+    private readonly router: Router) { }
 
   ngOnInit(): void {
 
@@ -62,11 +71,14 @@ export class MyAccountComponent implements OnInit {
   changeFinYear = (finYearC: FinYear): void => {
 
     this.loading = true;
-    this.userService.changeFinYear(finYearC.id).subscribe((authResp) => {
+    this.userService.changeFinYear(finYearC.id).subscribe(async(authResp) => {
 
       this.loading = false;
       localStorage.setItem(ACCESS_TOKEN_ID, authResp.token);
       this.toastr.success(`Switched to financial year ${finYearC.name}`, 'Switched finacial year.');
+      const userResp = await this.userService.findMe().toPromise();
+      localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(userResp));
+      this.sendData(localStorage.getItem(LOCAL_USER_KEY));
       this.router.navigate([ '/' ]);
 
     }, (error) => {
@@ -79,4 +91,12 @@ export class MyAccountComponent implements OnInit {
 
   }
 
+  sendData(data: string): void {
+
+    this.dataservice.sendData(data);
+
+  }
+
+
 }
+
