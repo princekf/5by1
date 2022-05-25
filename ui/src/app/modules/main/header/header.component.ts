@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
   displayName: string;
 
   constructor(private readonly mainService: MainService,
-    private dataservice: MainService,
+    private dataService: MainService,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -42,13 +42,13 @@ export class HeaderComponent implements OnInit {
       }
 
     }
-    this.getData();
+    this.fetchUserInfo();
 
   }
 
-  getData(): void {
+  fetchUserInfo(): void {
 
-    this.dataservice.getData().subscribe((response) => {
+    this.dataService.fetchUserInfo().subscribe((response) => {
 
       if (response) {
 

@@ -42,7 +42,7 @@ export class MyAccountComponent implements OnInit {
   displayedColumns: string[] = [ 'name', 'code', 'startDate', 'endDate', 'action' ];
 
   constructor(private userService: UserService,
-    private dataservice: MainService,
+    private dataService: MainService,
     private readonly toastr: ToastrService,
     private readonly router: Router) { }
 
@@ -78,7 +78,7 @@ export class MyAccountComponent implements OnInit {
       this.toastr.success(`Switched to financial year ${finYearC.name}`, 'Switched finacial year.');
       const userResp = await this.userService.findMe().toPromise();
       localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(userResp));
-      this.sendData(localStorage.getItem(LOCAL_USER_KEY));
+      this.setUserInfo(localStorage.getItem(LOCAL_USER_KEY));
       this.router.navigate([ '/' ]);
 
     }, (error) => {
@@ -91,9 +91,9 @@ export class MyAccountComponent implements OnInit {
 
   }
 
-  sendData(data: string): void {
+  setUserInfo(data: string): void {
 
-    this.dataservice.sendData(data);
+    this.dataService.setUserInfo(data);
 
   }
 

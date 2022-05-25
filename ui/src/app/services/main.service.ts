@@ -72,13 +72,13 @@ export class MainService {
 
   data: Observable<string> = this.dataSource.asObservable();
 
-  sendData(data: string): void {
+  setUserInfo(data: string): void {
 
     this.dataSource.next(data);
 
   }
 
-  getData(): Observable<string> {
+  fetchUserInfo(): Observable<string> {
 
     return this.dataSource.asObservable();
 
