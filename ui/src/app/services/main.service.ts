@@ -68,4 +68,21 @@ export class MainService {
 
   }
 
+  private dataSource: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
+  data: Observable<string> = this.dataSource.asObservable();
+
+  setUserInfo(data: string): void {
+
+    this.dataSource.next(data);
+
+  }
+
+  fetchUserInfo(): Observable<string> {
+
+    return this.dataSource.asObservable();
+
+  }
+
+
 }

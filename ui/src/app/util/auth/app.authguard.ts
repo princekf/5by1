@@ -12,15 +12,15 @@ export class AppAuthGuard implements CanActivate {
   constructor(private router: Router,
     private userService: UserService) { }
 
-  private createUrlTree = (state: RouterStateSnapshot):UrlTree => {
+  private createUrlTree = (state: RouterStateSnapshot): UrlTree => {
 
     const urlTree = this.router.parseUrl('/login');
-    urlTree.queryParams = {burl: state.url};
+    urlTree.queryParams = { burl: state.url };
     return urlTree;
 
   }
 
-  canActivate = async(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Promise<boolean | UrlTree> => {
+  canActivate = async(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> => {
 
     if (!localStorage.getItem(ACCESS_TOKEN_ID)) {
 
