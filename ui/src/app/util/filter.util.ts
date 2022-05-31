@@ -131,6 +131,11 @@ export const createQueryStringFromFilterForm =
     }
 
   }
+  if(Object.keys(where).length === 0){
+
+    return null;
+    
+  }
   return JSON.stringify(where);
 
 };
