@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Voucher } from '@shared/entity/accounting/voucher';
 import { VOUCHER_API_URI } from '@shared/server-apis';
 import { LedgerSummaryTB } from '@shared/util/trial-balance-ledger-summary';
+import { LedgerGroupSummary } from '@shared/util/ledger-group-summary';
 import { BaseHTTPService } from '@fboservices/base-http.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -40,6 +41,14 @@ export class VoucherService extends BaseHTTPService<Voucher> {
   public fetchLedgerSummary(): Observable<Array<LedgerSummaryTB>> {
 
     return this.http.get<Array<LedgerSummaryTB>>(`${this.API_URI}/ledgerSummary`).pipe(
+      catchError((err) => throwError(err))
+    );
+
+  }
+
+  public fetchLedgerGroupSummary(): Observable<Array<LedgerGroupSummary>> {
+
+    return this.http.get<Array<LedgerGroupSummary>>(`${this.API_URI}/ledgerGroupSummary`).pipe(
       catchError((err) => throwError(err))
     );
 

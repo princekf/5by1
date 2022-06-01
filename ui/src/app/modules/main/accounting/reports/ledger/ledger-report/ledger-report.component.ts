@@ -230,7 +230,7 @@ export class LedgerReportComponent implements OnInit {
         const ledgerMap: Record<string, Ledger> = {};
         ledgers.forEach((ldg) => (ledgerMap[ldg.id] = ldg));
         const sLedger = ledgerMap[ledgerId];
-        this.tableHeader = `Ledger Report -- ${sLedger?.name}`;
+        this.tableHeader = `Ledger Report -- ${sLedger?.name ?? ''}`;
         let totalDebit = 0;
         let totalCredit = 0;
         items.forEach((item, idx: number) => {
@@ -309,7 +309,6 @@ export class LedgerReportComponent implements OnInit {
   ngOnInit(): void {
 
     this.filterItem = new FilterItem(FilterLedgerReportComponent, {});
-    const tId = this.route.snapshot.queryParamMap.get('id');
     
     
     this.activatedRoute.queryParams.subscribe((value) => {
@@ -333,6 +332,7 @@ export class LedgerReportComponent implements OnInit {
 
       }
       if (whereS) {
+
         this.showSummaryType = true;
         this.loading = true;
         this.displayedColumns = [ 'number', 'date', 'type', 'name', 'debit', 'credit', 'details' ];
@@ -356,6 +356,7 @@ export class LedgerReportComponent implements OnInit {
           this.displayedColumns = [ 'name', 'debit', 'credit', 'opBalance', 'balance' ];
           const items: Array<LedgerReportFields> = [];
           for(const res of result){
+
             const {id, name, debit, credit, obAmount, obType} = res;
             const opBalance = `${obAmount} ${obType === 'Credit' ? 'Cr' : 'Dr'}`;
             const balanceV = debit - credit + (obAmount * (obType === 'Credit' ? -1 : 1));
@@ -368,6 +369,7 @@ export class LedgerReportComponent implements OnInit {
               opBalance,
               balance,
             })
+            
           }
           this.ledgerRows = {
             items,
