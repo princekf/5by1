@@ -5,6 +5,7 @@ import {Voucher} from '../models/voucher.model';
 import {VoucherRepository} from '../repositories/voucher.repository';
 import { VOUCHER_API } from '@shared/server-apis';
 import { LedgerSummaryTB } from '@shared/util/trial-balance-ledger-summary';
+import { LedgerGroupSummary } from '@shared/util/ledger-group-summary';
 
 import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
@@ -27,7 +28,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { TrialBalanceLedgerSummaryRespSchema } from './specs/common-specs';
+import { LedgerGroupSummaryRespSchema, TrialBalanceLedgerSummaryRespSchema } from './specs/common-specs';
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -122,6 +123,79 @@ export class VoucherController {
 
   }
 
+  private ledgerGroupSummaryAggregates = [
+    {
+        '$project': {
+            'transactions': 1
+        }
+    },
+    { '$unwind': '$transactions' },
+    {
+        '$project': {
+            'ledgerId': '$transactions.ledgerId',
+            'type': '$transactions.type',
+            'credit': {'$cond': [{'$eq': ['$transactions.type', 'Credit']}, '$transactions.amount', 0]},
+            'debit': {'$cond': [{'$eq': ['$transactions.type', 'Debit']}, '$transactions.amount', 0]}
+        }
+    },
+    {
+      '$lookup': {
+        'from': 'Ledger',
+        'localField': 'ledgerId',
+        'foreignField': '_id',
+        'as': 'ledgers'
+      }
+    },
+    { '$unwind': '$ledgers' },
+    {
+      '$lookup': {
+        'from': 'LedgerGroup',
+        'localField': 'ledgers.ledgerGroupId',
+        'foreignField': '_id',
+        'as': 'ledgerGroups'
+      }
+    },
+    { '$unwind': '$ledgerGroups' },
+
+    {
+        '$group': {
+            '_id': '$ledgers._id',
+            'lname': {'$first': '$ledgers.name'},
+            'lgid': {'$first': '$ledgerGroups._id'},
+            'name': {'$first': '$ledgerGroups.name'},
+            'code': {'$first': '$ledgerGroups.code'},
+            'credit': {'$sum': '$credit'},
+            'debit': {'$sum': '$debit'},
+            'obAmount': {'$first': '$ledgers.obAmount'},
+            'obType': {'$first': '$ledgers.obType'}
+        }
+    },
+    {
+        '$project': {
+            'ledgerId': '$_id',
+            'lGroupId': '$lgid',
+            'name': '$name',
+            'code': '$code',
+            'credit': '$credit',
+            'debit': '$debit',
+            'obCredit': {'$cond': [{'$eq': ['$obType', 'Credit']}, '$obAmount', 0]},
+            'obDebit': {'$cond': [{'$eq': ['$obType', 'Debit']}, '$obAmount', 0]}
+        }
+    },
+    {
+        '$group': {
+            '_id': '$lGroupId',
+            'id': {'$first': '$lGroupId'},
+            'name': {'$first': '$name'},
+            'code': {'$first': '$code'},
+            'credit': {'$sum': '$credit'},
+            'debit': {'$sum': '$debit'},
+            'obCredit': {'$sum': '$obCredit'},
+            'obDebit': {'$sum': '$obDebit'}
+        }
+    },
+];
+
   private ledgerSummaryAggregates = [
     {
         '$project': {
@@ -169,7 +243,7 @@ export class VoucherController {
 
   @get(`${VOUCHER_API}/ledgerSummary`)
   @response(200, {
-    description: 'Ledger summary for trial balance',
+    description: 'Ledger summary',
     content: {
       'application/json': {schema: TrialBalanceLedgerSummaryRespSchema},
     },
@@ -180,6 +254,23 @@ export class VoucherController {
 
     const pQuery = await this.voucherRepository.execute(this.voucherRepository.modelClass.name, 'aggregate', this.ledgerSummaryAggregates);
     const lgsR = <Array<LedgerSummaryTB>> await pQuery.toArray();
+    return lgsR;
+
+  }
+
+  @get(`${VOUCHER_API}/ledgerGroupSummary`)
+  @response(200, {
+    description: 'Ledger group summary',
+    content: {
+      'application/json': {schema: LedgerGroupSummaryRespSchema},
+    },
+  })
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
+  async ledgerGroupSummary(): Promise<LedgerGroupSummary[]> {
+
+    const pQuery = await this.voucherRepository.execute(this.voucherRepository.modelClass.name, 'aggregate', this.ledgerGroupSummaryAggregates);
+    const lgsR = <Array<LedgerGroupSummary>> await pQuery.toArray();
     return lgsR;
 
   }

@@ -17,3 +17,6 @@
 * `yarn install:all`
 * `yarn start`
 * some times there will be errors with shared imports in ui or server project then do `yarn upgrade @shared` (in ui and server fodlers)
+
+### Start MongoDB
+* In MAC : `sudo brew services start mongodb-community@4.4`

@@ -17,6 +17,7 @@ import * as Excel from 'exceljs';
 import * as saveAs from 'file-saver';
 import JSPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { LedgerGroupSummary } from '@shared/util/ledger-group-summary';
 interface LedgerGroupReportFields {
   id: string;
   number: string;
@@ -27,6 +28,16 @@ interface LedgerGroupReportFields {
   debit: string;
   credit: string;
   details: string;
+}
+interface LedgerGroupSummaryR {
+  id: string;
+    name: string;
+    code: string;
+    debit: string;
+    credit: string;
+    obCredit: string;
+    obDebit: string;
+    balance: string;
 }
 interface RowSummary {name: string, credit: number, debit: number}
 @Component({
@@ -44,7 +55,7 @@ export class LedgerGroupReportComponent implements OnInit {
 
   sortDisabledColumns: string[] = [ 'date' ];
 
-  numberColumns: string[] = [ 'debit', 'credit' ];
+  numberColumns: string[] = [ 'debit', 'credit', 'obCredit', 'obDebit', 'balance' ];
 
   reportType = '';
 
@@ -80,13 +91,17 @@ export class LedgerGroupReportComponent implements OnInit {
     ledger: 'Ledger',
     debit: 'Debit',
     credit: 'Credit',
+    name: 'Name',
+    obDebit: 'OB Debit',
+    obCredit: 'OB Credit',
+    balance: 'Balance'
   };
 
   queryParams: QueryData = {};
 
   loading = true;
 
-  ledgerRows: ListQueryRespType<LedgerGroupReportFields> = {
+  ledgerRows: ListQueryRespType<LedgerGroupReportFields | LedgerGroupSummaryR> = {
     totalItems: 0,
     pageIndex: 0,
     items: []
@@ -94,6 +109,9 @@ export class LedgerGroupReportComponent implements OnInit {
 
   filterItem: FilterItem;
 
+  deleteUri: string = null;
+
+  editUri: string = null;
 
   constructor(private activatedRoute: ActivatedRoute,
               private voucherService: VoucherService,
@@ -335,7 +353,13 @@ export class LedgerGroupReportComponent implements OnInit {
     this.filterItem = new FilterItem(FilterLedgerGroupReportComponent, {});
     this.activatedRoute.queryParams.subscribe((value) => {
 
-      const { whereS, order, rtype, ...qParam } = value;
+      const { id, whereS, order, rtype, ...qParam } = value;
+      if (id) {
+        
+        this.router.navigate([ '/reports/ledger-group' ], { queryParams: {whereS: `{"ledgerGroupId":{"like":"${id}","options":"i"}}`} });
+        return;
+  
+      }
       this.reportType = rtype;
       this.queryParams = qParam;
       if (typeof order === 'string') {
@@ -350,6 +374,9 @@ export class LedgerGroupReportComponent implements OnInit {
       if (whereS) {
 
         this.loading = true;
+        this.displayedColumns = [ 'number', 'date', 'type', 'primaryLedger', 'ledger', 'debit', 'credit', 'details' ];
+        this.deleteUri = '/voucher/delete';
+        this.editUri = '/voucher/edit';
         this.queryParams.where = JSON.parse(whereS);
         const ledgerGroupParam = this.queryParams.where.ledgerGroupId as {like: string};
         const againstParam = this.queryParams.where.againstL as {ne: string};
@@ -357,10 +384,39 @@ export class LedgerGroupReportComponent implements OnInit {
         const againstId = againstParam?.ne;
         this.loadData(ledgerGroupId, againstId);
 
+      } else {
+
+        this.editUri = '/reports/ledger-group';
+        this.deleteUri = null;
+        this.displayedColumns = [ 'name', 'debit', 'credit', 'obDebit', 'obCredit', 'balance' ];
+        this.tableHeader = 'Ledger Group Summary Report';          
+        this.voucherService.fetchLedgerGroupSummary().subscribe((result) => {
+          const items:Array<LedgerGroupSummaryR> = [];
+          const dpL = environment.decimalPlaces;
+          result.forEach((res) => {
+            const {id, name, code, credit, debit, obCredit, obDebit} = res;
+            const balanceI = credit + obCredit - debit - obDebit;
+            const balance = `${Math.abs(balanceI).toFixed(dpL)} ${balanceI > 0 ? 'Cr' : 'Dr'}`;
+            items.push({
+              id,
+              name,
+              code,
+              credit: credit.toFixed(dpL),
+              debit: debit.toFixed(dpL),
+              obCredit: obCredit.toFixed(dpL),
+              obDebit: obDebit.toFixed(dpL),
+              balance});
+          });
+          this.ledgerRows = {
+            items,
+            totalItems: items.length,
+            pageIndex: 0
+          };
+          this.loading = false;
+        });
       }
 
     });
-    this.loading = false;
 
   }
 
