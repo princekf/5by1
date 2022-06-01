@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { MyAccountComponent } from './my-account.component';
 import { MyAccountRoutingModule } from './my-account-routing.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import {MatTableModule} from '@angular/material/table';
-import {MatIconModule} from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [ MyAccountComponent ],
@@ -12,4 +13,6 @@ import {MatIconModule} from '@angular/material/icon';
     CommonModule, MyAccountRoutingModule, NgxSkeletonLoaderModule, MatTableModule, MatIconModule
   ]
 })
-export class MyAccountModule { }
+export class MyAccountModule {
+
+}
