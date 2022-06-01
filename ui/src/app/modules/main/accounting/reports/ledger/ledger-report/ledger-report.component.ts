@@ -309,7 +309,6 @@ export class LedgerReportComponent implements OnInit {
   ngOnInit(): void {
 
     this.filterItem = new FilterItem(FilterLedgerReportComponent, {});
-    const tId = this.route.snapshot.queryParamMap.get('id');
     
     
     this.activatedRoute.queryParams.subscribe((value) => {
