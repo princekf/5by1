@@ -12,7 +12,7 @@ export class ProductService extends BaseHTTPService<Product> {
 
   public API_URI = PRODUCT_API_URI;
 
-  public upsert(product:Product):Observable<void> {
+  public upsert(product:Product):Observable<Product | void> {
 
     const {id, category, ...product2} = product;
     if (category && category.id) {

@@ -40,3 +40,5 @@ export * from './voucher.controller';
 export * from './cost-centre.controller';
 export * from './transaction-ledger.controller';
 export * from './transaction-cost-centre.controller';
+export * from './document.controller';
+export * from './voucher-document.controller';

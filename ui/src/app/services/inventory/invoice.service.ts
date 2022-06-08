@@ -35,7 +35,7 @@ export class InvoiceService extends BaseHTTPService<Invoice> {
 
   }
 
-  public upsert = (invoice:Invoice):Observable<void> => {
+  public upsert = (invoice:Invoice):Observable<Invoice | void> => {
 
     const {id, customer, dueDate, invoiceDate, saleItems, ...invoice2} = invoice;
     invoice2.customerId = customer?.id ?? '';

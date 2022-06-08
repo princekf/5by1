@@ -125,18 +125,18 @@ export class VoucherController {
 
   private ledgerGroupSummaryAggregates = [
     {
-        '$project': {
-            'transactions': 1
-        }
+      '$project': {
+        'transactions': 1
+      }
     },
     { '$unwind': '$transactions' },
     {
-        '$project': {
-            'ledgerId': '$transactions.ledgerId',
-            'type': '$transactions.type',
-            'credit': {'$cond': [{'$eq': ['$transactions.type', 'Credit']}, '$transactions.amount', 0]},
-            'debit': {'$cond': [{'$eq': ['$transactions.type', 'Debit']}, '$transactions.amount', 0]}
-        }
+      '$project': {
+        'ledgerId': '$transactions.ledgerId',
+        'type': '$transactions.type',
+        'credit': {'$cond': [ {'$eq': [ '$transactions.type', 'Credit' ]}, '$transactions.amount', 0 ]},
+        'debit': {'$cond': [ {'$eq': [ '$transactions.type', 'Debit' ]}, '$transactions.amount', 0 ]}
+      }
     },
     {
       '$lookup': {
@@ -158,65 +158,65 @@ export class VoucherController {
     { '$unwind': '$ledgerGroups' },
 
     {
-        '$group': {
-            '_id': '$ledgers._id',
-            'lname': {'$first': '$ledgers.name'},
-            'lgid': {'$first': '$ledgerGroups._id'},
-            'name': {'$first': '$ledgerGroups.name'},
-            'code': {'$first': '$ledgerGroups.code'},
-            'credit': {'$sum': '$credit'},
-            'debit': {'$sum': '$debit'},
-            'obAmount': {'$first': '$ledgers.obAmount'},
-            'obType': {'$first': '$ledgers.obType'}
-        }
+      '$group': {
+        '_id': '$ledgers._id',
+        'lname': {'$first': '$ledgers.name'},
+        'lgid': {'$first': '$ledgerGroups._id'},
+        'name': {'$first': '$ledgerGroups.name'},
+        'code': {'$first': '$ledgerGroups.code'},
+        'credit': {'$sum': '$credit'},
+        'debit': {'$sum': '$debit'},
+        'obAmount': {'$first': '$ledgers.obAmount'},
+        'obType': {'$first': '$ledgers.obType'}
+      }
     },
     {
-        '$project': {
-            'ledgerId': '$_id',
-            'lGroupId': '$lgid',
-            'name': '$name',
-            'code': '$code',
-            'credit': '$credit',
-            'debit': '$debit',
-            'obCredit': {'$cond': [{'$eq': ['$obType', 'Credit']}, '$obAmount', 0]},
-            'obDebit': {'$cond': [{'$eq': ['$obType', 'Debit']}, '$obAmount', 0]}
-        }
+      '$project': {
+        'ledgerId': '$_id',
+        'lGroupId': '$lgid',
+        'name': '$name',
+        'code': '$code',
+        'credit': '$credit',
+        'debit': '$debit',
+        'obCredit': {'$cond': [ {'$eq': [ '$obType', 'Credit' ]}, '$obAmount', 0 ]},
+        'obDebit': {'$cond': [ {'$eq': [ '$obType', 'Debit' ]}, '$obAmount', 0 ]}
+      }
     },
     {
-        '$group': {
-            '_id': '$lGroupId',
-            'id': {'$first': '$lGroupId'},
-            'name': {'$first': '$name'},
-            'code': {'$first': '$code'},
-            'credit': {'$sum': '$credit'},
-            'debit': {'$sum': '$debit'},
-            'obCredit': {'$sum': '$obCredit'},
-            'obDebit': {'$sum': '$obDebit'}
-        }
+      '$group': {
+        '_id': '$lGroupId',
+        'id': {'$first': '$lGroupId'},
+        'name': {'$first': '$name'},
+        'code': {'$first': '$code'},
+        'credit': {'$sum': '$credit'},
+        'debit': {'$sum': '$debit'},
+        'obCredit': {'$sum': '$obCredit'},
+        'obDebit': {'$sum': '$obDebit'}
+      }
     },
-];
+  ];
 
   private ledgerSummaryAggregates = [
     {
-        '$project': {
-            'transactions': 1
-        }
+      '$project': {
+        'transactions': 1
+      }
     },
     { '$unwind': '$transactions' },
     {
-        '$project': {
-            'ledgerId': '$transactions.ledgerId',
-            'type': '$transactions.type',
-            'credit': {'$cond': [{'$eq': ['$transactions.type', 'Credit']}, '$transactions.amount', 0]},
-            'debit': {'$cond': [{'$eq': ['$transactions.type', 'Debit']}, '$transactions.amount', 0]}
-        }
+      '$project': {
+        'ledgerId': '$transactions.ledgerId',
+        'type': '$transactions.type',
+        'credit': {'$cond': [ {'$eq': [ '$transactions.type', 'Credit' ]}, '$transactions.amount', 0 ]},
+        'debit': {'$cond': [ {'$eq': [ '$transactions.type', 'Debit' ]}, '$transactions.amount', 0 ]}
+      }
     },
     {
-        '$group': {
-            '_id': '$ledgerId',
-            'credit': {'$sum': '$credit'},
-            'debit': {'$sum': '$debit'}
-        }
+      '$group': {
+        '_id': '$ledgerId',
+        'credit': {'$sum': '$credit'},
+        'debit': {'$sum': '$debit'}
+      }
     },
     {
       '$lookup': {
@@ -228,18 +228,18 @@ export class VoucherController {
     },
     { '$unwind': '$ledgers' },
     {
-        '$project': {
-            'id': '$_id',
-            'credit': '$credit',
-            'debit': '$debit',
-            'name': '$ledgers.name',
-            'code': '$ledgers.code',
-            'obAmount': '$ledgers.obAmount',
-            'obType': '$ledgers.obType',
-            'ledgerGroupId': '$ledgers.ledgerGroupId',
-        }
+      '$project': {
+        'id': '$_id',
+        'credit': '$credit',
+        'debit': '$debit',
+        'name': '$ledgers.name',
+        'code': '$ledgers.code',
+        'obAmount': '$ledgers.obAmount',
+        'obType': '$ledgers.obType',
+        'ledgerGroupId': '$ledgers.ledgerGroupId',
+      }
     },
-];
+  ];
 
   @get(`${VOUCHER_API}/ledgerSummary`)
   @response(200, {
@@ -565,35 +565,35 @@ export class VoucherController {
     const {startDate, endDate} = finYear;
     const compoundVData:Record<string, Array<VoucherImport>> = {};
     const simepleVData:Array<VoucherImport> = [];
-    for (const [rowNum, vData] of vouchersData.entries()) {
+    for (const [ rowNum, vData ] of vouchersData.entries()) {
 
       const dayJsDate = dayjs.utc(vData.Date, 'DD-MM-YYYY');
-      if(!dayJsDate.isValid()){
+      if (!dayJsDate.isValid()) {
 
         throw new HttpErrors.UnprocessableEntity(`Please select a proper date for ${vData.Date}, ${vData.PrimaryLedger} at row ${rowNum + 1}.`);
 
       }
       const date = dayJsDate.toDate();
-      if(date < startDate || date > endDate){
+      if (date < startDate || date > endDate) {
 
         throw new HttpErrors.UnprocessableEntity(`Date should be within the fin year, ${vData.Date} a row ${rowNum + 1}`);
-        
+
       }
-      if(vData.Credit > 0 && vData.Debit > 0){
+      if (vData.Credit > 0 && vData.Debit > 0) {
 
         throw new HttpErrors.UnprocessableEntity(`Both credit and debit cannot be greater than 0 at a time, ${vData.Date} a row ${rowNum + 1}`);
 
       }
-      if(vData.Credit <= 0 && vData.Debit <= 0){
+      if (vData.Credit <= 0 && vData.Debit <= 0) {
 
         throw new HttpErrors.UnprocessableEntity(`One and only one of debit or credit should be greater than 0, ${vData.Date} a row ${rowNum + 1}`);
 
       }
 
-      if(vData.GroupCode){
+      if (vData.GroupCode) {
 
-        
-        if(!compoundVData[vData.GroupCode]){
+
+        if (!compoundVData[vData.GroupCode]) {
 
           compoundVData[vData.GroupCode] = [];
           compoundVData[vData.GroupCode].push(vData);
@@ -601,23 +601,23 @@ export class VoucherController {
         } else {
 
           const [ vData0 ] = compoundVData[vData.GroupCode];
-          if(vData0.Date !== vData.Date || vData0.PrimaryLedger !== vData.PrimaryLedger){
-            
+          if (vData0.Date !== vData.Date || vData0.PrimaryLedger !== vData.PrimaryLedger) {
+
             throw new HttpErrors.UnprocessableEntity(`Date and primary ledger should be same for compound ledgers, ${vData.Date} a row ${rowNum + 1}`);
-            
+
           }
-          if(!vData.Credit && vData0.Credit){
-            
+          if (!vData.Credit && vData0.Credit) {
+
             throw new HttpErrors.UnprocessableEntity(`Compound ledgers can have either debit value or credit value, ${vData.Date} a row ${rowNum + 1}`);
-            
+
           }
-          if(!vData.Debit && vData0.Debit){
-            
+          if (!vData.Debit && vData0.Debit) {
+
             throw new HttpErrors.UnprocessableEntity(`Compound ledgers can have either debit value or credit value, ${vData.Date} a row ${rowNum + 1}`);
-            
+
           }
           compoundVData[vData.GroupCode].push(vData);
-          
+
         }
 
       } else {
@@ -628,7 +628,7 @@ export class VoucherController {
 
     }
 
-    simepleVData.forEach(async (vData) => {
+    simepleVData.forEach(async(vData) => {
 
       const date = dayjs.utc(vData.Date, 'DD-MM-YYYY')
         .toDate();
@@ -664,9 +664,10 @@ export class VoucherController {
         transactions: [ pTransaction, cTransaction ]
       });
       await finYearRepository.updateById(finYear?.id ?? '', {extras: {lastVNo: nextVNo}});
+
     });
 
-    for(const groupId in compoundVData){
+    for (const groupId in compoundVData) {
 
       const compVDatas = compoundVData[groupId];
       const [ vData ] = compVDatas;
@@ -675,7 +676,7 @@ export class VoucherController {
       let totalCredit = 0;
       let totalDebit = 0;
       const cTransactions:Array<Partial<Transaction>> = [];
-      for(const [idx, compVData] of compVDatas.entries()){
+      for (const [ idx, compVData ] of compVDatas.entries()) {
 
         totalCredit += compVData.Credit;
         totalDebit += compVData.Debit;
@@ -687,6 +688,7 @@ export class VoucherController {
           amount,
         };
         cTransactions.push(cTransaction);
+
       }
       const date = dayjs.utc(vData.Date, 'DD-MM-YYYY')
         .toDate();
@@ -713,6 +715,7 @@ export class VoucherController {
         transactions: [ pTransaction, ...cTransactions ]
       });
       await finYearRepository.updateById(finYear?.id ?? '', {extras: {lastVNo: nextVNo}});
+
     }
 
   }

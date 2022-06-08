@@ -12,7 +12,7 @@ export class TaxService extends BaseHTTPService<Tax> {
 
   public API_URI = TAX_API_URI;
 
-  public upsert(tax:Tax):Observable<void> {
+  public upsert(tax:Tax):Observable<Tax | void> {
 
     const {id, ...tax2} = tax;
     if (id) {

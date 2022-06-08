@@ -13,7 +13,7 @@ export class CategoryService extends BaseHTTPService<Category> {
 
   public API_URI = CATEGORY_API_URI;
 
-  public upsert(category:Category):Observable<void> {
+  public upsert(category:Category):Observable<void | Category> {
 
     const {id, parent, unit, ...category2} = category;
     if (parent && parent.id) {

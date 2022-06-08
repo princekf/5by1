@@ -14,7 +14,7 @@ export class LedgerGroupService extends BaseHTTPService<LedgerGroup> {
 
   public API_URI = LEDGER_GROUP_API_URI;
 
-  public upsert(ledgerGroup:LedgerGroup):Observable<void> {
+  public upsert(ledgerGroup:LedgerGroup):Observable<LedgerGroup | void> {
 
     const {id, ...ledgerGroup2} = ledgerGroup;
     if (id) {

@@ -71,3 +71,6 @@ export const UNIT_API_URI = `${BASE_URI}${UNIT_API}`;
 
 export const STOCK_API = '/inv/stock';
 export const STOCK_API_URI = `${BASE_URI}${STOCK_API}`;
+
+export const DOCUMENT_API = '/common/documents';
+export const DOCUMENT_API_URI = `${BASE_URI}${DOCUMENT_API}`;

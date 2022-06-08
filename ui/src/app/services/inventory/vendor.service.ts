@@ -11,7 +11,7 @@ export class VendorService extends BaseHTTPService<Vendor> {
 
     public API_URI = VENDOR_API_URI;
 
-    public upsert(vendor:Vendor):Observable<void> {
+    public upsert(vendor:Vendor):Observable<Vendor | void> {
 
       const {id, ...vendor2} = vendor;
       if (id) {

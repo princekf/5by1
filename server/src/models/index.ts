@@ -24,3 +24,5 @@ export * from './ledger.model';
 export * from './voucher.model';
 export * from './cost-centre.model';
 export * from './transaction.model';
+export * from './document.model';
+export * from './voucher-document.model';

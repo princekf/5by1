@@ -11,7 +11,7 @@ export class CostCentreService extends BaseHTTPService<CostCentre> {
 
   public API_URI = COST_CENTRE_API_URI;
 
-  public upsert(ledger:CostCentre):Observable<void> {
+  public upsert(ledger:CostCentre):Observable<CostCentre | void> {
 
 
     const {id, ...ledger2} = ledger;

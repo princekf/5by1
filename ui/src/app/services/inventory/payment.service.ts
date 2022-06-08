@@ -12,7 +12,7 @@ export class PaymentService extends BaseHTTPService<Payment> {
 
   public API_URI = PAYMENT_API_URI;
 
-  public upsert(payment:Payment):Observable<void> {
+  public upsert(payment:Payment):Observable<Payment | void> {
 
     const {id, vendor, bill, bank, ...payment2} = payment;
     payment2.vendorId = vendor?.id ?? '';
