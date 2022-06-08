@@ -124,4 +124,12 @@ export class FilterLedgerReportComponent implements OnInit {
 
   extractNameOfObject = (idS: string): string => this.ledgersFiltered.find((ldgr) => ldgr.id === idS)?.name;
 
+  resetter = (): void => {
+
+    this.filterForm.controls['transactions.ledgerId'].reset();
+    this.filterForm.controls.againstL.reset();
+    this.filterForm.controls.date.reset();
+
+  }
+
 }
