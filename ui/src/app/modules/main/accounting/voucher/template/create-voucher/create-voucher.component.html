@@ -14,8 +14,8 @@
 
     <mat-form-field class="fbo-form-field-multi">
         <mat-label>Voucher date</mat-label>
-        <input matInput [matDatepicker]="voucherDatePicker" formControlName="date"
-        [min]="finYear.startDate" [max]="finYear.endDate">
+        <input matInput [matDatepicker]="voucherDatePicker" formControlName="date" [min]="finYear.startDate"
+            [max]="finYear.endDate">
         <mat-datepicker-toggle matSuffix [for]="voucherDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #voucherDatePicker></mat-datepicker>
         <mat-error *ngIf="fboForm.controls['date'].hasError('required')"> Voucher date is required </mat-error>
@@ -45,11 +45,10 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Amount </th>
             <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
                 <mat-form-field class="amount-transaction-field">
-                    <input matInput type="number" formControlName="amount" [ngClass]="{primayamount: i === 0}" [readonly]="i === 0" autocomplete="off">
-                    <button 
-                    [ngClass]="findCreditDebitStyle(i)"
-                     mat-flat-button matSuffix type="button"
-                     (click)="changeDebitCredit(i)">{{findTransactionType(i)}}</button>
+                    <input matInput type="number" formControlName="amount" [ngClass]="{primayamount: i === 0}"
+                        [readonly]="i === 0" autocomplete="off">
+                    <button [ngClass]="findCreditDebitStyle(i)" mat-flat-button matSuffix type="button"
+                        (click)="changeDebitCredit(i)">{{findTransactionType(i)}}</button>
                 </mat-form-field>
             </td>
         </ng-container>
@@ -93,9 +92,27 @@
         </tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="fiveby1-element-row"></tr>
     </table>
-
-  <p class="form-submit-container">
-    <button class="cancel-button" type="button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
-    <button class="submit-button" mat-button>save</button>
-  </p>
+    <div class="image-upload-container" appFileDragDrop (filesDropped)="handleFileUploadInput($event)">
+        <span mat-button class="drag-and-drop-title" (click)="openFileUpload()" mat-button>
+            Drag & drop documents or click here to upload
+        </span>
+        <input id="photoInput" name="selectedFiles" multiple (change)="handleFileUploadInput($event.target.files)"
+            style="display: none;" type="file" />
+        <mat-chip-list multiple>
+            <mat-chip *ngFor="let sFile of existingFiles" (removed)="removeExistingFile(sFile)">
+                {{sFile.name}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+        </mat-chip-list>
+        <mat-chip-list multiple>
+            <mat-chip *ngFor="let sFile of selectedFiles" (removed)="removeFile(sFile)">
+                {{sFile.name}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+        </mat-chip-list>
+    </div>
+    <p class="form-submit-container">
+        <button class="cancel-button" type="button" mat-button (click)="goToPreviousPage(route,router)">Cancel</button>
+        <button class="submit-button" mat-button>save</button>
+    </p>
 </form>

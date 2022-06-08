@@ -11,7 +11,7 @@ export class RevenueService extends BaseHTTPService<Revenue> {
 
 public API_URI = REVENUE_API_URI;
 
-public upsert(revenue:Revenue):Observable<void> {
+public upsert(revenue:Revenue):Observable<Revenue | void> {
 
   const {id, customer, invoice, bank, ...revenue2} = revenue;
   revenue2.customerId = customer?.id ?? '';

@@ -11,7 +11,7 @@ export class CustomerService extends BaseHTTPService<Customer> {
 
     public API_URI = CUSTOMER_API_URI;
 
-    public upsert(customer:Customer):Observable<void> {
+    public upsert(customer:Customer):Observable<void | Customer> {
 
       const {id, ...customer2} = customer;
       if (id) {

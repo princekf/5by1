@@ -53,6 +53,10 @@
     "!*/__tests__"
   ],
   "dependencies": {
+    "@aws-sdk/hash-node": "3.78.0",
+    "@aws-sdk/protocol-http": "3.78.0",
+    "@aws-sdk/s3-request-presigner": "3.100.0",
+    "@aws-sdk/url-parser": "3.78.0",
     "@loopback/authentication": "7.3.2",
     "@loopback/authorization": "0.9.2",
     "@loopback/boot": "3.4.2",

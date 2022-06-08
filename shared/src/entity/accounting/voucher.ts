@@ -1,4 +1,5 @@
 import { Transaction } from './transaction';
+import { Document } from '../common/document';
 
 export enum VoucherType {
     SALES = 'Sales',
@@ -17,5 +18,6 @@ export interface Voucher {
     date?: Date;
     type?: VoucherType;
     details?: string;
-    transactions?: Array<Transaction>
+    transactions?: Array<Transaction>;
+    documents?: Array<Document>;
 }

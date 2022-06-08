@@ -12,7 +12,7 @@ export class FinYearService extends BaseHTTPService<FinYear> {
 
   public API_URI = FIN_YEAR_API_URI;
 
-  public upsert(finYear:FinYear):Observable<void> {
+  public upsert(finYear:FinYear):Observable<FinYear | void> {
 
 
     const {id, branch, ...branch2} = finYear;

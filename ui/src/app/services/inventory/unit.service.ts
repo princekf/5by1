@@ -13,7 +13,7 @@ export class UnitService extends BaseHTTPService<Unit> {
 
   public API_URI = UNIT_API_URI;
 
-  public upsert(unit:Unit):Observable<void> {
+  public upsert(unit:Unit):Observable<Unit | void> {
 
     const {id, ...unit2} = unit;
     if (id) {

@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { CostCentreService } from '@fboservices/accounting/cost-centre.service';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
+import { VoucherDocumentService } from '@fboservices/accounting/voucher-document.service';
+import { DocumentService } from '@fboservices/common/document.service';
 import { CostCentre } from '@shared/entity/accounting/cost-centre';
 import { Ledger } from '@shared/entity/accounting/ledger';
 import { Transaction, TransactionType } from '@shared/entity/accounting/transaction';
@@ -12,13 +14,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { QueryData } from '@shared/util/query-data';
 import { LedgerService } from '@fboservices/accounting/ledger.service';
-import { catchError, switchMap } from 'rxjs/operators';
-import { of, throwError, zip } from 'rxjs';
+import { catchError, flatMap, switchMap } from 'rxjs/operators';
+import { Observable, of, throwError, zip } from 'rxjs';
 import { LOCAL_USER_KEY } from '@fboutil/constants';
 import { SessionUser } from '@shared/util/session-user';
 import { FinYear } from '@shared/entity/auth/fin-year';
 import * as utc from 'dayjs/plugin/utc';
 import * as dayjs from 'dayjs';
+import { DOCUMENT } from '@angular/common';
+import { Document as DocumentEnt } from '@shared/entity/common/document';
 dayjs.extend(utc);
 
 @Component({
@@ -58,14 +62,21 @@ export class CreateVoucherComponent implements OnInit {
 
   finYear: FinYear;
 
+  selectedFiles: File[] = [];
+
+  existingFiles: DocumentEnt[];
+
   constructor(
     public readonly router: Router,
     public readonly route: ActivatedRoute,
     private voucherService: VoucherService,
     private ledgerService: LedgerService,
     private costCentreService: CostCentreService,
+    private readonly voucherDocumentService: VoucherDocumentService,
     private readonly fBuilder: FormBuilder,
-    private readonly toastr: ToastrService) { }
+    private readonly toastr: ToastrService,
+    @Inject(DOCUMENT) private document: Document,
+    private readonly documentService: DocumentService) { }
 
     private handleCostCentreAutoChange = (costCentreQ: unknown) => {
 
@@ -258,12 +269,17 @@ export class CreateVoucherComponent implements OnInit {
     this.loading = true;
     const tId = this.route.snapshot.queryParamMap.get('id');
 
-
     if (tId) {
 
       this.loading = true;
       this.createTrnasactionDetailsObserver(tId)
         .subscribe(([ voucher, ledgers, cCentres ]) => {
+
+          this.voucherDocumentService.getAttatchments(tId).subscribe((docs) => {
+
+            this.existingFiles = docs;
+
+          });
 
           this.formHeader = `Update ${voucher.number}`;
           const cMap: Record<string, CostCentre> = {};
@@ -369,7 +385,7 @@ export class CreateVoucherComponent implements OnInit {
       return;
 
     }
-    this.primaryTransactionType === TransactionType.CREDIT ? TransactionType.DEBIT : TransactionType.CREDIT;
+    this.primaryTransactionType = TransactionType.CREDIT ? TransactionType.DEBIT : TransactionType.CREDIT;
 
   }
 
@@ -441,6 +457,35 @@ export class CreateVoucherComponent implements OnInit {
 
   }
 
+  private uploadDocuments = (voucherId: string):Observable<Array<DocumentEnt>> => {
+
+    const uploadTasks$:Observable<DocumentEnt>[] = [];
+    this.selectedFiles.forEach((sFile) => {
+
+      const {name, type} = sFile;
+      uploadTasks$.push(this.voucherDocumentService.attatchDocument(voucherId, {name,
+        type}));
+
+    });
+    return zip(...uploadTasks$).pipe(
+      flatMap(async(docs) => {
+
+        const s3PutPromises:Array<Promise<unknown>> = [];
+        docs.forEach((doc) => {
+
+          const file = this.selectedFiles.find((sFile) => sFile.name === doc.name && sFile.type === doc.type);
+          s3PutPromises.push(fetch(doc.putURL, {method: 'PUT',
+            body: file}));
+
+        });
+        await Promise.all(s3PutPromises);
+        return docs;
+
+      })
+    );
+
+  }
+
   upsertVoucher = (): void => {
 
     if (this.fboForm.controls.number.errors) {
@@ -448,6 +493,7 @@ export class CreateVoucherComponent implements OnInit {
       return;
 
     }
+    this.loading = true;
     const {...voucher} = this.fboForm.value as Voucher;
     const vdate = dayjs(voucher.date).utc(true)
       .format();
@@ -462,14 +508,29 @@ export class CreateVoucherComponent implements OnInit {
 
     } catch (error) {
 
+      this.loading = false;
       this.toastr.error(error.message, 'Validation failed');
       return;
 
     }
-    this.voucherService.upsert(voucher).subscribe(() => {
+    // Step 1. Save voucher.
+    this.voucherService.upsert(voucher).subscribe((voucherR) => {
 
-      this.toastr.success(`Voucher ${voucher.number} is saved successfully`, 'Voucher saved');
-      this.goToPreviousPage(this.route, this.router);
+      // Step 2. Save documents if any.
+      if (!this.selectedFiles?.length) {
+
+        this.loading = false;
+        this.toastr.success(`Voucher ${voucher.number} is saved successfully`, 'Voucher saved');
+        this.goToPreviousPage(this.route, this.router);
+
+      }
+      const voucherId = voucherR.id;
+      this.uploadDocuments(voucherId).subscribe((docs) => {
+
+        this.loading = false;
+        this.goToPreviousPage(this.route, this.router);
+
+      });
 
     }, (error) => {
 
@@ -478,6 +539,48 @@ export class CreateVoucherComponent implements OnInit {
       console.error(error);
 
     });
+
+
+  }
+
+
+  openFileUpload = (): void => {
+
+    this.document.getElementById('photoInput').click();
+
+  };
+
+  handleFileUploadInput = (files: Array<File>): void => {
+
+    if (!files) {
+
+      return;
+
+    }
+
+    this.selectedFiles.push(...files);
+
+  }
+
+  removeFile = (file: File): void => {
+
+    const index = this.selectedFiles.indexOf(file);
+    if (index > -1) {
+
+      this.selectedFiles.splice(index, 1);
+
+    }
+
+  }
+
+  removeExistingFile = (file: DocumentEnt): void => {
+
+    const index = this.existingFiles.indexOf(file);
+    if (index > -1) {
+
+      this.existingFiles.splice(index, 1);
+
+    }
 
   }
 

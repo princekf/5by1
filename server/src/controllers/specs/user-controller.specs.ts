@@ -22,6 +22,10 @@ const CredentialsSchema: SchemaObject = {
       type: 'string',
       minLength: 8,
     },
+    company: {
+      type: 'string',
+      minLength: 3,
+    },
   },
 };
 

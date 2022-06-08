@@ -13,6 +13,8 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatChipsModule} from '@angular/material/chips';
+import {FileDragDropModule} from '@fbodirectives/file-drag-drop/file-drag-drop.module';
 
 import { CreateVoucherComponent } from './create-voucher/create-voucher.component';
 import { ListVoucherComponent } from './list-voucher/list-voucher.component';
@@ -31,7 +33,8 @@ import { FilterVoucherComponent } from './filter-voucher/filter-voucher.componen
     MatTableModule,
     MatFormFieldModule, ReactiveFormsModule, FormsModule, NgxSkeletonLoaderModule, MatButtonModule,
     MatInputModule, MatNativeDateModule, MatAutocompleteModule, MatIconModule, MatDatepickerModule,
-    MatSelectModule, MatSortModule, MatTableModule, MatButtonToggleModule, DataTableModule,
+    MatSelectModule, MatSortModule, MatTableModule, MatButtonToggleModule, DataTableModule, MatChipsModule,
+    FileDragDropModule,
   ],
   exports: [ CreateVoucherComponent, ListVoucherComponent ]
 })

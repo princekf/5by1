@@ -13,7 +13,7 @@ export class BranchService extends BaseHTTPService<Branch> {
 
   public API_URI = BRANCH_API_URI;
 
-  public upsert(branch:Branch):Observable<void> {
+  public upsert(branch:Branch):Observable<Branch | void> {
 
 
     const {id, defaultFinYear, ...branch2} = branch;

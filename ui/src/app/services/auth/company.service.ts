@@ -13,7 +13,7 @@ export class CompanyService extends BaseHTTPService<Company> {
 
   public API_URI = COMPANY_API_URI;
 
-  public upsert(company:Company & {password: string}):Observable<void> {
+  public upsert(company:Company & {password: string}):Observable<Company | void> {
 
     const {id, password, ...company2} = company;
     if (id) {

@@ -15,7 +15,7 @@ export class TransferService extends BaseHTTPService<Transfer> {
 
   public API_URI = TRANSFER_API_URI;
 
-  public upsert(transfer:Transfer):Observable<void> {
+  public upsert(transfer:Transfer):Observable<Transfer | void> {
 
     const {id, fromAccount, toAccount, ...transfer2} = transfer;
     if (fromAccount && fromAccount.id) {
