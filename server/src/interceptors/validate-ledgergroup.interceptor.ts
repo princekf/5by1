@@ -113,7 +113,13 @@ export class ValidateLedgerGroupInterceptor implements Provider<Interceptor> {
       }
       // Should not allow to edit code of default ledger groups.
       await this.checkIfDefaultLedgerGroupCodeChange(code, id);
-      const nameAlreadyExist = await this.ledgerGroupRepository.find({where: {or: [ {name: {regexp: `/^${name}$/i`}}, {code: {regexp: `/^${code}$/i`}} ]}});
+      const nameAlreadyExist = await this.ledgerGroupRepository.find({where: {and: [
+        { id: {neq: id ?? '--'} },
+        {or: [
+          {name: {regexp: `/^${name}$/i`}},
+          {code: {regexp: `/^${code}$/i`}},
+        ]}
+      ]}});
       if (nameAlreadyExist.length) {
 
         throw new HttpErrors.UnprocessableEntity(
