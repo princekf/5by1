@@ -66,6 +66,8 @@ export class CreateVoucherComponent implements OnInit {
 
   existingFiles: DocumentEnt[];
 
+  deletedFiles: DocumentEnt[] = [];
+
   constructor(
     public readonly router: Router,
     public readonly route: ActivatedRoute,
@@ -488,13 +490,21 @@ export class CreateVoucherComponent implements OnInit {
 
   upsertVoucher = (): void => {
 
+    this.loading = true;
+    const { ...voucher } = this.fboForm.value as Voucher;
+    this.deletedFiles.forEach((element) => {
+
+      this.voucherDocumentService.removeAttatchment(voucher.id, element.id).subscribe();
+
+    });
+
+
     if (this.fboForm.controls.number.errors) {
 
       return;
 
     }
-    this.loading = true;
-    const {...voucher} = this.fboForm.value as Voucher;
+
     const vdate = dayjs(voucher.date).utc(true)
       .format();
 
@@ -578,7 +588,9 @@ export class CreateVoucherComponent implements OnInit {
     const index = this.existingFiles.indexOf(file);
     if (index > -1) {
 
-      this.existingFiles.splice(index, 1);
+      const removedFile = this.existingFiles.splice(index, 1);
+
+      this.deletedFiles = this.deletedFiles.concat(removedFile);
 
     }
 
