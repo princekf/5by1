@@ -5,6 +5,8 @@ import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { BalanceSheetItem } from '@shared/util/balance-sheet-item';
 import { SessionUser } from '@shared/util/session-user';
 import * as dayjs from 'dayjs';
+import { FilterItem } from 'src/app/modules/main/directives/table-filter/filter-item';
+import { FilterProfitLossReportComponent } from '../filter-profit-loss-report/filter-profit-loss-report.component';
 
 @Component({
   selector: 'app-profit-loss-report',
@@ -40,10 +42,14 @@ export class ProfitLossReportComponent implements OnInit {
     items: []
   };
 
+  filterItem: FilterItem;
+
   constructor(private accountingReportService: AccountingReportService) { }
 
 
   ngOnInit(): void {
+
+    this.filterItem = new FilterItem(FilterProfitLossReportComponent, {});
 
     const userS = localStorage.getItem(LOCAL_USER_KEY);
     const sessionUser: SessionUser = JSON.parse(userS);
@@ -63,4 +69,9 @@ export class ProfitLossReportComponent implements OnInit {
 
   }
 
+  exportExcel(): void {
+  }
+
+  convert(): void {
+  }
 }
