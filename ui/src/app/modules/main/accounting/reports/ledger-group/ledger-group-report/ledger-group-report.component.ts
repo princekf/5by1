@@ -17,7 +17,7 @@ import * as Excel from 'exceljs';
 import * as saveAs from 'file-saver';
 import JSPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { LedgerGroupSummary } from '@shared/util/ledger-group-summary';
+
 interface LedgerGroupReportFields {
   id: string;
   number: string;
@@ -214,11 +214,11 @@ export class LedgerGroupReportComponent implements OnInit {
   }
 
   private createTableRowData =
-  (ledgerMap: Record<string, Ledger>, items: Array<LedgerGroupReportFields>, sLedgers: Array<Ledger>) => {
+  (ledgerMap: Record<string, Ledger>, itemsP: Array<LedgerGroupReportFields>, sLedgers: Array<Ledger>) => {
 
     let totalDebit = 0;
     let totalCredit = 0;
-    items.forEach((item) => {
+    itemsP.forEach((item) => {
 
       item.ledger = ledgerMap[item.ledger].name;
       item.primaryLedger = ledgerMap[item.primaryLedger].name;
@@ -226,7 +226,7 @@ export class LedgerGroupReportComponent implements OnInit {
       totalCredit += Number(item.credit);
 
     });
-    items = this.createDailyOrMonthlySummary(items);
+    const items = this.createDailyOrMonthlySummary(itemsP);
     this.createSummaryRows(items, 'Total', String(totalDebit.toFixed(environment.decimalPlaces)), String(totalCredit.toFixed(environment.decimalPlaces)));
     const [ opBalCr, opBalDr, balCrS, balDrS ] = this.findBalances(totalCredit, totalDebit, sLedgers);
     this.createSummaryRows(items, 'Opening Balance', opBalDr, opBalCr);
@@ -347,6 +347,55 @@ export class LedgerGroupReportComponent implements OnInit {
 
   }
 
+  private loadSummary = (): void => {
+
+    this.editUri = '/reports/ledger-group';
+    this.deleteUri = null;
+    this.displayedColumns = [ 'name', 'debit', 'credit', 'obDebit', 'obCredit', 'balance' ];
+    this.tableHeader = 'Ledger Group Summary Report';
+    this.voucherService.fetchLedgerGroupSummary().subscribe((result) => {
+
+      const items:Array<LedgerGroupSummaryR> = [];
+      const dpL = environment.decimalPlaces;
+      result.forEach((res) => {
+
+        const {id, name, code, credit, debit, obCredit, obDebit} = res;
+        const balanceI = credit + obCredit - debit - obDebit;
+        const balance = `${Math.abs(balanceI).toFixed(dpL)} ${balanceI > 0 ? 'Cr' : 'Dr'}`;
+        items.push({id,
+          name,
+          code,
+          credit: credit.toFixed(dpL),
+          debit: debit.toFixed(dpL),
+          obCredit: obCredit.toFixed(dpL),
+          obDebit: obDebit.toFixed(dpL),
+          balance});
+
+      });
+      this.ledgerRows = {
+        items,
+        totalItems: items.length,
+        pageIndex: 0
+      };
+      this.loading = false;
+
+    });
+
+  };
+
+  private loadSingleLGroupDetails = (whereS: string): void => {
+
+    this.displayedColumns = [ 'number', 'date', 'type', 'primaryLedger', 'ledger', 'debit', 'credit', 'details' ];
+    this.deleteUri = '/voucher/delete';
+    this.editUri = '/voucher/edit';
+    this.queryParams.where = JSON.parse(whereS);
+    const ledgerGroupParam = this.queryParams.where.ledgerGroupId as {like: string};
+    const againstParam = this.queryParams.where.againstL as {ne: string};
+    const ledgerGroupId = ledgerGroupParam?.like;
+    const againstId = againstParam?.ne;
+    this.loadData(ledgerGroupId, againstId);
+
+  }
 
   ngOnInit(): void {
 
@@ -355,10 +404,10 @@ export class LedgerGroupReportComponent implements OnInit {
 
       const { id, whereS, order, rtype, ...qParam } = value;
       if (id) {
-        
+
         this.router.navigate([ '/reports/ledger-group' ], { queryParams: {whereS: `{"ledgerGroupId":{"like":"${id}","options":"i"}}`} });
         return;
-  
+
       }
       this.reportType = rtype;
       this.queryParams = qParam;
@@ -371,49 +420,16 @@ export class LedgerGroupReportComponent implements OnInit {
         this.queryParams.order = order;
 
       }
+      this.loading = true;
+
       if (whereS) {
 
-        this.loading = true;
-        this.displayedColumns = [ 'number', 'date', 'type', 'primaryLedger', 'ledger', 'debit', 'credit', 'details' ];
-        this.deleteUri = '/voucher/delete';
-        this.editUri = '/voucher/edit';
-        this.queryParams.where = JSON.parse(whereS);
-        const ledgerGroupParam = this.queryParams.where.ledgerGroupId as {like: string};
-        const againstParam = this.queryParams.where.againstL as {ne: string};
-        const ledgerGroupId = ledgerGroupParam?.like;
-        const againstId = againstParam?.ne;
-        this.loadData(ledgerGroupId, againstId);
+        this.loadSingleLGroupDetails(whereS);
 
       } else {
 
-        this.editUri = '/reports/ledger-group';
-        this.deleteUri = null;
-        this.displayedColumns = [ 'name', 'debit', 'credit', 'obDebit', 'obCredit', 'balance' ];
-        this.tableHeader = 'Ledger Group Summary Report';          
-        this.voucherService.fetchLedgerGroupSummary().subscribe((result) => {
-          const items:Array<LedgerGroupSummaryR> = [];
-          const dpL = environment.decimalPlaces;
-          result.forEach((res) => {
-            const {id, name, code, credit, debit, obCredit, obDebit} = res;
-            const balanceI = credit + obCredit - debit - obDebit;
-            const balance = `${Math.abs(balanceI).toFixed(dpL)} ${balanceI > 0 ? 'Cr' : 'Dr'}`;
-            items.push({
-              id,
-              name,
-              code,
-              credit: credit.toFixed(dpL),
-              debit: debit.toFixed(dpL),
-              obCredit: obCredit.toFixed(dpL),
-              obDebit: obDebit.toFixed(dpL),
-              balance});
-          });
-          this.ledgerRows = {
-            items,
-            totalItems: items.length,
-            pageIndex: 0
-          };
-          this.loading = false;
-        });
+        this.loadSummary();
+
       }
 
     });

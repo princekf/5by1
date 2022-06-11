@@ -12,6 +12,7 @@ export class VoucherRepository extends DefaultCrudRepository<
   VoucherRelations
 > {
 
+
   public readonly documents: HasManyThroughRepositoryFactory<Document, typeof Document.prototype.id,
           VoucherDocument,
           typeof Voucher.prototype.id
@@ -26,5 +27,6 @@ export class VoucherRepository extends DefaultCrudRepository<
     this.registerInclusionResolver('documents', this.documents.inclusionResolver);
 
   }
+
 
 }
