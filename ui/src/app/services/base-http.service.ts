@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { forkJoin, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/internal/operators';
+import { forkJoin, Observable, of, throwError } from 'rxjs';
+import { catchError, flatMap, map } from 'rxjs/internal/operators';
 import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { DEFAULT_MAX_ROWS } from '@fboutil/constants';
@@ -71,20 +71,20 @@ export class BaseHTTPService<T> {
 
   }
 
-  public save(item: T): Observable<void> {
+  public save(item: T): Observable<T> {
 
-    return this.http.post<void>(this.API_URI, item).pipe(
+    return this.http.post<T>(this.API_URI, item).pipe(
       catchError((err) => throwError(err))
     );
 
   }
 
 
-  public update(item: T): Observable<void> {
+  public update(item: T): Observable<T> {
 
     const cObj = item as unknown as { id: string };
-    return this.http.patch<void>(`${this.API_URI}/${cObj.id}`, item).pipe(
-      catchError((err) => throwError(err))
+    return this.http.patch<number>(`${this.API_URI}/${cObj.id}`, item).pipe(
+      flatMap((count) => of(item))
     );
 
   }

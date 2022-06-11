@@ -8,7 +8,8 @@
     "paths": {
       "@fboservices/*" :["src/app/services/*"],
       "@fboenvironments/*" :["src/environments/*"],
-      "@fboutil/*" :["src/app/util/*"]
+      "@fboutil/*" :["src/app/util/*"],
+      "@fbodirectives/*" :["src/app/directives/*"]
     }
   },
   "files": [

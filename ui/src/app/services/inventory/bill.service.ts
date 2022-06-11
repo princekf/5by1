@@ -37,7 +37,7 @@ export class BillService extends BaseHTTPService<Bill> {
 
   }
 
-  public upsert = (bill:Bill):Observable<void> => {
+  public upsert = (bill:Bill):Observable<void | Bill> => {
 
     const {id, vendor, dueDate, orderDate, purchaseItems, ...bill2} = bill;
     bill2.vendorId = vendor?.id ?? '';

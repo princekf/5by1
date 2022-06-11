@@ -22,10 +22,12 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatIconModule} from '@angular/material/icon';
 import { LedgerGroupReportComponent } from './ledger-group/ledger-group-report/ledger-group-report.component';
 import { FilterLedgerGroupReportComponent } from './ledger-group/filter-ledger-group-report/filter-ledger-group-report.component';
+import { ProfitLossReportComponent } from './profit-loss/profit-loss-report/profit-loss-report.component';
+import { FilterProfitLossReportComponent } from './profit-loss/filter-profit-loss-report/filter-profit-loss-report.component';
 
 @NgModule({
   declarations: [ LedgerReportComponent, FilterLedgerReportComponent, TrialBalanceReportComponent,
-    LedgerGroupReportComponent, FilterLedgerGroupReportComponent ],
+    LedgerGroupReportComponent, FilterLedgerGroupReportComponent, ProfitLossReportComponent, FilterProfitLossReportComponent ],
   imports: [
     CommonModule, ReportsRoutingModule, DataTableModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule,
     ReactiveFormsModule, FormsModule, MatAutocompleteModule, MatSelectModule, MatFormFieldModule, MatInputModule,

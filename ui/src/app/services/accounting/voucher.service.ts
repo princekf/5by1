@@ -15,7 +15,7 @@ export class VoucherService extends BaseHTTPService<Voucher> {
 
   public API_URI = VOUCHER_API_URI;
 
-  public upsert(voucher: Voucher): Observable<void> {
+  public upsert(voucher: Voucher): Observable<Voucher> {
 
     const {id, ...voucher2} = voucher;
     if (id) {

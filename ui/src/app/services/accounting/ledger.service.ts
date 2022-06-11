@@ -12,7 +12,7 @@ export class LedgerService extends BaseHTTPService<Ledger> {
 
   public API_URI = LEDGER_API_URI;
 
-  public upsert(ledger:Ledger):Observable<void> {
+  public upsert(ledger:Ledger):Observable<Ledger | void> {
 
 
     const {id, ledgerGroup, ...ledger2} = ledger;

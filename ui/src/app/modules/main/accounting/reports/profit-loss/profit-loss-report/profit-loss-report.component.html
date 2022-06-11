@@ -1,0 +1,14 @@
+
+<div class="head">
+    <div class="empy-space"></div>
+    <button mat-flat-button class="button" (click)="convert()">
+    <mat-icon>ios_share</mat-icon> PDF
+
+</button>
+    <button mat-flat-button class="button" (click)="exportExcel()">
+    <mat-icon>ios_share</mat-icon>  EXCEL
+</button>
+
+</div>
+<app-data-table [tableHeader]=tableHeader [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="tablesRows" [filterItem]="filterItem"  [numberColumns]="numberColumns"
+    [deleteUri]=deleteUri [editUri]=editUri [showPaginator]="false" [sortDisabledColumns]="sortDisabledColumns"></app-data-table>

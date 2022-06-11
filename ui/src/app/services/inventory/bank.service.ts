@@ -12,7 +12,7 @@ export class BankService extends BaseHTTPService<Bank> {
 
   public API_URI = BANK_API_URI;
 
-  public upsert(bank:Bank):Observable<void> {
+  public upsert(bank:Bank):Observable<Bank | void> {
 
     const {id, ...bank2} = bank;
     if (id) {

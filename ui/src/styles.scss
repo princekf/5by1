@@ -221,8 +221,23 @@ cursor: pointer;
   color: #0062FF;
 }
 
+.image-upload-container {
+  background-color: #f8f8f8;
+  min-height: 100px;
+  padding: 0.5rem 1rem;
+}
 
-
+.drag-and-drop-title {
+  display: block;
+  background-color:#0062FF;
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+  margin: -0.5rem -1rem 0.5rem -1rem;
+  line-height: 1.7rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
 
 @media only screen and (max-width: 768px) {
   

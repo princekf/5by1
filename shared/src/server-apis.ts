@@ -33,6 +33,9 @@ export const VOUCHER_API_URI = `${BASE_URI}${VOUCHER_API}`;
 export const COST_CENTRE_API = '/acc/costcentres';
 export const COST_CENTRE_API_URI = `${BASE_URI}${COST_CENTRE_API}`;
 
+export const ACC_REPORTS_API = '/acc/reports';
+export const ACC_REPORTS_API_URI = `${BASE_URI}${ACC_REPORTS_API}`;
+
 export const VENDOR_API = '/inv/vendors';
 export const VENDOR_API_URI = `${BASE_URI}${VENDOR_API}`;
 
@@ -71,3 +74,6 @@ export const UNIT_API_URI = `${BASE_URI}${UNIT_API}`;
 
 export const STOCK_API = '/inv/stock';
 export const STOCK_API_URI = `${BASE_URI}${STOCK_API}`;
+
+export const DOCUMENT_API = '/common/documents';
+export const DOCUMENT_API_URI = `${BASE_URI}${DOCUMENT_API}`;
