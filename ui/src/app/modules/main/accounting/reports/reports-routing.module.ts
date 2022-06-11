@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LedgerReportComponent } from './ledger/ledger-report/ledger-report.component';
 import { LedgerGroupReportComponent } from './ledger-group/ledger-group-report/ledger-group-report.component';
 import { TrialBalanceReportComponent } from './trial-balance/trial-balance-report/trial-balance-report.component';
+import { ProfitLossReportComponent } from './profit-loss/profit-loss-report/profit-loss-report.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,11 @@ const routes: Routes = [
     path: 'trial-balance',
     pathMatch: 'full',
     component: TrialBalanceReportComponent
+  },
+  {
+    path: 'profit-loss',
+    pathMatch: 'full',
+    component: ProfitLossReportComponent
   },
 ];
 

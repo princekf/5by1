@@ -22,3 +22,12 @@ export const LedgerGroupSummaryRespSchema = {
     obCredit: {type: 'number'},
   }},
 };
+export const BalanceSheetRespSchema = {
+  type: 'array',
+  items: {properties: {
+    lItem: {type: 'string'},
+    lAmount: {type: 'string'},
+    rItem: {type: 'string'},
+    rAmount: {type: 'string'},
+  }},
+};
