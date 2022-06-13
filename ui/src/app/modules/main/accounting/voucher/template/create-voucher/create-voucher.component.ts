@@ -490,20 +490,16 @@ export class CreateVoucherComponent implements OnInit {
 
   upsertVoucher = (): void => {
 
-    this.loading = true;
-    const { ...voucher } = this.fboForm.value as Voucher;
-    this.deletedFiles.forEach((element) => {
-
-      this.voucherDocumentService.removeAttatchment(voucher.id, element.id).subscribe();
-
-    });
-
 
     if (this.fboForm.controls.number.errors) {
 
       return;
 
     }
+
+    this.loading = true;
+    const { ...voucher } = this.fboForm.value as Voucher;
+
 
     const vdate = dayjs(voucher.date).utc(true)
       .format();
@@ -527,13 +523,23 @@ export class CreateVoucherComponent implements OnInit {
     this.voucherService.upsert(voucher).subscribe((voucherR) => {
 
       // Step 2. Save documents if any.
-      if (!this.selectedFiles?.length) {
+      if (!this.selectedFiles?.length && !this.deletedFiles?.length) {
 
         this.loading = false;
         this.toastr.success(`Voucher ${voucher.number} is saved successfully`, 'Voucher saved');
         this.goToPreviousPage(this.route, this.router);
+        return;
 
       }
+      this.deletedFiles.forEach((element) => {
+
+        this.voucherDocumentService.removeAttatchment(voucher.id, element.id).subscribe(() => {
+
+          this.goToPreviousPage(this.route, this.router);
+
+        });
+
+      });
       const voucherId = voucherR.id;
       this.uploadDocuments(voucherId).subscribe((docs) => {
 
