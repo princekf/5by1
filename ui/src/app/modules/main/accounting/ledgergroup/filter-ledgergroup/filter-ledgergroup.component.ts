@@ -83,4 +83,11 @@ export class FilterLedgergroupComponent implements OnInit {
 
   extractNameOfLedgerGroup = (idS: string): string => this.ledgerGroupsFiltered.find((ldgr) => ldgr.id === idS)?.name;
 
+  resetter() {
+
+    this.filterForm.controls.name.reset();
+    this.filterForm.controls.parentId.reset();
+
+  }
+
 }

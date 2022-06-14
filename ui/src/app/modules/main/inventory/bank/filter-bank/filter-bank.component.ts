@@ -70,5 +70,12 @@ export class FilterBankComponent {
 
   };
 
+  resetter() {
+
+    this.filterForm.controls.type.reset();
+    this.filterForm.controls.name.reset();
+    this.filterForm.controls.openingBalance.reset();
+
+  }
 
 }

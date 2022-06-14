@@ -100,4 +100,14 @@ export class FilterBranchComponent implements OnInit {
 
   extractNameOfdefaultFY= (idS: string): string => this.defaultfinyearFiltered.find((dfy) => dfy.id === idS)?.name;
 
+  resetter() {
+
+    this.filterForm.controls.name.reset();
+    this.filterForm.controls.email.reset();
+    this.filterForm.controls.address.reset();
+    this.filterForm.controls.finYearStartDate.reset();
+    this.filterForm.controls.defaultFinYearId.reset();
+
+  }
+
 }

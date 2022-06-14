@@ -114,4 +114,13 @@ export class FilterCategoryComponent {
 
   extractNameOfunit= (idS: string): string => this.unitFiltered.find((unit) => unit.id === idS)?.name;
 
+  resetter() {
+
+    this.filterForm.controls.parentId.reset();
+    this.filterForm.controls.name.reset();
+    this.filterForm.controls.unitId.reset();
+    this.filterForm.controls.hsnNumber.reset();
+
+  }
+
 }

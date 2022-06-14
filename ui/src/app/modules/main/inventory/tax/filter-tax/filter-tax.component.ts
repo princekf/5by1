@@ -71,5 +71,13 @@ export class FilterTaxComponent {
 
   };
 
+  resetter() {
+
+    this.filterForm.controls.groupName.reset();
+    this.filterForm.controls.name.reset();
+    this.filterForm.controls.rate.reset();
+    this.filterForm.controls.appliedTo.reset();
+
+  }
 
 }

@@ -124,7 +124,7 @@
 
     <div class='filter-actions-container'>
         <button mat-button class="filtercancelbutton">Cancel</button>
-        <button mat-button type="reset" class="filterresetbutton"(click)="$event.stopPropagation()">Reset</button>
+        <button mat-button type="button" class="filterresetbutton"(click)="resetter();$event.stopPropagation()">Reset</button>
         <button mat-button class="filtersavebutton">Submit</button>
 
     </div>
