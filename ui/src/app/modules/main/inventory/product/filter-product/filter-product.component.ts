@@ -107,6 +107,19 @@ export class FilterProductComponent {
 
   };
 
-  extractNameOfcategory= (idS: string): string => this.categoryFiltered.find((cat) => cat.id === idS)?.name;
+  extractNameOfcategory = (idS: string): string => this.categoryFiltered.find((cat) => cat.id === idS)?.name;
+
+  resetter() {
+
+    this.filterForm.controls.name.reset();
+    this.filterForm.controls.code.reset();
+    this.filterForm.controls.brand.reset();
+    this.filterForm.controls.location.reset();
+    this.filterForm.controls.barcode.reset();
+    this.filterForm.controls.reorderLevel.reset();
+    this.filterForm.controls.categoryId.reset();
+    this.filterForm.controls.Status.reset();
+
+  }
 
 }

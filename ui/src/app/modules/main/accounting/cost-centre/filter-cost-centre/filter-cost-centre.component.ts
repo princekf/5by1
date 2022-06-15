@@ -25,7 +25,7 @@ export class FilterCostCentreComponent implements OnInit, AfterViewInit {
   });
 
   constructor(private router: Router,
-              private activatedRoute: ActivatedRoute, ) { }
+              private activatedRoute: ActivatedRoute,) { }
 
   ngOnInit(): void {
 
@@ -60,5 +60,11 @@ export class FilterCostCentreComponent implements OnInit, AfterViewInit {
 
   }
 
+  resetter() {
+
+    this.filterForm.controls.name.reset();
+    this.filterForm.controls.details.reset();
+
+  }
 
 }

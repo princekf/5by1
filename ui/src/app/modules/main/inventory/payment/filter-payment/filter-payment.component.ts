@@ -151,4 +151,15 @@ export class FilterPaymentComponent {
 
   extractNameOfbill= (idS: string): string => this.billfiltered.find((bill) => bill.id === idS)?.billNumber;
 
+  resetter() {
+
+    this.filterForm.controls.paidDate.reset();
+    this.filterForm.controls.vendorId.reset();
+    this.filterForm.controls.billId.reset();
+    this.filterForm.controls.bankId.reset();
+    this.filterForm.controls.Category.reset();
+    this.filterForm.controls.amount.reset();
+
+  }
+
 }

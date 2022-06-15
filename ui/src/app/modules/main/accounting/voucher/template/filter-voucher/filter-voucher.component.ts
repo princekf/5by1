@@ -77,4 +77,13 @@ export class FilterVoucherComponent implements OnInit {
 
   };
 
+  resetter() {
+
+    this.filterForm.controls.number.reset();
+    this.filterForm.controls.details.reset();
+    this.filterForm.controls['transactions.amount'].reset();
+    this.filterForm.controls.date.reset();
+
+  }
+
 }

@@ -124,6 +124,19 @@ export class FilterBillComponent {
 
   };
 
-  extractNameOfvendor= (idS: string): string => this.vendorFiltered.find((vendor) => vendor.id === idS)?.name;
+  extractNameOfvendor = (idS: string): string => this.vendorFiltered.find((vendor) => vendor.id === idS)?.name;
+
+  resetter() {
+
+    this.filterForm.controls.vendorId.reset();
+    this.filterForm.controls.billDate.reset();
+    this.filterForm.controls.billNumber.reset();
+    this.filterForm.controls.totalAmount.reset();
+    this.filterForm.controls.totalDisount.reset();
+    this.filterForm.controls.totalTax.reset();
+    this.filterForm.controls.grandTotal.reset();
+    this.filterForm.controls.isPaid.reset();
+
+  }
 
 }

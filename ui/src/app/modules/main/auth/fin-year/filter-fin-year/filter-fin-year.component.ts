@@ -99,4 +99,13 @@ export class FilterFinYearComponent implements OnInit {
 
   extractNameOfbranch= (idS: string): string => this.branchFiltered.find((branch) => branch.id === idS)?.name;
 
+  resetter() {
+
+    this.filterForm.controls.name.reset();
+    this.filterForm.controls.startDate.reset();
+    this.filterForm.controls.endDate.reset();
+    this.filterForm.controls.branchId.reset();
+
+  }
+
 }

@@ -60,5 +60,11 @@ export class FilterUserComponent implements OnInit {
 
   };
 
+  resetter() {
+
+    this.filterForm.controls.name.reset();
+    this.filterForm.controls.email.reset();
+
+  }
 
 }
