@@ -21,3 +21,5 @@ class FBOServerUtil {
 }
 
 export const fboServerUtil = new FBOServerUtil();
+
+export const DECIMAL_PART = 2;
