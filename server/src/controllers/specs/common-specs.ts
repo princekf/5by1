@@ -31,3 +31,30 @@ export const BalanceSheetRespSchema = {
     rAmount: {type: 'string'},
   }},
 };
+
+export const TrialBalanceRespSchema = {
+  type: 'object',
+  properties: {
+    id: {type: 'string'},
+    name: {type: 'string'},
+    code: {type: 'string'},
+    credit: {type: 'number'},
+    debit: {type: 'number'},
+    obCredit: {type: 'number'},
+    obDebit: {type: 'number'},
+    balance: {type: 'number'},
+    children: {
+      type: 'array',
+      items: {properties: {
+        id: {type: 'string'},
+        name: {type: 'string'},
+        code: {type: 'string'},
+        credit: {type: 'number'},
+        debit: {type: 'number'},
+        obCredit: {type: 'number'},
+        obDebit: {type: 'number'},
+        balance: {type: 'number'},
+      }},
+    }
+  }
+};

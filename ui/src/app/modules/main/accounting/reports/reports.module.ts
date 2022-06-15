@@ -17,21 +17,25 @@ import { MatDayjsDateModule } from '@tabuckner/material-dayjs-adapter';
 import { MatNativeDateModule } from '@angular/material/core';
 import {dayJSProviders} from '@fboutil/day-js-providers';
 import { TrialBalanceReportComponent } from './trial-balance/trial-balance-report/trial-balance-report.component';
-import { TreetableModule } from '@vaseap/ng-material-treetable';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatIconModule} from '@angular/material/icon';
 import { LedgerGroupReportComponent } from './ledger-group/ledger-group-report/ledger-group-report.component';
 import { FilterLedgerGroupReportComponent } from './ledger-group/filter-ledger-group-report/filter-ledger-group-report.component';
 import { ProfitLossReportComponent } from './profit-loss/profit-loss-report/profit-loss-report.component';
 import { FilterProfitLossReportComponent } from './profit-loss/filter-profit-loss-report/filter-profit-loss-report.component';
+import { FilterBalanceSheetReportComponent } from './balance-sheet/filter-balance-sheet-report/filter-balance-sheet-report.component';
+import { BalanceSheetReportComponent } from './balance-sheet/balance-sheet-report/balance-sheet-report.component';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [ LedgerReportComponent, FilterLedgerReportComponent, TrialBalanceReportComponent,
-    LedgerGroupReportComponent, FilterLedgerGroupReportComponent, ProfitLossReportComponent, FilterProfitLossReportComponent ],
+    LedgerGroupReportComponent, FilterLedgerGroupReportComponent, ProfitLossReportComponent,
+    FilterProfitLossReportComponent, FilterBalanceSheetReportComponent, BalanceSheetReportComponent ],
   imports: [
     CommonModule, ReportsRoutingModule, DataTableModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule,
     ReactiveFormsModule, FormsModule, MatAutocompleteModule, MatSelectModule, MatFormFieldModule, MatInputModule,
-    MatDayjsDateModule, TreetableModule, NgxSkeletonLoaderModule, MatIconModule, MatRadioModule
+    MatDayjsDateModule, NgxSkeletonLoaderModule, MatIconModule, MatRadioModule, MatTreeModule, MatTableModule,
   ],
   providers: [ ...dayJSProviders ]
 })

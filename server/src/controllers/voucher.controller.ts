@@ -13,7 +13,7 @@ import { resourcePermissions } from '../utils/resource-permissions';
 import { adminAndUserAuthDetails } from '../utils/authorize-details';
 import { ValidateVoucherInterceptor } from '../interceptors/validate-voucher.interceptor';
 import { inject, intercept } from '@loopback/context';
-import { ProfileUser } from '../services';
+import { ProfileUser, VoucherService } from '../services';
 import {SecurityBindings} from '@loopback/security';
 import { CostCentreRepository, FinYearRepository, LedgerRepository } from '../repositories';
 import {FileUploadHandler} from '../types';
@@ -29,6 +29,8 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { LedgerGroupSummaryRespSchema, TrialBalanceLedgerSummaryRespSchema } from './specs/common-specs';
+import { service } from '@loopback/core';
+import { TrialBalanceItem } from '@shared/util/trial-balance-item';
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -40,6 +42,7 @@ export class VoucherController {
   constructor(
     @repository(VoucherRepository)
     public voucherRepository : VoucherRepository,
+    @service(VoucherService) public voucherService: VoucherService,
   ) {}
 
   @intercept(ValidateVoucherInterceptor.BINDING_KEY)
@@ -196,64 +199,18 @@ export class VoucherController {
     },
   ];
 
-  private ledgerSummaryAggregates = [
-    {
-      '$project': {
-        'transactions': 1
-      }
-    },
-    { '$unwind': '$transactions' },
-    {
-      '$project': {
-        'ledgerId': '$transactions.ledgerId',
-        'type': '$transactions.type',
-        'credit': {'$cond': [ {'$eq': [ '$transactions.type', 'Credit' ]}, '$transactions.amount', 0 ]},
-        'debit': {'$cond': [ {'$eq': [ '$transactions.type', 'Debit' ]}, '$transactions.amount', 0 ]}
-      }
-    },
-    {
-      '$group': {
-        '_id': '$ledgerId',
-        'credit': {'$sum': '$credit'},
-        'debit': {'$sum': '$debit'}
-      }
-    },
-    {
-      '$lookup': {
-        'from': 'Ledger',
-        'localField': '_id',
-        'foreignField': '_id',
-        'as': 'ledgers'
-      }
-    },
-    { '$unwind': '$ledgers' },
-    {
-      '$project': {
-        'id': '$_id',
-        'credit': '$credit',
-        'debit': '$debit',
-        'name': '$ledgers.name',
-        'code': '$ledgers.code',
-        'obAmount': '$ledgers.obAmount',
-        'obType': '$ledgers.obType',
-        'ledgerGroupId': '$ledgers.ledgerGroupId',
-      }
-    },
-  ];
-
-  @get(`${VOUCHER_API}/ledgerSummary`)
+  @get(`${VOUCHER_API}/ledgerSummary/{ason}`)
   @response(200, {
-    description: 'Ledger summary',
+    description: 'Ledger summary as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
     content: {
       'application/json': {schema: TrialBalanceLedgerSummaryRespSchema},
     },
   })
   @authorize({resource: resourcePermissions.voucherView.name,
     ...adminAndUserAuthDetails})
-  async ledgerSummary(): Promise<LedgerSummaryTB[]> {
+  async ledgerSummary(@param.path.date('ason') ason: Date,): Promise<TrialBalanceItem[]> {
 
-    const pQuery = await this.voucherRepository.execute(this.voucherRepository.modelClass.name, 'aggregate', this.ledgerSummaryAggregates);
-    const lgsR = <Array<LedgerSummaryTB>> await pQuery.toArray();
+    const lgsR = await this.voucherService.generateLedgerSummary(ason);
     return lgsR;
 
   }
