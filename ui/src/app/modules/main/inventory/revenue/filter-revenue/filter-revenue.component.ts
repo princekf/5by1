@@ -149,6 +149,17 @@ export class FilterRevenueComponent {
 
   extractNameOfbank= (idS: string): string => this.bankFiltered.find((bank) => bank.id === idS)?.name;
 
-  extractNameOfinvo= (idS: string): string => this.invoicefiltered.find((invoice) => invoice.id === idS)?.invoiceNumber;
+  extractNameOfinvo = (idS: string): string => this.invoicefiltered.find((invoice) => invoice.id === idS)?.invoiceNumber;
+
+  resetter() {
+
+    this.filterForm.controls.receivedDate.reset();
+    this.filterForm.controls.customerId.reset();
+    this.filterForm.controls.invoiceId.reset();
+    this.filterForm.controls.bankId.reset();
+    this.filterForm.controls.Category.reset();
+    this.filterForm.controls.amount.reset();
+
+  }
 
 }

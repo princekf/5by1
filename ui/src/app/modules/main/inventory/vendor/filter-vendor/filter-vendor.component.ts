@@ -80,5 +80,15 @@ export class FilterVendorComponent {
 
   };
 
+  resetter() {
+
+    this.filterForm.controls.name.reset();
+    this.filterForm.controls.email.reset();
+    this.filterForm.controls.mobile.reset();
+    this.filterForm.controls.state.reset();
+    this.filterForm.controls.addresså.reset();
+    this.filterForm.controls.gstNo.reset();
+
+  }
 
 }
