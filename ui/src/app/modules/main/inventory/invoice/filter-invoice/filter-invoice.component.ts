@@ -126,4 +126,17 @@ export class FilterInvoiceComponent {
 
   extractNameOfcustomer= (idS: string): string => this.customerFiltered.find((customer) => customer.id === idS)?.name;
 
+  resetter() {
+
+    this.filterForm.controls.customerId.reset();
+    this.filterForm.controls.invoiceDate.reset();
+    this.filterForm.controls.invoiceNumber.reset();
+    this.filterForm.controls.totalAmount.reset();
+    this.filterForm.controls.totalDisount.reset();
+    this.filterForm.controls.totalTax.reset();
+    this.filterForm.controls.grandTotal.reset();
+    this.filterForm.controls.isReceived.reset();
+
+  }
+
 }

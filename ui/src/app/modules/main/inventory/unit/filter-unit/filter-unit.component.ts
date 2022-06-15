@@ -69,5 +69,14 @@ export class FilterUnitComponent {
 
   };
 
+  resetter() {
+
+    this.filterForm.controls.name.reset();
+    this.filterForm.controls.code.reset();
+    this.filterForm.controls.decimalPlaces.reset();
+    this.filterForm.controls.times.reset();
+
+  }
+
 
 }

@@ -1,6 +1,6 @@
 import {injectable, BindingScope} from '@loopback/core';
 import { repository } from '@loopback/repository';
-import { LedgerSummaryTB } from '@shared/util/trial-balance-ledger-summary';
+import { TrialBalanceItem } from '@shared/util/trial-balance-item';
 import { VoucherRepository } from '../repositories';
 
 @injectable({scope: BindingScope.TRANSIENT})
@@ -22,45 +22,51 @@ export class VoucherService {
           'ledgerId': '$transactions.ledgerId',
           'type': '$transactions.type',
           'credit': {'$cond': [ {'$eq': [ '$transactions.type', 'Credit' ]}, '$transactions.amount', 0 ]},
-          'debit': {'$cond': [ {'$eq': [ '$transactions.type', 'Debit' ]}, '$transactions.amount', 0 ]}
-        }
-      },
-      {
-        '$group': {
-          '_id': '$ledgerId',
-          'credit': {'$sum': '$credit'},
-          'debit': {'$sum': '$debit'}
+          'debit': {'$cond': [ {'$eq': [ '$transactions.type', 'Debit' ]}, '$transactions.amount', 0 ]},
         }
       },
       {
         '$lookup': {
           'from': 'Ledger',
-          'localField': '_id',
+          'localField': 'ledgerId',
           'foreignField': '_id',
           'as': 'ledgers'
         }
       },
       { '$unwind': '$ledgers' },
       {
+        '$group': {
+          '_id': '$ledgers._id',
+          'name': {'$first': '$ledgers.name'},
+          'lgid': {'$first': '$ledgers.ledgerGroupId'},
+          'code': {'$first': '$ledgers.code'},
+          'credit': {'$sum': '$credit'},
+          'debit': {'$sum': '$debit'},
+          'obAmount': {'$first': '$ledgers.obAmount'},
+          'obType': {'$first': '$ledgers.obType'},
+        }
+      },
+      {
         '$project': {
           'id': '$_id',
+          'parentId': '$lgid',
+          'name': '$name',
+          'code': '$code',
           'credit': '$credit',
           'debit': '$debit',
-          'name': '$ledgers.name',
-          'code': '$ledgers.code',
-          'obAmount': '$ledgers.obAmount',
-          'obType': '$ledgers.obType',
-          'ledgerGroupId': '$ledgers.ledgerGroupId',
+          'type': '$transactions.type',
+          'obCredit': {'$cond': [ {'$eq': [ '$obType', 'Credit' ]}, '$obAmount', 0 ]},
+          'obDebit': {'$cond': [ {'$eq': [ '$obType', 'Debit' ]}, '$obAmount', 0 ]},
         }
       },
     ];
 
 
-  generateLedgerSummary = async(ason: Date):Promise<Array<LedgerSummaryTB>> => {
+  generateLedgerSummary = async(ason: Date):Promise<Array<TrialBalanceItem>> => {
 
     const aggregates = [ { '$match': { 'date': { '$lte': ason } } }, ...this.ledgerSummaryAggregates ];
     const pQuery = await this.voucherRepository.execute(this.voucherRepository.modelClass.name, 'aggregate', aggregates);
-    const res = <Array<LedgerSummaryTB>> await pQuery.toArray();
+    const res = <Array<TrialBalanceItem>> await pQuery.toArray();
     return res;
 
   }
