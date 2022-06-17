@@ -1,8 +1,4 @@
-<mat-radio-group aria-label="Select a report type" [value]="reportType" *ngIf="showSummaryType" (change)="handleReportTypeChange($event)">
-    <mat-radio-button value="">None</mat-radio-button>
-    <mat-radio-button value="daily">Daily Summary</mat-radio-button>
-    <mat-radio-button value="monthly">Monthly Summary</mat-radio-button>
-</mat-radio-group>
+
 <div class="head">
     <div class="empy-space"></div>
     <button mat-flat-button class="button" (click)="convert()">
@@ -14,5 +10,6 @@
 </button>
 
 </div>
-<app-data-table [tableHeader]=tableHeader [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="ledgerRows" [filterItem]="filterItem" [columnParsingFn]="columnParsingFn" [numberColumns]="numberColumns"
+<app-data-table [tableHeader]=tableHeader [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="ledgerRows"
+    [filterItem]="filterItem" [columnParsingFn]="columnParsingFn" [numberColumns]="numberColumns"
     [deleteUri]=deleteUri [editUri]=editUri [showPaginator]="false" [sortDisabledColumns]="sortDisabledColumns"></app-data-table>

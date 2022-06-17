@@ -61,6 +61,10 @@ export class FilterLedgerReportComponent implements OnInit {
 
   ngOnInit(): void {
 
+    const userS = localStorage.getItem(LOCAL_USER_KEY);
+    const sessionUser: SessionUser = JSON.parse(userS);
+    const {finYear} = sessionUser;
+
     const [ start, end ] = this.findStartEndDates();
     this.filterForm = new FormGroup({
 
@@ -68,27 +72,14 @@ export class FilterLedgerReportComponent implements OnInit {
       'transactions.ledgerIdType': new FormControl(''),
       againstL: new FormControl(''),
       againstLType: new FormControl('ne'),
-      date: new FormControl(''),
-      dateType: new FormControl('eq'),
+      date: new FormControl(finYear.endDate),
+      dateType: new FormControl('lte'),
       dateStart: new FormControl(start),
       dateEnd: new FormControl(end),
     });
     this.filterForm.controls['transactions.ledgerId'].valueChanges.subscribe(this.handleLedgerAutoChange);
     this.filterForm.controls.againstL.valueChanges.subscribe(this.handleLedgerAutoChange);
-    const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
-    const where: Record<string, Record<string, unknown>> = JSON.parse(whereS);
-    if (where?.['transactions?.ledgerId'] && where?.['transactions?.ledgerId'].like) {
 
-      const cldgId = where['transactions.ledgerId'].like as string;
-      this.ledgerService.get(cldgId, {}).subscribe((ldgr) => {
-
-        this.ledgersFiltered.push(ldgr);
-        this.filterForm.controls['transactions.ledgerId'].setValue(ldgr.id);
-
-      });
-
-    }
-    fillFilterForm(this.filterForm, whereS);
 
   }
 
@@ -98,7 +89,39 @@ export class FilterLedgerReportComponent implements OnInit {
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
-      this.queryParams = { ...value };
+      const {whereS} = value;
+      if (whereS) {
+
+        const where: Record<string, Record<string, unknown>> = JSON.parse(whereS);
+        if (!this.filterForm.controls['transactions.ledgerId'].value && where?.['transactions.ledgerId'] && where?.['transactions.ledgerId'].like) {
+
+          const cldgId = where['transactions.ledgerId'].like as string;
+          const aldgId = where.againstL?.ne as string;
+          const lids = [ cldgId, aldgId ];
+          this.ledgerService.search({where: {
+            id: {
+              inq: lids
+            }
+          }}).subscribe((ldrs) => {
+
+            const pLdg = ldrs.find((lrd) => lrd.id === cldgId);
+            this.ledgersFiltered.push(pLdg);
+            this.filterForm.controls['transactions.ledgerId'].setValue(pLdg.id);
+            if (aldgId) {
+
+              const aLdg = ldrs.find((lrd) => lrd.id === aldgId);
+              this.ledgersFiltered.push(aLdg);
+              this.filterForm.controls.againstL.setValue(aLdg.id);
+
+            }
+
+            fillFilterForm(this.filterForm, whereS);
+
+          });
+
+        }
+
+      }
 
     });
 

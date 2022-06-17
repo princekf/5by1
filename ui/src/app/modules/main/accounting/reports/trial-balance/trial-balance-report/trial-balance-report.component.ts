@@ -10,6 +10,7 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 interface TBFlatNode extends TrialBalanceItem {
   expandable: boolean;
   level: number;
+  sclass: string;
 }
 
 @Component({
@@ -32,6 +33,7 @@ export class TrialBalanceReportComponent implements OnInit {
     opening: node.opening,
     balance: node.balance,
     level,
+    sclass: '',
   })
 
   treeControl = new FlatTreeControl<TBFlatNode>(
@@ -58,6 +60,13 @@ ngOnInit(): void {
 
   });
 
+}
+
+handleExColClick = (node: TBFlatNode): void => {
+
+  this.treeControl.toggle(node);
+  node.sclass = this.treeControl.isExpanded(node) ? 'expanded-node' : '';
+  
 }
 
 hasChild = (_nouse: number, node: TBFlatNode): boolean => node.expandable;

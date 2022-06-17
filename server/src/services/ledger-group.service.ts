@@ -82,6 +82,7 @@ export class LedgerGroupService {
         }
       }
     },
+    { '$sort': { 'id': 1 } }
   ];
 
   private fillLDGParentMap = (ldGMap:Record<string, Array<LedgerGroupIntf>>, groups:Array<LedgerGroupIntf>) => {

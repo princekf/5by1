@@ -5,7 +5,8 @@ import { adminAndUserAuthDetails } from '../utils/authorize-details';
 import { ACC_REPORTS_API } from '@shared/server-apis';
 import { BalanceSheetItem } from '@shared/util/balance-sheet-item';
 import { TrialBalanceItem } from '@shared/util/trial-balance-item';
-import { BalanceSheetRespSchema, TrialBalanceRespSchema } from './specs/common-specs';
+import { LedgerReportItem } from '@shared/util/ledger-report-item';
+import { BalanceSheetRespSchema, LedgerReportRespSchema, TrialBalanceLedgerSummaryRespSchema, TrialBalanceRespSchema } from './specs/common-specs';
 import { AccountReportService } from '../services/account-report.service';
 import { service } from '@loopback/core';
 
@@ -17,6 +18,37 @@ export class AccountReportController {
     @service(AccountReportService) public accountReportService: AccountReportService,
   ) {}
 
+  @get(`${ACC_REPORTS_API}/ledger-summary/{ason}`)
+  @response(200, {
+    description: 'Ledger summary as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
+    content: {
+      'application/json': {schema: TrialBalanceLedgerSummaryRespSchema},
+    },
+  })
+  async ledgerSummary(@param.path.date('ason') ason: Date,): Promise<TrialBalanceItem[]> {
+
+    const lgsR = await this.accountReportService.generateLedgerSummary(ason);
+    return lgsR;
+
+  }
+
+  @get(`${ACC_REPORTS_API}/ledger-report`)
+  @response(200, {
+    description: 'Ledger report of a specified ledger',
+    content: {
+      'application/json': {schema: LedgerReportRespSchema},
+    },
+  })
+  async ledgerReport(
+    @param.query.date('ason') ason: Date,
+    @param.query.string('plid') plid: string,
+    @param.query.string('clid') clid?: string,
+  ): Promise<LedgerReportItem[]> {
+
+    const lgsR = await this.accountReportService.generateLedgerReport(ason, plid, clid);
+    return lgsR;
+
+  }
 
   @get(`${ACC_REPORTS_API}/balance-sheet/{ason}`)
   @response(200, {
