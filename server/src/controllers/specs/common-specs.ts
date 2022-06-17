@@ -36,25 +36,43 @@ export const TrialBalanceRespSchema = {
   type: 'object',
   properties: {
     id: {type: 'string'},
+    parentId: {type: 'string'},
     name: {type: 'string'},
     code: {type: 'string'},
     credit: {type: 'number'},
     debit: {type: 'number'},
     obCredit: {type: 'number'},
     obDebit: {type: 'number'},
-    balance: {type: 'number'},
+    opening: {type: 'string'},
+    balance: {type: 'string'},
     children: {
       type: 'array',
       items: {properties: {
         id: {type: 'string'},
+        parentId: {type: 'string'},
         name: {type: 'string'},
         code: {type: 'string'},
         credit: {type: 'number'},
         debit: {type: 'number'},
         obCredit: {type: 'number'},
         obDebit: {type: 'number'},
-        balance: {type: 'number'},
+        opening: {type: 'string'},
+        balance: {type: 'string'},
       }},
     }
+  }
+};
+
+export const LedgerReportRespSchema = {
+  type: 'object',
+  properties: {
+    id: {type: 'string'},
+    voucherNo: {type: 'string'},
+    date: {type: 'Date'},
+    vType: {type: 'string'},
+    cLedger: {type: 'string'},
+    credit: {type: 'number'},
+    debit: {type: 'number'},
+    details: {type: 'string'},
   }
 };

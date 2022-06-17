@@ -28,9 +28,8 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { LedgerGroupSummaryRespSchema, TrialBalanceLedgerSummaryRespSchema } from './specs/common-specs';
+import { LedgerGroupSummaryRespSchema } from './specs/common-specs';
 import { service } from '@loopback/core';
-import { TrialBalanceItem } from '@shared/util/trial-balance-item';
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -198,22 +197,6 @@ export class VoucherController {
       }
     },
   ];
-
-  @get(`${VOUCHER_API}/ledgerSummary/{ason}`)
-  @response(200, {
-    description: 'Ledger summary as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
-    content: {
-      'application/json': {schema: TrialBalanceLedgerSummaryRespSchema},
-    },
-  })
-  @authorize({resource: resourcePermissions.voucherView.name,
-    ...adminAndUserAuthDetails})
-  async ledgerSummary(@param.path.date('ason') ason: Date,): Promise<TrialBalanceItem[]> {
-
-    const lgsR = await this.voucherService.generateLedgerSummary(ason);
-    return lgsR;
-
-  }
 
   @get(`${VOUCHER_API}/ledgerGroupSummary`)
   @response(200, {

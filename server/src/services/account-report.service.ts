@@ -5,6 +5,7 @@ import { LedgerGroupService } from './ledger-group.service';
 import { VoucherService } from './voucher.service';
 import { LedgerGroup as LedgerGroupIntf } from '@shared/entity/accounting/ledger-group';
 import { DECIMAL_PART } from '../utils/fbo-server-util';
+import { LedgerReportItem } from '@shared/util/ledger-report-item';
 
 // Get decimal place count from user session.
 const decimal = 2;
@@ -288,6 +289,29 @@ export class AccountReportService {
 
     });
     return itemsF;
+
+  }
+
+  generateLedgerSummary = async(ason: Date):Promise<Array<TrialBalanceItem>> => {
+
+    const plItems = await this.voucherService.generateLedgerSummary(ason);
+    plItems.forEach((item) => {
+
+      const openingI = item.obCredit ?? item.obDebit;
+      item.opening = `${openingI.toFixed(DECIMAL_PART)} ${item.obCredit ? 'Cr' : 'Dr'}`;
+
+      const balanceI = (item.credit ?? 0) + (item.obCredit ?? 0) - (item.debit ?? 0) - (item.obDebit ?? 0);
+      item.balance = `${Math.abs(balanceI).toFixed(DECIMAL_PART)} ${balanceI > 0 ? 'Cr' : 'Dr'}`;
+
+    });
+    return plItems;
+
+  }
+
+  generateLedgerReport = async(ason: Date, plid: string, clid?: string): Promise<LedgerReportItem[]> => {
+
+    const items = await this.voucherService.generateLedgerReport(ason, plid, clid);
+    return items;
 
   }
 

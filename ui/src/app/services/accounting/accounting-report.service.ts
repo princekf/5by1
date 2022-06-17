@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ACC_REPORTS_API_URI } from '@shared/server-apis';
 import { BalanceSheetItem } from '@shared/util/balance-sheet-item';
 import { TrialBalanceItem } from '@shared/util/trial-balance-item';
+import { LedgerReportItem } from '@shared/util/ledger-report-item';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -15,6 +16,21 @@ export class AccountingReportService {
   constructor(
     protected readonly http: HttpClient
   ) { }
+
+  public fetchLedgerSummaryReportItems(ason: string):Observable<Array<TrialBalanceItem>> {
+
+    return this.http.get<Array<TrialBalanceItem>>(`${this.API_URI}/ledger-summary/${ason}`);
+
+  }
+
+  public fetchLedgerReportItems(ason: string, plid: string, clid?: string):Observable<Array<LedgerReportItem>> {
+
+    let params = new HttpParams();
+    params = params.append('ason', ason).append('plid', plid)
+      .append('clid', clid ?? '');
+    return this.http.get<Array<LedgerReportItem>>(`${this.API_URI}/ledger-report`, {params});
+
+  }
 
   public fetchPLReportItems(ason: string):Observable<Array<BalanceSheetItem>> {
 
