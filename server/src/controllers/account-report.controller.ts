@@ -18,16 +18,47 @@ export class AccountReportController {
     @service(AccountReportService) public accountReportService: AccountReportService,
   ) {}
 
-  @get(`${ACC_REPORTS_API}/ledger-summary/{ason}`)
+  @get(`${ACC_REPORTS_API}/ledger-group-summary`)
+  @response(200, {
+    description: 'Ledger group summary as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
+    content: {
+      'application/json': {schema: TrialBalanceLedgerSummaryRespSchema},
+    },
+  })
+  async ledgerGroupSummary(@param.query.date('ason') ason: Date,): Promise<TrialBalanceItem[]> {
+
+    const lgsR = await this.accountReportService.ledgerGroupSummary(ason);
+    return lgsR;
+
+  }
+
+  @get(`${ACC_REPORTS_API}/ledger-summary`)
   @response(200, {
     description: 'Ledger summary as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
     content: {
       'application/json': {schema: TrialBalanceLedgerSummaryRespSchema},
     },
   })
-  async ledgerSummary(@param.path.date('ason') ason: Date,): Promise<TrialBalanceItem[]> {
+  async ledgerSummary(@param.query.date('ason') ason: Date,): Promise<TrialBalanceItem[]> {
 
     const lgsR = await this.accountReportService.generateLedgerSummary(ason);
+    return lgsR;
+
+  }
+
+  @get(`${ACC_REPORTS_API}/ledger-group-report`)
+  @response(200, {
+    description: 'Ledger group report of a specified ledger',
+    content: {
+      'application/json': {schema: LedgerReportRespSchema},
+    },
+  })
+  async ledgerGroupReport(
+    @param.query.date('ason') ason: Date,
+    @param.query.string('plid') plid: string,
+  ): Promise<LedgerReportItem[]> {
+
+    const lgsR = await this.accountReportService.generateLedgerGroupReport(ason, plid);
     return lgsR;
 
   }
