@@ -4,6 +4,7 @@ export interface LedgerReportItem {
     date: Date;
     type: string;
     name: string;
+    pname: string;
     debit: number;
     credit: number;
     details: string;

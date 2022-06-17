@@ -17,23 +17,6 @@
                     </mat-autocomplete>
                 </mat-form-field>
             </div>
-
-            <div class="filter-content-div">
-                <mat-label class="lable">Against Ledger</mat-label>
-                <mat-select formControlName="againstLType" class="select">
-                    <mat-option value="ne">Equal to</mat-option>
-                </mat-select>
-                <mat-form-field class="ledger-transaction-field">
-                    <input type="text" matInput formControlName="againstL" [matAutocomplete]="autoagainstLLedger">
-                    <mat-autocomplete autoActiveFirstOption #autoagainstLLedger="matAutocomplete"
-                        [displayWith]="extractNameOfObject">
-                        <mat-option *ngFor="let ledgerS of ledgersFiltered" [value]="ledgerS.id">
-                            {{ledgerS.name}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </div>
-
             
             <div class="filter-content-div">
                 <mat-label class="lable">Date</mat-label>
