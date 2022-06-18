@@ -115,7 +115,7 @@ export class AccountReportController {
   }
 
 
-  @get(`${ACC_REPORTS_API}/trial-balance/{ason}`)
+  @get(`${ACC_REPORTS_API}/trial-balance`)
   @response(200, {
     description: 'Trial balance as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
     content: {
@@ -123,7 +123,7 @@ export class AccountReportController {
     },
   })
   async trialBalance(
-    @param.path.date('ason') ason: Date,
+    @param.query.date('ason') ason: Date,
   ): Promise<TrialBalanceItem[]> {
 
     const bSheet = await this.accountReportService.generateTrialBalance(ason);
