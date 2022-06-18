@@ -1,5 +1,6 @@
 import {injectable, BindingScope} from '@loopback/core';
-import { repository } from '@loopback/repository';
+import { Filter, repository } from '@loopback/repository';
+import { Ledger } from '../models';
 import { LedgerRepository } from '../repositories';
 
 @injectable({scope: BindingScope.TRANSIENT})
@@ -34,6 +35,13 @@ export class LedgerService {
     const pQuery = await this.ledgerRepository.execute(this.ledgerRepository.modelClass.name, 'aggregate', ledgerReportAggs);
     const res = <[{lids: string[]}]> await pQuery.toArray();
     return res[0] ?? null;
+
+  }
+
+  find = async(filter?: Filter<Ledger>): Promise<Ledger[]> => {
+
+    const lgsR = await this.ledgerRepository.find(filter);
+    return lgsR;
 
   }
 

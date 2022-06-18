@@ -10,7 +10,7 @@ import { resourcePermissions } from '../utils/resource-permissions';
 import { adminAndUserAuthDetails } from '../utils/authorize-details';
 import { ValidateLedgerInterceptor } from '../interceptors/validate-ledger.interceptor';
 import { intercept } from '@loopback/context';
-import { inject } from '@loopback/core';
+import { inject, service } from '@loopback/core';
 import {SecurityBindings} from '@loopback/security';
 import { ProfileUser } from '../services';
 import { FileUploadHandler } from '../types';
@@ -19,6 +19,7 @@ import xlsx from 'xlsx';
 import { BindingKeys } from '../binding.keys';
 import { LedgerImport } from '../utils/ledger-import-specs';
 import { Save } from '../utils/save-spec';
+import { LedgerService } from '../services/ledger.service';
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
 export class LedgerController {
@@ -28,6 +29,7 @@ export class LedgerController {
     public ledgerRepository : LedgerRepository,
     @repository(LedgerGroupRepository)
     public ledgerGroupRepository : LedgerGroupRepository,
+    @service(LedgerService) public ledgerService: LedgerService,
   ) {}
 
   @intercept(ValidateLedgerInterceptor.BINDING_KEY)
@@ -95,7 +97,7 @@ export class LedgerController {
     @param.filter(Ledger) filter?: Filter<Ledger>,
   ): Promise<Ledger[]> {
 
-    const lgsR = await this.ledgerRepository.find(filter);
+    const lgsR = await this.ledgerService.find(filter);
     return lgsR;
 
   }
