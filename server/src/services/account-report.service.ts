@@ -294,6 +294,35 @@ export class AccountReportService {
 
   }
 
+  private findAllTBItemsWithNoTransactionButOpening = async(lIds: Array<string>): Promise<Array<TrialBalanceItem>> => {
+
+    const ldgNTs = await this.ledgerService.find({where: {
+      id: {nin: lIds},
+      obAmount: {gt: 0}
+    }});
+    const lSumm: Array<TrialBalanceItem> = [];
+    ldgNTs.forEach((ldgNT) => {
+
+      const {name, code, ledgerGroupId, id, obAmount, obType} = ldgNT;
+      lSumm.push({
+        id,
+        parentId: ledgerGroupId,
+        name,
+        code,
+        obCredit: obType === 'Credit' ? obAmount : 0,
+        obDebit: obType === 'Debit' ? obAmount : 0,
+        credit: 0,
+        debit: 0,
+        opening: '',
+        balance: '',
+        children: []
+      });
+
+    });
+    return lSumm;
+
+  }
+
   ledgerGroupSummary = async(ason: Date):Promise<Array<TrialBalanceItem>> => {
 
     const plItems = await this.voucherService.generateLedgerGroupSummary(ason);
@@ -312,7 +341,11 @@ export class AccountReportService {
 
   generateLedgerSummary = async(ason: Date):Promise<Array<TrialBalanceItem>> => {
 
-    const plItems = await this.voucherService.generateLedgerSummary(ason);
+    const plItems2 = await this.voucherService.generateLedgerSummary(ason);
+    const lids = plItems2.map((item) => item.id);
+
+    const ldGNts = await this.findAllTBItemsWithNoTransactionButOpening(lids);
+    const plItems = [ ...plItems2, ...ldGNts ];
     plItems.forEach((item) => {
 
       item.credit = item.credit ? Number(item.credit.toFixed(DECIMAL_PART)) : null;
@@ -376,7 +409,11 @@ export class AccountReportService {
     const lGsWithChildren = lGsWithChildrenU as Array<TrialBalanceItem>;
     const lGMap:Record<string, TrialBalanceItem> = {};
     this.fillLGMap(lGMap, lGsWithChildren);
-    const lSumm = await this.voucherService.generateLedgerSummary(ason);
+    const lSummC = await this.voucherService.generateLedgerSummary(ason);
+    // Find all ledger which don't have transactions but opening balance.
+    const lIds = lSummC.map((lsu) => lsu.id);
+    const ldGNTs = await this.findAllTBItemsWithNoTransactionButOpening(lIds);
+    const lSumm = [ ...lSummC, ...ldGNTs ];
     this.fillTreeWithLedger(lSumm, lGMap);
     this.fillTreeWithLedgerGroups(lSumm, lGMap);
     const nonEmptyItems = this.removeEmptyItems(lGsWithChildren);

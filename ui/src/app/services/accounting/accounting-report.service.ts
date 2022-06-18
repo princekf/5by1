@@ -64,7 +64,9 @@ export class AccountingReportService {
 
   public fetchTrialBalanceItems(ason: string):Observable<Array<TrialBalanceItem>> {
 
-    return this.http.get<Array<TrialBalanceItem>>(`${this.API_URI}/trial-balance/${ason}`);
+    let params = new HttpParams();
+    params = params.append('ason', ason);
+    return this.http.get<Array<TrialBalanceItem>>(`${this.API_URI}/trial-balance`, {params});
 
   }
 
