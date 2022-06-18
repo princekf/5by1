@@ -2,15 +2,14 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { LedgerService } from '@fboservices/accounting/ledger.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterLedgerComponent } from '../filter-ledger/filter-ledger.component';
 import { Ledger } from '@shared/entity/accounting/ledger';
 import { MatDialog } from '@angular/material/dialog';
-import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
-import { MainService } from '../../../../../services/main.service';
 import { ImportErrordataPopupComponent } from '../../../import-errordata-popup/import-errordata-popup.component';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
+import flat from 'flat';
 
 @Component({
   selector: 'app-list-ledger',
@@ -23,7 +22,7 @@ export class ListLedgerComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'ledgerGroup.name', 'ledgerGroup.code', 'obAmount', 'obType', 'details' ];
 
-  c = this.displayedColumns.length;
+  numberColumns: string[] = [ 'obAmount' ];
 
   columnHeaders = {
     name: 'Name',
@@ -34,34 +33,6 @@ export class ListLedgerComponent implements OnInit, AfterViewInit {
     obType: 'Opening Type',
     details: 'Details',
   };
-
-  xheaders = [
-
-    {key: 'name',
-      width: 30, },
-    { key: 'code',
-      width: 25 },
-    {key: 'ledgerGroup.name',
-      width: 25 },
-    { key: 'ledgerGroup.code',
-      width: 25 },
-    { key: 'obAmount',
-      width: 20 },
-    { key: 'obType',
-      width: 25 },
-    { key: 'details',
-      width: 30 }
-  ];
-
-   iheaders = [
-     'Name',
-     'Code',
-     'Ledger Group',
-     'Group Code',
-     'Opening Balance',
-     'Opening Type',
-     'Details',
-   ];
 
 displayedColumns1: string[] = [ 'Name', 'Code', 'OpeningBalance', 'OpeningType', 'Details' ];
 
@@ -78,8 +49,6 @@ displayedColumns1: string[] = [ 'Name', 'Code', 'OpeningBalance', 'OpeningType',
 
   queryParams: QueryData = {};
 
-  routerSubscription: Subscription;
-
 
   ledgers: ListQueryRespType<Ledger> = {
     totalItems: 0,
@@ -93,7 +62,6 @@ displayedColumns1: string[] = [ 'Name', 'Code', 'OpeningBalance', 'OpeningType',
 
   constructor(private activatedRoute: ActivatedRoute,
               private ledgerService: LedgerService,
-              private mainservice: MainService,
               private dialog: MatDialog) { }
 
 
@@ -171,44 +139,31 @@ displayedColumns1: string[] = [ 'Name', 'Code', 'OpeningBalance', 'OpeningType',
     const tParams = {...this.queryParams};
     tParams.limit = this.ledgers.totalItems;
     this.loading = true;
-    const data = [];
     this.ledgerService.queryData(tParams).subscribe((items) => {
 
-
-      items.forEach((element) => {
-
-        const temp = [ element.name, element.code, element.ledgerGroup.name, element.ledgerGroup.code,
-          element.obAmount, element.obType,
-          element.details ];
-        data.push(temp);
-
-
-      });
-
-
-      this.dialog.open(ExportPopupComponent, {height: '500px',
-        data: {items,
-          displayedColumns: this.displayedColumns,
-          columnHeaders: this.columnHeaders}});
+      const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+        key: col}));
+      exportAsXLSX('Ledger List', items, headers);
       this.loading = false;
-      const result = {
-        cell: this.c,
-        rheader: this.iheaders,
-        eheader: this.xheaders,
-        header: this.columnHeaders,
-        rowData: data
 
-      };
-      this.mainservice.setExport(result);
-
-    }
-    // eslint-disable-next-line function-call-argument-newline
-    , (error) => {
+    }, (error) => {
 
       console.error(error);
       this.loading = false;
 
     });
+
+  }
+
+  columnParsingFn = (element: unknown, column: string): string => {
+
+    const elm = flat(element);
+    if (!elm[column]) {
+
+      return ' ';
+
+    }
+    return null;
 
   }
 
