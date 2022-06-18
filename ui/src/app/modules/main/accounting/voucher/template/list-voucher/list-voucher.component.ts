@@ -39,9 +39,9 @@ export class ListVoucherComponent implements OnInit {
     'cledger.name': 'Compound Ledger',
     amount: 'Amount',
     details: 'Details',
+    'pledger.code': 'Primary Ledger Code',
+    'cledger.code': 'Compound Ledger Code',
   };
-
-  lengthofcolumn = this.displayedColumns.length;
 
   xheaders = [
 
@@ -51,29 +51,17 @@ export class ListVoucherComponent implements OnInit {
       width: 30, },
     { key: 'pledger.name',
       width: 30, },
-      { key: 'pledger.code',
-        width: 30, },
+    { key: 'pledger.code',
+      width: 30, },
     { key: 'cledger.name',
       width: 30, },
-      { key: 'cledger.code',
-        width: 30, },
+    { key: 'cledger.code',
+      width: 30, },
     { key: 'amount',
       width: 30, },
     { key: 'details',
       width: 30 }
   ];
-
-    iheaders = [
-      'Voucher #',
-      'Date',
-      'Primary Ledger',
-      'Primary Ledger Code',
-      'Compound Ledger',
-      'Compound Ledger Code',
-      'Amount',
-      'Details',
-    ];
-
 
   queryParams: QueryData = {};
 
@@ -112,8 +100,8 @@ export class ListVoucherComponent implements OnInit {
         details: details2?.length < maxLength ? details2 : `${details2?.substring(0, trimLength)}...`,
         ...item2,
         amount: `${firstTr.amount} ${tType}`,
-        pledger: pledger,
-        cledger: cledger,
+        pledger,
+        cledger,
 
 
       });
@@ -121,8 +109,8 @@ export class ListVoucherComponent implements OnInit {
     }
 
     const expOptions = {
-      cell: this.lengthofcolumn,
-      rheader: this.iheaders,
+      cell: this.displayedColumns.length,
+      rheader: [ ...this.displayedColumns, 'pledger.code', 'cledger.code' ].map((head) => this.columnHeaders[head] ?? head),
       title: table,
       items: itemsT,
       displayedColumns: this.displayedColumns,
@@ -131,6 +119,7 @@ export class ListVoucherComponent implements OnInit {
       columnParsingFn: this.columnParsingFn,
 
     };
+
     this.mainservice.setExport(expOptions);
     return itemsT;
 

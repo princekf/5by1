@@ -5,7 +5,7 @@ export interface LedgerReportItem {
     type: string;
     name: string;
     pname: string;
-    debit: number;
-    credit: number;
+    debit: number | null;
+    credit: number | null;
     details: string;
 }

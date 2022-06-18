@@ -12,6 +12,7 @@ import { LOCAL_USER_KEY } from '@fboutil/constants';
 import { SessionUser } from '@shared/util/session-user';
 import { TrialBalanceItem } from '@shared/util/trial-balance-item';
 import { LedgerReportItem } from '@shared/util/ledger-report-item';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 
 @Component({
   selector: 'app-ledger-group-report',
@@ -70,7 +71,7 @@ export class LedgerGroupReportComponent implements OnInit {
 
     this.ledgerGroupService.get(ledgerGroupId, {}).subscribe((lGroup) => {
 
-      this.tableHeader = `Ledger Group Report -- ${lGroup.name}`;
+      this.tableHeader = `Ledger Group Report - ${lGroup.name} as on ${ason}`;
 
     });
 
@@ -92,7 +93,7 @@ export class LedgerGroupReportComponent implements OnInit {
 
     this.editUri = '/reports/ledger-group';
     this.deleteUri = null;
-    this.displayedColumns = [ 'number', 'date', 'type', 'name', 'debit', 'credit', 'details' ];
+    this.displayedColumns = [ 'name', 'debit', 'credit', 'opening', 'balance' ];
     this.tableHeader = 'Ledger Group Summary Report';
     this.accountingReportService.fetchLedgerGroupSummaryReportItems(ason).subscribe((items) => {
 
@@ -179,6 +180,10 @@ export class LedgerGroupReportComponent implements OnInit {
   }
 
   exportExcel(): void {
+
+    const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+      key: col}));
+    exportAsXLSX(this.tableHeader, this.ledgerRows.items, headers);
 
   }
 
