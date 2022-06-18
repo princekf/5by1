@@ -31,6 +31,7 @@
         "dayjs": "1.10.6",
         "exceljs": "4.3.0",
         "file-saver": "2.0.5",
+        "flat": "^5.0.2",
         "jspdf": "2.5.1",
         "jspdf-autotable": "3.5.23",
         "ngx-skeleton-loader": "2.10.1",

@@ -74,6 +74,20 @@ export const fillFilterForm = (filterForm: FormGroup, whereS: string):void => {
 
 };
 
+const createStringCondition = (filterForm: FormGroup, fieldName: string, typeName: string):unknown => {
+
+  const operator = filterForm.controls[typeName]?.value;
+  if (operator === 'eq') {
+
+    return {like: `^${filterForm.controls[fieldName]?.value}$`,
+      options: 'i'};
+
+  }
+  return {like: `${operator}${filterForm.controls[fieldName]?.value}`,
+    options: 'i'};
+
+};
+
 export const createQueryStringFromFilterForm =
 (filterForm: FormGroup, filterFormFields:Array<FilterFormField>):string => {
 
@@ -82,13 +96,12 @@ export const createQueryStringFromFilterForm =
 
     const fieldName = formField.name;
     const typeName = `${fieldName}Type`;
-    if (filterForm.controls[fieldName]?.value) {
+    if (filterForm.controls[fieldName]?.value || filterForm.controls[fieldName]?.value === 0) {
 
       switch (formField.type) {
 
       case 'string':
-        where[fieldName] = {like: `${filterForm.controls[typeName]?.value}${filterForm.controls[fieldName]?.value}`,
-          options: 'i'};
+        where[fieldName] = createStringCondition(filterForm, fieldName, typeName);
         break;
       case 'void':
         where[fieldName] = {ne: filterForm.controls[fieldName]?.value};
@@ -131,10 +144,10 @@ export const createQueryStringFromFilterForm =
     }
 
   }
-  if(Object.keys(where).length === 0){
+  if (Object.keys(where).length === 0) {
 
     return null;
-    
+
   }
   return JSON.stringify(where);
 
