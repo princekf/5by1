@@ -9,9 +9,11 @@ import { FilterItem } from '../../../../directives/table-filter/filter-item';
 import { FilterLedgerReportComponent } from '../filter-ledger-report/filter-ledger-report.component';
 import { AccountingReportService } from '@fboservices/accounting/accounting-report.service';
 import { LOCAL_USER_KEY } from '@fboutil/constants';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 import { SessionUser } from '@shared/util/session-user';
 import { LedgerReportItem } from '@shared/util/ledger-report-item';
 import { TrialBalanceItem } from '@shared/util/trial-balance-item';
+import { LedgerService } from '@fboservices/accounting/ledger.service';
 
 @Component({
   selector: 'app-ledger-report',
@@ -19,6 +21,7 @@ import { TrialBalanceItem } from '@shared/util/trial-balance-item';
   styleUrls: [ './ledger-report.component.scss' ]
 })
 export class LedgerReportComponent implements OnInit {
+
 
   tableHeader = 'Ledger Wise Summary Report';
 
@@ -59,6 +62,7 @@ export class LedgerReportComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
               private accountingReportService: AccountingReportService,
+              private ledgerService: LedgerService,
               private router: Router) { }
 
 
@@ -93,6 +97,7 @@ export class LedgerReportComponent implements OnInit {
     const againstParam = this.queryParams.where.againstL as {ne: string};
     const ledgerId = ledgerParam?.like;
     const againstId = againstParam?.ne;
+    this.ledgerService.get(ledgerId, {}).subscribe((ldg) => (this.tableHeader = `Ledger Report - ${ldg.name} as on ${ason}`));
     this.accountingReportService.fetchLedgerReportItems(ason, ledgerId, againstId).subscribe((items) => {
 
       this.ledgerRows = {
@@ -171,6 +176,10 @@ export class LedgerReportComponent implements OnInit {
 
 
   exportExcel(): void {
+
+    const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+      key: col}));
+    exportAsXLSX(this.tableHeader, this.ledgerRows.items, headers);
 
   }
 

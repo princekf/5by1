@@ -3,8 +3,8 @@ export interface TrialBalanceItem {
     parentId: string;
     name: string;
     code: string;
-    credit: number;
-    debit: number;
+    credit: number | null;
+    debit: number | null;
     obCredit: number;
     obDebit: number;
     opening: string;
