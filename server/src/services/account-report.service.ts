@@ -5,6 +5,8 @@ import { LedgerGroupService } from './ledger-group.service';
 import { VoucherService } from './voucher.service';
 import { LedgerGroup as LedgerGroupIntf } from '@shared/entity/accounting/ledger-group';
 import { DECIMAL_PART } from '../utils/fbo-server-util';
+import { LedgerReportItem } from '@shared/util/ledger-report-item';
+import { LedgerService } from './ledger.service';
 
 // Get decimal place count from user session.
 const decimal = 2;
@@ -15,6 +17,7 @@ export class AccountReportService {
   constructor(
     @service(VoucherService) public voucherService: VoucherService,
     @service(LedgerGroupService) public ledgerGroupService: LedgerGroupService,
+    @service(LedgerService) public ledgerService: LedgerService,
   ) {}
 
 
@@ -77,8 +80,8 @@ export class AccountReportService {
       const ldgId = summTB.parentId;
       ldGMap[ldgId] = ldGMap[ldgId] ?? {debit: 0,
         credit: 0};
-      ldGMap[ldgId].credit += summTB.credit;
-      ldGMap[ldgId].debit += summTB.debit;
+      ldGMap[ldgId].credit += summTB.credit ?? 0;
+      ldGMap[ldgId].debit += summTB.debit ?? 0;
       ldGMap[ldgId].credit += summTB.obCredit;
       ldGMap[ldgId].debit += summTB.obDebit;
 
@@ -152,7 +155,7 @@ export class AccountReportService {
 
     const summTBs = await this.voucherService.generateLedgerSummary(ason);
     // Filter the ledgers with balance
-    const filtTBs = summTBs.filter((summTB) => summTB.credit - summTB.debit + summTB.obCredit - summTB.obDebit);
+    const filtTBs = summTBs.filter((sTB) => (sTB.credit ?? 0) - (sTB.debit ?? 0) + sTB.obCredit - sTB.obDebit);
     // Find ledger group wise summary
     const ldGMap = this.findLedgerGroupSummaryMap(filtTBs);
     const lgsWithParents = await this.ledgerGroupService.findLedgerGroupsWithParents(Object.keys(ldGMap));
@@ -177,7 +180,7 @@ export class AccountReportService {
 
     const summTBs = await this.voucherService.generateLedgerSummary(ason);
     // Filter the ledgers with balance
-    const filtTBs = summTBs.filter((summTB) => summTB.credit - summTB.debit + summTB.obCredit - summTB.obDebit);
+    const filtTBs = summTBs.filter((sTB) => (sTB.credit ?? 0) - (sTB.debit ?? 0) + sTB.obCredit - sTB.obDebit);
     // Find ledger group wise summary
     const ldGMap = this.findLedgerGroupSummaryMap(filtTBs);
     const lgsWithParents = await this.ledgerGroupService.findLedgerGroupsWithParents(Object.keys(ldGMap));
@@ -229,8 +232,8 @@ export class AccountReportService {
         let parent = lGMap[ldS.parentId];
         while (parent) {
 
-          parent.credit = Number((ldS.credit + (parent.credit || 0)).toFixed(DECIMAL_PART));
-          parent.debit = Number((ldS.debit + (parent.debit || 0)).toFixed(DECIMAL_PART));
+          parent.credit = Number(((ldS.credit ?? 0) + (parent.credit || 0)).toFixed(DECIMAL_PART));
+          parent.debit = Number(((ldS.debit ?? 0) + (parent.debit || 0)).toFixed(DECIMAL_PART));
           parent.obCredit = Number((ldS.obCredit + (parent.obCredit || 0)).toFixed(DECIMAL_PART));
           parent.obDebit = Number((ldS.obDebit + (parent.obDebit || 0)).toFixed(DECIMAL_PART));
           const opening = parent.obCredit - parent.obDebit;
@@ -288,6 +291,68 @@ export class AccountReportService {
 
     });
     return itemsF;
+
+  }
+
+  ledgerGroupSummary = async(ason: Date):Promise<Array<TrialBalanceItem>> => {
+
+    const plItems = await this.voucherService.generateLedgerGroupSummary(ason);
+    plItems.forEach((item) => {
+
+      const openingI = item.obCredit ?? item.obDebit;
+      item.opening = openingI ? `${openingI.toFixed(DECIMAL_PART)} ${item.obCredit ? 'Cr' : 'Dr'}` : '';
+
+      const balanceI = (item.credit ?? 0) + (item.obCredit ?? 0) - (item.debit ?? 0) - (item.obDebit ?? 0);
+      item.balance = balanceI ? `${Math.abs(balanceI).toFixed(DECIMAL_PART)} ${balanceI > 0 ? 'Cr' : 'Dr'}` : '';
+
+    });
+    return plItems;
+
+  }
+
+  generateLedgerSummary = async(ason: Date):Promise<Array<TrialBalanceItem>> => {
+
+    const plItems = await this.voucherService.generateLedgerSummary(ason);
+    plItems.forEach((item) => {
+
+      item.credit = item.credit ? Number(item.credit.toFixed(DECIMAL_PART)) : null;
+      item.debit = item.debit ? Number(item.debit.toFixed(DECIMAL_PART)) : null;
+
+      const openingI = item.obCredit ?? item.obDebit;
+      item.opening = openingI ? `${openingI.toFixed(DECIMAL_PART)} ${item.obCredit ? 'Cr' : 'Dr'}` : '';
+
+      const balanceI = (item.credit ?? 0) + (item.obCredit ?? 0) - (item.debit ?? 0) - (item.obDebit ?? 0);
+      item.balance = balanceI ? `${Math.abs(balanceI).toFixed(DECIMAL_PART)} ${balanceI > 0 ? 'Cr' : 'Dr'}` : '';
+
+    });
+    return plItems;
+
+  }
+
+  generateLedgerGroupReport = async(ason: Date, plid: string): Promise<LedgerReportItem[]> => {
+
+    const lidsD = await this.ledgerService.findLedgerIdsOfGroup(plid);
+    const items = await this.voucherService.generateLedgerGroupReport(ason, lidsD.lids);
+    for (const item of items) {
+
+      item.credit = item.credit ? Number(item.credit.toFixed(DECIMAL_PART)) : null;
+      item.debit = item.debit ? Number(item.debit.toFixed(DECIMAL_PART)) : null;
+
+    }
+    return items;
+
+  }
+
+  generateLedgerReport = async(ason: Date, plid: string, clid?: string): Promise<LedgerReportItem[]> => {
+
+    const items = await this.voucherService.generateLedgerReport(ason, plid, clid);
+    for (const item of items) {
+
+      item.credit = item.credit ? Number(item.credit.toFixed(DECIMAL_PART)) : null;
+      item.debit = item.debit ? Number(item.debit.toFixed(DECIMAL_PART)) : null;
+
+    }
+    return items;
 
   }
 
