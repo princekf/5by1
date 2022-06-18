@@ -31,6 +31,41 @@
                 </mat-form-field>
             </div>
 
+            <div class="filter-content-div">
+                <mat-label class="lable">Opening</mat-label>
+                <mat-select formControlName="obAmountType" class="select">
+                    <mat-option value="eq">Equal to</mat-option>
+                    <mat-option value="lt">Lesser than</mat-option>
+                    <mat-option value="gt">Greater than</mat-option>
+                    <mat-option value="between">Between</mat-option>
+                </mat-select>
+                
+                <mat-form-field *ngIf="filterForm.controls['obAmountType'].value !== 'between'">
+                    <input matInput type="number" formControlName="obAmount">
+                </mat-form-field>
+                
+                <div class="betweenKeyInputs" *ngIf="filterForm.controls['obAmountType'].value === 'between'">
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="obAmountStart">
+                    </mat-form-field>
+                    <mat-label class="betweenlable">and</mat-label>
+                    <mat-form-field class="inputPrimary">
+                        <input matInput type="number" formControlName="obAmountEnd">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="filter-content-div">
+                <mat-label class="lable">Opening Type</mat-label>
+                <mat-select class="select" formControlName="obTypeType">
+                    <mat-option value="">Contains</mat-option>
+                    <mat-option value="eq">Equal to</mat-option>
+                </mat-select>
+                <mat-select class="select" formControlName="obType">
+                    <mat-option value=""></mat-option>
+                    <mat-option value="Credit">Credit</mat-option>
+                    <mat-option value="Debit">Debit</mat-option>
+                </mat-select>
+            </div>
         </div>
 
         <div class='filter-actions-container'>

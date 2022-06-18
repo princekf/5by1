@@ -22,7 +22,10 @@ export class FilterLedgerComponent implements OnInit {
     nameType: new FormControl('^'),
     ledgerGroupId: new FormControl(''),
     ledgerGroupIdType: new FormControl(''),
-
+    obAmount: new FormControl(''),
+    obAmountType: new FormControl('gt'),
+    obType: new FormControl(''),
+    obTypeType: new FormControl(''),
   });
 
   constructor(private router:Router,
@@ -72,6 +75,10 @@ export class FilterLedgerComponent implements OnInit {
         type: 'string'},
       {name: 'ledgerGroupId',
         type: 'string'},
+      {name: 'obAmount',
+        type: 'number'},
+      {name: 'obType',
+        type: 'string'},
 
     ];
     const whereS = createQueryStringFromFilterForm(this.filterForm, formFields);
@@ -81,10 +88,12 @@ export class FilterLedgerComponent implements OnInit {
 
   extractNameOfLedgerGroup = (idS: string): string => this.ledgerGroupsFiltered.find((ldgr) => ldgr.id === idS)?.name;
 
-  resetter() {
+  resetter():void {
 
     this.filterForm.controls.name.reset();
     this.filterForm.controls.ledgerGroupId.reset();
+    this.filterForm.controls.obAmount.reset();
+    this.filterForm.controls.obType.reset();
 
   }
 
