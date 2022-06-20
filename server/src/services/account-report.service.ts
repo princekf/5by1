@@ -328,6 +328,9 @@ export class AccountReportService {
     const plItems = await this.voucherService.generateLedgerGroupSummary(ason);
     plItems.forEach((item) => {
 
+      item.credit = item.credit ? Number(item.credit.toFixed(DECIMAL_PART)) : null;
+      item.debit = item.debit ? Number(item.debit.toFixed(DECIMAL_PART)) : null;
+
       const openingI = item.obCredit ?? item.obDebit;
       item.opening = openingI ? `${openingI.toFixed(DECIMAL_PART)} ${item.obCredit ? 'Cr' : 'Dr'}` : '';
 
@@ -365,27 +368,60 @@ export class AccountReportService {
   generateLedgerGroupReport = async(ason: Date, plid: string): Promise<LedgerReportItem[]> => {
 
     const lidsD = await this.ledgerService.findLedgerIdsOfGroup(plid);
-    const items = await this.voucherService.generateLedgerGroupReport(ason, lidsD.lids);
+    const items = await this.voucherService.generateLedgerGroupReport(ason, lidsD.lids) as
+    Array<Partial<LedgerReportItem>>;
+    let totalDebit = 0;
+    let totalCredit = 0;
     for (const item of items) {
 
+      totalDebit += item?.debit ?? 0;
+      totalCredit += item?.credit ?? 0;
       item.credit = item.credit ? Number(item.credit.toFixed(DECIMAL_PART)) : null;
       item.debit = item.debit ? Number(item.debit.toFixed(DECIMAL_PART)) : null;
 
     }
-    return items;
+    const balance = totalCredit - totalDebit;
+    items.push({
+      name: 'Balance',
+      debit: balance > 0 ? Number(balance.toFixed(DECIMAL_PART)) : null,
+      credit: balance < 0 ? Number(Math.abs(balance).toFixed(DECIMAL_PART)) : null,
+    });
+    const total = totalCredit > totalDebit ? totalCredit : totalDebit;
+    items.push({
+      name: 'Total',
+      debit: total,
+      credit: total,
+    });
+    return items as LedgerReportItem[];
 
   }
 
   generateLedgerReport = async(ason: Date, plid: string, clid?: string): Promise<LedgerReportItem[]> => {
 
-    const items = await this.voucherService.generateLedgerReport(ason, plid, clid);
+    const items = await this.voucherService.generateLedgerReport(ason, plid, clid) as Array<Partial<LedgerReportItem>>;
+    let totalDebit = 0;
+    let totalCredit = 0;
     for (const item of items) {
 
+      totalDebit += item?.debit ?? 0;
+      totalCredit += item?.credit ?? 0;
       item.credit = item.credit ? Number(item.credit.toFixed(DECIMAL_PART)) : null;
       item.debit = item.debit ? Number(item.debit.toFixed(DECIMAL_PART)) : null;
 
     }
-    return items;
+    const balance = totalCredit - totalDebit;
+    items.push({
+      name: 'Balance',
+      debit: balance > 0 ? Number(balance.toFixed(DECIMAL_PART)) : null,
+      credit: balance < 0 ? Number(Math.abs(balance).toFixed(DECIMAL_PART)) : null,
+    });
+    const total = totalCredit > totalDebit ? totalCredit : totalDebit;
+    items.push({
+      name: 'Total',
+      debit: total,
+      credit: total,
+    });
+    return items as LedgerReportItem[];
 
   }
 

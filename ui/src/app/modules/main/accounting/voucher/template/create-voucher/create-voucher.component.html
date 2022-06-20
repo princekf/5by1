@@ -99,7 +99,7 @@
         <input id="photoInput" name="selectedFiles" multiple (change)="handleFileUploadInput($event.target.files)"
             style="display: none;" type="file" />
         <mat-chip-list multiple>
-            <mat-chip *ngFor="let sFile of existingFiles" (removed)="removeExistingFile(sFile)">
+            <mat-chip *ngFor="let sFile of existingFiles" (click)="viewAttatchment(sFile)" (removed)="removeExistingFile(sFile)">
                 {{sFile.name}}
                 <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
