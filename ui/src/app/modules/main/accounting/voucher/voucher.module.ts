@@ -25,7 +25,6 @@ import { EditVoucherComponent } from './edit-voucher/edit-voucher.component';
     DataTableModule, MatTableModule, NgxSkeletonLoaderModule, MatSortModule, ToolBarModule,
     MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule,
     MatInputModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule, MatAutocompleteModule, MatIconModule,
-
-  ]
+  ],
 })
 export class VoucherModule { }

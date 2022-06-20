@@ -28,6 +28,12 @@ export class VoucherDocumentService {
 
   }
 
+  public getAttatchmentSignedURL(voucherId: string, docId: string): Observable<{signedURL: string}> {
+
+    return this.http.get<{signedURL: string}>(`${this.API_URI}/${voucherId}/${docId}/signed-url`);
+
+  }
+
   public removeAttatchment(voucherId: string, id: string): Observable<number> {
 
     const filterParam = JSON.stringify({id});

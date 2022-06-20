@@ -4,7 +4,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CostCentreService } from '@fboservices/accounting/cost-centre.service';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
 import { VoucherDocumentService } from '@fboservices/accounting/voucher-document.service';
-import { DocumentService } from '@fboservices/common/document.service';
 import { CostCentre } from '@shared/entity/accounting/cost-centre';
 import { Ledger } from '@shared/entity/accounting/ledger';
 import { Transaction, TransactionType } from '@shared/entity/accounting/transaction';
@@ -77,8 +76,7 @@ export class CreateVoucherComponent implements OnInit {
     private readonly voucherDocumentService: VoucherDocumentService,
     private readonly fBuilder: FormBuilder,
     private readonly toastr: ToastrService,
-    @Inject(DOCUMENT) private document: Document,
-    private readonly documentService: DocumentService) { }
+    @Inject(DOCUMENT) private document: Document,) { }
 
     private handleCostCentreAutoChange = (costCentreQ: unknown) => {
 
@@ -575,6 +573,17 @@ export class CreateVoucherComponent implements OnInit {
     }
 
     this.selectedFiles.push(...files);
+
+  }
+
+  viewAttatchment = (doc: DocumentEnt): void => {
+
+    const tId = this.route.snapshot.queryParamMap.get('id');
+    this.voucherDocumentService.getAttatchmentSignedURL(tId, doc.id).subscribe((url) => {
+
+      this.document.defaultView.open(url.signedURL, '_blank');
+
+    });
 
   }
 
