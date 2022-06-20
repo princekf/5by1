@@ -46,6 +46,44 @@ export class VoucherDocumentController {
 
   }
 
+  @get(`${VOUCHER_API}/{vid}/{did}/signed-url`, {
+    responses: {
+      '200': {
+        description: 'Signed get url for the attatched document.',
+        content: {'application/json': {schema: {
+          type: 'object',
+          title: 'string',
+          'x-typescript-type': 'string',
+          properties: {
+            signedURL: {
+              type: 'string'
+            }
+          }
+        }}},
+      },
+    },
+  })
+  async signedURL(
+    @param.path.string('vid') vid: string,
+    @param.path.string('did') did: string,
+  ): Promise<{signedURL: string}> {
+
+    const documents = await this.voucherRepository.documents(vid).find({where: {
+      id: {
+        eq: did
+      }
+    }});
+    const [ doc ] = documents;
+    if (!doc?.key) {
+
+      return {signedURL: ''};
+
+    }
+    const signedURL = await awsPreSignedUrlUtil.createTemporarySignedGETUrl(doc.key);
+    return {signedURL};
+
+  }
+
   @post(`${VOUCHER_API}/{id}/documents`, {
     responses: {
       '200': {
