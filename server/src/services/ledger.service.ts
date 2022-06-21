@@ -9,7 +9,7 @@ export class LedgerService {
   constructor(@repository(LedgerRepository)
   public ledgerRepository : LedgerRepository,) {}
 
-  private createLedgerIdsByGroupAggs = (lid: string) => [
+  private findLedgerIdsByGroupAggs = (lid: string) => [
     {
       '$graphLookup': {
         'from': 'LedgerGroup',
@@ -23,7 +23,7 @@ export class LedgerService {
     { '$match': { 'parents._id': { '$eq': lid } } },
     {
       '$group': {
-        '_id': '$ledgerGroupId',
+        '_id': '',
         'lids': {'$push': '$_id'}
       }
     }
@@ -31,7 +31,7 @@ export class LedgerService {
 
   findLedgerIdsOfGroup = async(plid: string): Promise<{lids: string[]}> => {
 
-    const ledgerReportAggs = this.createLedgerIdsByGroupAggs(plid);
+    const ledgerReportAggs = this.findLedgerIdsByGroupAggs(plid);
     const pQuery = await this.ledgerRepository.execute(this.ledgerRepository.modelClass.name, 'aggregate', ledgerReportAggs);
     const res = <[{lids: string[]}]> await pQuery.toArray();
     return res[0] ?? null;

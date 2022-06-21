@@ -1,5 +1,8 @@
 
 const RANDOM_STR_DEFAULT_SIZE = 5;
+const C_23 = 23;
+const C_59 = 59;
+const C_999 = 999;
 
 class FBOServerUtil {
 
@@ -15,6 +18,22 @@ class FBOServerUtil {
 
       }
       return result;
+
+    }
+
+    public updateTimeToMaximum = (inc: Date):Date => {
+
+      const maxdDate = new Date(inc.getTime());
+      maxdDate.setUTCHours(C_23, C_59, C_59, C_999);
+      return maxdDate;
+
+    }
+
+    public updateTimeToMinimum = (inc: Date):Date => {
+
+      const maxdDate = new Date(inc.getTime());
+      maxdDate.setUTCHours(0, 0, 0, 0);
+      return maxdDate;
 
     }
 
