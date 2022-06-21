@@ -4,7 +4,7 @@ import { TrialBalanceItem } from '@shared/util/trial-balance-item';
 import { LedgerGroupService } from './ledger-group.service';
 import { VoucherService } from './voucher.service';
 import { LedgerGroup as LedgerGroupIntf } from '@shared/entity/accounting/ledger-group';
-import { DECIMAL_PART } from '../utils/fbo-server-util';
+import { DECIMAL_PART, fboServerUtil } from '../utils/fbo-server-util';
 import { LedgerReportItem } from '@shared/util/ledger-report-item';
 import { LedgerService } from './ledger.service';
 
@@ -323,8 +323,9 @@ export class AccountReportService {
 
   }
 
-  ledgerGroupSummary = async(ason: Date):Promise<Array<TrialBalanceItem>> => {
+  ledgerGroupSummary = async(asonI: Date):Promise<Array<TrialBalanceItem>> => {
 
+    const ason = fboServerUtil.updateTimeToMaximum(asonI);
     const plItems = await this.voucherService.generateLedgerGroupSummary(ason);
     plItems.forEach((item) => {
 
@@ -342,8 +343,9 @@ export class AccountReportService {
 
   }
 
-  generateLedgerSummary = async(ason: Date):Promise<Array<TrialBalanceItem>> => {
+  generateLedgerSummary = async(asonI: Date):Promise<Array<TrialBalanceItem>> => {
 
+    const ason = fboServerUtil.updateTimeToMaximum(asonI);
     const plItems2 = await this.voucherService.generateLedgerSummary(ason);
     const lids = plItems2.map((item) => item.id);
 
@@ -365,8 +367,9 @@ export class AccountReportService {
 
   }
 
-  generateLedgerGroupReport = async(ason: Date, plid: string): Promise<LedgerReportItem[]> => {
+  generateLedgerGroupReport = async(asonI: Date, plid: string): Promise<LedgerReportItem[]> => {
 
+    const ason = fboServerUtil.updateTimeToMaximum(asonI);
     const lidsD = await this.ledgerService.findLedgerIdsOfGroup(plid);
     const items = await this.voucherService.generateLedgerGroupReport(ason, lidsD.lids) as
     Array<Partial<LedgerReportItem>>;
@@ -396,8 +399,9 @@ export class AccountReportService {
 
   }
 
-  generateLedgerReport = async(ason: Date, plid: string, clid?: string): Promise<LedgerReportItem[]> => {
+  generateLedgerReport = async(asonI: Date, plid: string, clid?: string): Promise<LedgerReportItem[]> => {
 
+    const ason = fboServerUtil.updateTimeToMaximum(asonI);
     const items = await this.voucherService.generateLedgerReport(ason, plid, clid) as Array<Partial<LedgerReportItem>>;
     let totalDebit = 0;
     let totalCredit = 0;
@@ -425,22 +429,25 @@ export class AccountReportService {
 
   }
 
-  generateBalanceSheet = async(ason: Date):Promise<Array<BalanceSheetItem>> => {
+  generateBalanceSheet = async(asonI: Date):Promise<Array<BalanceSheetItem>> => {
 
+    const ason = fboServerUtil.updateTimeToMaximum(asonI);
     const plItems = await this.generateBalanceSheetReport(ason);
     return plItems.bItems;
 
   }
 
-  generateProfitLoss = async(ason: Date):Promise<Array<BalanceSheetItem>> => {
+  generateProfitLoss = async(asonI: Date):Promise<Array<BalanceSheetItem>> => {
 
+    const ason = fboServerUtil.updateTimeToMaximum(asonI);
     const plItems = await this.generateProfitLossReport(ason);
     return plItems.bItems;
 
   }
 
-  generateTrialBalance = async(ason: Date):Promise<Array<TrialBalanceItem>> => {
+  generateTrialBalance = async(asonI: Date):Promise<Array<TrialBalanceItem>> => {
 
+    const ason = fboServerUtil.updateTimeToMaximum(asonI);
     const lGsWithChildrenU = await this.ledgerGroupService.findLedgerGroupsWithChildren() as unknown;
     const lGsWithChildren = lGsWithChildrenU as Array<TrialBalanceItem>;
     const lGMap:Record<string, TrialBalanceItem> = {};
