@@ -1,2 +1,2 @@
-<app-tool-bar createUri="/unit/create" mainHeader="Unit"  (importClickEvent)="handleImportClick($event)" (exportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-tool-bar createUri="/unit/create" mainHeader="Unit"  (importClickEvent)="handleImportClick($event)" (exportClickEvent)="exportExcel()"></app-tool-bar>
 <app-data-table tableHeader="List of Units" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="units" editUri="/unit/create" deleteUri="/unit/delete" [filterItem]="filterItem"></app-data-table>

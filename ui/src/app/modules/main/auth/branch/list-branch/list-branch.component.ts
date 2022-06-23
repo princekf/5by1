@@ -10,14 +10,16 @@ import { Branch } from '@shared/entity/auth/branch';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
 import { MatDialog } from '@angular/material/dialog';
-import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 import { MainService } from '../../../../../services/main.service';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-branch',
   templateUrl: './list-branch.component.html',
   styleUrls: [ './list-branch.component.scss' ]
 })
 export class ListBranchComponent implements OnInit, AfterViewInit {
+
+  tableHeader = 'List of Branch';
 
   displayedColumns: string[] = [ 'name', 'email', 'code', 'address', 'finYearStartDate', 'defaultFinYear.name' ];
 
@@ -141,44 +143,12 @@ export class ListBranchComponent implements OnInit, AfterViewInit {
 
   }
 
-  handleExportClick = (): void => {
+  exportExcel() : void {
 
-    const tParams = {...this.queryParams};
-    tParams.limit = this.branchs.totalItems;
-    this.loading = true;
-    const data = [];
-    this.branchService.queryData(tParams).subscribe((items) => {
+    const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+      key: col}));
 
-      items.forEach((element) => {
-
-        const temp = [ element.name, element.email, element.code, element.address,
-          element.finYearStartDate, element.defaultFinYear.name ];
-
-        data.push(temp);
-
-      });
-      const result = {
-        cell: this.c,
-        rheader: this.iheaders,
-        eheader: this.xheaders,
-        header: this.columnHeaders,
-        rowData: data
-      };
-      this.mainservice.setExport(result);
-
-      this.dialog.open(ExportPopupComponent, {height: '500px',
-        data: {items,
-          displayedColumns: this.displayedColumns,
-          columnHeaders: this.columnHeaders}});
-      this.loading = false;
-
-
-    }, (error) => {
-
-      console.error(error);
-      this.loading = false;
-
-    });
+    exportAsXLSX(this.tableHeader, this.branchs.items, headers);
 
   }
 

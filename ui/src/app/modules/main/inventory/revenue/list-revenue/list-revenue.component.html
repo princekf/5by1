@@ -1,3 +1,3 @@
-<app-tool-bar createUri="/revenue/create" mainHeader="Revenue" (exportClickEvent)="handleExportClick()"></app-tool-bar>
+<app-tool-bar createUri="/revenue/create" mainHeader="Revenue" (exportClickEvent)="exportExcel()"></app-tool-bar>
 <app-data-table tableHeader="List of Revenues" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="revenues" editUri="/revenue/create" deleteUri="/revenue/delete" [columnParsingFn]="columnParsingFn" [numberColumns]="numberColumns"
     [filterItem]="filterItem"></app-data-table>
