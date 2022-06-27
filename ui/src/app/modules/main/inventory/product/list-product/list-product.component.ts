@@ -7,15 +7,17 @@ import { QueryData } from '@shared/util/query-data';
 import { Subscription } from 'rxjs';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterProductComponent } from '../filter-product/filter-product.component';
-import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MainService } from '../../../../../services/main.service';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-item',
   templateUrl: './list-product.component.html',
   styleUrls: [ './list-product.component.scss' ]
 })
 export class ListProductComponent implements AfterViewInit, OnInit {
+
+  tableHeader = 'List of Products';
 
   displayedColumns: string[] = [ 'name', 'code', 'brand', 'location', 'barcode', 'reorderLevel', 'category.name', 'status' ];
 
@@ -133,54 +135,19 @@ export class ListProductComponent implements AfterViewInit, OnInit {
 
     handleImportClick = (file: File): void => {
 
-      this.productService.importProduct(file).subscribe(() => {
-
-        console.log('file uploaded');
-
-      });
+      this.productService.importProduct(file).subscribe(() => {});
 
 
     }
 
-    handleExportClick = (): void => {
-
-      const tParams = {...this.queryParams};
-      tParams.limit = this.rawDatas.totalItems;
-      this.loading = true;
-      const data = [];
-      this.productService.queryData(tParams).subscribe((items) => {
-
-        items.forEach((element) => {
-
-          const temp = [ element.name, element.code, element.brand, element.location,
-            element.barcode, element.reorderLevel,
-            element.category?.name, element.status ];
-
-          data.push(temp);
-
-        });
-        const result = {
-          cell: this.c,
-          rheader: this.iheaders,
-          eheader: this.xheaders,
-          header: this.columnHeaders,
-          rowData: data
-        };
-        this.mainservice.setExport(result);
-
-        this.dialog.open(ExportPopupComponent, {height: '500px',
-          data: {items,
-            displayedColumns: this.displayedColumns,
-            columnHeaders: this.columnHeaders}});
-        this.loading = false;
+    exportExcel(): void {
 
 
-      }, (error) => {
+      const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+        key: col}));
 
-        console.error(error);
-        this.loading = false;
+      exportAsXLSX(this.tableHeader, this.rawDatas.items, headers);
 
-      });
 
     }
 

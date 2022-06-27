@@ -4,7 +4,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatIconModule} from '@angular/material/icon';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -15,6 +15,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatChipsModule} from '@angular/material/chips';
 import {FileDragDropModule} from '@fbodirectives/file-drag-drop/file-drag-drop.module';
+import {DatePickerAdapter, PICK_FORMATS} from '@fboutil/date-picker-adapter';
 
 import { CreateVoucherComponent } from './create-voucher/create-voucher.component';
 import { ListVoucherComponent } from './list-voucher/list-voucher.component';
@@ -36,6 +37,12 @@ import { FilterVoucherComponent } from './filter-voucher/filter-voucher.componen
     MatSelectModule, MatSortModule, MatTableModule, MatButtonToggleModule, DataTableModule, MatChipsModule,
     FileDragDropModule,
   ],
-  exports: [ CreateVoucherComponent, ListVoucherComponent ]
+  exports: [ CreateVoucherComponent, ListVoucherComponent ],
+  providers: [
+    {provide: DateAdapter,
+      useClass: DatePickerAdapter},
+    {provide: MAT_DATE_FORMATS,
+      useValue: PICK_FORMATS}
+  ]
 })
 export class VoucherTemplateModule { }

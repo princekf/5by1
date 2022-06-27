@@ -10,12 +10,15 @@ import { FilterVendorComponent } from '../filter-vendor/filter-vendor.component'
 import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MainService } from '../../../../../services/main.service';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-vendor',
   templateUrl: './list-vendor.component.html',
   styleUrls: [ './list-vendor.component.scss' ]
 })
 export class ListVendorComponent implements AfterViewInit, OnInit {
+
+  tableHeader = 'List of Vendors';
 
   displayedColumns: string[] = [ 'name', 'email', 'mobile', 'state', 'address', 'gstNo' ];
 
@@ -155,6 +158,15 @@ export class ListVendorComponent implements AfterViewInit, OnInit {
         this.loading = false;
 
       });
+
+    }
+
+    exportExcel() : void {
+
+      const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+        key: col}));
+
+      exportAsXLSX(this.tableHeader, this.rawDatas.items, headers);
 
     }
 

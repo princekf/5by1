@@ -7,15 +7,17 @@ import { Tax } from '@shared/entity/inventory/tax';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterTaxComponent } from '../filter-tax/filter-tax.component';
-import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MainService } from '../../../../../services/main.service';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-tax',
   templateUrl: './list-tax.component.html',
   styleUrls: [ './list-tax.component.scss' ],
 })
 export class ListTaxComponent implements AfterViewInit, OnInit {
+
+  tableHeader = 'List of Taxes';
 
   displayedColumns: string[] = [ 'groupName', 'name', 'rate', 'appliedTo', 'description' ];
 
@@ -118,52 +120,17 @@ export class ListTaxComponent implements AfterViewInit, OnInit {
 
   handleImportClick = (file: File): void => {
 
-    this.taxService.importTax(file).subscribe(() => {
-
-      console.log('file uploaded');
-
-    });
+    this.taxService.importTax(file).subscribe(() => {});
 
 
   }
 
-  handleExportClick = (): void => {
+  exportExcel() : void {
 
-    const tParams = {...this.queryParams};
-    tParams.limit = this.taxes.totalItems;
-    this.loading = true;
-    const data = [];
-    this.taxService.queryData(tParams).subscribe((items) => {
+    const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+      key: col}));
 
-      items.forEach((element) => {
-
-        const temp = [ element.groupName, element.name, element.rate, element.appliedTo, element.description ];
-
-        data.push(temp);
-
-      });
-      const result = {
-        cell: this.c,
-        rheader: this.iheaders,
-        eheader: this.xheaders,
-        header: this.columnHeaders,
-        rowData: data
-      };
-      this.mainservice.setExport(result);
-
-      this.dialog.open(ExportPopupComponent, {height: '500px',
-        data: {items,
-          displayedColumns: this.displayedColumns,
-          columnHeaders: this.columnHeaders}});
-      this.loading = false;
-
-
-    }, (error) => {
-
-      console.error(error);
-      this.loading = false;
-
-    });
+    exportAsXLSX(this.tableHeader, this.taxes.items, headers);
 
   }
 
