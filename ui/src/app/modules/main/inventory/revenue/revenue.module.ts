@@ -15,9 +15,10 @@ import {MatTableModule} from '@angular/material/table';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatSortModule} from '@angular/material/sort';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
 import { FilterRevenueComponent } from './filter-revenue/filter-revenue.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { DatePickerAdapter, PICK_FORMATS } from '@fboutil/date-picker-adapter';
 @NgModule({
   declarations: [ ListRevenueComponent, CreateRevenueComponent, DeleteRevenueComponent, FilterRevenueComponent ],
   imports: [
@@ -26,6 +27,12 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     FormsModule, MatInputModule, MatButtonModule, MatTableModule, MatSortModule,
     NgxSkeletonLoaderModule, ToolBarModule, MatDatepickerModule, MatNativeDateModule,
     DataTableModule, MatAutocompleteModule
+  ],
+  providers: [
+    {provide: DateAdapter,
+      useClass: DatePickerAdapter},
+    {provide: MAT_DATE_FORMATS,
+      useValue: PICK_FORMATS}
   ]
 })
 export class RevenueModule { }

@@ -14,7 +14,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatSelectModule} from '@angular/material/select';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { ToolBarModule } from '../../tool-bar/tool-bar.module';
@@ -23,6 +23,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { FilterBillComponent } from './filter-bill/filter-bill.component';
 import {MatCardModule} from '@angular/material/card';
 import {MatMenuModule} from '@angular/material/menu';
+import { DatePickerAdapter, PICK_FORMATS } from '@fboutil/date-picker-adapter';
 
 
 @NgModule({
@@ -33,6 +34,12 @@ import {MatMenuModule} from '@angular/material/menu';
     ReactiveFormsModule, FormsModule, MatInputModule, MatDatepickerModule, MatNativeDateModule,
     MatAutocompleteModule, DataTableModule, ToolBarModule, MatFormFieldModule, MatButtonToggleModule,
     MatSlideToggleModule, MatIconModule, MatCardModule, MatMenuModule
+  ],
+  providers: [
+    {provide: DateAdapter,
+      useClass: DatePickerAdapter},
+    {provide: MAT_DATE_FORMATS,
+      useValue: PICK_FORMATS}
   ]
 })
 export class BillModule { }
