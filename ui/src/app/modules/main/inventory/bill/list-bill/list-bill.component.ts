@@ -1,7 +1,6 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { BillService } from '@fboservices/inventory/bill.service';
-import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { Bill } from '@shared/entity/inventory/bill';
 import { ActivatedRoute } from '@angular/router';
@@ -11,8 +10,6 @@ import { ProductService } from '@fboservices/inventory/product.service';
 import { Product } from '@shared/entity/inventory/product';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterBillComponent } from '../filter-bill/filter-bill.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
 import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-bill',
@@ -26,7 +23,6 @@ export class ListBillComponent implements AfterViewInit, OnInit {
   displayedColumns: string[] = [ 'vendor.name', 'billDate', 'billNumber', 'totalAmount',
     'totalDiscount', 'totalTax', 'grandTotal', 'isPaid' ];
 
-  c = this.displayedColumns.length;
 
   numberColumns: string[] = [ 'totalAmount' ];
 
@@ -41,42 +37,7 @@ export class ListBillComponent implements AfterViewInit, OnInit {
     isPaid: 'Paid'
   };
 
-  xheaders = [
-    {key: 'vendor.name',
-      width: 25 },
-    { key: 'billDate',
-      width: 30, },
-    {key: 'billNumber',
-      width: 25 },
-    {key: 'totalAmount',
-      width: 20 },
-    {key: 'totalDiscount',
-      width: 25 },
-    {key: 'totalTax',
-      width: 30 },
-    {key: 'grandTotal',
-      width: 25 },
-    {key: 'isPaid',
-      width: 25 }
-
-  ];
-
-  iheaders = [
-
-    'Vendor',
-    'Bill Date',
-    'bill Number #',
-    'Amount',
-    'Discount',
-    'Tax',
-    'Grand Total',
-    'Paid'
-  ];
-
-
   queryParams: QueryData = { };
-
-  routerSubscription: Subscription;
 
   loading = true;
 
@@ -110,8 +71,6 @@ export class ListBillComponent implements AfterViewInit, OnInit {
     private activatedRoute: ActivatedRoute,
     private readonly billService: BillService,
     private readonly productService: ProductService,
-    private dialog: MatDialog,
-    private mainservice: MainService,
   ) { }
 
   private loadData = () => {

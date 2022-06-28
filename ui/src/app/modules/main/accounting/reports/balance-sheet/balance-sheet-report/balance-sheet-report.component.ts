@@ -18,7 +18,7 @@ export class BalanceSheetReportComponent implements OnInit {
 
   tableHeader = 'Balance Sheet Report';
 
-  displayedColumns: string[] = [ 'lItem', 'lAmount', 'rItem', 'rAmount' ];
+  displayedColumns: string[] = [ 'lItexm', 'lAmount', 'rItem', 'rAmount' ];
 
   sortDisabledColumns: string[] = [ 'lItem', 'lAmount', 'rItem', 'rAmount' ];
 

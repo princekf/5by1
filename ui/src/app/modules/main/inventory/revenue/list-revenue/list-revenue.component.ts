@@ -1,7 +1,6 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { RevenueService } from '@fboservices/inventory/revenue.service';
 import { QueryData } from '@shared/util/query-data';
-import { Subscription } from 'rxjs';
 import { Revenue } from '@shared/entity/inventory/revenue';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
@@ -9,8 +8,6 @@ import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterRevenueComponent } from '../filter-revenue/filter-revenue.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
 import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 
 @Component({
@@ -25,8 +22,6 @@ export class ListRevenueComponent implements AfterViewInit, OnInit {
   displayedColumns: string[] = [ 'receivedDate', 'customer.name', 'invoice.invoiceNumber', 'bank.name',
     'category', 'amount', 'description' ];
 
-  c = this.displayedColumns.length;
-
   numberColumns: string[] = [ 'amount' ];
 
   columnHeaders = {
@@ -40,38 +35,7 @@ export class ListRevenueComponent implements AfterViewInit, OnInit {
 
   };
 
-  xheaders = [
-    {key: 'receivedDate',
-      width: 25 },
-    {key: 'customer.name',
-      width: 30 },
-    {key: 'invoice.invoiceNumber',
-      width: 20 },
-    {key: 'bank.name',
-      width: 20 },
-    {key: 'category',
-      width: 25 },
-    {key: 'amount',
-      width: 25 },
-    {key: 'description',
-      width: 30 },
-  ];
-
-  iheaders = [
-    'Received Date',
-    'Customer',
-    'Invoice',
-    'Bank',
-    'Category',
-    'Amount',
-    'Description',
-
-  ];
-
-
-  queryParams: QueryData = { };
-
-  routerSubscription: Subscription;
+  queryParams: QueryData = {};
 
   loading = true;
 
@@ -96,9 +60,7 @@ export class ListRevenueComponent implements AfterViewInit, OnInit {
   }
 
   constructor(private activatedRoute: ActivatedRoute,
-              private revenueService: RevenueService,
-              private dialog: MatDialog,
-              private mainservice: MainService,) { }
+              private revenueService: RevenueService) { }
 
 
     private loadData = () => {

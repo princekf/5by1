@@ -3,13 +3,10 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CategoryService } from '@fboservices/inventory/category.service';
 import { QueryData } from '@shared/util/query-data';
-import { Subscription } from 'rxjs';
 import { Category } from '@shared/entity/inventory/category';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterCategoryComponent } from '../filter-category/filter-category.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
 import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-category',
@@ -33,32 +30,7 @@ export class ListCategoryComponent implements AfterViewInit, OnInit {
     description: 'Description',
   };
 
-  xheaders = [
-    {key: 'parent.name',
-      width: 20 },
-    {key: 'name',
-      width: 30, },
-    {key: 'unit.name',
-      width: 20 },
-    { key: 'hsnNumber',
-      width: 20 },
-    { key: 'description',
-      width: 30 },
-
-  ];
-
-  iheaders = [
-    'Parent',
-    'Name',
-    'Unit',
-    'hsnNumber',
-    'Description',
-  ];
-
-
   queryParams: QueryData = { };
-
-  routerSubscription: Subscription;
 
   loading = true;
 
@@ -72,9 +44,7 @@ export class ListCategoryComponent implements AfterViewInit, OnInit {
 
 
   constructor(private activatedRoute: ActivatedRoute,
-              private categoryService: CategoryService,
-              private dialog: MatDialog,
-              private mainservice: MainService,) { }
+              private categoryService: CategoryService) { }
 
     private loadData = () => {
 
@@ -127,7 +97,7 @@ export class ListCategoryComponent implements AfterViewInit, OnInit {
 
     handleImportClick = (file: File): void => {
 
-      this.categoryService.importCategory(file).subscribe(() => {});
+      this.categoryService.importCategory(file).subscribe();
 
 
     }

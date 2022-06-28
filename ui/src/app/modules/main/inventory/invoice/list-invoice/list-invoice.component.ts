@@ -1,7 +1,6 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { InvoiceService } from '@fboservices/inventory/invoice.service';
-import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { Invoice } from '@shared/entity/inventory/invoice';
 import { ActivatedRoute } from '@angular/router';
@@ -9,8 +8,6 @@ import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterInvoiceComponent } from '../filter-invoice/filter-invoice.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
 import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 
 @Component({
@@ -23,8 +20,6 @@ export class ListInvoiceComponent implements AfterViewInit, OnInit {
   tableHeader = 'List of Invoices';
 
   displayedColumns: string[] = [ 'customer.name', 'invoiceDate', 'invoiceNumber', 'totalAmount', 'totalDiscount', 'totalTax', 'grandTotal', 'isReceived' ];
-
-  c = this.displayedColumns.length;
 
 numberColumns: string[] = [ 'totalAmount' ];
 
@@ -39,41 +34,7 @@ numberColumns: string[] = [ 'totalAmount' ];
     isReceived: 'Received'
   };
 
-  xheaders = [
-    {key: 'customer.name',
-      width: 30, },
-    {key: 'invoiceDate',
-      width: 15 },
-    {key: 'invoiceNumber',
-      width: 20 },
-    {key: 'totalAmount',
-      width: 20 },
-    { key: 'totalDiscount',
-      width: 20 },
-    { key: 'totalTax',
-      width: 15 },
-    {key: 'grandTotal',
-      width: 25 },
-    { key: 'isReceived',
-      width: 25 }
-
-  ];
-
-  iheaders = [
-    'Customer',
-    'Date',
-    'Invoice #',
-    'Amount',
-    'Discount',
-    'Tax',
-    'Grand Total',
-    'Received'
-  ];
-
-
   queryParams: QueryData = { };
-
-  routerSubscription: Subscription;
 
   loading = true;
 
@@ -102,9 +63,7 @@ numberColumns: string[] = [ 'totalAmount' ];
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private readonly invoiceService: InvoiceService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private readonly invoiceService: InvoiceService) { }
 
     private loadData = () => {
 

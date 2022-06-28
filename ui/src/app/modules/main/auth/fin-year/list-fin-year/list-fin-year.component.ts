@@ -2,15 +2,12 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FinYearService } from '@fboservices/auth//fin-year.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterFinYearComponent } from '../filter-fin-year/filter-fin-year.component';
 import { FinYear } from '@shared/entity/auth/fin-year';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
 import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-fin-year',
@@ -23,8 +20,6 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'code', 'startDate', 'endDate', 'branch.name' ];
 
-  c = this.displayedColumns.length;
-
   columnHeaders = {
     name: 'Name',
     code: 'Code',
@@ -34,37 +29,9 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
 
   };
 
-  xheaders = [
-
-    { key: 'name',
-      width: 30, },
-    { key: 'code',
-      width: 15 },
-    {key: 'startDate',
-      width: 15 },
-    {key: 'endDate',
-      width: 15 },
-    {key: 'branch.name',
-      width: 25 },
-
-  ];
-
-   iheaders = [
-     'Name',
-     'Code',
-     'StartDate',
-     'EndDate',
-     'Branch',
-
-   ];
-
-
   loading = true;
 
   queryParams: QueryData = {};
-
-  routerSubscription: Subscription;
-
 
   FinYears: ListQueryRespType<FinYear> = {
     totalItems: 0,
@@ -93,9 +60,7 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
   }
 
   constructor(private activatedRoute: ActivatedRoute,
-              private finYearService: FinYearService,
-              private dialog: MatDialog,
-              private mainservice: MainService,) { }
+              private finYearService: FinYearService) { }
 
 
   private loadData = () => {

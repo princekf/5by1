@@ -2,13 +2,10 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { UserService } from '@fboservices/user.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterUserComponent } from '../filter-user/filter-user.component';
 import { User } from '@shared/entity/auth/user';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
 import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 
 @Component({
@@ -22,37 +19,16 @@ export class ListUserComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [ 'name', 'email', 'role' ];
 
-  c = this.displayedColumns.length;
-
   columnHeaders = {
     name: 'Name',
     email: 'Email',
     role: 'Role',
   };
 
-    iheaders = [
-      'Name',
-      'Email',
-      'Role',
-    ];
-
-
-  xheaders = [
-    {key: 'name',
-      width: 40 },
-    { key: 'email',
-      width: 50 },
-    { key: 'role',
-      width: 10 },
-
-  ];
-
 
   loading = true;
 
   queryParams: QueryData = {};
-
-  routerSubscription: Subscription;
 
 
   Users: ListQueryRespType<User> = {
@@ -65,9 +41,7 @@ export class ListUserComponent implements OnInit, AfterViewInit {
   filterItem: FilterItem;
 
   constructor(private activatedRoute: ActivatedRoute,
-              private userService: UserService,
-              private dialog: MatDialog,
-              private mainservice: MainService,) { }
+              private userService: UserService) { }
 
 
   private loadData = () => {

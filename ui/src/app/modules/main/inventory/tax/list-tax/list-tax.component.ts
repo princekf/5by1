@@ -1,14 +1,11 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { QueryData } from '@shared/util/query-data';
-import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TaxService } from '@fboservices/inventory/tax.service';
 import { Tax } from '@shared/entity/inventory/tax';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterTaxComponent } from '../filter-tax/filter-tax.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
 import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-tax',
@@ -21,8 +18,6 @@ export class ListTaxComponent implements AfterViewInit, OnInit {
 
   displayedColumns: string[] = [ 'groupName', 'name', 'rate', 'appliedTo', 'description' ];
 
-  c = this.displayedColumns.length;
-
   columnHeaders = {
     groupName: 'Group Name',
     name: 'Name',
@@ -31,30 +26,7 @@ export class ListTaxComponent implements AfterViewInit, OnInit {
     description: 'Description'
   };
 
-  xheaders = [
-    {key: 'groupName',
-      width: 30 },
-    {key: 'name',
-      width: 30 },
-    { key: 'rate',
-      width: 20 },
-    { key: 'appliedTo',
-      width: 15 },
-    {key: 'description',
-      width: 30 },
-  ];
-
-    iheaders = [
-      'Group Name',
-      'Name',
-      'Rate (%)',
-      'Applied To (%)',
-      'Description'
-    ];
-
   queryParams: QueryData = { };
-
-  routerSubscription: Subscription;
 
   loading = true;
 
@@ -68,9 +40,7 @@ export class ListTaxComponent implements AfterViewInit, OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private readonly taxService: TaxService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private readonly taxService: TaxService) { }
 
   private loadData = () => {
 
@@ -120,7 +90,7 @@ export class ListTaxComponent implements AfterViewInit, OnInit {
 
   handleImportClick = (file: File): void => {
 
-    this.taxService.importTax(file).subscribe(() => {});
+    this.taxService.importTax(file).subscribe();
 
 
   }

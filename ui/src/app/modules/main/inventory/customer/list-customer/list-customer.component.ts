@@ -2,13 +2,10 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CustomerService } from '@fboservices/inventory/customer.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
-import { Subscription } from 'rxjs';
 import { Customer } from '@shared/entity/inventory/customer';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterCustomerComponent } from '../filter-customer/filter-customer.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
 import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 
 
@@ -23,8 +20,6 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
 
   displayedColumns: string[] = [ 'name', 'email', 'mobile', 'state', 'address', 'gstNo' ];
 
-  c = this.displayedColumns.length;
-
   columnHeaders = {
     name: 'Name',
     email: 'EMail',
@@ -34,33 +29,7 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
     gstNo: 'GST No'
   };
 
-  xheaders = [
-    { key: 'name',
-      width: 30, },
-    { key: 'eMail',
-      width: 35 },
-    { key: 'mobile',
-      width: 19 },
-    { key: 'state',
-      width: 20 },
-    { key: 'address',
-      width: 40 },
-    { key: 'gstNo',
-      width: 25 }
-  ];
-
-  iheaders = [
-    'Name',
-    'EMail',
-    'Mobile',
-    'State',
-    'Address',
-    'GST No'
-  ];
-
-  queryParams: QueryData = { };
-
-  routerSubscription: Subscription;
+  queryParams: QueryData = {};
 
   loading = true;
 
@@ -74,9 +43,7 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private readonly customerService: CustomerService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private readonly customerService: CustomerService) { }
 
     private loadData = () => {
 

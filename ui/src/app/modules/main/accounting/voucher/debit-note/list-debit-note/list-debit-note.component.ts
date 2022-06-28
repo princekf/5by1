@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { VoucherType } from '@shared/entity/accounting/voucher';
-import { MatDialog } from '@angular/material/dialog';
 import { MainService } from '../../../../../../services/main.service';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
 import { handleImportVouchers } from '../../voucher.util';
@@ -23,8 +22,7 @@ export class ListDebitNoteComponent {
 
 
   constructor(private voucherService: VoucherService,
-              private mainservice: MainService,
-              private dialog: MatDialog) { }
+              private mainservice: MainService) { }
 
 
     handleImportClick = (file: File): void => {
@@ -38,8 +36,6 @@ export class ListDebitNoteComponent {
       this.mainservice.getExport()
         .pipe(first())
         .subscribe((data) => {
-
-
           const info: string[] = data.items as string[];
           const special:string[] = data.displayedColumns as string[];
           const headers = special.map((col) => ({header: data.columnHeaders[col],
