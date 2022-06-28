@@ -403,6 +403,7 @@ export class AccountReportService {
 
     const ason = fboServerUtil.updateTimeToMaximum(asonI);
     const items = await this.voucherService.generateLedgerReport(ason, plid, clid) as Array<Partial<LedgerReportItem>>;
+    const ledger = await this.ledgerService.findById(plid);
     let totalDebit = 0;
     let totalCredit = 0;
     for (const item of items) {
@@ -413,7 +414,17 @@ export class AccountReportService {
       item.debit = item.debit ? Number(item.debit.toFixed(DECIMAL_PART)) : null;
 
     }
-    const balance = totalCredit - totalDebit;
+    items.push({
+      name: 'Net Total',
+      debit: totalDebit > 0 ? Number(totalDebit.toFixed(DECIMAL_PART)) : null,
+      credit: totalCredit > 0 ? Number(Math.abs(totalCredit).toFixed(DECIMAL_PART)) : null,
+    });
+    items.push({
+      name: 'Opening Balance',
+      debit: ledger.obType === 'Debit' ? Number(ledger.obAmount.toFixed(DECIMAL_PART)) : null,
+      credit: ledger.obType === 'Credit' ? Number(ledger.obAmount.toFixed(DECIMAL_PART)) : null,
+    });
+    const balance = totalCredit - totalDebit + (ledger.obType === 'Credit' ? 1 : -1) * ledger.obAmount;
     items.push({
       name: 'Balance',
       debit: balance > 0 ? Number(balance.toFixed(DECIMAL_PART)) : null,
@@ -421,7 +432,7 @@ export class AccountReportService {
     });
     const total = totalCredit > totalDebit ? totalCredit : totalDebit;
     items.push({
-      name: 'Total',
+      name: 'Gross Total',
       debit: total,
       credit: total,
     });
