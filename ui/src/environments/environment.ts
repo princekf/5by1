@@ -7,6 +7,7 @@
 export const environment = {
   production: false,
   dateFormat: 'DD-MM-YYYY',
+  datePickerFormat: 'dd-MM-YYYY',
   decimalPlaces: 2,
 };
 

@@ -3,13 +3,10 @@ import { Bank } from '@shared/entity/inventory/bank';
 import { BankService } from '@fboservices/inventory/bank.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterBankComponent } from '../filter-bank/filter-bank.component';
-import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-bank',
   templateUrl: './list-bank.component.html',
@@ -17,9 +14,9 @@ import { MainService } from '../../../../../services/main.service';
 })
 export class ListBankComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = [ 'type', 'name', 'openingBalance', 'description' ];
+  tableHeader = 'List of Banks';
 
-  c = this.displayedColumns.length;
+  displayedColumns: string[] = [ 'type', 'name', 'openingBalance', 'description' ];
 
   columnHeaders = {
     type: 'Type',
@@ -28,31 +25,9 @@ export class ListBankComponent implements OnInit, AfterViewInit {
     description: 'Description',
   };
 
-  iheaders = [
-    'Type',
-    'Name',
-    'OpeningBalance',
-    'Description',
-  ];
-
-  xheaders = [
-    {key: 'type',
-      width: 15 },
-    {key: 'name',
-      width: 30, },
-    {key: 'openingBalance',
-      width: 20 },
-    {key: 'description',
-      width: 25 }
-  ];
-
-
   loading = true;
 
   queryParams: QueryData = {};
-
-  routerSubscription: Subscription;
-
 
   banks: ListQueryRespType<Bank> = {
     totalItems: 0,
@@ -64,9 +39,7 @@ export class ListBankComponent implements OnInit, AfterViewInit {
   filterItem: FilterItem;
 
   constructor(private activatedRoute: ActivatedRoute,
-              private bankService: BankService,
-              private dialog: MatDialog,
-              private mainservice: MainService,) { }
+              private bankService: BankService) { }
 
 
   private loadData = () => {
@@ -116,52 +89,19 @@ export class ListBankComponent implements OnInit, AfterViewInit {
 
   handleImportClick = (file: File): void => {
 
-    this.bankService.importBank(file).subscribe(() => {
-
-      console.log('file uploaded');
-
-    });
+    this.bankService.importBank(file).subscribe();
 
 
   }
 
-  handleExportClick = (): void => {
-
-    const tParams = {...this.queryParams};
-    tParams.limit = this.banks.totalItems;
-    this.loading = true;
-    const data = [];
-    this.bankService.queryData(tParams).subscribe((items) => {
-
-      items.forEach((element) => {
-
-        const temp = [ element.type, element.name, element.openingBalance, element.description, ];
-
-        data.push(temp);
-
-      });
-      const result = {
-        cell: this.c,
-        rheader: this.iheaders,
-        eheader: this.xheaders,
-        header: this.columnHeaders,
-        rowData: data
-      };
-      this.mainservice.setExport(result);
-
-      this.dialog.open(ExportPopupComponent, {height: '500px',
-        data: {items,
-          displayedColumns: this.displayedColumns,
-          columnHeaders: this.columnHeaders}});
-      this.loading = false;
+  exportExcel(): void {
 
 
-    }, (error) => {
+    const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+      key: col}));
 
-      console.error(error);
-      this.loading = false;
+    exportAsXLSX(this.tableHeader, this.banks.items, headers);
 
-    });
 
   }
 

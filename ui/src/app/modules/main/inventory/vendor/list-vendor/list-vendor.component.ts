@@ -2,14 +2,11 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { QueryData } from '@shared/util/query-data';
-import { Subscription } from 'rxjs';
 import { Customer } from '@shared/entity/inventory/customer';
 import { VendorService } from '@fboservices/inventory/vendor.service';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterVendorComponent } from '../filter-vendor/filter-vendor.component';
-import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-vendor',
   templateUrl: './list-vendor.component.html',
@@ -17,9 +14,9 @@ import { MainService } from '../../../../../services/main.service';
 })
 export class ListVendorComponent implements AfterViewInit, OnInit {
 
-  displayedColumns: string[] = [ 'name', 'email', 'mobile', 'state', 'address', 'gstNo' ];
+  tableHeader = 'List of Vendors';
 
-  c = this.displayedColumns.length;
+  displayedColumns: string[] = [ 'name', 'email', 'mobile', 'state', 'address', 'gstNo' ];
 
   columnHeaders = {
     name: 'Name',
@@ -30,34 +27,7 @@ export class ListVendorComponent implements AfterViewInit, OnInit {
     gstNo: 'GST No'
   };
 
-  xheaders = [
-    {key: 'name',
-      width: 30, },
-    { key: 'email',
-      width: 45 },
-    {key: 'mobile',
-      width: 20 },
-    {key: 'state',
-      width: 15 },
-    {key: 'address',
-      width: 45 },
-    {key: 'gstNo',
-      width: 20 }
-  ];
-
-   iheaders = [
-     'Name',
-     'E-Mail',
-     'Mobile',
-     'State',
-     'Address',
-     'GST No'
-   ];
-
-
   queryParams: QueryData = { };
-
-  routerSubscription: Subscription;
 
   loading = true;
 
@@ -71,9 +41,7 @@ export class ListVendorComponent implements AfterViewInit, OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private readonly vendorService: VendorService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private readonly vendorService: VendorService) { }
 
     private loadData = () => {
 
@@ -118,43 +86,12 @@ export class ListVendorComponent implements AfterViewInit, OnInit {
 
     }
 
-    handleExportClick = (): void => {
+    exportExcel() : void {
 
-      const tParams = {...this.queryParams};
-      tParams.limit = this.rawDatas.totalItems;
-      this.loading = true;
-      const data = [];
-      this.vendorService.queryData(tParams).subscribe((items) => {
+      const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+        key: col}));
 
-        items.forEach((element) => {
-
-          const temp = [ element.name, element.email, element.mobile, element.state, element.address, element.gstNo ];
-
-          data.push(temp);
-
-        });
-        const result = {
-          cell: this.c,
-          rheader: this.iheaders,
-          eheader: this.xheaders,
-          header: this.columnHeaders,
-          rowData: data
-        };
-        this.mainservice.setExport(result);
-
-        this.dialog.open(ExportPopupComponent, {height: '500px',
-          data: {items,
-            displayedColumns: this.displayedColumns,
-            columnHeaders: this.columnHeaders}});
-        this.loading = false;
-
-
-      }, (error) => {
-
-        console.error(error);
-        this.loading = false;
-
-      });
+      exportAsXLSX(this.tableHeader, this.rawDatas.items, headers);
 
     }
 

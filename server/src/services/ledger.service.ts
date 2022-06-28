@@ -45,4 +45,11 @@ export class LedgerService {
 
   }
 
+  findById = async(id: string, filter?: Filter<Ledger>): Promise<Ledger> => {
+
+    const lgsR = await this.ledgerRepository.findById(id, filter);
+    return lgsR;
+
+  }
+
 }

@@ -142,7 +142,7 @@ export class LedgerController {
     @param.filter(Ledger, {exclude: 'where'}) filter?: FilterExcludingWhere<Ledger>
   ): Promise<Ledger> {
 
-    const lgR = await this.ledgerRepository.findById(id, filter);
+    const lgR = await this.ledgerService.findById(id, filter);
     return lgR;
 
   }

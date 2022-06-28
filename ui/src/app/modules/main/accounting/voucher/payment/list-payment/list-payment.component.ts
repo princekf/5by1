@@ -1,18 +1,18 @@
 
 import { VoucherType } from '@shared/entity/accounting/voucher';
 import { Component } from '@angular/core';
-import { ExportPopupComponent } from '../../../../export-popup/export-popup.component';
-import { MatDialog } from '@angular/material/dialog';
 import { MainService } from '../../../../../../services/main.service';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
 import { handleImportVouchers } from '../../voucher.util';
 import { first } from 'rxjs/operators';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-payment',
   templateUrl: './list-payment.component.html',
   styleUrls: [ './list-payment.component.scss' ]
 })
 export class ListPaymentComponent {
+
 
   voucherType = VoucherType.PAYMENT;
 
@@ -23,8 +23,7 @@ export class ListPaymentComponent {
   loading = { status: false };
 
   constructor(private voucherService: VoucherService,
-              private mainservice: MainService,
-              private dialog: MatDialog) { }
+              private mainservice: MainService) { }
 
     handleImportClick = (file: File): void => {
 
@@ -32,21 +31,21 @@ export class ListPaymentComponent {
 
     }
 
-  handleExportClick = (): void => {
+    exportExcel(): void {
 
-    this.mainservice.getExport()
-    .pipe(first())
-    .subscribe((data) => {
+      this.mainservice.getExport()
+        .pipe(first())
+        .subscribe((data) => {
 
-      this.dialog.open(ExportPopupComponent, {
-        height: '500px',
-        data: {...data, fileName : 'vouchers-payment'}
-      });
+          const info: string[] = data.items as string[];
+          const special:string[] = data.displayedColumns as string[];
+          const headers = special.map((col) => ({header: data.columnHeaders[col],
+            key: col}));
+          exportAsXLSX(this.tableHeader, info, headers);
 
-    });
+        });
 
-  }
-
+    }
 
 }
 
