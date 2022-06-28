@@ -1,16 +1,12 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { QueryData } from '@shared/util/query-data';
-import { Subscription } from 'rxjs';
 import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 import { ActivatedRoute } from '@angular/router';
 import { LedgerGroupService } from '@fboservices/accounting/ledger-group.service';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterLedgergroupComponent } from '../filter-ledgergroup/filter-ledgergroup.component';
-import { MatDialog } from '@angular/material/dialog';
-import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
-import { MainService } from '../../../../../services/main.service';
-import { ImportErrordataPopupComponent } from '../../../import-errordata-popup/import-errordata-popup.component';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-ledgergroup',
   templateUrl: './list-ledgergroup.component.html',
@@ -18,9 +14,9 @@ import { ImportErrordataPopupComponent } from '../../../import-errordata-popup/i
 })
 export class ListLedgergroupComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = [ 'name', 'code', 'parent.name', 'parent.code', 'details' ];
+  tableHeader = 'List of Ledger Groups';
 
-  c = this.displayedColumns.length;
+  displayedColumns: string[] = [ 'name', 'code', 'parent.name', 'parent.code', 'details' ];
 
   columnHeaders = {
     name: 'Name',
@@ -30,28 +26,6 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
     details: 'Details',
 
   };
-
-  xheaders = [
-
-    {key: 'name',
-      width: 30, },
-    {key: 'code',
-      width: 15 },
-    { key: 'parent.name',
-      width: 25 },
-    { key: 'parent.code',
-      width: 25 },
-    { key: 'details',
-      width: 35 }
-  ];
-
-  iheaders = [
-    'Name',
-    'Code',
-    'Parent Name',
-    'Parent Code',
-    'Details'
-  ];
 
   displayedColumns1: string[] = [ 'Name', 'Code', 'Details' ];
 
@@ -63,7 +37,6 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
 
   queryParams: QueryData = { };
 
-  routerSubscription: Subscription;
 
   loading = true;
 
@@ -77,9 +50,7 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private readonly ledgerGroupService: LedgerGroupService,
-    private dialog: MatDialog,
-    private mainservice: MainService) { }
+    private readonly ledgerGroupService: LedgerGroupService) { }
 
     private loadData = () => {
 
@@ -128,58 +99,13 @@ export class ListLedgergroupComponent implements OnInit, AfterViewInit {
 
     }
 
-    handleImportClick = (file: File): void => {
-
-      this.ledgerGroupService.importLedgerGroup(file).subscribe((items) => {
-
-        this.dialog.open(ImportErrordataPopupComponent, {height: '500px',
-          data: {items,
-            displayedColumns: this.displayedColumns1,
-            columnHeaders: this.columnHeaders1}});
-
-      });
 
 
-    }
+    exportExcel() : void {
 
-    handleExportClick = (): void => {
-
-      const tParams = {...this.queryParams};
-      tParams.limit = this.ledgerGroups.totalItems;
-      this.loading = true;
-      const data = [];
-      this.ledgerGroupService.queryData(tParams).subscribe((items) => {
-
-        items.forEach((element) => {
-
-
-          const temp = [ element.name, element.code, element.parent?.name, element.parent?.code, element.details ];
-
-          data.push(temp);
-
-        });
-        const result = {
-          cell: this.c,
-          rheader: this.iheaders,
-          eheader: this.xheaders,
-          header: this.columnHeaders,
-          rowData: data
-        };
-        this.mainservice.setExport(result);
-
-        this.dialog.open(ExportPopupComponent, {height: '500px',
-          data: {items,
-            displayedColumns: this.displayedColumns,
-            columnHeaders: this.columnHeaders}});
-        this.loading = false;
-
-
-      }, (error) => {
-
-        console.error(error);
-        this.loading = false;
-
-      });
+      const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+        key: col}));
+      exportAsXLSX(this.tableHeader, this.ledgerGroups.items, headers);
 
     }
 

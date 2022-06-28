@@ -14,7 +14,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatRadioModule} from '@angular/material/radio';
 
 import { MatDayjsDateModule } from '@tabuckner/material-dayjs-adapter';
-import { MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
 import {dayJSProviders} from '@fboutil/day-js-providers';
 import { TrialBalanceReportComponent } from './trial-balance/trial-balance-report/trial-balance-report.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -27,6 +27,7 @@ import { FilterBalanceSheetReportComponent } from './balance-sheet/filter-balanc
 import { BalanceSheetReportComponent } from './balance-sheet/balance-sheet-report/balance-sheet-report.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatTableModule } from '@angular/material/table';
+import { DatePickerAdapter, PICK_FORMATS } from '@fboutil/date-picker-adapter';
 
 @NgModule({
   declarations: [ LedgerReportComponent, FilterLedgerReportComponent, TrialBalanceReportComponent,
@@ -37,6 +38,9 @@ import { MatTableModule } from '@angular/material/table';
     ReactiveFormsModule, FormsModule, MatAutocompleteModule, MatSelectModule, MatFormFieldModule, MatInputModule,
     MatDayjsDateModule, NgxSkeletonLoaderModule, MatIconModule, MatRadioModule, MatTreeModule, MatTableModule,
   ],
-  providers: [ ...dayJSProviders ]
+  providers: [{provide: DateAdapter,
+    useClass: DatePickerAdapter},
+  {provide: MAT_DATE_FORMATS,
+    useValue: PICK_FORMATS}]
 })
 export class ReportsModule { }

@@ -2,16 +2,13 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FinYearService } from '@fboservices/auth//fin-year.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterFinYearComponent } from '../filter-fin-year/filter-fin-year.component';
 import { FinYear } from '@shared/entity/auth/fin-year';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
-import { MatDialog } from '@angular/material/dialog';
-import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
-import { MainService } from '../../../../../services/main.service';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-fin-year',
   templateUrl: './list-fin-year.component.html',
@@ -19,9 +16,9 @@ import { MainService } from '../../../../../services/main.service';
 })
 export class ListFinYearComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = [ 'name', 'code', 'startDate', 'endDate', 'branch.name' ];
+  tableHeader = 'List of Fin Years';
 
-  c = this.displayedColumns.length;
+  displayedColumns: string[] = [ 'name', 'code', 'startDate', 'endDate', 'branch.name' ];
 
   columnHeaders = {
     name: 'Name',
@@ -32,37 +29,9 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
 
   };
 
-  xheaders = [
-
-    { key: 'name',
-      width: 30, },
-    { key: 'code',
-      width: 15 },
-    {key: 'startDate',
-      width: 15 },
-    {key: 'endDate',
-      width: 15 },
-    {key: 'branch.name',
-      width: 25 },
-
-  ];
-
-   iheaders = [
-     'Name',
-     'Code',
-     'StartDate',
-     'EndDate',
-     'Branch',
-
-   ];
-
-
   loading = true;
 
   queryParams: QueryData = {};
-
-  routerSubscription: Subscription;
-
 
   FinYears: ListQueryRespType<FinYear> = {
     totalItems: 0,
@@ -91,9 +60,7 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
   }
 
   constructor(private activatedRoute: ActivatedRoute,
-              private finYearService: FinYearService,
-              private dialog: MatDialog,
-              private mainservice: MainService,) { }
+              private finYearService: FinYearService) { }
 
 
   private loadData = () => {
@@ -147,43 +114,12 @@ export class ListFinYearComponent implements OnInit, AfterViewInit {
 
   }
 
-  handleExportClick = (): void => {
+  exportExcel() : void {
 
-    const tParams = {...this.queryParams};
-    tParams.limit = this.FinYears.totalItems;
-    this.loading = true;
-    const data = [];
-    this.finYearService.queryData(tParams).subscribe((items) => {
+    const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+      key: col}));
 
-      items.forEach((element) => {
-
-        const temp = [ element.name, element.code, element.startDate, element.endDate, element.branch.name ];
-
-        data.push(temp);
-
-      });
-      const result = {
-        cell: this.c,
-        rheader: this.iheaders,
-        eheader: this.xheaders,
-        header: this.columnHeaders,
-        rowData: data
-      };
-      this.mainservice.setExport(result);
-
-      this.dialog.open(ExportPopupComponent, {height: '500px',
-        data: {items,
-          displayedColumns: this.displayedColumns,
-          columnHeaders: this.columnHeaders}});
-      this.loading = false;
-
-
-    }, (error) => {
-
-      console.error(error);
-      this.loading = false;
-
-    });
+    exportAsXLSX(this.tableHeader, this.FinYears.items, headers);
 
   }
 

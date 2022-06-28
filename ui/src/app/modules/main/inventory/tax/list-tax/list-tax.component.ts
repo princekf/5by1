@@ -1,15 +1,12 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { QueryData } from '@shared/util/query-data';
-import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TaxService } from '@fboservices/inventory/tax.service';
 import { Tax } from '@shared/entity/inventory/tax';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterTaxComponent } from '../filter-tax/filter-tax.component';
-import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-tax',
   templateUrl: './list-tax.component.html',
@@ -17,9 +14,9 @@ import { MainService } from '../../../../../services/main.service';
 })
 export class ListTaxComponent implements AfterViewInit, OnInit {
 
-  displayedColumns: string[] = [ 'groupName', 'name', 'rate', 'appliedTo', 'description' ];
+  tableHeader = 'List of Taxes';
 
-  c = this.displayedColumns.length;
+  displayedColumns: string[] = [ 'groupName', 'name', 'rate', 'appliedTo', 'description' ];
 
   columnHeaders = {
     groupName: 'Group Name',
@@ -29,30 +26,7 @@ export class ListTaxComponent implements AfterViewInit, OnInit {
     description: 'Description'
   };
 
-  xheaders = [
-    {key: 'groupName',
-      width: 30 },
-    {key: 'name',
-      width: 30 },
-    { key: 'rate',
-      width: 20 },
-    { key: 'appliedTo',
-      width: 15 },
-    {key: 'description',
-      width: 30 },
-  ];
-
-    iheaders = [
-      'Group Name',
-      'Name',
-      'Rate (%)',
-      'Applied To (%)',
-      'Description'
-    ];
-
   queryParams: QueryData = { };
-
-  routerSubscription: Subscription;
 
   loading = true;
 
@@ -66,9 +40,7 @@ export class ListTaxComponent implements AfterViewInit, OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private readonly taxService: TaxService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private readonly taxService: TaxService) { }
 
   private loadData = () => {
 
@@ -118,52 +90,17 @@ export class ListTaxComponent implements AfterViewInit, OnInit {
 
   handleImportClick = (file: File): void => {
 
-    this.taxService.importTax(file).subscribe(() => {
-
-      console.log('file uploaded');
-
-    });
+    this.taxService.importTax(file).subscribe();
 
 
   }
 
-  handleExportClick = (): void => {
+  exportExcel() : void {
 
-    const tParams = {...this.queryParams};
-    tParams.limit = this.taxes.totalItems;
-    this.loading = true;
-    const data = [];
-    this.taxService.queryData(tParams).subscribe((items) => {
+    const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+      key: col}));
 
-      items.forEach((element) => {
-
-        const temp = [ element.groupName, element.name, element.rate, element.appliedTo, element.description ];
-
-        data.push(temp);
-
-      });
-      const result = {
-        cell: this.c,
-        rheader: this.iheaders,
-        eheader: this.xheaders,
-        header: this.columnHeaders,
-        rowData: data
-      };
-      this.mainservice.setExport(result);
-
-      this.dialog.open(ExportPopupComponent, {height: '500px',
-        data: {items,
-          displayedColumns: this.displayedColumns,
-          columnHeaders: this.columnHeaders}});
-      this.loading = false;
-
-
-    }, (error) => {
-
-      console.error(error);
-      this.loading = false;
-
-    });
+    exportAsXLSX(this.tableHeader, this.taxes.items, headers);
 
   }
 

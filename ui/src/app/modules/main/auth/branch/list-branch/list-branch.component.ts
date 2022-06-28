@@ -2,16 +2,13 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { BranchService } from '@fboservices/auth/branch.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterBranchComponent } from '../filter-branch/filter-branch.component';
 import { Branch } from '@shared/entity/auth/branch';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
-import { MatDialog } from '@angular/material/dialog';
-import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
-import { MainService } from '../../../../../services/main.service';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-branch',
   templateUrl: './list-branch.component.html',
@@ -19,9 +16,9 @@ import { MainService } from '../../../../../services/main.service';
 })
 export class ListBranchComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = [ 'name', 'email', 'code', 'address', 'finYearStartDate', 'defaultFinYear.name' ];
+  tableHeader = 'List of Branch';
 
-  c = this.displayedColumns.length;
+  displayedColumns: string[] = [ 'name', 'email', 'code', 'address', 'finYearStartDate', 'defaultFinYear.name' ];
 
   columnHeaders = {
     name: 'Name',
@@ -32,36 +29,9 @@ export class ListBranchComponent implements OnInit, AfterViewInit {
     'defaultFinYear.name': 'DefaultFinYear'
   };
 
-  xheaders = [
-    {key: 'name',
-      width: 30, },
-    {key: 'email',
-      width: 40 },
-    {key: 'code',
-      width: 15 },
-    { key: 'address',
-      width: 50 },
-    {key: 'finYearStartDate',
-      width: 19 },
-    {key: 'defaultFinYear.name',
-      width: 15 }
-  ];
-
-   iheaders = [
-     'Name',
-     'Email',
-     'Code',
-     'Address',
-     'FinYearStartDate',
-     'DefaultFinYear'
-   ];
-
   loading = true;
 
   queryParams: QueryData = {};
-
-  routerSubscription: Subscription;
-
 
   branchs: ListQueryRespType<Branch> = {
     totalItems: 0,
@@ -86,9 +56,7 @@ export class ListBranchComponent implements OnInit, AfterViewInit {
   }
 
   constructor(private activatedRoute: ActivatedRoute,
-              private branchService: BranchService,
-              private dialog: MatDialog,
-              private mainservice: MainService,) { }
+              private branchService: BranchService) { }
 
 
   private loadData = () => {
@@ -141,44 +109,12 @@ export class ListBranchComponent implements OnInit, AfterViewInit {
 
   }
 
-  handleExportClick = (): void => {
+  exportExcel() : void {
 
-    const tParams = {...this.queryParams};
-    tParams.limit = this.branchs.totalItems;
-    this.loading = true;
-    const data = [];
-    this.branchService.queryData(tParams).subscribe((items) => {
+    const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+      key: col}));
 
-      items.forEach((element) => {
-
-        const temp = [ element.name, element.email, element.code, element.address,
-          element.finYearStartDate, element.defaultFinYear.name ];
-
-        data.push(temp);
-
-      });
-      const result = {
-        cell: this.c,
-        rheader: this.iheaders,
-        eheader: this.xheaders,
-        header: this.columnHeaders,
-        rowData: data
-      };
-      this.mainservice.setExport(result);
-
-      this.dialog.open(ExportPopupComponent, {height: '500px',
-        data: {items,
-          displayedColumns: this.displayedColumns,
-          columnHeaders: this.columnHeaders}});
-      this.loading = false;
-
-
-    }, (error) => {
-
-      console.error(error);
-      this.loading = false;
-
-    });
+    exportAsXLSX(this.tableHeader, this.branchs.items, headers);
 
   }
 

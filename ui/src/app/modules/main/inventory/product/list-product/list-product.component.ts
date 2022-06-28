@@ -4,12 +4,9 @@ import { Product } from '@shared/entity/inventory/product';
 import { ActivatedRoute } from '@angular/router';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { QueryData } from '@shared/util/query-data';
-import { Subscription } from 'rxjs';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterProductComponent } from '../filter-product/filter-product.component';
-import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 @Component({
   selector: 'app-list-item',
   templateUrl: './list-product.component.html',
@@ -17,9 +14,9 @@ import { MainService } from '../../../../../services/main.service';
 })
 export class ListProductComponent implements AfterViewInit, OnInit {
 
-  displayedColumns: string[] = [ 'name', 'code', 'brand', 'location', 'barcode', 'reorderLevel', 'category.name', 'status' ];
+  tableHeader = 'List of Products';
 
-  c = this.displayedColumns.length;
+  displayedColumns: string[] = [ 'name', 'code', 'brand', 'location', 'barcode', 'reorderLevel', 'category.name', 'status' ];
 
   columnHeaders = {
     name: 'Name',
@@ -32,41 +29,7 @@ export class ListProductComponent implements AfterViewInit, OnInit {
     status: 'Status'
   };
 
-  xheaders = [
-    {key: 'name',
-      width: 30 },
-    {key: 'code',
-      width: 15 },
-    {key: 'brand',
-      width: 20 },
-    {key: 'location',
-      width: 15 },
-    {key: 'barcode',
-      width: 20 },
-    {key: 'reorderLevel',
-      width: 20 },
-    {key: 'category.name',
-      width: 25 },
-    {key: 'status',
-      width: 35 }
-
-  ];
-
-   iheaders = [
-     'Name',
-     'Code',
-     'Brand',
-     'Location',
-     'Barcode',
-     'Re-Order',
-     'Category',
-     'Status'
-   ];
-
-
   queryParams: QueryData = { };
-
-  routerSubscription: Subscription;
 
   loading = true;
 
@@ -80,9 +43,7 @@ export class ListProductComponent implements AfterViewInit, OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private readonly productService: ProductService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private readonly productService: ProductService) { }
 
     private loadData = () => {
 
@@ -133,54 +94,19 @@ export class ListProductComponent implements AfterViewInit, OnInit {
 
     handleImportClick = (file: File): void => {
 
-      this.productService.importProduct(file).subscribe(() => {
-
-        console.log('file uploaded');
-
-      });
+      this.productService.importProduct(file).subscribe();
 
 
     }
 
-    handleExportClick = (): void => {
-
-      const tParams = {...this.queryParams};
-      tParams.limit = this.rawDatas.totalItems;
-      this.loading = true;
-      const data = [];
-      this.productService.queryData(tParams).subscribe((items) => {
-
-        items.forEach((element) => {
-
-          const temp = [ element.name, element.code, element.brand, element.location,
-            element.barcode, element.reorderLevel,
-            element.category?.name, element.status ];
-
-          data.push(temp);
-
-        });
-        const result = {
-          cell: this.c,
-          rheader: this.iheaders,
-          eheader: this.xheaders,
-          header: this.columnHeaders,
-          rowData: data
-        };
-        this.mainservice.setExport(result);
-
-        this.dialog.open(ExportPopupComponent, {height: '500px',
-          data: {items,
-            displayedColumns: this.displayedColumns,
-            columnHeaders: this.columnHeaders}});
-        this.loading = false;
+    exportExcel(): void {
 
 
-      }, (error) => {
+      const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+        key: col}));
 
-        console.error(error);
-        this.loading = false;
+      exportAsXLSX(this.tableHeader, this.rawDatas.items, headers);
 
-      });
 
     }
 

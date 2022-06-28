@@ -2,14 +2,11 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CustomerService } from '@fboservices/inventory/customer.service';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
-import { Subscription } from 'rxjs';
 import { Customer } from '@shared/entity/inventory/customer';
 import { QueryData } from '@shared/util/query-data';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterCustomerComponent } from '../filter-customer/filter-customer.component';
-import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 
 
 @Component({
@@ -19,10 +16,9 @@ import { MainService } from '../../../../../services/main.service';
 })
 export class ListCustomerComponent implements AfterViewInit, OnInit {
 
+  tableHeader = 'List of Customers';
 
   displayedColumns: string[] = [ 'name', 'email', 'mobile', 'state', 'address', 'gstNo' ];
-
-  c = this.displayedColumns.length;
 
   columnHeaders = {
     name: 'Name',
@@ -33,33 +29,7 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
     gstNo: 'GST No'
   };
 
-  xheaders = [
-    { key: 'name',
-      width: 30, },
-    { key: 'eMail',
-      width: 35 },
-    { key: 'mobile',
-      width: 19 },
-    { key: 'state',
-      width: 20 },
-    { key: 'address',
-      width: 40 },
-    { key: 'gstNo',
-      width: 25 }
-  ];
-
-  iheaders = [
-    'Name',
-    'EMail',
-    'Mobile',
-    'State',
-    'Address',
-    'GST No'
-  ];
-
-  queryParams: QueryData = { };
-
-  routerSubscription: Subscription;
+  queryParams: QueryData = {};
 
   loading = true;
 
@@ -73,9 +43,7 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private readonly customerService: CustomerService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private readonly customerService: CustomerService) { }
 
     private loadData = () => {
 
@@ -119,44 +87,13 @@ export class ListCustomerComponent implements AfterViewInit, OnInit {
 
     }
 
-  handleExportClick = (): void => {
+    exportExcel() : void {
 
-    const tParams = {...this.queryParams};
-    tParams.limit = this.rawDatas.totalItems;
-    this.loading = true;
-    const data = [];
-    this.customerService.queryData(tParams).subscribe((items) => {
+      const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+        key: col}));
 
-      items.forEach((element) => {
+      exportAsXLSX(this.tableHeader, this.rawDatas.items, headers);
 
-        const temp = [ element.name, element.email, element.mobile, element.state, element.address, element.gstNo ];
-
-        data.push(temp);
-
-      });
-      const result = {
-        cell: this.c,
-        eheader: this.xheaders,
-        rheader: this.iheaders,
-        header: this.columnHeaders,
-        rowData: data
-      };
-      this.mainservice.setExport(result);
-
-      this.dialog.open(ExportPopupComponent, {height: '500px',
-        data: {items,
-          displayedColumns: this.displayedColumns,
-          columnHeaders: this.columnHeaders}});
-      this.loading = false;
-
-
-    }, (error) => {
-
-      console.error(error);
-      this.loading = false;
-
-    });
-
-  }
+    }
 
 }

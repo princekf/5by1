@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountingReportService } from '@fboservices/accounting/accounting-report.service';
 import { LOCAL_USER_KEY } from '@fboutil/constants';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { BalanceSheetItem } from '@shared/util/balance-sheet-item';
 import { SessionUser } from '@shared/util/session-user';
@@ -70,8 +71,15 @@ export class ProfitLossReportComponent implements OnInit {
   }
 
   exportExcel(): void {
+
+    const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+      key: col}));
+
+    exportAsXLSX(this.tableHeader, this.tablesRows.items, headers);
+
   }
 
   convert(): void {
   }
+
 }

@@ -1,7 +1,6 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { InvoiceService } from '@fboservices/inventory/invoice.service';
-import { Subscription } from 'rxjs';
 import { QueryData } from '@shared/util/query-data';
 import { Invoice } from '@shared/entity/inventory/invoice';
 import { ActivatedRoute } from '@angular/router';
@@ -9,9 +8,7 @@ import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
 import { FilterItem } from '../../../directives/table-filter/filter-item';
 import { FilterInvoiceComponent } from '../filter-invoice/filter-invoice.component';
-import { ExportPopupComponent } from '../../../export-popup/export-popup.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MainService } from '../../../../../services/main.service';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 
 @Component({
   selector: 'app-list-invoice',
@@ -20,9 +17,9 @@ import { MainService } from '../../../../../services/main.service';
 })
 export class ListInvoiceComponent implements AfterViewInit, OnInit {
 
-  displayedColumns: string[] = [ 'customer.name', 'invoiceDate', 'invoiceNumber', 'totalAmount', 'totalDiscount', 'totalTax', 'grandTotal', 'isReceived' ];
+  tableHeader = 'List of Invoices';
 
-  c = this.displayedColumns.length;
+  displayedColumns: string[] = [ 'customer.name', 'invoiceDate', 'invoiceNumber', 'totalAmount', 'totalDiscount', 'totalTax', 'grandTotal', 'isReceived' ];
 
 numberColumns: string[] = [ 'totalAmount' ];
 
@@ -37,41 +34,7 @@ numberColumns: string[] = [ 'totalAmount' ];
     isReceived: 'Received'
   };
 
-  xheaders = [
-    {key: 'customer.name',
-      width: 30, },
-    {key: 'invoiceDate',
-      width: 15 },
-    {key: 'invoiceNumber',
-      width: 20 },
-    {key: 'totalAmount',
-      width: 20 },
-    { key: 'totalDiscount',
-      width: 20 },
-    { key: 'totalTax',
-      width: 15 },
-    {key: 'grandTotal',
-      width: 25 },
-    { key: 'isReceived',
-      width: 25 }
-
-  ];
-
-  iheaders = [
-    'Customer',
-    'Date',
-    'Invoice #',
-    'Amount',
-    'Discount',
-    'Tax',
-    'Grand Total',
-    'Received'
-  ];
-
-
   queryParams: QueryData = { };
-
-  routerSubscription: Subscription;
 
   loading = true;
 
@@ -100,9 +63,7 @@ numberColumns: string[] = [ 'totalAmount' ];
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private readonly invoiceService: InvoiceService,
-    private dialog: MatDialog,
-    private mainservice: MainService,) { }
+    private readonly invoiceService: InvoiceService) { }
 
     private loadData = () => {
 
@@ -149,45 +110,13 @@ numberColumns: string[] = [ 'totalAmount' ];
 
     }
 
-  handleExportClick = (): void => {
+    exportExcel() : void {
 
-    const tParams = {...this.queryParams};
-    tParams.limit = this.invoices.totalItems;
-    this.loading = true;
-    const data = [];
-    this.invoiceService.queryData(tParams).subscribe((items) => {
+      const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+        key: col}));
 
-      items.forEach((element) => {
+      exportAsXLSX(this.tableHeader, this.invoices.items, headers);
 
-        const temp = [ element.customer?.name, element.invoiceDate, element.invoiceNumber, element.totalAmount,
-          element.totalDiscount, element.totalTax, element.grandTotal, element.isReceived ];
-
-        data.push(temp);
-
-      });
-      const result = {
-        cell: this.c,
-        rheader: this.iheaders,
-        eheader: this.xheaders,
-        header: this.columnHeaders,
-        rowData: data
-      };
-      this.mainservice.setExport(result);
-
-      this.dialog.open(ExportPopupComponent, {height: '500px',
-        data: {items,
-          displayedColumns: this.displayedColumns,
-          columnHeaders: this.columnHeaders}});
-      this.loading = false;
-
-
-    }, (error) => {
-
-      console.error(error);
-      this.loading = false;
-
-    });
-
-  }
+    }
 
 }

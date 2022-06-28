@@ -1,2 +1,2 @@
-<app-tool-bar createUri="/cost-centre/create" mainHeader="CostCentre" (exportClickEvent)="handleExportClick()"></app-tool-bar>
-<app-data-table tableHeader="List of Cost-Centres" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="costCentres" editUri="/cost-centre/create" deleteUri="/cost-centre/delete" [filterItem]="filterItem"></app-data-table>
+<app-tool-bar createUri="/cost-centre/create" mainHeader="CostCentre" (exportClickEvent)="exportExcel()"></app-tool-bar>
+<app-data-table tableHeader="List of Cost-Centres" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="costCentres" editUri="/cost-centre/create" deleteUri="/cost-centre/delete" [filterItem]="filterItem"></app-data-table> 
