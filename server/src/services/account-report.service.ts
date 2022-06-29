@@ -414,6 +414,7 @@ export class AccountReportService {
       item.debit = item.debit ? Number(item.debit.toFixed(DECIMAL_PART)) : null;
 
     }
+    const isOBCredit = ledger.obType === 'Credit';
     items.push({
       name: 'Net Total',
       debit: totalDebit > 0 ? Number(totalDebit.toFixed(DECIMAL_PART)) : null,
@@ -421,20 +422,22 @@ export class AccountReportService {
     });
     items.push({
       name: 'Opening Balance',
-      debit: ledger.obType === 'Debit' ? Number(ledger.obAmount.toFixed(DECIMAL_PART)) : null,
-      credit: ledger.obType === 'Credit' ? Number(ledger.obAmount.toFixed(DECIMAL_PART)) : null,
+      debit: !isOBCredit ? Number(ledger.obAmount.toFixed(DECIMAL_PART)) : null,
+      credit: isOBCredit ? Number(ledger.obAmount.toFixed(DECIMAL_PART)) : null,
     });
-    const balance = totalCredit - totalDebit + (ledger.obType === 'Credit' ? 1 : -1) * ledger.obAmount;
+    const balance = totalCredit - totalDebit + (isOBCredit ? 1 : -1) * ledger.obAmount;
     items.push({
       name: 'Balance',
       debit: balance > 0 ? Number(balance.toFixed(DECIMAL_PART)) : null,
       credit: balance < 0 ? Number(Math.abs(balance).toFixed(DECIMAL_PART)) : null,
     });
-    const total = totalCredit > totalDebit ? totalCredit : totalDebit;
+    const grandTotalCr = totalCredit + (isOBCredit ? ledger.obAmount : 0);
+    const grandTotalDr = totalDebit + (!isOBCredit ? ledger.obAmount : 0);
+    const total = grandTotalCr > grandTotalDr ? grandTotalCr : grandTotalDr;
     items.push({
       name: 'Gross Total',
-      debit: total,
-      credit: total,
+      debit: Number(Math.abs(total).toFixed(DECIMAL_PART)),
+      credit: Number(Math.abs(total).toFixed(DECIMAL_PART)),
     });
     return items as LedgerReportItem[];
 
