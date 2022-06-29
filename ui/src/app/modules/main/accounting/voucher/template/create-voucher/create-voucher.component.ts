@@ -183,10 +183,15 @@ export class CreateVoucherComponent implements OnInit {
 
   private initFboForm = () => {
 
+    const day = new Date();
+
+    const tDate = day > new Date(this.finYear.startDate)
+    && day < new Date(this.finYear.endDate) ? day : this.finYear.endDate;
+
     this.fboForm = this.fBuilder.group({
       id: new FormControl(null),
       number: new FormControl(''),
-      date: this.fBuilder.control(new Date(), [ Validators.required ]),
+      date: this.fBuilder.control(tDate, [ Validators.required ]),
       type: this.fBuilder.control(this.voucherType, [ Validators.required ]),
       details: this.fBuilder.control(''),
       transactions: this.fBuilder.array([
