@@ -166,8 +166,8 @@ export class VoucherService {
         'type': 1,
         'details': 1,
         'name': '$ledgers.name',
-        'credit': {'$cond': [ {'$eq': [ '$tType', 'Credit' ]}, '$amount', 0 ]},
-        'debit': {'$cond': [ {'$eq': [ '$tType', 'Debit' ]}, '$amount', 0 ]},
+        'credit': {'$cond': [ {'$eq': [ '$tType', 'Debit' ]}, '$amount', 0 ]},
+        'debit': {'$cond': [ {'$eq': [ '$tType', 'Credit' ]}, '$amount', 0 ]},
       }
     },
     {
@@ -243,8 +243,8 @@ export class VoucherService {
         'details': 1,
         'pname': '$pledgers.name',
         'name': '$ledgers.name',
-        'credit': {'$cond': [ {'$eq': [ '$tType', 'Credit' ]}, '$amount', 0 ]},
-        'debit': {'$cond': [ {'$eq': [ '$tType', 'Debit' ]}, '$amount', 0 ]},
+        'credit': {'$cond': [ {'$eq': [ '$tType', 'Debit' ]}, '$amount', 0 ]},
+        'debit': {'$cond': [ {'$eq': [ '$tType', 'Credit' ]}, '$amount', 0 ]},
       }
     },
     {
