@@ -8,6 +8,8 @@ export const HTTP_RESPONSE_CODE = {
   HTTP_REDIRECT: 301,
 };
 
+export const INVALID_TOKEN = 'Your session might have expired.<br/><a href=\"/login\">Please login again</a>';
+
 // Should not give underscore _ in header key. It might cause while we deal with reverse proxy.
 export const ACCESS_TOKEN_ID = 'ACCESSTOKEN';
 export const GUEST_NAME = 'GUESTNAME';

@@ -6,6 +6,7 @@ import {securityId} from '@loopback/security';
 import * as jwt from 'jsonwebtoken';
 import {BindingKeys} from '../binding.keys';
 import { ProfileUser } from '.';
+import { INVALID_TOKEN } from '@shared/Constants';
 
 const signAsync = <(
   payload: unknown,
@@ -55,7 +56,7 @@ export class JWTService implements TokenService {
     } catch (error: any) {
 
       throw new HttpErrors.Unauthorized(
-        `Error verifying token : ${error.message}`,
+        INVALID_TOKEN,
       );
 
     }
