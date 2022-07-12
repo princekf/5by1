@@ -6,6 +6,7 @@ import { SessionUser } from '@shared/util/session-user';
 import * as dayjs from 'dayjs';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 
 interface TBFlatNode extends TrialBalanceItem {
   expandable: boolean;
@@ -20,10 +21,21 @@ interface TBFlatNode extends TrialBalanceItem {
 })
 export class TrialBalanceReportComponent implements OnInit {
 
+  temporary = [];
+
+  tableHeader = 'Trial Balance Summary Report';
+
   displayedColumns: string[] = [ 'name', 'credit', 'debit', 'opening', 'balance' ];
 
   loading = true;
 
+  columnHeaders = {
+    debit: 'Debit',
+    credit: 'Credit',
+    name: 'Name',
+    balance: 'Balance',
+    opening: 'Opening'
+  };
 
   private transformer = (node: TrialBalanceItem, level: number) => ({
     expandable: Boolean(node.children) && node.children.length > 0,
@@ -44,7 +56,7 @@ treeFlattener = new MatTreeFlattener(
 
 dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-constructor(private accountingReportService: AccountingReportService) { }
+constructor(private accountingReportService: AccountingReportService) {}
 
 
 ngOnInit(): void {
@@ -66,14 +78,39 @@ handleExColClick = (node: TBFlatNode): void => {
 
   this.treeControl.toggle(node);
   node.sclass = this.treeControl.isExpanded(node) ? 'expanded-node' : '';
-  
+
 }
 
 hasChild = (_nouse: number, node: TBFlatNode): boolean => node.expandable;
 
-  exportExcel = () => {
+nodeEditor():void {
+
+  const temp = this.treeControl.dataNodes;
+  let spacer = '';
+  for (const abc of temp) {
+
+    for (let simpL = 0; simpL < abc.level; simpL++) {
+
+      spacer += '   ';
+
+    }
+    abc.name = spacer + abc.name;
+    spacer = '';
 
   }
+  this.temporary = temp;
+
+}
+
+exportExcel(): void {
+
+  this.nodeEditor();
+  const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
+    key: col}));
+  exportAsXLSX(this.tableHeader, this.temporary, headers);
+
+
+}
 
   exportPDF = () => {
 
