@@ -3,7 +3,7 @@ import {
   HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { ACCESS_TOKEN_ID, HTTP_RESPONSE_CODE } from '@shared/Constants';
+import { ACCESS_TOKEN_ID, HTTP_RESPONSE_CODE, INVALID_TOKEN } from '@shared/Constants';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, map } from 'rxjs/operators';
 
@@ -30,12 +30,20 @@ export class AuthInterceptor implements HttpInterceptor {
       catchError((resp: HttpErrorResponse) => {
 
         let title = 'Error occured.';
+
         if ([ HTTP_RESPONSE_CODE.FORBIDDEN_USER, HTTP_RESPONSE_CODE.UNAUTHORIZED_USER ].includes(resp.status)) {
 
           title = 'Access denied';
 
         }
-        const message = resp.error?.error?.message ?? 'Your session might have expired.<br/><a href=\"/login\">Please login again</a>';
+        const message = resp.error?.error?.message ?? 'Unable to fetch data from sever<br>Please try again later';
+
+        if (message === INVALID_TOKEN) {
+
+          localStorage.removeItem(ACCESS_TOKEN_ID);
+
+        }
+
         this.toastr.error(message, title, {
           enableHtml: true,
           closeButton: true,

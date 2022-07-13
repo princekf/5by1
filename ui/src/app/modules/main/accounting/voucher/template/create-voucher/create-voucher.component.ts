@@ -390,7 +390,8 @@ export class CreateVoucherComponent implements OnInit {
       return;
 
     }
-    this.primaryTransactionType = TransactionType.CREDIT ? TransactionType.DEBIT : TransactionType.CREDIT;
+    const isCredit = this.primaryTransactionType === TransactionType.CREDIT;
+    this.primaryTransactionType = isCredit ? TransactionType.DEBIT : TransactionType.CREDIT;
 
   }
 
