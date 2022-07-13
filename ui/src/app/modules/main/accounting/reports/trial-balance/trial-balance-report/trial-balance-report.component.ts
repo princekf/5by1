@@ -87,14 +87,14 @@ nodeEditor():void {
 
   const temp = this.treeControl.dataNodes;
   let spacer = '';
-  for (const abc of temp) {
+  for (const value of temp) {
 
-    for (let simpL = 0; simpL < abc.level; simpL++) {
+    for (let simpL = 0; simpL < value.level; simpL++) {
 
       spacer += '   ';
 
     }
-    abc.name = spacer + abc.name;
+    value.name = spacer + value.name;
     spacer = '';
 
   }
