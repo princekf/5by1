@@ -145,6 +145,7 @@ export class VoucherService {
         'type': '$type',
         'details': 1,
         'tdetails': '$transactions.details',
+        'pdetails': '$primaryTransaction.details',
         'cLedgerId': {'$cond': [ {'$eq': [ '$transactions.ledgerId', plid ]}, '$primaryTransaction.ledgerId', '$transactions.ledgerId' ]},
         'tType': {'$cond': [ {'$eq': [ '$transactions.ledgerId', plid ]}, '$primaryTransaction.type', '$transactions.type' ]},
         'amount': {'$cond': [ {'$lt': [ '$transactions.amount', '$primaryTransaction.amount' ]}, '$transactions.amount', '$primaryTransaction.amount' ]},
@@ -165,7 +166,7 @@ export class VoucherService {
         'number': 1,
         'date': 1,
         'type': 1,
-        'details': { $concat: [ '$details', ' - ', '$tdetails' ] },
+        'details': { '$concat': [ '$details', ' - ', {'$ifNull': [ '$tdetails', '' ]}, ' - ', { '$ifNull': [ '$pdetails', '' ] }, ] },
         'name': '$ledgers.name',
         'credit': {'$cond': [ {'$eq': [ '$tType', 'Debit' ]}, '$amount', 0 ]},
         'debit': {'$cond': [ {'$eq': [ '$tType', 'Credit' ]}, '$amount', 0 ]},
@@ -261,6 +262,8 @@ export class VoucherService {
 
     const ledgerReportAggs = this.createLedgerReportAggregates(plid, clid);
     const aggregates = [ { '$match': { 'date': { '$lte': ason } } }, ...ledgerReportAggs ];
+    console.log(JSON.stringify(aggregates, null, 2));
+
     const pQuery = await this.voucherRepository.execute(this.voucherRepository.modelClass.name, 'aggregate', aggregates);
     const res = <Array<LedgerReportItem>> await pQuery.toArray();
     return res;
