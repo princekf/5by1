@@ -262,8 +262,6 @@ export class VoucherService {
 
     const ledgerReportAggs = this.createLedgerReportAggregates(plid, clid);
     const aggregates = [ { '$match': { 'date': { '$lte': ason } } }, ...ledgerReportAggs ];
-    console.log(JSON.stringify(aggregates, null, 2));
-
     const pQuery = await this.voucherRepository.execute(this.voucherRepository.modelClass.name, 'aggregate', aggregates);
     const res = <Array<LedgerReportItem>> await pQuery.toArray();
     return res;
