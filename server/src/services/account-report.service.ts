@@ -356,9 +356,8 @@ export class AccountReportService {
       item.credit = item.credit ? Number(item.credit.toFixed(DECIMAL_PART)) : null;
       item.debit = item.debit ? Number(item.debit.toFixed(DECIMAL_PART)) : null;
 
-      const openingI = item.obCredit ?? item.obDebit;
+      const openingI = item.obCredit ? item.obCredit : item.obDebit;
       item.opening = openingI ? `${openingI.toFixed(DECIMAL_PART)} ${item.obCredit ? 'Cr' : 'Dr'}` : '';
-
       const balanceI = (item.credit ?? 0) + (item.obCredit ?? 0) - (item.debit ?? 0) - (item.obDebit ?? 0);
       item.balance = balanceI ? `${Math.abs(balanceI).toFixed(DECIMAL_PART)} ${balanceI > 0 ? 'Cr' : 'Dr'}` : '';
 
