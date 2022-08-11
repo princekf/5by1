@@ -31,6 +31,8 @@ dayjs.extend(utc);
 })
 export class CreateVoucherComponent implements OnInit {
 
+  vdate: string = null;
+
   goToPreviousPage = _goToPreviousPage;
 
   @Input() formHeader: string;
@@ -183,10 +185,19 @@ export class CreateVoucherComponent implements OnInit {
 
   private initFboForm = () => {
 
-    const day = new Date();
+    let tDate: Date;
 
-    const tDate = day > new Date(this.finYear.startDate)
-    && day < new Date(this.finYear.endDate) ? day : this.finYear.endDate;
+    if (localStorage.getItem('currentDate') !== null) {
+
+      tDate = new Date(localStorage.getItem('currentDate'));
+
+    } else {
+
+      const day = new Date();
+      tDate = day > new Date(this.finYear.startDate)
+        && day < new Date(this.finYear.endDate) ? day : this.finYear.endDate;
+
+    }
 
     this.fboForm = this.fBuilder.group({
       id: new FormControl(null),
@@ -505,11 +516,12 @@ export class CreateVoucherComponent implements OnInit {
     const { ...voucher } = this.fboForm.value as Voucher;
 
 
-    const vdate = dayjs(voucher.date).utc(true)
+    this.vdate = dayjs(voucher.date).utc(true)
       .format();
 
 
-    voucher.date = new Date(vdate);
+    voucher.date = new Date(this.vdate);
+    localStorage.setItem('currentDate', this.vdate);
 
 
     try {
