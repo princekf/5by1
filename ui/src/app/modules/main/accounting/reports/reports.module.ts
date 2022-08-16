@@ -28,19 +28,22 @@ import { BalanceSheetReportComponent } from './balance-sheet/balance-sheet-repor
 import { MatTreeModule } from '@angular/material/tree';
 import { MatTableModule } from '@angular/material/table';
 import { DatePickerAdapter, PICK_FORMATS } from '@fboutil/date-picker-adapter';
+import { FilterDayBookReportComponent } from './day-book/filter-day-book-report/filter-day-book-report.component';
+import { DayBookReportComponent } from './day-book/day-book-report/day-book-report.component';
 
 @NgModule({
   declarations: [ LedgerReportComponent, FilterLedgerReportComponent, TrialBalanceReportComponent,
     LedgerGroupReportComponent, FilterLedgerGroupReportComponent, ProfitLossReportComponent,
-    FilterProfitLossReportComponent, FilterBalanceSheetReportComponent, BalanceSheetReportComponent ],
+    FilterProfitLossReportComponent, FilterBalanceSheetReportComponent, BalanceSheetReportComponent,
+    FilterDayBookReportComponent, DayBookReportComponent ],
   imports: [
     CommonModule, ReportsRoutingModule, DataTableModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule,
     ReactiveFormsModule, FormsModule, MatAutocompleteModule, MatSelectModule, MatFormFieldModule, MatInputModule,
     MatDayjsDateModule, NgxSkeletonLoaderModule, MatIconModule, MatRadioModule, MatTreeModule, MatTableModule,
   ],
-  providers: [{provide: DateAdapter,
+  providers: [ {provide: DateAdapter,
     useClass: DatePickerAdapter},
   {provide: MAT_DATE_FORMATS,
-    useValue: PICK_FORMATS}]
+    useValue: PICK_FORMATS} ]
 })
 export class ReportsModule { }

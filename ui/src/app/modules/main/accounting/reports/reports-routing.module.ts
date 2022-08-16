@@ -5,6 +5,7 @@ import { LedgerGroupReportComponent } from './ledger-group/ledger-group-report/l
 import { TrialBalanceReportComponent } from './trial-balance/trial-balance-report/trial-balance-report.component';
 import { ProfitLossReportComponent } from './profit-loss/profit-loss-report/profit-loss-report.component';
 import { BalanceSheetReportComponent } from './balance-sheet/balance-sheet-report/balance-sheet-report.component';
+import { DayBookReportComponent } from './day-book/day-book-report/day-book-report.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,11 @@ const routes: Routes = [
     path: 'balance-sheet',
     pathMatch: 'full',
     component: BalanceSheetReportComponent
+  },
+  {
+    path: 'day-book',
+    pathMatch: 'full',
+    component: DayBookReportComponent
   },
 ];
 
