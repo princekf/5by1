@@ -20,6 +20,7 @@ import { LeftNavComponent } from './left-nav/left-nav.component';
 import {FormsModule} from '@angular/forms';
 import { ImportErrordataPopupComponent } from './import-errordata-popup/import-errordata-popup.component';
 import { MatTableModule } from '@angular/material/table';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { MatTableModule } from '@angular/material/table';
 
   ],
   imports: [
+    MatAutocompleteModule,
     CommonModule,
     MainRoutingModule,
     MatTreeModule,

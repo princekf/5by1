@@ -7,7 +7,7 @@ import { Permission } from '@shared/entity/auth/user';
 import { SessionUser } from '@shared/util/session-user';
 import { Router } from '@angular/router';
 
-interface MenuNode {
+export interface MenuNode {
   path: string;
   name: string;
   icon?: string;
@@ -15,7 +15,7 @@ interface MenuNode {
   children?: MenuNode[];
 }
 
-const menus: MenuNode[] = [
+export const menus: MenuNode[] = [
   {
     path: 'dashboard',
     name: 'Dashboard',

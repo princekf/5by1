@@ -84,12 +84,23 @@ export class ListVoucherComponent implements OnInit {
   private formatItems = (ledgerMap: Record<string, Ledger>, items: Array<Voucher>): Array<VType> => {
 
     const table = this.tableHeader;
-
+    let tempDate: string = null;
     const itemsT = [];
     const maxLength = 20;
     const trimLength = 17;
     for (const item of items) {
 
+      if (item.date !== null) {
+
+        if (localStorage.getItem('currentDate') === null) {
+
+          tempDate = dayjs(item.date).utc(true)
+            .format();
+          localStorage.setItem('currentDate', tempDate);
+
+        }
+
+      }
       const [ firstTr, secondTr ] = item.transactions;
       const pledger = ledgerMap[firstTr.ledgerId];
       const cledger = ledgerMap[secondTr.ledgerId];
@@ -131,26 +142,25 @@ export class ListVoucherComponent implements OnInit {
     this.loading = true;
     const voucherS$ = this.voucherService.list(this.queryParams);
     const ledgerS$ = this.voucherService.fetchLedgersUsed(this.voucherType);
-    forkJoin([ voucherS$, ledgerS$ ])
-      .subscribe(([ voucherListData, ledgers ]) => {
+    forkJoin([ voucherS$, ledgerS$ ]).subscribe(([ voucherListData, ledgers ]) => {
 
-        const ledgerMap: Record<string, Ledger> = {};
-        ledgers.forEach((ledger) => (ledgerMap[ledger.id] = ledger));
-        const { totalItems, pageIndex, items } = { ...voucherListData };
-        const itemsT = this.formatItems(ledgerMap, items);
-        this.vouchers = {
-          totalItems,
-          pageIndex,
-          items: itemsT
-        };
-        this.loading = false;
+      const ledgerMap: Record<string, Ledger> = {};
+      ledgers.forEach((ledger) => (ledgerMap[ledger.id] = ledger));
+      const { totalItems, pageIndex, items } = { ...voucherListData };
+      const itemsT = this.formatItems(ledgerMap, items);
+      this.vouchers = {
+        totalItems,
+        pageIndex,
+        items: itemsT
+      };
+      this.loading = false;
 
-      }, (error) => {
+    }, (error) => {
 
-        console.error(error);
-        this.loading = false;
+      console.error(error);
+      this.loading = false;
 
-      });
+    });
 
   }
 
