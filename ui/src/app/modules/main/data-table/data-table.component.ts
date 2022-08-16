@@ -226,7 +226,7 @@ export class DataTableComponent {
     }
 
     const selectedObjs = <Array<{id: string}>> this.selection.selected;
-    this.selection.clear()
+    this.selection.clear();
     const ids = [];
     selectedObjs.forEach((objP) => ids.push(objP.id));
     this.router.navigate([ this.deleteUri ], { queryParams: {ids: ids.join(),
