@@ -6,7 +6,8 @@ import { ACC_REPORTS_API } from '@shared/server-apis';
 import { BalanceSheetItem } from '@shared/util/balance-sheet-item';
 import { TrialBalanceItem } from '@shared/util/trial-balance-item';
 import { LedgerReportItem } from '@shared/util/ledger-report-item';
-import { BalanceSheetRespSchema, LedgerReportRespSchema, TrialBalanceLedgerSummaryRespSchema, TrialBalanceRespSchema } from './specs/common-specs';
+import { DayBookItem } from '@shared/util/day-book-item';
+import { BalanceSheetRespSchema, DayBookRespSchema, LedgerReportRespSchema, TrialBalanceLedgerSummaryRespSchema, TrialBalanceRespSchema } from './specs/common-specs';
 import { AccountReportService } from '../services/account-report.service';
 import { service } from '@loopback/core';
 
@@ -114,7 +115,6 @@ export class AccountReportController {
 
   }
 
-
   @get(`${ACC_REPORTS_API}/trial-balance`)
   @response(200, {
     description: 'Trial balance as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
@@ -127,6 +127,23 @@ export class AccountReportController {
   ): Promise<TrialBalanceItem[]> {
 
     const bSheet = await this.accountReportService.generateTrialBalance(ason);
+    return bSheet;
+
+  }
+
+  @get(`${ACC_REPORTS_API}/day-book`)
+  @response(200, {
+    description: 'Day book between 2 dates. Date format should be `YYYY-DD-MM` (2022-03-31)',
+    content: {
+      'application/json': {schema: DayBookRespSchema},
+    },
+  })
+  async dayBook(
+    @param.query.date('startDate') startDate: Date,
+    @param.query.date('endDate') endDate: Date,
+  ): Promise<DayBookItem[]> {
+
+    const bSheet = await this.accountReportService.generateDayBook(startDate, endDate);
     return bSheet;
 
   }

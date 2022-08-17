@@ -7,6 +7,7 @@ import { LedgerGroup as LedgerGroupIntf } from '@shared/entity/accounting/ledger
 import { DECIMAL_PART, fboServerUtil } from '../utils/fbo-server-util';
 import { LedgerReportItem } from '@shared/util/ledger-report-item';
 import { LedgerService } from './ledger.service';
+import { DayBookItem } from '@shared/util/day-book-item';
 
 // Get decimal place count from user session.
 const decimal = 2;
@@ -475,6 +476,32 @@ export class AccountReportService {
     const nonEmptyItems = this.removeEmptyItems(lGsWithChildren);
     const totalItem = this.findSummary(lSumm);
     return [ ...nonEmptyItems, totalItem ];
+
+  }
+
+  generateDayBook = async(startDateI: Date, endDateI: Date):Promise<Array<DayBookItem>> => {
+
+    const startDate = fboServerUtil.updateTimeToMinimum(startDateI);
+    const endDate = fboServerUtil.updateTimeToMaximum(endDateI);
+    const vouchers = await this.voucherService.listVouchersWithDetails(startDate, endDate);
+    const vMap:Record<string, DayBookItem> = {};
+    const retVoucher:DayBookItem[] = [];
+    for (const voucher of vouchers) {
+
+      if (!vMap[voucher.voucherId]) {
+
+        voucher.children = [];
+        vMap[voucher.voucherId] = voucher;
+        retVoucher.push(voucher);
+
+      } else {
+
+        vMap[voucher.voucherId].children.push(voucher);
+
+      }
+
+    }
+    return retVoucher;
 
   }
 

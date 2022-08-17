@@ -63,6 +63,35 @@ export const TrialBalanceRespSchema = {
   }
 };
 
+export const DayBookRespSchema = {
+  type: 'object',
+  properties: {
+    voucherId: {type: 'string'},
+    ledgerId: {type: 'string'},
+    ledgerName: {type: 'string'},
+    ledgerCode: {type: 'string'},
+    type: {type: 'string'},
+    date: {type: 'Date'},
+    credit: {type: 'number'},
+    debit: {type: 'number'},
+    obDebit: {type: 'number'},
+    children: {
+      type: 'array',
+      items: {properties: {
+        voucherId: {type: 'string'},
+        ledgerId: {type: 'string'},
+        ledgerName: {type: 'string'},
+        ledgerCode: {type: 'string'},
+        type: {type: 'string'},
+        date: {type: 'Date'},
+        credit: {type: 'number'},
+        debit: {type: 'number'},
+        obDebit: {type: 'number'},
+      }},
+    }
+  }
+};
+
 export const LedgerReportRespSchema = {
   type: 'object',
   properties: {

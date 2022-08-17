@@ -1,5 +1,6 @@
 import {injectable, BindingScope} from '@loopback/core';
 import { repository } from '@loopback/repository';
+import { DayBookItem } from '@shared/util/day-book-item';
 import { LedgerReportItem } from '@shared/util/ledger-report-item';
 import { TrialBalanceItem } from '@shared/util/trial-balance-item';
 import { VoucherRepository } from '../repositories';
@@ -131,6 +132,47 @@ export class VoucherService {
       { '$sort': { 'name': 1 } }
     ];
 
+  private dayBookAggregates = [
+    { '$sort': { 'date': 1 } },
+    {
+      '$unwind': '$transactions'
+    },
+    {
+      '$project': {
+        'ledgerId': '$transactions.ledgerId',
+        'date': '$date',
+        'type': '$type',
+        'number': '$number',
+        'credit': {'$cond': [ {'$eq': [ '$transactions.type', 'Credit' ]}, '$transactions.amount', 0 ]},
+        'debit': {'$cond': [ {'$eq': [ '$transactions.type', 'Debit' ]}, '$transactions.amount', 0 ]},
+      }
+    },
+
+    {
+      '$lookup': {
+        'from': 'Ledger',
+        'localField': 'ledgerId',
+        'foreignField': '_id',
+        'as': 'ledgers'
+      }
+    },
+
+    { '$unwind': '$ledgers' },
+    {
+      '$project': {
+        'voucherId': '$_id',
+        'ledgerId': '$ledgerId',
+        'ledgerName': '$ledgers.name',
+        'ledgerCode': '$ledgers.code',
+        'date': '$date',
+        'type': '$type',
+        'number': '$number',
+        'credit': '$credit',
+        'debit': '$debit',
+      }
+    },
+  ];
+
   private createLedgerReportAggregates = (plid: string, clid?: string):Array<unknown> => [
     { '$match': {'$or': [ { 'transactions.ledgerId': plid }, { 'transactions.ledgerId': clid ?? '' } ]}},
     { '$addFields': { 'primaryTransaction': { '$first': '$transactions' } } },
@@ -229,6 +271,16 @@ export class VoucherService {
     const aggregates = [ { '$match': { 'date': { '$lte': ason } } }, ...this.ledgerSummaryAggregates ];
     const pQuery = await this.voucherRepository.execute(this.voucherRepository.modelClass.name, 'aggregate', aggregates);
     const res = <Array<TrialBalanceItem>> await pQuery.toArray();
+    return res;
+
+  }
+
+  listVouchersWithDetails = async(startDate: Date, endDate: Date):Promise<Array<DayBookItem>> => {
+
+    const aggregates = [ { '$match': { 'date': { '$lte': endDate,
+      '$gte': startDate } } }, ...this.dayBookAggregates ];
+    const pQuery = await this.voucherRepository.execute(this.voucherRepository.modelClass.name, 'aggregate', aggregates);
+    const res = <Array<DayBookItem>> await pQuery.toArray();
     return res;
 
   }
