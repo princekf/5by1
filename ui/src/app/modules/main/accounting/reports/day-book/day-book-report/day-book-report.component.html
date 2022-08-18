@@ -12,6 +12,18 @@
   </button>
 
 </div>
+<div class="table-header-container">
+  <span class="table-header">{{tableHeader}}</span>
+  <div class="empy-space"></div>
+  <button mat-flat-button class="filter-list-button" [matMenuTriggerFor]="menu">
+    <mat-icon>filter_alt</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <div >
+      <ng-template filterHost ></ng-template>
+    </div>
+  </mat-menu>
+</div>
 <table mat-table [dataSource]="dataSource" class="fiveby1-table">
   <ng-container matColumnDef="ledgerName">
     <th mat-header-cell *matHeaderCellDef> 

@@ -30,6 +30,7 @@ import { MatTableModule } from '@angular/material/table';
 import { DatePickerAdapter, PICK_FORMATS } from '@fboutil/date-picker-adapter';
 import { FilterDayBookReportComponent } from './day-book/filter-day-book-report/filter-day-book-report.component';
 import { DayBookReportComponent } from './day-book/day-book-report/day-book-report.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [ LedgerReportComponent, FilterLedgerReportComponent, TrialBalanceReportComponent,
@@ -39,7 +40,8 @@ import { DayBookReportComponent } from './day-book/day-book-report/day-book-repo
   imports: [
     CommonModule, ReportsRoutingModule, DataTableModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule,
     ReactiveFormsModule, FormsModule, MatAutocompleteModule, MatSelectModule, MatFormFieldModule, MatInputModule,
-    MatDayjsDateModule, NgxSkeletonLoaderModule, MatIconModule, MatRadioModule, MatTreeModule, MatTableModule,
+    MatDayjsDateModule, NgxSkeletonLoaderModule, MatIconModule, MatRadioModule, MatTreeModule,
+    MatTableModule, MatMenuModule,
   ],
   providers: [ {provide: DateAdapter,
     useClass: DatePickerAdapter},
