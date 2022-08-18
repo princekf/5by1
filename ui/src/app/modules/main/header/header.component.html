@@ -11,9 +11,9 @@
         <mat-icon style="background-color: transparent;" class="mat-5by1-white" matPrefix>search</mat-icon>
         <mat-label>Search here</mat-label>
         <input type="text"
-           matInput
+           matInput #searchMenuInput
            [matAutocomplete]="auto" (keyup)="searchKeyUp($event)">
-           <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="pathFinder($event?.option.value)" [displayWith]="displayFn">
+           <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="pathFinder($event?.option.value); searchMenuInput.value = ''" [displayWith]="displayFn">
             <mat-optgroup *ngFor="let menu of filteredSearch" [value]="menu.path">
               {{menu.name}}
               <mat-option *ngFor="let child of menu?.children" [value]="child" class="disp">

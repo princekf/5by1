@@ -10,11 +10,11 @@ export class MainService {
 
   constructor(@Inject(DOCUMENT) private document: Document) { }
 
-  leftMenuDrawerSubject = new BehaviorSubject(true);
+  leftMenuDrawerSubject = new BehaviorSubject(false);
 
   leftMenuDrawerMobileSubject = new BehaviorSubject(false);
 
-  private leftMenuLastToggleStatus = true;
+  private leftMenuLastToggleStatus = false;
 
   private exports = new BehaviorSubject<Record<string, unknown>>({});
 

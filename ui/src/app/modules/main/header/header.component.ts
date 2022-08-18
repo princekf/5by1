@@ -4,10 +4,8 @@ import { MainService } from '@fboservices/main.service';
 import { LOCAL_USER_KEY } from '@fboutil/constants';
 import { ACCESS_TOKEN_ID } from '@shared/Constants';
 import { SessionUser } from '@shared/util/session-user';
-import { MenuNode, menus } from '../left-nav/left-nav.component';
-
-const compBase = [ ...menus ];
-const comp = compBase.splice(1);
+import { MenuNode } from '@fboutil/menu/menu-node';
+import { findPermittedMenus } from '@fboutil/menu/menus';
 
 
 @Component({
@@ -17,7 +15,9 @@ const comp = compBase.splice(1);
 })
 export class HeaderComponent implements OnInit {
 
-  filteredSearch:MenuNode[] = []
+  filteredSearch:MenuNode[] = [];
+
+  menus:MenuNode[] = [];
 
   leftMenuDrawerOpened = true;
 
@@ -29,11 +29,10 @@ export class HeaderComponent implements OnInit {
     private dataService: MainService,
     private router: Router) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.location = location.host;
-    this.filteredSearch = comp;
-
+    this.menus = findPermittedMenus();
     this.mainService.leftMenuDrawerSubject.subscribe((opened) => (this.leftMenuDrawerOpened = opened));
     const userS = localStorage.getItem(LOCAL_USER_KEY);
     if (userS) {
@@ -58,11 +57,11 @@ export class HeaderComponent implements OnInit {
   }
 
 
-  searchKeyUp(event) {
+  searchKeyUp(event: {target: {value: string}}):void {
 
     const query = event.target.value.toLocaleLowerCase();
     this.filteredSearch = [];
-    comp.forEach((_menu) => {
+    this.menus.forEach((_menu) => {
 
       const menu = {..._menu};
       if (menu.name.toLocaleLowerCase().includes(query)) {
@@ -118,13 +117,9 @@ export class HeaderComponent implements OnInit {
 
   }
 
-  displayFn(user: { name: string; }): string {
+  public displayFn = (menu: MenuNode): string => menu?.name ?? ''
 
-    return user && user.name ? user.name : '';
-
-  }
-
-  pathFinder(event) {
+  public pathFinder = (event: {path: string}):void => {
 
     this.router.navigate([ event.path ]);
 
