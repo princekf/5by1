@@ -21,7 +21,7 @@ interface TBFlatNode extends TrialBalanceItem {
 })
 export class TrialBalanceReportComponent implements OnInit {
 
-  temporary = [];
+  dataSrc = [];
 
   tableHeader = 'Trial Balance Summary Report';
 
@@ -96,9 +96,9 @@ nodeEditor():void {
     }
     value.name = spacer + value.name;
     spacer = '';
-
+    
   }
-  this.temporary = temp;
+  this.dataSrc = temp;
 
 }
 
@@ -107,7 +107,7 @@ exportExcel(): void {
   this.nodeEditor();
   const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
     key: col}));
-  exportAsXLSX(this.tableHeader, this.temporary, headers);
+  exportAsXLSX(this.tableHeader, this.dataSrc, headers);
 
 
 }
