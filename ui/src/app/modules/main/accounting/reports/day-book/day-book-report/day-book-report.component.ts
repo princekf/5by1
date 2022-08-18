@@ -7,6 +7,7 @@ import { AccountingReportService } from '@fboservices/accounting/accounting-repo
 import { LOCAL_USER_KEY } from '@fboutil/constants';
 import { SessionUser } from '@shared/util/session-user';
 import * as dayjs from 'dayjs';
+import { environment } from '@fboenvironments/environment';
 
 interface TBFlatNode extends DayBookItem {
   expandable: boolean;
@@ -19,7 +20,6 @@ interface TBFlatNode extends DayBookItem {
   styleUrls: [ './day-book-report.component.scss' ]
 })
 export class DayBookReportComponent implements OnInit {
-
 
   dataSrc = [];
 
@@ -115,5 +115,7 @@ ngOnInit(): void {
     exportPDF = () => {
 
     }
+  
+    formatDate = (dVal: Date): string => dayjs(dVal).format(environment.dateFormat);
 
 }
