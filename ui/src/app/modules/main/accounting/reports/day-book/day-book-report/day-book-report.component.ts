@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit, ViewChild } from '@angular/core';
 import { exportAsXLSX } from '@fboutil/export-xlsx.util';
 import { DayBookItem } from '@shared/util/day-book-item';
 import { FlatTreeControl } from '@angular/cdk/tree';
@@ -8,6 +8,7 @@ import { LOCAL_USER_KEY } from '@fboutil/constants';
 import { SessionUser } from '@shared/util/session-user';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
+import { TableFilterDirective } from 'src/app/modules/main/directives/table-filter/table-filter.directive';
 
 interface TBFlatNode extends DayBookItem {
   expandable: boolean;
@@ -25,7 +26,7 @@ export class DayBookReportComponent implements OnInit {
 
   tableHeader = 'Day Book';
 
-  displayedColumns: string[] = [ 'ledgerName', 'date', 'type', 'number', 'credit', 'debit' ];
+  displayedColumns: string[] = [ 'number', 'date', 'type', 'ledgerName', 'debit', 'credit' ];
 
   loading = true;
 
@@ -60,6 +61,7 @@ dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
 constructor(private accountingReportService: AccountingReportService) { }
 
+
 ngOnInit(): void {
 
   const userS = localStorage.getItem(LOCAL_USER_KEY);
@@ -69,6 +71,17 @@ ngOnInit(): void {
   const endDate = dayjs(finYear.endDate).format('YYYY-MM-DD');
   this.accountingReportService.fetchDayBookItems(startDate, endDate).subscribe((plItems) => {
 
+    plItems.forEach((item) => {
+
+      item.children.forEach((child) => {
+
+        child.number = '';
+        child.type = '';
+        child.date = null;
+
+      });
+
+    });
     this.dataSource.data = plItems;
     this.loading = false;
 
@@ -92,7 +105,11 @@ ngOnInit(): void {
     const spacer:any[] = [];
     for (const value of temp) {
 
-      value?.level === 0 && index !== 0 ? spacer.push({}) : '';
+      if (value?.level === 0 && index !== 0) {
+
+        spacer.push({});
+
+      }
       index++;
       spacer.push(value);
 
@@ -115,7 +132,16 @@ ngOnInit(): void {
     exportPDF = () => {
 
     }
-  
-    formatDate = (dVal: Date): string => dayjs(dVal).format(environment.dateFormat);
+
+    formatDate = (dVal: Date): string => {
+
+      if (!dVal) {
+
+        return '';
+
+      }
+      return dayjs(dVal).format(environment.dateFormat);
+
+    };
 
 }

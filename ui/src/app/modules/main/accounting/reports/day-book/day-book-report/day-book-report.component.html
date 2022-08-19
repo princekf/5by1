@@ -20,16 +20,15 @@
   </button>
   <mat-menu #menu="matMenu">
     <div >
-      <ng-template filterHost ></ng-template>
+      
     </div>
   </mat-menu>
 </div>
 <table mat-table [dataSource]="dataSource" class="fiveby1-table">
-  <ng-container matColumnDef="ledgerName">
-    <th mat-header-cell *matHeaderCellDef> 
-      <span [style.paddingLeft.px]="40"> LedgerName </span>
-    </th>
-    <td mat-cell *matCellDef="let data"> 
+
+  <ng-container matColumnDef="number">
+    <th mat-header-cell *matHeaderCellDef > Number </th>
+    <td mat-cell *matCellDef="let data">
       <button mat-icon-button 
               [style.visibility]="!data.expandable ? 'hidden' : ''"
               [style.marginLeft.px]="data.level * 32"
@@ -38,33 +37,33 @@
           {{treeControl.isExpanded(data) ? 'expand_more' : 'chevron_right'}}
         </mat-icon>
       </button>
-
-      {{data.ledgerName}}
-    </td>
+       {{data.number}} </td>
   </ng-container> 
 
   <ng-container matColumnDef="date">
     <th mat-header-cell *matHeaderCellDef class="column-right-align"> Date </th>
-    <td mat-cell *matCellDef="let data" class="column-right-align {{data.sclass}}"> {{formatDate(data.date)}} </td>
+    <td mat-cell *matCellDef="let data" class="column-right-align"> {{formatDate(data.date)}} </td>
   </ng-container> 
 
   <ng-container matColumnDef="type">
     <th mat-header-cell *matHeaderCellDef class="column-right-align"> Type </th>
-    <td mat-cell *matCellDef="let data" class="column-right-align {{data.sclass}}"> {{data.type}} </td>
+    <td mat-cell *matCellDef="let data" class="column-right-align"> {{data.type}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="number">
-    <th mat-header-cell *matHeaderCellDef class="column-right-align"> Number </th>
-    <td mat-cell *matCellDef="let data" class="column-right-align {{data.sclass}}"> {{data.number}} </td>
+  <ng-container matColumnDef="ledgerName">
+    <th mat-header-cell *matHeaderCellDef> 
+      <span [style.paddingLeft.px]="40"> LedgerName </span>
+    </th>
+    <td mat-cell *matCellDef="let data"> {{data.ledgerName}} </td>
   </ng-container> 
 
   <ng-container matColumnDef="credit">
     <th mat-header-cell *matHeaderCellDef class="column-right-align"> Credit </th>
-    <td mat-cell *matCellDef="let data" class="column-right-align {{data.sclass}}"> {{data.credit ? data.credit.toFixed(2) : ''}} </td>
+    <td mat-cell *matCellDef="let data" class="column-right-align"> {{data.credit ? data.credit.toFixed(2) : ''}} </td>
   </ng-container> 
   <ng-container matColumnDef="debit">
     <th mat-header-cell *matHeaderCellDef class="column-right-align"> Debit </th>
-    <td mat-cell *matCellDef="let data" class="column-right-align {{data.sclass}}"> {{data.debit ? data.debit.toFixed(2) : ''}} </td>
+    <td mat-cell *matCellDef="let data" class="column-right-align"> {{data.debit ? data.debit.toFixed(2) : ''}} </td>
   </ng-container>  
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
