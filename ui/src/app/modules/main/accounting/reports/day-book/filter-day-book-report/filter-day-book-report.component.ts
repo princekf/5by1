@@ -1,8 +1,8 @@
+import { S } from '@angular/cdk/keycodes';
 import { Component, OnInit} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LOCAL_USER_KEY } from '@fboutil/constants';
-import { createQueryStringFromFilterForm, FilterFormField } from '@fboutil/filter.util';
 import { SessionUser } from '@shared/util/session-user';
 import * as dayjs from 'dayjs';
 
@@ -19,7 +19,7 @@ export class FilterDayBookReportComponent implements OnInit {
 
   maxDate: string;
 
-  constructor(private router:Router) { }
+  constructor(private router:Router, private activatedRoute: ActivatedRoute,) { }
 
   private findStartEndDates = (): [Date, Date] => {
 
@@ -40,34 +40,44 @@ export class FilterDayBookReportComponent implements OnInit {
     const [ start, end ] = this.findStartEndDates();
     this.filterForm = new FormGroup({
 
-      date: new FormControl(''),
-      dateType: new FormControl('eq'),
+      dateType: new FormControl('between'),
       dateStart: new FormControl(start),
       dateEnd: new FormControl(end),
     });
 
   }
 
+  ngAfterViewInit(): void {
+
+
+    this.activatedRoute.queryParams.subscribe((value) => {
+
+      const [ start, end ] = this.findStartEndDates();
+      const {startDate, endDate} = value;
+      this.filterForm.get('dateStart').setValue(startDate ?? start);
+      this.filterForm.get('dateEnd').setValue(endDate ?? end);
+
+    });
+
+  }
+
   filterItems = ():void => {
 
-
-    const formFields: Array<FilterFormField> = [
-
-      {name: 'ledgerGroupId',
-        type: 'string'},
-      {name: 'date',
-        type: 'date'}
-
-    ];
-    const whereS = createQueryStringFromFilterForm(this.filterForm, formFields);
-    this.router.navigate([], { queryParams: {whereS} });
+    const sDate = dayjs(this.filterForm.get('dateStart').value).format('YYYY-MM-DD');
+    const eDate = dayjs(this.filterForm.get('dateEnd').value).format('YYYY-MM-DD');
+    const [ start, end ] = this.findStartEndDates();
+    const startDate = sDate ?? start;
+    const endDate = eDate ?? end;
+    this.router.navigate([], { queryParams: {startDate,
+      endDate} });
 
   };
 
   resetter = (): void => {
 
-    this.filterForm.controls.ledgerGroupId.reset();
-    this.filterForm.controls.date.reset();
+    const [ start, end ] = this.findStartEndDates();
+    this.filterForm.controls.dateStart.setValue(start);
+    this.filterForm.controls.dateEnd.setValue(end);
 
   }
 

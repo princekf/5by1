@@ -9,6 +9,7 @@ import { SessionUser } from '@shared/util/session-user';
 import * as dayjs from 'dayjs';
 import { environment } from '@fboenvironments/environment';
 import { TableFilterDirective } from 'src/app/modules/main/directives/table-filter/table-filter.directive';
+import { ActivatedRoute } from '@angular/router';
 
 interface TBFlatNode extends DayBookItem {
   expandable: boolean;
@@ -59,7 +60,7 @@ treeFlattener = new MatTreeFlattener(
 
 dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-constructor(private accountingReportService: AccountingReportService) { }
+constructor(private accountingReportService: AccountingReportService, private activatedRoute: ActivatedRoute,) { }
 
 
 ngOnInit(): void {
@@ -67,23 +68,28 @@ ngOnInit(): void {
   const userS = localStorage.getItem(LOCAL_USER_KEY);
   const sessionUser: SessionUser = JSON.parse(userS);
   const { finYear } = sessionUser;
-  const startDate = dayjs(finYear.startDate).format('YYYY-MM-DD');
-  const endDate = dayjs(finYear.endDate).format('YYYY-MM-DD');
-  this.accountingReportService.fetchDayBookItems(startDate, endDate).subscribe((plItems) => {
+  this.activatedRoute.queryParams.subscribe((value) => {
 
-    plItems.forEach((item) => {
+    const {startDate, endDate} = value;
+    const spDate = startDate ?? dayjs(finYear.startDate).format('YYYY-MM-DD');
+    const seDate = endDate ?? dayjs(finYear.endDate).format('YYYY-MM-DD');
+    this.accountingReportService.fetchDayBookItems(spDate, seDate).subscribe((plItems) => {
 
-      item.children.forEach((child) => {
+      plItems.forEach((item) => {
 
-        child.number = '';
-        child.type = '';
-        child.date = null;
+        item.children.forEach((child) => {
+
+          child.number = '';
+          child.type = '';
+          child.date = null;
+
+        });
 
       });
+      this.dataSource.data = plItems;
+      this.loading = false;
 
     });
-    this.dataSource.data = plItems;
-    this.loading = false;
 
   });
 

@@ -4,17 +4,8 @@
         <div class="filter-content-div">
             <mat-label class="lable">Date</mat-label>
             <mat-select formControlName="dateType" class="select">
-                <mat-option value="eq">Equal to</mat-option>
-                <mat-option value="lt">Lesser than</mat-option>
-                <mat-option value="gt">Greater than</mat-option>
                 <mat-option value="between">Between</mat-option>
             </mat-select>
-            <mat-form-field *ngIf="filterForm.controls.dateType.value !== 'between'">
-                <input matInput [matDatepicker]="picker" formControlName="date" 
-                [min]="minDate" [max]="maxDate">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
             <div class="betweenKeyInputs" *ngIf="filterForm.controls.dateType.value === 'between'">
                 <mat-form-field class="inputPrimary">
                     <input matInput [matDatepicker]="pickerStart" formControlName="dateStart"

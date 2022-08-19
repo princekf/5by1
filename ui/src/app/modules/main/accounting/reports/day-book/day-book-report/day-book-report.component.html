@@ -1,7 +1,7 @@
 <div *ngIf="loading">
     <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
 </div>
-<div class="head">
+<div class="head" *ngIf="!loading">
     <div class="empy-space"></div>
     <button mat-flat-button class="button" (click)="exportPDF()">
       <mat-icon>ios_share</mat-icon> PDF
@@ -12,7 +12,7 @@
   </button>
 
 </div>
-<div class="table-header-container">
+<div class="table-header-container" *ngIf="!loading">
   <span class="table-header">{{tableHeader}}</span>
   <div class="empy-space"></div>
   <button mat-flat-button class="filter-list-button" [matMenuTriggerFor]="menu">
@@ -24,7 +24,7 @@
     </div>
   </mat-menu>
 </div>
-<table mat-table [dataSource]="dataSource" class="fiveby1-table">
+<table mat-table [dataSource]="dataSource" class="fiveby1-table" *ngIf="!loading">
 
   <ng-container matColumnDef="number">
     <th mat-header-cell *matHeaderCellDef > Number </th>
