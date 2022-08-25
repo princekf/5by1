@@ -3,6 +3,7 @@ import { ACCESS_TOKEN_ID } from '@shared/Constants';
 import { Injectable } from '@angular/core';
 import { UserService } from '@fboservices/user.service';
 import { LOCAL_USER_KEY } from '@fboutil/constants';
+import { MainService } from '@fboservices/main.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,8 @@ import { LOCAL_USER_KEY } from '@fboutil/constants';
 export class AppAuthGuard implements CanActivate {
 
   constructor(private router: Router,
-    private userService: UserService) { }
+    private userService: UserService,
+    private dataService: MainService,) { }
 
   private createUrlTree = (state: RouterStateSnapshot): UrlTree => {
 
@@ -32,6 +34,8 @@ export class AppAuthGuard implements CanActivate {
       const userResp = await this.userService.findMe().toPromise();
       const { user } = userResp;
       localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(userResp));
+      this.setUserInfo(localStorage.getItem(LOCAL_USER_KEY));
+
       if (user && user.id) {
 
         return true;
@@ -43,6 +47,12 @@ export class AppAuthGuard implements CanActivate {
     }
 
     return this.createUrlTree(state);
+
+  }
+
+  setUserInfo(data: string): void {
+
+    this.dataService.setUserInfo(data);
 
   }
 
