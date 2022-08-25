@@ -34,6 +34,7 @@
         "flat": "^5.0.2",
         "jspdf": "2.5.1",
         "jspdf-autotable": "3.5.23",
+        "jszip": "^3.10.1",
         "ngx-skeleton-loader": "2.10.1",
         "ngx-toastr": "14.1.0",
         "rxjs": "6.5.5",
