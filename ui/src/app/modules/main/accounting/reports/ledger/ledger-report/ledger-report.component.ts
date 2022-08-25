@@ -9,11 +9,17 @@ import { FilterItem } from '../../../../directives/table-filter/filter-item';
 import { FilterLedgerReportComponent } from '../filter-ledger-report/filter-ledger-report.component';
 import { AccountingReportService } from '@fboservices/accounting/accounting-report.service';
 import { LOCAL_USER_KEY } from '@fboutil/constants';
-import { exportAsXLSX } from '@fboutil/export-xlsx.util';
+import { createXLSXBuffer, exportAsXLSX } from '@fboutil/export-xlsx.util';
 import { SessionUser } from '@shared/util/session-user';
 import { LedgerReportItem } from '@shared/util/ledger-report-item';
 import { TrialBalanceItem } from '@shared/util/trial-balance-item';
 import { LedgerService } from '@fboservices/accounting/ledger.service';
+import * as saveAs from 'file-saver';
+import * as JSZip from 'jszip';
+import { forkJoin, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { LedgerGroupService } from '@fboservices/accounting/ledger-group.service';
+import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 
 @Component({
   selector: 'app-ledger-report',
@@ -63,6 +69,7 @@ export class LedgerReportComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
               private accountingReportService: AccountingReportService,
               private ledgerService: LedgerService,
+              private readonly ledgerGroupService: LedgerGroupService,
               private router: Router) { }
 
 
@@ -183,9 +190,71 @@ export class LedgerReportComponent implements OnInit {
 
   }
 
-  convert(): void {
 
+  fetchLedgerReport = (ason: string, rItem:TrialBalanceItem):Observable<{items: Array<LedgerReportItem>,
+  rItem: TrialBalanceItem}> => this.accountingReportService.fetchLedgerReportItems(ason, rItem.id).pipe(
+    map((items) => ({items,
+      rItem}))
+  )
+
+  findFolderPath = (lgC: LedgerGroup, lgMap:Record<string, LedgerGroup>): string => {
+
+    if (!lgC.parentId) {
+
+      return lgC.name;
+
+    }
+    return `${this.findFolderPath(lgMap[lgC.parentId], lgMap)}/${lgC.name}`;
 
   }
+
+  createFolderMap = async(zip: JSZip):Promise<Record<string, JSZip>> => {
+
+    const lgs = await this.ledgerGroupService.search({}).toPromise();
+    const folders:Record<string, JSZip> = {};
+    const lgMap:Record<string, LedgerGroup> = {};
+    lgs.forEach((lgC) => (lgMap[lgC.id] = lgC));
+    for (const lgC of lgs) {
+
+      const folderPath = this.findFolderPath(lgC, lgMap);
+      folders[lgC.id] = zip.folder(`ledger-reports/${folderPath}`);
+
+    }
+    return folders;
+
+  }
+
+  downloadAll = async(): Promise<void> => {
+
+    const userS = localStorage.getItem(LOCAL_USER_KEY);
+    const sessionUser: SessionUser = JSON.parse(userS);
+    const {finYear} = sessionUser;
+    const ason = dayjs(finYear.endDate).format('YYYY-MM-DD');
+    const dispColumns = [ 'number', 'date', 'type', 'name', 'debit', 'credit', 'details' ];
+    const headers = dispColumns.map((col) => ({header: this.columnHeaders[col],
+      key: col}));
+    const zip = new JSZip();
+    const folders = await this.createFolderMap(zip);
+    const tasks$:Array<Observable<{items: Array<LedgerReportItem>,
+      rItem: TrialBalanceItem}>> = [];
+    this.ledgerRows.items.forEach((item) => tasks$.push(this.fetchLedgerReport(ason, <TrialBalanceItem>item)));
+    forkJoin(tasks$).subscribe(async(dataDs) => {
+
+      for (const dataD of dataDs) {
+
+        const {items,
+          rItem} = dataD;
+        const tableHeader = `Ledger Report - ${rItem.name} as on ${ason}`;
+        const buffer = createXLSXBuffer(tableHeader, items, headers);
+        const data = await buffer;
+        folders[rItem.parentId]?.file(`${rItem.name}.xlsx`, data, {binary: true});
+
+      }
+      const content = await zip.generateAsync({type: 'blob'});
+      saveAs(content, 'ledger-reports.zip');
+
+    });
+
+  };
 
 }
