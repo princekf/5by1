@@ -14,6 +14,7 @@ import { awsPreSignedUrlUtil } from '../utils/aws-pre-signed-url.util';
 import { adminAndUserAuthDetails } from '../utils/authorize-details';
 import { authorize } from '@loopback/authorization';
 import { authenticate } from '@loopback/authentication';
+import { resourcePermissions } from '../utils/resource-permissions';
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
@@ -23,6 +24,8 @@ export class VoucherDocumentController {
     @repository(VoucherRepository) protected voucherRepository: VoucherRepository,
   ) { }
 
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
   @get(`${VOUCHER_API}/{id}/documents`, {
     responses: {
       '200': {
@@ -46,6 +49,8 @@ export class VoucherDocumentController {
 
   }
 
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
   @get(`${VOUCHER_API}/{vid}/{did}/signed-url`, {
     responses: {
       '200': {
@@ -84,6 +89,8 @@ export class VoucherDocumentController {
 
   }
 
+  @authorize({resource: resourcePermissions.voucherCreate.name,
+    ...adminAndUserAuthDetails})
   @post(`${VOUCHER_API}/{id}/documents`, {
     responses: {
       '200': {
@@ -118,6 +125,8 @@ export class VoucherDocumentController {
 
   }
 
+  @authorize({resource: resourcePermissions.voucherUpdate.name,
+    ...adminAndUserAuthDetails})
   @patch(`${VOUCHER_API}/{id}/documents`, {
     responses: {
       '200': {
@@ -144,6 +153,8 @@ export class VoucherDocumentController {
 
   }
 
+  @authorize({resource: resourcePermissions.voucherDelete.name,
+    ...adminAndUserAuthDetails})
   @del(`${VOUCHER_API}/{id}/documents`, {
     responses: {
       '200': {
