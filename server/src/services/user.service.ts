@@ -6,7 +6,7 @@ import {repository} from '@loopback/repository';
 import {BindingKeys} from '../binding.keys';
 import {inject} from '@loopback/context';
 import {PasswordHasher} from './hash-password.service';
-import { User } from '../models';
+import { Branch, FinYear, User } from '../models';
 import { ProfileUser as ProfileUserInft} from '@shared/util/profile-user';
 export interface ProfileUser extends ProfileUserInft{
   [securityId]: string;
@@ -22,39 +22,40 @@ export class FBOUserService implements UserService<ProfileUser, Credentials> {
   ) {
   }
 
+  private findFinYearOfUser = async(branchF: Branch): Promise<FinYear> => {
+
+    if (branchF?.defaultFinYearId) {
+
+      const finYearF = await this.finYearRepository.findById(branchF?.defaultFinYearId);
+      return finYearF;
+
+    }
+
+    const finYearF = await this.finYearRepository.findOne({
+      where: {branchId: branchF.id},
+    });
+    return finYearF as FinYear;
+
+
+  }
+
   private findBranchAndFinYear = async(foundUser: User):Promise<{ branch: string; finYear: string; }> => {
 
     let branch = '';
     let finYear = '';
-    
     if (foundUser.branchIds?.length) {
 
       const branchF = await this.branchRepository.findById(foundUser.branchIds[0]);
       branch = branchF.code;
-      const finYearF = await this.finYearRepository.findOne({
-        where: {branchId: branchF.id},
-      });
+      const finYearF = await this.findFinYearOfUser(branchF);
       finYear = finYearF?.code ?? '';
 
     } else if (foundUser.role === 'admin') {
 
       const branchF = await this.branchRepository.findOne();
-      if(branchF?.defaultFinYearId){
-
-        branch = branchF.code;
-        const finYearF = await this.finYearRepository.findById(branchF?.defaultFinYearId);
-        finYear = finYearF?.code ?? '';
-
-      } else if (branchF) {
-
-        branch = branchF.code;
-
-        const finYearF = await this.finYearRepository.findOne({
-          where: {branchId: branchF.id},
-        });
-        finYear = finYearF?.code ?? '';
-
-      }
+      branch = branchF?.code ?? '';
+      const finYearF = await this.findFinYearOfUser(branchF as Branch);
+      finYear = finYearF?.code ?? '';
 
     }
     return {branch,

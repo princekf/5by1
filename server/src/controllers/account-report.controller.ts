@@ -10,6 +10,7 @@ import { DayBookItem } from '@shared/util/day-book-item';
 import { BalanceSheetRespSchema, DayBookRespSchema, LedgerReportRespSchema, TrialBalanceLedgerSummaryRespSchema, TrialBalanceRespSchema } from './specs/common-specs';
 import { AccountReportService } from '../services/account-report.service';
 import { service } from '@loopback/core';
+import { resourcePermissions } from '../utils/resource-permissions';
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
@@ -19,6 +20,8 @@ export class AccountReportController {
     @service(AccountReportService) public accountReportService: AccountReportService,
   ) {}
 
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
   @get(`${ACC_REPORTS_API}/ledger-group-summary`)
   @response(200, {
     description: 'Ledger group summary as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
@@ -33,6 +36,8 @@ export class AccountReportController {
 
   }
 
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
   @get(`${ACC_REPORTS_API}/ledger-summary`)
   @response(200, {
     description: 'Ledger summary as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
@@ -47,6 +52,8 @@ export class AccountReportController {
 
   }
 
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
   @get(`${ACC_REPORTS_API}/ledger-group-report`)
   @response(200, {
     description: 'Ledger group report of a specified ledger',
@@ -64,6 +71,8 @@ export class AccountReportController {
 
   }
 
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
   @get(`${ACC_REPORTS_API}/ledger-report`)
   @response(200, {
     description: 'Ledger report of a specified ledger',
@@ -82,6 +91,8 @@ export class AccountReportController {
 
   }
 
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
   @get(`${ACC_REPORTS_API}/balance-sheet/{ason}`)
   @response(200, {
     description: 'Balance sheet as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
@@ -99,6 +110,8 @@ export class AccountReportController {
   }
 
 
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
   @get(`${ACC_REPORTS_API}/profit-loss/{ason}`)
   @response(200, {
     description: 'Profit and loss report as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
@@ -115,6 +128,8 @@ export class AccountReportController {
 
   }
 
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
   @get(`${ACC_REPORTS_API}/trial-balance`)
   @response(200, {
     description: 'Trial balance as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
@@ -131,6 +146,8 @@ export class AccountReportController {
 
   }
 
+  @authorize({resource: resourcePermissions.voucherView.name,
+    ...adminAndUserAuthDetails})
   @get(`${ACC_REPORTS_API}/day-book`)
   @response(200, {
     description: 'Day book between 2 dates. Date format should be `YYYY-DD-MM` (2022-03-31)',

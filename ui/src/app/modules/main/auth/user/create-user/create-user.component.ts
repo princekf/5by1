@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { permissions as permissionsT} from '@shared/util/permissions';
+import { permissions as permissionsO} from '@shared/util/permissions';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { goToPreviousPage as _goToPreviousPage } from '@fboutil/fbo.util';
@@ -100,9 +100,8 @@ export class CreateUserComponent implements OnInit {
               private readonly userService: UserService,
               private readonly branchService: BranchService) { }
 
-    private mergePermissions = (permKey: string, pPermissions: Record<string, Permission>) => {
+    private mergePermissions = (permKey: string, pPermissions: Record<string, Permission>, perm: Permission) => {
 
-      const perm = permissionsT[permKey];
       for (const opt in perm.operations) {
 
         if (!perm.operations.hasOwnProperty(opt)) {
@@ -184,7 +183,7 @@ export class CreateUserComponent implements OnInit {
 
     };
 
-    private categorisePermissions = (permKey: string, userC: User) => {
+    private categorisePermissions = (permKey: string, userC: User, perm: Permission) => {
 
       const pcObj2 = this.pcMap.find((pcObj) => pcObj.permisions.includes(permKey));
 
@@ -192,12 +191,12 @@ export class CreateUserComponent implements OnInit {
       if (pcObj2) {
 
         pcObj2.category[permKey] = userC.permissions[permKey] ?? null;
-        this.mergePermissions(permKey, pcObj2.category);
+        this.mergePermissions(permKey, pcObj2.category, perm);
 
       } else {
 
         this.permissions[permKey] = userC.permissions[permKey] ?? null;
-        this.mergePermissions(permKey, this.permissions);
+        this.mergePermissions(permKey, this.permissions, perm);
 
       }
 
@@ -210,7 +209,7 @@ export class CreateUserComponent implements OnInit {
       this.branchAuto.valueChanges.subscribe(this.handleBranchValueChanges);
 
       const tId = this.route.snapshot.queryParamMap.get('id');
-
+      const permissionsT = JSON.parse(JSON.stringify(permissionsO)) as Record<string, Permission>;
       if (tId) {
 
         this.formHeader = 'Update User';
@@ -224,7 +223,7 @@ export class CreateUserComponent implements OnInit {
               continue;
 
             }
-            this.categorisePermissions(permKey, userC);
+            this.categorisePermissions(permKey, userC, permissionsT[permKey]);
 
           }
           this.form.setValue({
@@ -314,8 +313,15 @@ export class CreateUserComponent implements OnInit {
 
 
       }
+      const permissions = {...this.permissions,
+        ...this.itemPermissions,
+        ...this.salePermissions,
+        ...this.purchasePermissions,
+        ...this.accountPermissions,
+        ...this.voucherPermissions,
+        ...this.settingsPermissions};
       const userPerm: User = {
-        permissions: this.permissions,
+        permissions,
         ...userP
       };
       const selectedBranchIds: Array<string> = [];

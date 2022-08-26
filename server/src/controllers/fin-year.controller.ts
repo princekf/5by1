@@ -18,16 +18,7 @@ import { Ledger, LedgerGroup } from '../models';
 import { defalutLedgerGroupCodes as dlgc } from '@shared/util/ledger-group-codes';
 import { defaultLedgers } from '../install/default.ledgers';
 import { TransactionType } from '@shared/entity/accounting/transaction';
-
-class FinYearTC extends FinYear {
-
-  @property({
-    type: 'string',
-    required: false,
-  })
-  refFinYearId? : string;
-
-}
+import { FinYearTC } from '../utils/fin-year-tc';
 
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
