@@ -49,6 +49,7 @@ export const basicAuthorization = async(
     return AuthorizationDecision.DENY;
 
   }
+
   if (metadata.resource === resourcePermissions.commonResources.name) {
 
     return AuthorizationDecision.ALLOW;
@@ -56,6 +57,15 @@ export const basicAuthorization = async(
   }
   const userRepository:UserRepository = authorizationCtx.invocationContext.getSync('repositories.UserRepository');
   const cUser = await userRepository.findById(currentUser.id);
+  const [ main, operation ] = metadata.resource?.split('-') ?? [];
+  const {permissions} = cUser;
+  if (!permissions[main]?.operations[operation]) {
+
+    return AuthorizationDecision.DENY;
+
+  }
+
+
   return AuthorizationDecision.ALLOW;
 
 };

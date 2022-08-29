@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
   dSummarys:Array<ISummary> = [
     {
       type: 'Summary',
-      width: 'width33',
+      width: 'width25',
       title: {
         value: 'Total income',
         icon: 'payments'
@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
     },
     {
       type: 'Summary',
-      width: 'width33',
+      width: 'width25',
       title: {
         value: 'Total expenses',
         icon: 'account_balance_wallet'
@@ -46,9 +46,22 @@ export class DashboardComponent implements OnInit {
     },
     {
       type: 'Summary',
-      width: 'width33',
+      width: 'width25',
       title: {
-        value: 'Total profit',
+        value: 'Total assets',
+        icon: 'account_balance'
+      },
+      content: '$4,567',
+      footer: {
+        left: 'Upcoming',
+        right: '$0.00/$0.00'
+      }
+    },
+    {
+      type: 'Summary',
+      width: 'width25',
+      title: {
+        value: 'Total liabalities',
         icon: 'account_balance'
       },
       content: '$4,567',

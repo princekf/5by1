@@ -3,7 +3,7 @@
     <div class="desktopView">
         <button mat-flat-button (click)="picker.open()" class="dashboard-datepicker">
             <mat-icon class="datepicker-icon">calendar_today</mat-icon>
-            {{range.value.start | date: 'dd, MMMM, y' }} - {{range.value.end | date: 'dd, MMMM, y' }}
+            {{range.value.start | date: 'dd MMMM, y' }} - {{range.value.end | date: 'dd MMMM, y' }}
         </button>
         <mat-date-range-input class="datepicker-input" [formGroup]="range" [rangePicker]="picker">
             <input matStartDate formControlName="start" placeholder="Start date">
@@ -27,19 +27,19 @@
 <div class="page-content">
     <ng-template ngFor let-dItem [ngForOf]="dItems">
         <app-summary-card *ngIf="dItem.type === 'Summary'" class="dashboard-item"
-            [ngClass]="dItem.width === 'width33' ? 'w33p' : dItem.width === 'width50' ? 'w50p' : dItem.width === 'width100' ? 'w100p' : ''"
+            [ngClass]="dItem.width === 'width25' ? 'w25p' : dItem.width === 'width33' ? 'w33p' : dItem.width === 'width50' ? 'w50p' : dItem.width === 'width100' ? 'w100p' : ''"
             [summary]="dItem"></app-summary-card>
 
         <app-line-chart *ngIf="dItem.type === 'LineChart'" class="dashboard-item"
-            [ngClass]="dItem.width === 'width33' ? 'w33p' : dItem.width === 'width50' ? 'w50p' : dItem.width === 'width100' ? 'w100p' : ''"
+            [ngClass]="dItem.width === 'width25' ? 'w25p' : dItem.width === 'width33' ? 'w33p' : dItem.width === 'width50' ? 'w50p' : dItem.width === 'width100' ? 'w100p' : ''"
             [lineData]="dItem"></app-line-chart>
 
         <app-pie-chart *ngIf="dItem.type === 'PieChart'" class="dashboard-item"
-            [ngClass]="dItem.width === 'width33' ? 'w33p' : dItem.width === 'width50' ? 'w50p' : dItem.width === 'width100' ? 'w100p' : ''"
+            [ngClass]="dItem.width === 'width25' ? 'w25p' : dItem.width === 'width33' ? 'w33p' : dItem.width === 'width50' ? 'w50p' : dItem.width === 'width100' ? 'w100p' : ''"
             [pieData]="dItem"></app-pie-chart>
 
         <app-summary-table *ngIf="dItem.type === 'Table'" class="dashboard-item"
-            [ngClass]="dItem.width === 'width33' ? 'w33p' : dItem.width === 'width50' ? 'w50p' : dItem.width === 'width100' ? 'w100p' : ''"
+            [ngClass]="dItem.width === 'width25' ? 'w25p' : dItem.width === 'width33' ? 'w33p' : dItem.width === 'width50' ? 'w50p' : dItem.width === 'width100' ? 'w100p' : ''"
             [tableData]="dItem"></app-summary-table>
 
     </ng-template>
