@@ -54,8 +54,12 @@ export class FBOUserService implements UserService<ProfileUser, Credentials> {
 
       const branchF = await this.branchRepository.findOne();
       branch = branchF?.code ?? '';
-      const finYearF = await this.findFinYearOfUser(branchF as Branch);
-      finYear = finYearF?.code ?? '';
+      if (branch) {
+
+        const finYearF = await this.findFinYearOfUser(branchF as Branch);
+        finYear = finYearF?.code ?? '';
+
+      }
 
     }
     return {branch,
