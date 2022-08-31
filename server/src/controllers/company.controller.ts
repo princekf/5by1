@@ -1,31 +1,22 @@
-import { Count, CountSchema, Filter, FilterExcludingWhere, repository, Where, } from '@loopback/repository';
-import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, RequestContext } from '@loopback/rest';
+import { Count, CountSchema, Filter, FilterExcludingWhere, Where, } from '@loopback/repository';
+import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response } from '@loopback/rest';
 import {Company} from '../models/company.model';
-import {CompanyRepository, UserRepository} from '../repositories';
 import { COMPANY_API } from '@shared/server-apis';
 import { authenticate } from '@loopback/authentication';
 import { authorize } from '@loopback/authorization';
 import { CompanyModelForCreateSchema } from '../models/company.create.model';
-import {Getter, inject, intercept} from '@loopback/context';
-import { BindingKeys } from '../binding.keys';
-import { PasswordHasher } from '../services';
-import { permissions } from '@shared/util/permissions';
+import {intercept} from '@loopback/context';
+import { CompanyService } from '../services';
 import { superAdminAuthDetails } from '../utils/authorize-details';
 import { ValidateCompanyForUniqueCodeInterceptor } from '../interceptors/validate-company-for-unique-code.interceptor';
+import { service } from '@loopback/core';
 
 @authenticate('jwt')
 @authorize(superAdminAuthDetails)
 export class CompanyController {
 
   constructor(
-    @repository(CompanyRepository)
-    public companyRepository : CompanyRepository,
-    @inject.getter('repositories.UserRepository')
-    private userRepositoryGetter: Getter<UserRepository>,
-    @inject.context()
-    public context: RequestContext,
-    @inject(BindingKeys.PASSWORD_HASHER)
-    public passwordHasher: PasswordHasher,
+    @service(CompanyService) public companyService: CompanyService,
   ) {}
 
   @intercept(ValidateCompanyForUniqueCodeInterceptor.BINDING_KEY)
@@ -48,37 +39,8 @@ export class CompanyController {
       companyS: Omit<CompanyModelForCreateSchema, 'id'>,
   ): Promise<Company> {
 
-    const {password, ...company} = companyS;
-    const companyR = await this.companyRepository.create(company);
-    this.context.bind(BindingKeys.SESSION_COMPANY_CODE).to(<string>company.code.toLowerCase());
-    const passwordC = await this.passwordHasher.hashPassword(password);
-    const userRepository = await this.userRepositoryGetter();
-    const permissions2 = {
-      'user': {
-        key: 'user',
-        name: 'User',
-        operations: {
-          list: true,
-          view: true,
-          create: true,
-          update: true,
-          delete: true,
-        }
-      },
-      ...permissions
-    };
-    const savedUser = await userRepository.create({
-      name: company.name,
-      email: company.email,
-      role: 'admin',
-      permissions: permissions2
-    });
-
-    // Set the password
-    await userRepository
-      .userCredentials(savedUser.id)
-      .create({password: passwordC});
-    return companyR;
+    const lgsR = await this.companyService.create(companyS);
+    return lgsR;
 
   }
 
@@ -91,7 +53,7 @@ export class CompanyController {
     @param.where(Company) where?: Where<Company>,
   ): Promise<Count> {
 
-    const countR = await this.companyRepository.count(where);
+    const countR = await this.companyService.count(where);
     return countR;
 
   }
@@ -112,7 +74,7 @@ export class CompanyController {
     @param.filter(Company) filter?: Filter<Company>,
   ): Promise<Company[]> {
 
-    const companiesR = await this.companyRepository.find(filter);
+    const companiesR = await this.companyService.find(filter);
     return companiesR;
 
   }
@@ -134,7 +96,7 @@ export class CompanyController {
     @param.where(Company) where?: Where<Company>,
   ): Promise<Count> {
 
-    const countR = await this.companyRepository.updateAll(company, where);
+    const countR = await this.companyService.updateAll(company, where);
     return countR;
 
   }
@@ -153,7 +115,7 @@ export class CompanyController {
     @param.filter(Company, {exclude: 'where'}) filter?: FilterExcludingWhere<Company>
   ): Promise<Company> {
 
-    const companyR = await this.companyRepository.findById(id, filter);
+    const companyR = await this.companyService.findById(id, filter);
     return companyR;
 
   }
@@ -174,7 +136,7 @@ export class CompanyController {
       company: Company,
   ): Promise<void> {
 
-    await this.companyRepository.updateById(id, company);
+    await this.companyService.updateById(id, company);
 
   }
 
@@ -187,7 +149,7 @@ export class CompanyController {
     @requestBody() company: Company,
   ): Promise<void> {
 
-    await this.companyRepository.replaceById(id, company);
+    await this.companyService.replaceById(id, company);
 
   }
 
@@ -197,7 +159,7 @@ export class CompanyController {
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
 
-    await this.companyRepository.deleteById(id);
+    await this.companyService.deleteById(id);
 
   }
 
@@ -211,19 +173,7 @@ export class CompanyController {
     @param.where(Company) where?: Where<Company>,
   ): Promise<Count> {
 
-    if (!where) {
-
-      throw new HttpErrors.Conflict('Invalid parameter : Company ids are required');
-
-    }
-    const whereC = where as {id: {inq: Array<string>}};
-    if (!whereC.id || !whereC.id.inq || whereC.id.inq.length < 1) {
-
-      throw new HttpErrors.Conflict('Invalid parameter : Company ids are required');
-
-    }
-
-    const count = await this.companyRepository.deleteAll(where);
+    const count = await this.companyService.deleteAll(where);
     return count;
 
   }
