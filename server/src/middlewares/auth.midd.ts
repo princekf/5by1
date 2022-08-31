@@ -32,21 +32,15 @@ export const basicAuthorization = async(
 
   }
 
-  if (!currentUser.role) {
+  if (!currentUser.role || !metadata.allowedRoles || !metadata.allowedRoles?.includes(currentUser.role)) {
 
     return AuthorizationDecision.DENY;
 
   }
 
-  if (!metadata.allowedRoles) {
+  if (currentUser.role === 'super-admin') {
 
-    return AuthorizationDecision.DENY;
-
-  }
-
-  if (!metadata.allowedRoles?.includes(currentUser.role)) {
-
-    return AuthorizationDecision.DENY;
+    return AuthorizationDecision.ALLOW;
 
   }
 
@@ -55,6 +49,7 @@ export const basicAuthorization = async(
     return AuthorizationDecision.ALLOW;
 
   }
+
   const userRepository:UserRepository = authorizationCtx.invocationContext.getSync('repositories.UserRepository');
   const cUser = await userRepository.findById(currentUser.id);
   const [ main, operation ] = metadata.resource?.split('-') ?? [];
