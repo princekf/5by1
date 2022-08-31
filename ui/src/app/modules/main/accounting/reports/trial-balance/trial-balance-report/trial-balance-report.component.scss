@@ -18,9 +18,23 @@
     flex: 1 1;
 }
 .column-right-align {
-    padding-right: 5%;
+    padding-right: 1%;
     text-align: right;
 }
 .expanded-node{
     font-weight: 900;
+    color: #00000000;
+}
+table {
+    width: 100%;
+}
+
+th.mat-header-cell {
+    text-align: center;
+    border: 1px solid #CCC;
+    padding: 0 !important;
+}
+
+td.mat-cell {
+    border: 1px solid #CCC;
 }

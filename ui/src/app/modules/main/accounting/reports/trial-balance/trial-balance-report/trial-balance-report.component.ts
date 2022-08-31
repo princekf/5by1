@@ -6,7 +6,7 @@ import { SessionUser } from '@shared/util/session-user';
 import * as dayjs from 'dayjs';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { exportAsXLSX } from '@fboutil/export-xlsx.util';
+import { exportTrialBalanceAsXLSX } from '@fboutil/export-xlsx.util';
 
 interface TBFlatNode extends TrialBalanceItem {
   expandable: boolean;
@@ -21,29 +21,15 @@ interface TBFlatNode extends TrialBalanceItem {
 })
 export class TrialBalanceReportComponent implements OnInit {
 
-  dataSrc = [];
+  tableHeader = 'Trial Balance Report';
 
-  tableHeader = 'Trial Balance Summary Report';
-
-  displayedColumns: string[] = [ 'name', 'credit', 'debit', 'opening', 'balance' ];
+  displayedColumns: string[] = [ 'name', 'obDebit', 'obCredit', 'debit', 'credit', 'closeDebit', 'closeCredit' ];
 
   loading = true;
 
-  columnHeaders = {
-    debit: 'Debit',
-    credit: 'Credit',
-    name: 'Name',
-    balance: 'Balance',
-    opening: 'Opening'
-  };
-
   private transformer = (node: TrialBalanceItem, level: number) => ({
     expandable: Boolean(node.children) && node.children.length > 0,
-    name: node.name,
-    credit: node.credit,
-    debit: node.debit,
-    opening: node.opening,
-    balance: node.balance,
+    ...node,
     level,
     sclass: '',
   })
@@ -65,6 +51,7 @@ ngOnInit(): void {
   const sessionUser: SessionUser = JSON.parse(userS);
   const {finYear} = sessionUser;
   const ason = dayjs(finYear.endDate).format('YYYY-MM-DD');
+  this.tableHeader = `Trial balance as on ${ason}`;
   this.accountingReportService.fetchTrialBalanceItems(ason).subscribe((plItems) => {
 
     this.dataSource.data = plItems;
@@ -83,38 +70,38 @@ handleExColClick = (node: TBFlatNode): void => {
 
 hasChild = (_nouse: number, node: TBFlatNode): boolean => node.expandable;
 
-nodeEditor():void {
-
-  const temp = this.treeControl.dataNodes;
-  let spacer = '';
-  for (const value of temp) {
-
-    for (let simpL = 0; simpL < value.level; simpL++) {
-
-      spacer += '   ';
-
-    }
-    value.name = spacer + value.name;
-    spacer = '';
-    
-  }
-  this.dataSrc = temp;
-
-}
-
 exportExcel(): void {
 
-  this.nodeEditor();
-  const headers = this.displayedColumns.map((col) => ({header: this.columnHeaders[col],
-    key: col}));
-  exportAsXLSX(this.tableHeader, this.dataSrc, headers);
+  const rows:Array<Array<string|number>> = [];
+  for (const node of this.treeControl.dataNodes) {
 
+    const {name, obDebit, obCredit, debit, credit, closeDebit, closeCredit} = node;
+    const fName = new Array(node.level + 1).join('  ') + name;
+    if (node.children?.length) {
 
-}
+      rows.push([ fName ]);
 
-  exportPDF = () => {
+    } else {
+
+      const row:Array<string|number> = [ fName ];
+      row.push(obDebit ? obDebit : '');
+      row.push(obCredit ? obCredit : '');
+      row.push(debit ? debit : '');
+      row.push(credit ? credit : '');
+      row.push(closeDebit ? closeDebit : '');
+      row.push(closeCredit ? closeCredit : '');
+      rows.push(row);
+
+    }
 
   }
+  const userS = localStorage.getItem(LOCAL_USER_KEY);
+  const sessionUser: SessionUser = JSON.parse(userS);
+  const {finYear, company, branch} = sessionUser;
+  const titles: string[] = [ this.tableHeader, `Company : ${company.name}`, `Branch : ${branch.name}`, `Financial Year : ${finYear.name}` ];
+  exportTrialBalanceAsXLSX(titles, rows);
+
+}
 
 }
 

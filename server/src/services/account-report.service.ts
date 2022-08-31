@@ -83,8 +83,8 @@ export class AccountReportService {
         credit: 0};
       ldGMap[ldgId].credit += summTB.credit ?? 0;
       ldGMap[ldgId].debit += summTB.debit ?? 0;
-      ldGMap[ldgId].credit += summTB.obCredit;
-      ldGMap[ldgId].debit += summTB.obDebit;
+      ldGMap[ldgId].credit += summTB.obCredit ?? 0;
+      ldGMap[ldgId].debit += summTB.obDebit ?? 0;
 
     }
     return ldGMap;
@@ -154,11 +154,11 @@ export class AccountReportService {
   private generateProfitLossReport = async(ason: Date):
   Promise<{ bItems: Array<BalanceSheetItem>; isProfit: boolean; profLoss: number; }> => {
 
-    const summTBs = await this.voucherService.generateLedgerSummary(ason);
+    const smT = await this.voucherService.generateLedgerSummary(ason);
     // Filter the ledgers with balance
-    const filtTBs = summTBs.filter((sTB) => (sTB.credit ?? 0) - (sTB.debit ?? 0) + sTB.obCredit - sTB.obDebit);
+    const filTBs = smT.filter((sTB) => (sTB.credit ?? 0) - (sTB.debit ?? 0) + (sTB.obCredit ?? 0) - (sTB.obDebit ?? 0));
     // Find ledger group wise summary
-    const ldGMap = this.findLedgerGroupSummaryMap(filtTBs);
+    const ldGMap = this.findLedgerGroupSummaryMap(filTBs);
     const lgsWithParents = await this.ledgerGroupService.findLedgerGroupsWithParents(Object.keys(ldGMap));
     const bItemsP: Array<BalanceSheetItem> = [];
     // Trading Account Report
@@ -179,11 +179,11 @@ export class AccountReportService {
   private generateBalanceSheetReport = async(ason: Date):
   Promise<{ bItems: Array<BalanceSheetItem>; isProfit: boolean; profLoss: number; }> => {
 
-    const summTBs = await this.voucherService.generateLedgerSummary(ason);
+    const smT = await this.voucherService.generateLedgerSummary(ason);
     // Filter the ledgers with balance
-    const filtTBs = summTBs.filter((sTB) => (sTB.credit ?? 0) - (sTB.debit ?? 0) + sTB.obCredit - sTB.obDebit);
+    const filTBs = smT.filter((sTB) => (sTB.credit ?? 0) - (sTB.debit ?? 0) + (sTB.obCredit ?? 0) - (sTB.obDebit ?? 0));
     // Find ledger group wise summary
-    const ldGMap = this.findLedgerGroupSummaryMap(filtTBs);
+    const ldGMap = this.findLedgerGroupSummaryMap(filTBs);
     const lgsWithParents = await this.ledgerGroupService.findLedgerGroupsWithParents(Object.keys(ldGMap));
     const bItemsP: Array<BalanceSheetItem> = [];
     // Balance sheet Report
@@ -214,10 +214,8 @@ export class AccountReportService {
       ldS.debit = Number((ldS.debit ?? 0).toFixed(DECIMAL_PART));
       ldS.obCredit = Number((ldS.obCredit ?? 0).toFixed(DECIMAL_PART));
       ldS.obDebit = Number((ldS.obDebit ?? 0).toFixed(DECIMAL_PART));
-      const opening = ldS.obCredit - ldS.obDebit;
-      ldS.opening = opening ? `${Math.abs(opening).toFixed(DECIMAL_PART)} ${opening > 0 ? 'Cr' : 'Dr'}` : '';
-      const balance = ldS.credit + ldS.obCredit - ldS.debit - ldS.obDebit;
-      ldS.balance = balance ? `${Math.abs(balance).toFixed(DECIMAL_PART)} ${balance > 0 ? 'Cr' : 'Dr'}` : '';
+      ldS.closeCredit = Number((ldS.closeCredit ?? 0).toFixed(DECIMAL_PART));
+      ldS.closeDebit = Number((ldS.closeDebit ?? 0).toFixed(DECIMAL_PART));
       lGMap[ldS.parentId].children = lGMap[ldS.parentId].children ?? [];
       lGMap[ldS.parentId].children.push(ldS);
 
@@ -235,12 +233,10 @@ export class AccountReportService {
 
           parent.credit = Number(((ldS.credit ?? 0) + (parent.credit || 0)).toFixed(DECIMAL_PART));
           parent.debit = Number(((ldS.debit ?? 0) + (parent.debit || 0)).toFixed(DECIMAL_PART));
-          parent.obCredit = Number((ldS.obCredit + (parent.obCredit || 0)).toFixed(DECIMAL_PART));
-          parent.obDebit = Number((ldS.obDebit + (parent.obDebit || 0)).toFixed(DECIMAL_PART));
-          const opening = parent.obCredit - parent.obDebit;
-          parent.opening = opening ? `${Math.abs(opening).toFixed(DECIMAL_PART)} ${opening > 0 ? 'Cr' : 'Dr'}` : '';
-          const balance = parent.credit + parent.obCredit - parent.debit - parent.obDebit;
-          parent.balance = balance ? `${Math.abs(balance).toFixed(DECIMAL_PART)} ${balance > 0 ? 'Cr' : 'Dr'}` : '';
+          parent.obCredit = Number(((ldS.obCredit || 0) + (parent.obCredit || 0)).toFixed(DECIMAL_PART));
+          parent.obDebit = Number(((ldS.obDebit || 0) + (parent.obDebit || 0)).toFixed(DECIMAL_PART));
+          parent.closeCredit = Number(((ldS.closeCredit || 0) + (parent.closeCredit || 0)).toFixed(DECIMAL_PART));
+          parent.closeDebit = Number(((ldS.closeDebit || 0) + (parent.closeDebit || 0)).toFixed(DECIMAL_PART));
           parent = lGMap[parent.parentId];
 
         }
@@ -255,18 +251,18 @@ export class AccountReportService {
     let debit = 0;
     let obCredit = 0;
     let obDebit = 0;
+    let closeCredit = 0;
+    let closeDebit = 0;
     for (const item of items) {
 
       credit += item.credit ?? 0;
       debit += item.debit ?? 0;
       obCredit += item.obCredit ?? 0;
       obDebit += item.obDebit ?? 0;
+      closeCredit += item.closeCredit ?? 0;
+      closeDebit += item.closeDebit ?? 0;
 
     }
-    const balanceN = credit - debit + obCredit - obDebit;
-    const balance = `${Math.abs(balanceN).toFixed(DECIMAL_PART)} ${balanceN > 0 ? 'Cr' : 'Dr'}`;
-    const openingN = obCredit - obDebit;
-    const opening = `${Math.abs(openingN).toFixed(DECIMAL_PART)} ${openingN > 0 ? 'Cr' : 'Dr'}`;
     return {
       id: '',
       parentId: '',
@@ -276,8 +272,8 @@ export class AccountReportService {
       debit: Number(debit.toFixed(DECIMAL_PART)),
       obCredit: Number(obCredit.toFixed(DECIMAL_PART)),
       obDebit: Number(obDebit.toFixed(DECIMAL_PART)),
-      opening,
-      balance,
+      closeCredit: Number(closeCredit.toFixed(DECIMAL_PART)),
+      closeDebit: Number(closeDebit.toFixed(DECIMAL_PART)),
       children: []
     };
 
@@ -312,10 +308,6 @@ export class AccountReportService {
         code,
         obCredit: obType === 'Credit' ? obAmount : 0,
         obDebit: obType === 'Debit' ? obAmount : 0,
-        credit: 0,
-        debit: 0,
-        opening: '',
-        balance: '',
         children: []
       });
 
@@ -330,14 +322,8 @@ export class AccountReportService {
     const plItems = await this.voucherService.generateLedgerGroupSummary(ason);
     plItems.forEach((item) => {
 
-      item.credit = item.credit ? Number(item.credit.toFixed(DECIMAL_PART)) : null;
-      item.debit = item.debit ? Number(item.debit.toFixed(DECIMAL_PART)) : null;
-
-      const openingI = item.obCredit ?? item.obDebit;
-      item.opening = openingI ? `${openingI.toFixed(DECIMAL_PART)} ${item.obCredit ? 'Cr' : 'Dr'}` : '';
-
-      const balanceI = (item.credit ?? 0) + (item.obCredit ?? 0) - (item.debit ?? 0) - (item.obDebit ?? 0);
-      item.balance = balanceI ? `${Math.abs(balanceI).toFixed(DECIMAL_PART)} ${balanceI > 0 ? 'Cr' : 'Dr'}` : '';
+      item.credit = Number(item.credit?.toFixed(DECIMAL_PART));
+      item.debit = Number(item.debit?.toFixed(DECIMAL_PART));
 
     });
     return plItems;
@@ -354,13 +340,8 @@ export class AccountReportService {
     const plItems = [ ...plItems2, ...ldGNts ];
     plItems.forEach((item) => {
 
-      item.credit = item.credit ? Number(item.credit.toFixed(DECIMAL_PART)) : null;
-      item.debit = item.debit ? Number(item.debit.toFixed(DECIMAL_PART)) : null;
-
-      const openingI = item.obCredit ? item.obCredit : item.obDebit;
-      item.opening = openingI ? `${openingI.toFixed(DECIMAL_PART)} ${item.obCredit ? 'Cr' : 'Dr'}` : '';
-      const balanceI = (item.credit ?? 0) + (item.obCredit ?? 0) - (item.debit ?? 0) - (item.obDebit ?? 0);
-      item.balance = balanceI ? `${Math.abs(balanceI).toFixed(DECIMAL_PART)} ${balanceI > 0 ? 'Cr' : 'Dr'}` : '';
+      item.credit = Number(item.credit?.toFixed(DECIMAL_PART));
+      item.debit = Number(item.debit?.toFixed(DECIMAL_PART));
 
     });
     return plItems;
@@ -467,9 +448,21 @@ export class AccountReportService {
     const lGMap:Record<string, TrialBalanceItem> = {};
     this.fillLGMap(lGMap, lGsWithChildren);
     const lSummC = await this.voucherService.generateLedgerSummary(ason);
+    lSummC.forEach((lSumm) => {
+
+      lSumm.closeCredit = (lSumm.credit ?? 0) + (lSumm.obCredit ?? 0);
+      lSumm.closeDebit = (lSumm.debit ?? 0) + (lSumm.obDebit ?? 0);
+
+    });
     // Find all ledger which don't have transactions but opening balance.
     const lIds = lSummC.map((lsu) => lsu.id);
     const ldGNTs = await this.findAllTBItemsWithNoTransactionButOpening(lIds);
+    ldGNTs.forEach((lSumm) => {
+
+      lSumm.closeCredit = lSumm.obCredit;
+      lSumm.closeDebit = lSumm.obDebit;
+
+    });
     const lSumm = [ ...lSummC, ...ldGNTs ];
     this.fillTreeWithLedger(lSumm, lGMap);
     this.fillTreeWithLedgerGroups(lSumm, lGMap);
