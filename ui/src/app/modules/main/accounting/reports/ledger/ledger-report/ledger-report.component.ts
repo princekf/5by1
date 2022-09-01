@@ -226,6 +226,7 @@ export class LedgerReportComponent implements OnInit {
 
   downloadAll = async(): Promise<void> => {
 
+    this.loading = true;
     const userS = localStorage.getItem(LOCAL_USER_KEY);
     const sessionUser: SessionUser = JSON.parse(userS);
     const {finYear} = sessionUser;
@@ -252,6 +253,7 @@ export class LedgerReportComponent implements OnInit {
       }
       const content = await zip.generateAsync({type: 'blob'});
       saveAs(content, 'ledger-reports.zip');
+      this.loading = false;
 
     });
 
