@@ -28,6 +28,7 @@ import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 })
 export class LedgerReportComponent implements OnInit {
 
+  status = true;
 
   tableHeader = 'Ledger Wise Summary Report';
 
@@ -258,5 +259,11 @@ export class LedgerReportComponent implements OnInit {
     });
 
   };
+
+  addItem(newItem: boolean) {
+
+    this.status = newItem;
+
+  }
 
 }

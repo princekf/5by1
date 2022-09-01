@@ -1,10 +1,12 @@
 
 <div class="head">
     <div class="empy-space"></div>
+    <div *ngIf="this.status">
     <button mat-flat-button *ngIf="!this.loading" class="button" (click)="downloadAll()">
     <mat-icon>ios_share</mat-icon> Download All
 
 </button>
+    </div>
     <button mat-flat-button class="button" (click)="exportExcel()">
     <mat-icon>ios_share</mat-icon>  EXCEL
 </button>
@@ -12,4 +14,4 @@
 </div>
 <app-data-table [tableHeader]=tableHeader [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="ledgerRows"
     [filterItem]="filterItem" [columnParsingFn]="columnParsingFn" [numberColumns]="numberColumns"
-    [deleteUri]=deleteUri [editUri]=editUri [showPaginator]="false" [sortDisabledColumns]="sortDisabledColumns"></app-data-table>
+    [deleteUri]=deleteUri [editUri]=editUri (newItemEvent)="addItem($event)" [showPaginator]="false" [sortDisabledColumns]="sortDisabledColumns"></app-data-table>

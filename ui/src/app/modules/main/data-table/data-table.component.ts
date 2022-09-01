@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, Input, ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -20,6 +20,8 @@ import { FilterComponent } from '../directives/table-filter/filter-component';
   animations: fboTableRowExpandAnimation,
 })
 export class DataTableComponent {
+
+  @Output() newItemEvent = new EventEmitter<boolean>();
 
   @Input() tableHeader: string;
 
@@ -214,6 +216,8 @@ export class DataTableComponent {
     this.selection.clear();
     this.router.navigate([ this.editUri ], { queryParams: {id: selectedObj.id,
       burl: this.router.url} });
+    this.newItemEvent.emit(false);
+
 
   }
 
