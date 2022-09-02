@@ -231,8 +231,8 @@ export class AccountReportService {
         let parent = lGMap[ldS.parentId];
         while (parent) {
 
-          parent.credit = Number(((ldS.credit ?? 0) + (parent.credit || 0)).toFixed(DECIMAL_PART));
-          parent.debit = Number(((ldS.debit ?? 0) + (parent.debit || 0)).toFixed(DECIMAL_PART));
+          parent.credit = Number(((ldS.credit || 0) + (parent.credit || 0)).toFixed(DECIMAL_PART));
+          parent.debit = Number(((ldS.debit || 0) + (parent.debit || 0)).toFixed(DECIMAL_PART));
           parent.obCredit = Number(((ldS.obCredit || 0) + (parent.obCredit || 0)).toFixed(DECIMAL_PART));
           parent.obDebit = Number(((ldS.obDebit || 0) + (parent.obDebit || 0)).toFixed(DECIMAL_PART));
           parent.closeCredit = Number(((ldS.closeCredit || 0) + (parent.closeCredit || 0)).toFixed(DECIMAL_PART));
@@ -450,8 +450,17 @@ export class AccountReportService {
     const lSummC = await this.voucherService.generateLedgerSummary(ason);
     lSummC.forEach((lSumm) => {
 
-      lSumm.closeCredit = (lSumm.credit ?? 0) + (lSumm.obCredit ?? 0);
-      lSumm.closeDebit = (lSumm.debit ?? 0) + (lSumm.obDebit ?? 0);
+      const closeCredit = (lSumm.credit ?? 0) + (lSumm.obCredit ?? 0);
+      const closeDebit = (lSumm.debit ?? 0) + (lSumm.obDebit ?? 0);
+      if (closeCredit > closeDebit) {
+
+        lSumm.closeCredit = closeCredit - closeDebit;
+
+      } else {
+
+        lSumm.closeDebit = closeDebit - closeCredit;
+
+      }
 
     });
     // Find all ledger which don't have transactions but opening balance.
