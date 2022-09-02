@@ -4,7 +4,6 @@ import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, resp
 import {Voucher} from '../models/voucher.model';
 import {VoucherRepository} from '../repositories/voucher.repository';
 import { VOUCHER_API } from '@shared/server-apis';
-import { LedgerSummaryTB } from '@shared/util/trial-balance-ledger-summary';
 import { LedgerGroupSummary } from '@shared/util/ledger-group-summary';
 
 import { authenticate } from '@loopback/authentication';
