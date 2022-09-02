@@ -28,6 +28,7 @@ import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 })
 export class LedgerReportComponent implements OnInit {
 
+  showDownloadAll = true;
 
   tableHeader = 'Ledger Wise Summary Report';
 
@@ -89,6 +90,7 @@ export class LedgerReportComponent implements OnInit {
       };
       this.loading = false;
 
+
     });
 
   }
@@ -131,6 +133,7 @@ export class LedgerReportComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((value) => {
 
       const { id, whereS, order, ...qParam } = value;
+
       if (id) {
 
         this.router.navigate([ '/reports/ledger' ], { queryParams: {whereS: `{"transactions.ledgerId":{"like":"${id}","options":"i"}}`} });
@@ -146,16 +149,19 @@ export class LedgerReportComponent implements OnInit {
 
         this.queryParams.order = order;
 
+
       }
       const where: Record<string, Record<string, unknown>> = JSON.parse(whereS ?? '{}');
       const ason = <string>where?.date?.lte ?? asonT;
       if (where?.['transactions.ledgerId']) {
 
         this.fillLedgerReport(ason, whereS);
+        this.showDownloadAll = false;
 
       } else {
 
         this.fillLedgerSummaryReport(ason);
+        this.showDownloadAll = true;
 
       }
 
