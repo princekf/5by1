@@ -181,6 +181,22 @@ export class LedgerReportComponent implements OnInit {
 
   }
 
+  findCssClassFn = (element: unknown, column: string): string => {
+
+    switch (column) {
+
+    case 'number':
+      const elm = element as {documents: Array<unknown>};
+      if (elm?.documents?.length) {
+
+        return 'has-attatchments';
+
+      }
+
+    }
+    return null;
+
+  }
 
   exportExcel(): void {
 

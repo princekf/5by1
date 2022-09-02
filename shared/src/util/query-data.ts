@@ -5,5 +5,5 @@ export interface QueryData {
     order?: Array<string>;
     fields?: Record<string, boolean>;
     where?: Record<string, unknown>;
-    include?: Array<Record<string, unknown>>;
+    include?: Array<Record<string, unknown>> | string[];
 }

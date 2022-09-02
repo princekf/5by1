@@ -79,6 +79,8 @@ export class DataTableComponent {
 
   @Input() columnParsingFn?:(elm:unknown, clm:string)=>string;
 
+  @Input() findCssClassFn?:(elm:unknown, clm:string)=>string;
+
   @ViewChild(MatSort) sort: MatSort;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -234,11 +236,16 @@ export class DataTableComponent {
 
   }
 
-  findCssClass = (cName:string):string => {
+  findCssClass = (cName:string, elm:unknown):string => {
 
     if (this.numberColumns.includes(cName)) {
 
       return 'column-right-align';
+
+    }
+    if (this.findCssClassFn) {
+
+      return this.findCssClassFn(elm, cName);
 
     }
     return '';
