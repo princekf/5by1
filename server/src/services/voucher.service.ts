@@ -173,6 +173,25 @@ export class VoucherService {
     },
   ];
 
+  private ledgerReportAggrsProject = ():Array<unknown> => [
+    {
+      '$project': {
+        'id': 1,
+        'number': 1,
+        'date': 1,
+        'type': 1,
+        'details': { '$concat': [ '$details', ' - ', {'$ifNull': [ '$tdetails', '' ]}, ' - ', { '$ifNull': [ '$pdetails', '' ] }, ] },
+        'name': '$ledgers.name',
+        'credit': {'$cond': [ {'$eq': [ '$tType', 'Debit' ]}, '$amount', 0 ]},
+        'debit': {'$cond': [ {'$eq': [ '$tType', 'Credit' ]}, '$amount', 0 ]},
+        'documents': 1,
+      }
+    },
+    {
+      '$sort': { 'date': 1 }
+    },
+  ]
+
   private createLedgerReportAggregates = (plid: string, clid?: string):Array<unknown> => [
     { '$match': {'$or': [ { 'transactions.ledgerId': plid }, { 'transactions.ledgerId': clid ?? '' } ]}},
     { '$addFields': { 'primaryTransaction': { '$first': '$transactions' } } },
@@ -203,20 +222,14 @@ export class VoucherService {
     },
     { '$unwind': '$ledgers' },
     {
-      '$project': {
-        'id': 1,
-        'number': 1,
-        'date': 1,
-        'type': 1,
-        'details': { '$concat': [ '$details', ' - ', {'$ifNull': [ '$tdetails', '' ]}, ' - ', { '$ifNull': [ '$pdetails', '' ] }, ] },
-        'name': '$ledgers.name',
-        'credit': {'$cond': [ {'$eq': [ '$tType', 'Debit' ]}, '$amount', 0 ]},
-        'debit': {'$cond': [ {'$eq': [ '$tType', 'Credit' ]}, '$amount', 0 ]},
+      '$lookup': {
+        'from': 'VoucherDocument',
+        'localField': '_id',
+        'foreignField': 'voucherId',
+        'as': 'documents'
       }
     },
-    {
-      '$sort': { 'date': 1 }
-    },
+    ...this.ledgerReportAggrsProject()
   ]
 
   private createLedgerGroupReportAggregates = (lids: Array<string>):Array<unknown> => [

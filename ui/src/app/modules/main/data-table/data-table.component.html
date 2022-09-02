@@ -42,7 +42,7 @@
   
   <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumnsO">
     <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="isSortingDisabled(column)" [arrowPosition]="findArrowPos(column)" class="fbo-table-th"> {{columnHeaders[column]}} </th>
-    <td mat-cell *matCellDef="let element" [class]="findCssClass(column)"> {{findColumnValue(element, column, columnParsingFn)}} </td>
+    <td mat-cell *matCellDef="let element" [class]="findCssClass(column, element)"> {{findColumnValue(element, column, columnParsingFn)}} </td>
   </ng-container>
 
   <!-- Expandable section -->

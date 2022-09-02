@@ -140,7 +140,8 @@ export class ListVoucherComponent implements OnInit {
   private loadData = () => {
 
     this.loading = true;
-    const voucherS$ = this.voucherService.list(this.queryParams);
+    const voucherS$ = this.voucherService.list({...this.queryParams,
+      include: [ 'documents' ]});
     const ledgerS$ = this.voucherService.fetchLedgersUsed(this.voucherType);
     forkJoin([ voucherS$, ledgerS$ ]).subscribe(([ voucherListData, ledgers ]) => {
 
@@ -187,13 +188,29 @@ export class ListVoucherComponent implements OnInit {
 
   }
 
-
   columnParsingFn = (element: unknown, column: string): string => {
 
     switch (column) {
 
     case 'date':
       return dayjs(element[column]).format(environment.dateFormat);
+
+    }
+    return null;
+
+  }
+
+  findCssClassFn = (element: unknown, column: string): string => {
+
+    switch (column) {
+
+    case 'number':
+      const elm = element as {documents: Array<unknown>};
+      if (elm?.documents?.length) {
+
+        return 'has-attatchments';
+
+      }
 
     }
     return null;
