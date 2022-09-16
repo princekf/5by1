@@ -477,6 +477,8 @@ export class AccountReportService {
     this.fillTreeWithLedgerGroups(lSumm, lGMap);
     const nonEmptyItems = this.removeEmptyItems(lGsWithChildren);
     const totalItem = this.findSummary(lSumm);
+    const order = [ 'ASTS', 'LBLTS', 'INCM', 'EXPNS' ];
+    nonEmptyItems.sort((it1, it2) => order.indexOf(it1.code) - order.indexOf(it2.code));
     return [ ...nonEmptyItems, totalItem ];
 
   }
