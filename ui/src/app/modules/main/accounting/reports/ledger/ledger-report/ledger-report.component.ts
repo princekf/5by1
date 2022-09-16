@@ -28,6 +28,7 @@ import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 })
 export class LedgerReportComponent implements OnInit {
 
+  showDownloadAll = true;
 
   tableHeader = 'Ledger Wise Summary Report';
 
@@ -152,10 +153,12 @@ export class LedgerReportComponent implements OnInit {
       if (where?.['transactions.ledgerId']) {
 
         this.fillLedgerReport(ason, whereS);
+        this.showDownloadAll = false;
 
       } else {
 
         this.fillLedgerSummaryReport(ason);
+        this.showDownloadAll = true;
 
       }
 
