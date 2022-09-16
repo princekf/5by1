@@ -61,10 +61,6 @@ export class FilterLedgerReportComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const userS = localStorage.getItem(LOCAL_USER_KEY);
-    const sessionUser: SessionUser = JSON.parse(userS);
-    const {finYear} = sessionUser;
-
     const [ start, end ] = this.findStartEndDates();
     this.filterForm = new FormGroup({
 
@@ -72,8 +68,7 @@ export class FilterLedgerReportComponent implements OnInit {
       'transactions.ledgerIdType': new FormControl(''),
       againstL: new FormControl(''),
       againstLType: new FormControl('ne'),
-      date: new FormControl(finYear.endDate),
-      dateType: new FormControl('lte'),
+      dateType: new FormControl('between'),
       dateStart: new FormControl(start),
       dateEnd: new FormControl(end),
     });
@@ -93,6 +88,13 @@ export class FilterLedgerReportComponent implements OnInit {
       if (whereS) {
 
         const where: Record<string, Record<string, unknown>> = JSON.parse(whereS);
+        const [ stD, enD ] = (where?.date?.between ?? []) as string[];
+        const [ start, end ] = this.findStartEndDates();
+        const endDate = enD ?? end;
+        const startDate = stD ?? start;
+        this.filterForm.controls.dateStart.setValue(startDate);
+        this.filterForm.controls.dateEnd.setValue(endDate);
+
         if (!this.filterForm.controls['transactions.ledgerId'].value && where?.['transactions.ledgerId'] && where?.['transactions.ledgerId'].like) {
 
           const cldgId = where['transactions.ledgerId'].like as string;

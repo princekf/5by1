@@ -45,9 +45,11 @@ export class AccountReportController {
       'application/json': {schema: TrialBalanceLedgerSummaryRespSchema},
     },
   })
-  async ledgerSummary(@param.query.date('ason') ason: Date,): Promise<TrialBalanceItem[]> {
+  async ledgerSummary(
+    @param.query.date('startDate') startDate: Date,
+    @param.query.date('endDate') endDate: Date,): Promise<TrialBalanceItem[]> {
 
-    const lgsR = await this.accountReportService.generateLedgerSummary(ason);
+    const lgsR = await this.accountReportService.generateLedgerSummary(startDate, endDate);
     return lgsR;
 
   }
@@ -75,36 +77,38 @@ export class AccountReportController {
     ...adminAndUserAuthDetails})
   @get(`${ACC_REPORTS_API}/ledger-report`)
   @response(200, {
-    description: 'Ledger report of a specified ledger',
+    description: 'Ledger report of a specified ledger `date` format should be `YYYY-DD-MM` (2022-03-31)',
     content: {
       'application/json': {schema: LedgerReportRespSchema},
     },
   })
   async ledgerReport(
-    @param.query.date('ason') ason: Date,
+    @param.query.date('startDate') startDate: Date,
+    @param.query.date('endDate') endDate: Date,
     @param.query.string('plid') plid: string,
     @param.query.string('clid') clid?: string,
   ): Promise<LedgerReportItem[]> {
 
-    const lgsR = await this.accountReportService.generateLedgerReport(ason, plid, clid);
+    const lgsR = await this.accountReportService.generateLedgerReport(startDate, endDate, plid, clid);
     return lgsR;
 
   }
 
   @authorize({resource: resourcePermissions.voucherView.name,
     ...adminAndUserAuthDetails})
-  @get(`${ACC_REPORTS_API}/balance-sheet/{ason}`)
+  @get(`${ACC_REPORTS_API}/balance-sheet`)
   @response(200, {
-    description: 'Balance sheet as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
+    description: 'Balance sheet as on a specified date. `Date` format should be `YYYY-DD-MM` (2022-03-31)',
     content: {
       'application/json': {schema: BalanceSheetRespSchema},
     },
   })
   async balanceSheet(
-    @param.path.date('ason') ason: Date,
+    @param.query.date('startDate') startDate: Date,
+    @param.query.date('endDate') endDate: Date,
   ): Promise<BalanceSheetItem[]> {
 
-    const bSheet = await this.accountReportService.generateBalanceSheet(ason);
+    const bSheet = await this.accountReportService.generateBalanceSheet(startDate, endDate);
     return bSheet;
 
   }
@@ -112,18 +116,19 @@ export class AccountReportController {
 
   @authorize({resource: resourcePermissions.voucherView.name,
     ...adminAndUserAuthDetails})
-  @get(`${ACC_REPORTS_API}/profit-loss/{ason}`)
+  @get(`${ACC_REPORTS_API}/profit-loss`)
   @response(200, {
-    description: 'Profit and loss report as on a specified date. `ason` date format should be `YYYY-DD-MM` (2022-03-31)',
+    description: 'Profit and loss report as on a specified date. `Date` format should be `YYYY-DD-MM` (2022-03-31)',
     content: {
       'application/json': {schema: BalanceSheetRespSchema},
     },
   })
   async profitLoss(
-    @param.path.date('ason') ason: Date,
+    @param.query.date('startDate') startDate: Date,
+    @param.query.date('endDate') endDate: Date,
   ): Promise<BalanceSheetItem[]> {
 
-    const bSheet = await this.accountReportService.generateProfitLoss(ason);
+    const bSheet = await this.accountReportService.generateProfitLoss(startDate, endDate);
     return bSheet;
 
   }
@@ -138,10 +143,11 @@ export class AccountReportController {
     },
   })
   async trialBalance(
-    @param.query.date('ason') ason: Date,
+    @param.query.date('startDate') startDate: Date,
+    @param.query.date('endDate') endDate: Date,
   ): Promise<TrialBalanceItem[]> {
 
-    const bSheet = await this.accountReportService.generateTrialBalance(ason);
+    const bSheet = await this.accountReportService.generateTrialBalance(startDate, endDate);
     return bSheet;
 
   }

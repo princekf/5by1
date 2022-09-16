@@ -74,12 +74,12 @@ export class LedgerReportComponent implements OnInit {
               private router: Router) { }
 
 
-  private fillLedgerSummaryReport = (ason: string) => {
+  private fillLedgerSummaryReport = (startDate: string, endDate: string) => {
 
     this.loading = true;
-    this.accountingReportService.fetchLedgerSummaryReportItems(ason).subscribe((items) => {
+    this.accountingReportService.fetchLedgerSummaryReportItems(startDate, endDate).subscribe((items) => {
 
-      this.tableHeader = 'Ledger Wise Summary Report';
+      this.tableHeader = `Ledger wise summary report between ${startDate} and ${endDate}`;
       this.editUri = '/reports/ledger';
       this.deleteUri = null;
       this.displayedColumns = [ 'name', 'debit', 'credit', 'opening', 'balance' ];
@@ -94,7 +94,7 @@ export class LedgerReportComponent implements OnInit {
 
   }
 
-  private fillLedgerReport = (ason: string, whereS: string) => {
+  private fillLedgerReport = (startDate: string, endDate: string, whereS: string) => {
 
     this.loading = true;
     this.displayedColumns = [ 'number', 'date', 'type', 'name', 'debit', 'credit', 'details' ];
@@ -105,8 +105,8 @@ export class LedgerReportComponent implements OnInit {
     const againstParam = this.queryParams.where.againstL as {ne: string};
     const ledgerId = ledgerParam?.like;
     const againstId = againstParam?.ne;
-    this.ledgerService.get(ledgerId, {}).subscribe((ldg) => (this.tableHeader = `Ledger Report - ${ldg.name} as on ${ason}`));
-    this.accountingReportService.fetchLedgerReportItems(ason, ledgerId, againstId).subscribe((items) => {
+    this.ledgerService.get(ledgerId, {}).subscribe((ldg) => (this.tableHeader = `Ledger Report - ${ldg.name} between ${startDate} and ${endDate}`));
+    this.accountingReportService.fetchLedgerReportItems(startDate, endDate, ledgerId, againstId).subscribe((items) => {
 
       this.ledgerRows = {
         items,
@@ -124,7 +124,8 @@ export class LedgerReportComponent implements OnInit {
     const userS = localStorage.getItem(LOCAL_USER_KEY);
     const sessionUser: SessionUser = JSON.parse(userS);
     const {finYear} = sessionUser;
-    const asonT = dayjs(finYear.endDate).format('YYYY-MM-DD');
+    const endDateT = dayjs(finYear.endDate).format('YYYY-MM-DD');
+    const startDateT = dayjs(finYear.startDate).format('YYYY-MM-DD');
 
     this.filterItem = new FilterItem(FilterLedgerReportComponent, {});
 
@@ -149,15 +150,17 @@ export class LedgerReportComponent implements OnInit {
 
       }
       const where: Record<string, Record<string, unknown>> = JSON.parse(whereS ?? '{}');
-      const ason = <string>where?.date?.lte ?? asonT;
+      const [ stD, enD ] = (where?.date?.between ?? []) as string[];
+      const endDate = enD ?? endDateT;
+      const startDate = stD ?? startDateT;
       if (where?.['transactions.ledgerId']) {
 
-        this.fillLedgerReport(ason, whereS);
+        this.fillLedgerReport(startDate, endDate, whereS);
         this.showDownloadAll = false;
 
       } else {
 
-        this.fillLedgerSummaryReport(ason);
+        this.fillLedgerSummaryReport(startDate, endDate);
         this.showDownloadAll = true;
 
       }
@@ -210,8 +213,9 @@ export class LedgerReportComponent implements OnInit {
   }
 
 
-  fetchLedgerReport = (ason: string, rItem:TrialBalanceItem):Observable<{items: Array<LedgerReportItem>,
-  rItem: TrialBalanceItem}> => this.accountingReportService.fetchLedgerReportItems(ason, rItem.id).pipe(
+  fetchLedgerReport = (startDate: string, endDate: string, rItem:TrialBalanceItem):
+  Observable<{items: Array<LedgerReportItem>,
+  rItem: TrialBalanceItem}> => this.accountingReportService.fetchLedgerReportItems(startDate, endDate, rItem.id).pipe(
     map((items) => ({items,
       rItem}))
   )
@@ -249,7 +253,8 @@ export class LedgerReportComponent implements OnInit {
     const userS = localStorage.getItem(LOCAL_USER_KEY);
     const sessionUser: SessionUser = JSON.parse(userS);
     const {finYear} = sessionUser;
-    const ason = dayjs(finYear.endDate).format('YYYY-MM-DD');
+    const stD = dayjs(finYear.startDate).format('YYYY-MM-DD');
+    const enD = dayjs(finYear.endDate).format('YYYY-MM-DD');
     const dispColumns = [ 'number', 'date', 'type', 'name', 'debit', 'credit', 'details' ];
     const headers = dispColumns.map((col) => ({header: this.columnHeaders[col],
       key: col}));
@@ -257,14 +262,14 @@ export class LedgerReportComponent implements OnInit {
     const folders = await this.createFolderMap(zip);
     const tasks$:Array<Observable<{items: Array<LedgerReportItem>,
       rItem: TrialBalanceItem}>> = [];
-    this.ledgerRows.items.forEach((item) => tasks$.push(this.fetchLedgerReport(ason, <TrialBalanceItem>item)));
+    this.ledgerRows.items.forEach((item) => tasks$.push(this.fetchLedgerReport(stD, enD, <TrialBalanceItem>item)));
     forkJoin(tasks$).subscribe(async(dataDs) => {
 
       for (const dataD of dataDs) {
 
         const {items,
           rItem} = dataD;
-        const tableHeader = `Ledger Report - ${rItem.name} as on ${ason}`;
+        const tableHeader = `Ledger Report - ${rItem.name} between ${stD} and ${enD}`;
         const buffer = createXLSXBuffer(tableHeader, items, headers);
         const data = await buffer;
         folders[rItem.parentId]?.file(`${rItem.name}.xlsx`, data, {binary: true});

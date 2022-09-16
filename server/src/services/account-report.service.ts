@@ -8,6 +8,7 @@ import { DECIMAL_PART, fboServerUtil } from '../utils/fbo-server-util';
 import { LedgerReportItem } from '@shared/util/ledger-report-item';
 import { LedgerService } from './ledger.service';
 import { DayBookItem } from '@shared/util/day-book-item';
+import { Ledger } from '../models';
 
 // Get decimal place count from user session.
 const decimal = 2;
@@ -151,10 +152,10 @@ export class AccountReportService {
 
   }
 
-  private generateProfitLossReport = async(ason: Date):
+  private generateProfitLossReport = async(startDate: Date, endDate: Date):
   Promise<{ bItems: Array<BalanceSheetItem>; isProfit: boolean; profLoss: number; }> => {
 
-    const smT = await this.voucherService.generateLedgerSummary(ason);
+    const smT = await this.voucherService.generateLedgerSummary(startDate, endDate);
     // Filter the ledgers with balance
     const filTBs = smT.filter((sTB) => (sTB.credit ?? 0) - (sTB.debit ?? 0) + (sTB.obCredit ?? 0) - (sTB.obDebit ?? 0));
     // Find ledger group wise summary
@@ -176,10 +177,10 @@ export class AccountReportService {
   }
 
 
-  private generateBalanceSheetReport = async(ason: Date):
+  private generateBalanceSheetReport = async(startDate: Date, endDate: Date):
   Promise<{ bItems: Array<BalanceSheetItem>; isProfit: boolean; profLoss: number; }> => {
 
-    const smT = await this.voucherService.generateLedgerSummary(ason);
+    const smT = await this.voucherService.generateLedgerSummary(startDate, endDate);
     // Filter the ledgers with balance
     const filTBs = smT.filter((sTB) => (sTB.credit ?? 0) - (sTB.debit ?? 0) + (sTB.obCredit ?? 0) - (sTB.obDebit ?? 0));
     // Find ledger group wise summary
@@ -330,10 +331,11 @@ export class AccountReportService {
 
   }
 
-  generateLedgerSummary = async(asonI: Date):Promise<Array<TrialBalanceItem>> => {
+  generateLedgerSummary = async(startDateI: Date, endDateI: Date):Promise<Array<TrialBalanceItem>> => {
 
-    const ason = fboServerUtil.updateTimeToMaximum(asonI);
-    const plItems2 = await this.voucherService.generateLedgerSummary(ason);
+    const startDate = fboServerUtil.updateTimeToMinimum(startDateI);
+    const endDate = fboServerUtil.updateTimeToMaximum(endDateI);
+    const plItems2 = await this.voucherService.generateLedgerSummary(startDate, endDate);
     const lids = plItems2.map((item) => item.id);
 
     const ldGNts = await this.findAllTBItemsWithNoTransactionButOpening(lids);
@@ -380,11 +382,8 @@ export class AccountReportService {
 
   }
 
-  generateLedgerReport = async(asonI: Date, plid: string, clid?: string): Promise<LedgerReportItem[]> => {
+  private alterItems = (ledger: Ledger, items: Array<Partial<LedgerReportItem>>): LedgerReportItem[] => {
 
-    const ason = fboServerUtil.updateTimeToMaximum(asonI);
-    const items = await this.voucherService.generateLedgerReport(ason, plid, clid) as Array<Partial<LedgerReportItem>>;
-    const ledger = await this.ledgerService.findById(plid);
     let totalDebit = 0;
     let totalCredit = 0;
     for (const item of items) {
@@ -420,34 +419,52 @@ export class AccountReportService {
       debit: Number(Math.abs(total).toFixed(DECIMAL_PART)),
       credit: Number(Math.abs(total).toFixed(DECIMAL_PART)),
     });
+
     return items as LedgerReportItem[];
 
   }
 
-  generateBalanceSheet = async(asonI: Date):Promise<Array<BalanceSheetItem>> => {
+  generateLedgerReport = async(startDateI: Date, endDateI: Date, plid: string, clid?: string):
+  Promise<LedgerReportItem[]> => {
 
-    const ason = fboServerUtil.updateTimeToMaximum(asonI);
-    const plItems = await this.generateBalanceSheetReport(ason);
+    const endDate = fboServerUtil.updateTimeToMaximum(endDateI);
+    const startDate = fboServerUtil.updateTimeToMinimum(startDateI);
+    const items = await this.voucherService
+      .generateLedgerReport(startDate, endDate, plid, clid) as Array<Partial<LedgerReportItem>>;
+    const ledger = await this.ledgerService.findById(plid);
+    const itemsR = this.alterItems(ledger, items);
+    return itemsR;
+
+  }
+
+  generateBalanceSheet = async(startDateI: Date, endDateI: Date):Promise<Array<BalanceSheetItem>> => {
+
+    const startDate = fboServerUtil.updateTimeToMinimum(startDateI);
+    const endDate = fboServerUtil.updateTimeToMaximum(endDateI);
+    const plItems = await this.generateBalanceSheetReport(startDate, endDate);
     return plItems.bItems;
 
   }
 
-  generateProfitLoss = async(asonI: Date):Promise<Array<BalanceSheetItem>> => {
+  generateProfitLoss = async(startDateI: Date, endDateI: Date):Promise<Array<BalanceSheetItem>> => {
 
-    const ason = fboServerUtil.updateTimeToMaximum(asonI);
-    const plItems = await this.generateProfitLossReport(ason);
+    const startDate = fboServerUtil.updateTimeToMinimum(startDateI);
+    const endDate = fboServerUtil.updateTimeToMaximum(endDateI);
+    const plItems = await this.generateProfitLossReport(startDate, endDate);
     return plItems.bItems;
 
   }
 
-  generateTrialBalance = async(asonI: Date):Promise<Array<TrialBalanceItem>> => {
+  generateTrialBalance = async(startDateI: Date, endDateI: Date):Promise<Array<TrialBalanceItem>> => {
 
-    const ason = fboServerUtil.updateTimeToMaximum(asonI);
+
+    const startDate = fboServerUtil.updateTimeToMinimum(startDateI);
+    const endDate = fboServerUtil.updateTimeToMaximum(endDateI);
     const lGsWithChildrenU = await this.ledgerGroupService.findLedgerGroupsWithChildren() as unknown;
     const lGsWithChildren = lGsWithChildrenU as Array<TrialBalanceItem>;
     const lGMap:Record<string, TrialBalanceItem> = {};
     this.fillLGMap(lGMap, lGsWithChildren);
-    const lSummC = await this.voucherService.generateLedgerSummary(ason);
+    const lSummC = await this.voucherService.generateLedgerSummary(startDate, endDate);
     lSummC.forEach((lSumm) => {
 
       const closeCredit = (lSumm.credit ?? 0) + (lSumm.obCredit ?? 0);

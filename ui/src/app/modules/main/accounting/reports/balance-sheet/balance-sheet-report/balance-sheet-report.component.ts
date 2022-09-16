@@ -56,8 +56,9 @@ export class BalanceSheetReportComponent implements OnInit {
     const sessionUser: SessionUser = JSON.parse(userS);
     const {finYear} = sessionUser;
 
-    const ason = dayjs(finYear.endDate).format('YYYY-MM-DD');
-    this.accountingReportService.fetchBalanceSheetItems(ason).subscribe((plItems) => {
+    const startDate = dayjs(finYear.startDate).format('YYYY-MM-DD');
+    const endDate = dayjs(finYear.endDate).format('YYYY-MM-DD');
+    this.accountingReportService.fetchBalanceSheetItems(startDate, endDate).subscribe((plItems) => {
 
       this.tablesRows = {
         items: [ ...plItems ],
