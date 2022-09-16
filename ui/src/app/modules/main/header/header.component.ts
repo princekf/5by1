@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MainService } from '@fboservices/main.service';
-import { LOCAL_USER_KEY } from '@fboutil/constants';
 import { ACCESS_TOKEN_ID } from '@shared/Constants';
 import { SessionUser } from '@shared/util/session-user';
 import { MenuNode } from '@fboutil/menu/menu-node';
@@ -34,24 +33,6 @@ export class HeaderComponent implements OnInit {
     this.location = location.host;
     this.menus = findPermittedMenus();
     this.mainService.leftMenuDrawerSubject.subscribe((opened) => (this.leftMenuDrawerOpened = opened));
-    const userS = localStorage.getItem(LOCAL_USER_KEY);
-    if (userS) {
-
-      const sessionUser: SessionUser = JSON.parse(userS);
-      const { branch, finYear, user, company } = sessionUser;
-
-      if (branch && finYear) {
-
-        this.displayName = `${company.name}<br/>${branch.name} @ ${finYear.name}`;
-
-
-      } else {
-
-        this.displayName = user.name;
-
-      }
-
-    }
     this.fetchUserInfo();
 
   }
