@@ -153,7 +153,8 @@ export class FilterLedgerReportComponent implements OnInit {
 
     this.filterForm.controls['transactions.ledgerId'].reset();
     this.filterForm.controls.againstL.reset();
-    this.filterForm.controls.date.reset(this.maxDate);
+    this.filterForm.controls.dateStart.reset(this.minDate);
+    this.filterForm.controls.dateEnd.reset(this.maxDate);
 
   }
 
