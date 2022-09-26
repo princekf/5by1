@@ -446,7 +446,7 @@ export class CreateVoucherComponent implements OnInit {
       type,
       order,
       ledgerId,
-      amount,
+      amount: Number(amount),
       details,
       costCentreId});
 
