@@ -94,7 +94,7 @@ export class FilterVoucherComponent implements OnInit {
 
   };
 
-  resetter() {
+  resetter():void {
 
     this.filterForm.controls.number.reset();
     this.filterForm.controls.details.reset();
