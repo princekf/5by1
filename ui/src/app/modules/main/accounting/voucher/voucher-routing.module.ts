@@ -39,7 +39,7 @@ const routes: Routes = [
     loadChildren: () => import('./contra/contra.module').then((mod) => mod.ContraModule)
   },
   {
-    path: 'credit-note',
+    path: 'credit note',
     loadChildren: () => import('./credit-note/credit-note.module').then((mod) => mod.CreditNoteModule)
   },
   {
