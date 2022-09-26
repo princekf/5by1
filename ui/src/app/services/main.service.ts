@@ -10,11 +10,9 @@ export class MainService {
 
   constructor(@Inject(DOCUMENT) private document: Document) { }
 
-  leftMenuDrawerSubject = new BehaviorSubject(false);
+  leftMenuDrawerSubject = new BehaviorSubject(localStorage.getItem('menuToggleStat') === 'true');
 
   leftMenuDrawerMobileSubject = new BehaviorSubject(false);
-
-  private leftMenuLastToggleStatus = false;
 
   private exports = new BehaviorSubject<Record<string, unknown>>({});
 
@@ -28,13 +26,12 @@ export class MainService {
 
   }
 
-  getLeftMenuLastToggleStatus = (): boolean => this.leftMenuLastToggleStatus;
+  getLeftMenuLastToggleStatus = (): boolean => localStorage.getItem('menuToggleStat') === 'true';
 
   toggleLeftMenuDrawer = (): void => {
 
-    this.leftMenuDrawerSubject.next(!this.leftMenuDrawerSubject.value);
-    this.leftMenuLastToggleStatus = this.leftMenuDrawerSubject.value;
-
+    localStorage.setItem('menuToggleStat', String(localStorage.getItem('menuToggleStat') !== 'true'));
+    this.leftMenuDrawerSubject.next(this.getLeftMenuLastToggleStatus());
 
   }
 
