@@ -113,5 +113,8 @@ export const defaultLedgerGroups:Array<LedgerGroup> = [
   {name: 'Suspense Accounts',
     code: dlgn.SUSPENSE_ACCOUNTS,
     parent: {code: dlgn.LIABILITIES}},
+  {name: 'Duties and Taxes (Receivables)',
+    code: dlgn.DUTIES_AND_TAXESR,
+    parent: {code: dlgn.CURRENT_ASSETS}},
 
 ];

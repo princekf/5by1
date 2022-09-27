@@ -279,9 +279,10 @@ export class VoucherService {
 
   }
 
-  generateLedgerSummary = async(ason: Date):Promise<Array<TrialBalanceItem>> => {
+  generateLedgerSummary = async(startDate: Date, endDate: Date):Promise<Array<TrialBalanceItem>> => {
 
-    const aggregates = [ { '$match': { 'date': { '$lte': ason } } }, ...this.ledgerSummaryAggregates ];
+    const aggregates = [ { '$match': { 'date': { '$lte': endDate,
+      '$gte': startDate, } } }, ...this.ledgerSummaryAggregates ];
     const pQuery = await this.voucherRepository.execute(this.voucherRepository.modelClass.name, 'aggregate', aggregates);
     const res = <Array<TrialBalanceItem>> await pQuery.toArray();
     return res;
@@ -323,10 +324,12 @@ export class VoucherService {
 
   }
 
-  generateLedgerReport = async(ason: Date, plid: string, clid?: string): Promise<LedgerReportItem[]> => {
+  generateLedgerReport = async(startDate: Date, endDate: Date, plid: string, clid?: string):
+  Promise<LedgerReportItem[]> => {
 
     const ledgerReportAggs = this.createLedgerReportAggregates(plid, clid);
-    const aggregates = [ { '$match': { 'date': { '$lte': ason } } }, ...ledgerReportAggs ];
+    const aggregates = [ { '$match': { 'date': { '$lte': endDate,
+      '$gte': startDate } } }, ...ledgerReportAggs ];
     const pQuery = await this.voucherRepository.execute(this.voucherRepository.modelClass.name, 'aggregate', aggregates);
     const res = <Array<LedgerReportItem>> await pQuery.toArray();
     return res;

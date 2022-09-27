@@ -18,10 +18,10 @@ export class AccountingReportService {
     protected readonly http: HttpClient
   ) { }
 
-  public fetchLedgerSummaryReportItems(ason: string):Observable<Array<TrialBalanceItem>> {
+  public fetchLedgerSummaryReportItems(startDate: string, endDate: string):Observable<Array<TrialBalanceItem>> {
 
     let params = new HttpParams();
-    params = params.append('ason', ason);
+    params = params.append('startDate', startDate).append('endDate', endDate);
     return this.http.get<Array<TrialBalanceItem>>(`${this.API_URI}/ledger-summary`, {params});
 
   }
@@ -42,31 +42,37 @@ export class AccountingReportService {
 
   }
 
-  public fetchLedgerReportItems(ason: string, plid: string, clid?: string):Observable<Array<LedgerReportItem>> {
+  public fetchLedgerReportItems(startDate: string, endDate: string, plid: string, clid?: string):
+  Observable<Array<LedgerReportItem>> {
 
     let params = new HttpParams();
-    params = params.append('ason', ason).append('plid', plid)
+    params = params.append('startDate', startDate).append('endDate', endDate)
+      .append('plid', plid)
       .append('clid', clid ?? '');
     return this.http.get<Array<LedgerReportItem>>(`${this.API_URI}/ledger-report`, {params});
 
   }
 
-  public fetchPLReportItems(ason: string):Observable<Array<BalanceSheetItem>> {
-
-    return this.http.get<Array<BalanceSheetItem>>(`${this.API_URI}/profit-loss/${ason}`);
-
-  }
-
-  public fetchBalanceSheetItems(ason: string):Observable<Array<BalanceSheetItem>> {
-
-    return this.http.get<Array<BalanceSheetItem>>(`${this.API_URI}/balance-sheet/${ason}`);
-
-  }
-
-  public fetchTrialBalanceItems(ason: string):Observable<Array<TrialBalanceItem>> {
+  public fetchPLReportItems(startDate: string, endDate: string):Observable<Array<BalanceSheetItem>> {
 
     let params = new HttpParams();
-    params = params.append('ason', ason);
+    params = params.append('startDate', startDate).append('endDate', endDate);
+    return this.http.get<Array<BalanceSheetItem>>(`${this.API_URI}/profit-loss`, {params});
+
+  }
+
+  public fetchBalanceSheetItems(startDate: string, endDate: string):Observable<Array<BalanceSheetItem>> {
+
+    let params = new HttpParams();
+    params = params.append('startDate', startDate).append('endDate', endDate);
+    return this.http.get<Array<BalanceSheetItem>>(`${this.API_URI}/balance-sheet`, {params});
+
+  }
+
+  public fetchTrialBalanceItems(startDate: string, endDate: string):Observable<Array<TrialBalanceItem>> {
+
+    let params = new HttpParams();
+    params = params.append('startDate', startDate).append('endDate', endDate);
     return this.http.get<Array<TrialBalanceItem>>(`${this.API_URI}/trial-balance`, {params});
 
   }

@@ -21,6 +21,7 @@ import { FinYear } from '@shared/entity/auth/fin-year';
 import * as utc from 'dayjs/plugin/utc';
 import * as dayjs from 'dayjs';
 import { DOCUMENT } from '@angular/common';
+import { environment } from 'src/environments/environment';
 import { Document as DocumentEnt } from '@shared/entity/common/document';
 dayjs.extend(utc);
 
@@ -169,7 +170,7 @@ export class CreateVoucherComponent implements OnInit {
 
       }
       const primaryFormGroup = formArray.get([ 0 ]) as FormGroup;
-      primaryFormGroup.controls.amount.setValue(totalAmount);
+      primaryFormGroup.controls.amount.setValue(totalAmount.toFixed(environment.decimalPlaces));
 
     }
 
@@ -445,7 +446,7 @@ export class CreateVoucherComponent implements OnInit {
       type,
       order,
       ledgerId,
-      amount,
+      amount: Number(amount),
       details,
       costCentreId});
 

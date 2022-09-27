@@ -50,9 +50,10 @@ ngOnInit(): void {
   const userS = localStorage.getItem(LOCAL_USER_KEY);
   const sessionUser: SessionUser = JSON.parse(userS);
   const {finYear} = sessionUser;
-  const ason = dayjs(finYear.endDate).format('YYYY-MM-DD');
-  this.tableHeader = `Trial balance as on ${ason}`;
-  this.accountingReportService.fetchTrialBalanceItems(ason).subscribe((plItems) => {
+  const startDate = dayjs(finYear.startDate).format('YYYY-MM-DD');
+  const endDate = dayjs(finYear.endDate).format('YYYY-MM-DD');
+  this.tableHeader = `Trial balance between ${startDate} and ${endDate}`;
+  this.accountingReportService.fetchTrialBalanceItems(startDate, endDate).subscribe((plItems) => {
 
     this.dataSource.data = plItems;
     this.loading = false;

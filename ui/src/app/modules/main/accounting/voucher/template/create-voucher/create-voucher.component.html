@@ -6,9 +6,9 @@
 
 <form [style.display]="loading ? 'none': ''" [formGroup]="fboForm" (ngSubmit)="upsertVoucher()">
 
-    <mat-form-field class="fbo-form-field-multi" *ngIf="fboForm.controls['id'].value">
+    <mat-form-field class="fbo-form-field-multi">
         <mat-label>Voucher Number</mat-label>
-        <input matInput formControlName="number" type="text" autocomplete="off" readonly>
+        <input matInput formControlName="number" type="text" autocomplete="off">
         <mat-error *ngIf="fboForm.controls['number'].hasError('required')"> Voucher number is required</mat-error>
     </mat-form-field>
 

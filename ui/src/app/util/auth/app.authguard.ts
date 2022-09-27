@@ -12,7 +12,11 @@ export class AppAuthGuard implements CanActivate {
 
   constructor(private router: Router,
     private userService: UserService,
+<<<<<<< HEAD
     private dataService: MainService,) { }
+=======
+    private dataService: MainService) { }
+>>>>>>> develop
 
   private createUrlTree = (state: RouterStateSnapshot): UrlTree => {
 
@@ -35,7 +39,10 @@ export class AppAuthGuard implements CanActivate {
       const { user } = userResp;
       localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(userResp));
       this.setUserInfo(localStorage.getItem(LOCAL_USER_KEY));
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
       if (user && user.id) {
 
         return true;

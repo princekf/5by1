@@ -62,6 +62,41 @@ export class ValidateVoucherInterceptor implements Provider<Interceptor> {
 
   }
 
+  private validateInputs = async(id: string, number: string) => {
+
+    if ((/^\s|\s$/u).test(number)) {
+
+      throw new HttpErrors.UnprocessableEntity(
+        'Voucher number should not contains white spaces at end or beginning.',
+      );
+
+    }
+    if (id && !number) {
+
+      throw new HttpErrors.UnprocessableEntity(
+        'Voucher number is required.',
+      );
+
+    }
+    if (number) {
+
+      const dupVouchers = await this.voucherRepository.find({where: {
+        id: {nin: [ id ]},
+        number: {regexp: `/^${number}/i`}
+      }});
+
+      if (dupVouchers?.length > 0) {
+
+        throw new HttpErrors.UnprocessableEntity(
+          `Duplicate voucher number - ${number}.`,
+        );
+
+      }
+
+    }
+
+  }
+
   /**
    * The logic to intercept an invocation
    * @param invocationCtx - Invocation context
@@ -74,14 +109,8 @@ export class ValidateVoucherInterceptor implements Provider<Interceptor> {
 
     try {
 
-      const [ { number, date } ] = invocationCtx.args;
-      if ((/^\s|\s$/u).test(number)) {
-
-        throw new HttpErrors.UnprocessableEntity(
-          'Voucher number should not contains white spaces at end or beginning.',
-        );
-
-      }
+      const [ { id, number, date } ] = invocationCtx.args.slice(-1);
+      await this.validateInputs(id, number);
       const { finYear, branch } = this.uProfile;
       const pQuery = await this.finYearRepository.execute(this.finYearRepository.modelClass.name, 'aggregate', [
         {$match: { code: { $eq: finYear}}},

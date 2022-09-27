@@ -77,8 +77,11 @@ export class VoucherController {
     const otherDetails = finYear.extras as {lastVNo:number};
     const lastVNo = otherDetails?.lastVNo ?? 0;
     const nextVNo = lastVNo + 1;
-    const nextVNoS = `${uProfile.company}/${uProfile.branch}/${uProfile.finYear}/${nextVNo}`.toUpperCase();
-    voucher.number = nextVNoS;
+    if (!voucher.number) {
+
+      voucher.number = `${uProfile.company}/${uProfile.branch}/${uProfile.finYear}/${nextVNo}`.toUpperCase();
+
+    }
     const voucherR = await this.voucherRepository.create(voucher);
     await finYearRepository.updateById(finYear.id, {extras: {lastVNo: nextVNo}});
     return voucherR;
@@ -307,6 +310,7 @@ export class VoucherController {
 
   }
 
+  @intercept(ValidateVoucherInterceptor.BINDING_KEY)
   @patch(`${VOUCHER_API}/{id}`)
   @response(204, {
     description: 'Voucher PATCH success',

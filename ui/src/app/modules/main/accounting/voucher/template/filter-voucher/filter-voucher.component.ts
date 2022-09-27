@@ -3,6 +3,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryData } from '@shared/util/query-data';
 import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from '@fboutil/filter.util';
+import * as dayjs from 'dayjs';
+import { SessionUser } from '@shared/util/session-user';
+import { LOCAL_USER_KEY } from '@fboutil/constants';
 
 @Component({
   selector: 'app-filter-voucher',
@@ -11,7 +14,11 @@ import { fillFilterForm, createQueryStringFromFilterForm, FilterFormField } from
 })
 export class FilterVoucherComponent implements OnInit {
 
-  queryParams:QueryData = { };
+  queryParams: QueryData = {};
+
+  minDate: string;
+
+  maxDate: string;
 
   filterForm: FormGroup = new FormGroup({
 
@@ -34,6 +41,16 @@ export class FilterVoucherComponent implements OnInit {
 
   });
 
+  filterDateFinder():void {
+
+    const userS = localStorage.getItem(LOCAL_USER_KEY);
+    const sessionUser: SessionUser = JSON.parse(userS);
+    const {finYear} = sessionUser;
+    this.minDate = dayjs(finYear.startDate).format('YYYY-MM-DD');
+    this.maxDate = dayjs(finYear.endDate).format('YYYY-MM-DD');
+
+  }
+
 
   constructor(private router:Router,
     private activatedRoute : ActivatedRoute,) { }
@@ -42,7 +59,7 @@ export class FilterVoucherComponent implements OnInit {
 
     const whereS = this.activatedRoute.snapshot.queryParamMap.get('whereS');
     fillFilterForm(this.filterForm, whereS);
-
+    this.filterDateFinder();
 
   }
 
@@ -77,7 +94,7 @@ export class FilterVoucherComponent implements OnInit {
 
   };
 
-  resetter() {
+  resetter():void {
 
     this.filterForm.controls.number.reset();
     this.filterForm.controls.details.reset();
