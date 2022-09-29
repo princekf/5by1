@@ -115,20 +115,35 @@ export class AccountReportService {
 
   private generateBalanceReport =
   (lgsWithParents:Array<LedgerGroupIntf>,
-    ldGMap:Record<string, {debit: number, credit: number}>):
-    {bItems: Array<BalanceSheetItem>, isProfit: boolean, profLoss: number} => {
+    ldGMap:Record<string, {debit: number, credit: number}>, isProfit: boolean, profLoss:number):
+    Array<BalanceSheetItem> => {
 
     const bItems: Array<BalanceSheetItem> = [];
     const asssetsLdGs = lgsWithParents.filter((ldG) => ldG.code === 'ASTS' || ldG.parents?.find((lgP) => lgP.code === 'ASTS'));
     const liablitiesLdGs = lgsWithParents.filter((ldG) => ldG.code === 'LBLTS' || ldG.parents?.find((lgP) => lgP.code === 'LBLTS'));
+    if (isProfit) {
+
+      liablitiesLdGs.push({
+        name: 'Net Profit',
+        id: 'netprofit'
+      });
+      ldGMap.netprofit = {credit: profLoss,
+        debit: 0};
+
+    } else {
+
+      asssetsLdGs.push({
+        name: 'Net Loss',
+        id: 'netloss'
+      });
+      ldGMap.netloss = {debit: profLoss,
+        credit: 0};
+
+    }
     const tItems = this.generateReport(asssetsLdGs, liablitiesLdGs, ldGMap);
     bItems.push(...tItems.bItems);
-    const profLoss = Math.abs(tItems.totalRight - tItems.totalLeft);
-    const isProfit = tItems.totalRight > tItems.totalLeft;
     bItems.push(this.createSingleItem('Total', tItems.totalLeft.toFixed(decimal), 'Total', tItems.totalRight.toFixed(decimal)));
-    return {bItems,
-      isProfit,
-      profLoss};
+    return bItems;
 
   }
 
@@ -179,21 +194,23 @@ export class AccountReportService {
 
 
   private generateBalanceSheetReport = async(startDate: Date, endDate: Date):
-  Promise<{ bItems: Array<BalanceSheetItem>; isProfit: boolean; profLoss: number; }> => {
+  Promise<Array<BalanceSheetItem>> => {
 
     const smT = await this.voucherService.generateLedgerSummary(startDate, endDate);
     // Filter the ledgers with balance
     const filTBs = smT.filter((sTB) => (sTB.credit ?? 0) - (sTB.debit ?? 0) + (sTB.obCredit ?? 0) - (sTB.obDebit ?? 0));
+    // Find all ledger which don't have transactions but opening balance.
+    const lIds = smT.map((lsu) => lsu.id);
+    const ldGNTs = await this.findAllTBItemsWithNoTransactionButOpening(lIds);
     // Find ledger group wise summary
-    const ldGMap = this.findLedgerGroupSummaryMap(filTBs);
+    const ldGMap = this.findLedgerGroupSummaryMap([ ...filTBs, ...ldGNTs ]);
     const lgsWithParents = await this.ledgerGroupService.findLedgerGroupsWithParents(Object.keys(ldGMap));
-    const bItemsP: Array<BalanceSheetItem> = [];
+    // Find profit or loss
+    const profLossR = await this.generateProfitLossReport(startDate, endDate);
+    const {isProfit, profLoss} = profLossR;
     // Balance sheet Report
-    const {bItems, isProfit, profLoss} = this.generateBalanceReport(lgsWithParents, ldGMap);
-    bItemsP.push(...bItems);
-    return {bItems: bItemsP,
-      isProfit,
-      profLoss};
+    const bItems = this.generateBalanceReport(lgsWithParents, ldGMap, isProfit, profLoss);
+    return bItems;
 
   }
 
@@ -459,7 +476,7 @@ export class AccountReportService {
     const startDate = fboServerUtil.updateTimeToMinimum(startDateI);
     const endDate = fboServerUtil.updateTimeToMaximum(endDateI);
     const plItems = await this.generateBalanceSheetReport(startDate, endDate);
-    return plItems.bItems;
+    return plItems;
 
   }
 
