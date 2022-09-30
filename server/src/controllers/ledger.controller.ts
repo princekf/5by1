@@ -51,10 +51,7 @@ export class LedgerController {
         },
       },
     })
-      ledger: Omit<Ledger, 'id'>,
-      @inject(SecurityBindings.USER) uProfile: ProfileUser,
-      @repository(FinYearRepository)
-      finYearRepository : FinYearRepository,
+      ledger: Omit<Ledger, 'id'>
   ): Promise<Ledger> {
 
 

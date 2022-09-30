@@ -67,13 +67,16 @@ export class FBOSequence implements SequenceHandler {
         throw new Error('Parameter company is missing');
 
       }
-      context.bind(BindingKeys.SESSION_COMPANY_CODE).to(<string>uDetails.company.toLowerCase());
+      const company = uDetails.company.toLowerCase();
+      context.bind(BindingKeys.SESSION_COMPANY_CODE).to(company);
+      context.bind(BindingKeys.SESSION_DB_NAME).to(company);
       return;
 
     }
 
     if (routePath.startsWith('/api-docs')) {
 
+      context.bind(BindingKeys.SESSION_COMPANY_CODE).to(process.env.COMMON_COMPANY_CODE ?? '');
       return;
 
     }
@@ -83,7 +86,9 @@ export class FBOSequence implements SequenceHandler {
 
       if (uProfile?.company) {
 
-        context.bind(BindingKeys.SESSION_COMPANY_CODE).to(<string>uProfile.company.toLowerCase());
+        const company = uProfile.company.toLowerCase();
+        context.bind(BindingKeys.SESSION_COMPANY_CODE).to(company);
+        context.bind(BindingKeys.SESSION_DB_NAME).to(company);
 
       } else {
 

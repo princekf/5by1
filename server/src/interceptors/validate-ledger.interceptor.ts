@@ -68,7 +68,7 @@ export class ValidateLedgerInterceptor implements Provider<Interceptor> {
     try {
 
 
-      const {id, code, name} = this.fetchParams(invocationCtx.args);
+      const {code, name} = this.fetchParams(invocationCtx.args);
       if ((/^\s|\s$/u).test(code)) {
 
         throw new HttpErrors.UnprocessableEntity(

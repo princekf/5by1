@@ -8,7 +8,6 @@ import { DECIMAL_PART, fboServerUtil } from '../utils/fbo-server-util';
 import { LedgerReportItem } from '@shared/util/ledger-report-item';
 import { LedgerService } from './ledger.service';
 import { DayBookItem } from '@shared/util/day-book-item';
-import { Ledger } from '../models';
 import dayjs from 'dayjs';
 
 // Get decimal place count from user session.

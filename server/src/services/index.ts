@@ -6,3 +6,4 @@ export * from './account-report.service';
 export * from './voucher.service';
 export * from './ledger-group.service';
 export * from './company.service';
+export * from './request-log.service';
