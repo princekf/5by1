@@ -84,7 +84,7 @@ export class CreateUserComponent implements OnInit {
     id: new FormControl(null),
     name: new FormControl('', [ Validators.required ]),
     email: new FormControl('', [ Validators.required ]),
-    password: new FormControl('', [ Validators.required ]),
+    password: new FormControl('', [ Validators.required, Validators.pattern('.{8,}') ]),
     cPassword: new FormControl('', [ Validators.required ]),
   });
 
