@@ -95,7 +95,7 @@ const resourcePs:Record<string, {name: string, key: string, operation: string}> 
   voucherUpdate: createResourceObj('voucher-update', 'voucher', 'update'),
   voucherDelete: createResourceObj('voucher-delete', 'voucher', 'delete'),
 
-  requestLogsView: createResourceObj('request-logs', 'voucher', 'view'),
+  requestLogsView: createResourceObj('reqlogs-view', 'reqlogs', 'view'),
 
   costcentreView: createResourceObj('costcentre-view', 'costcentre', 'view'),
   costcentreCreate: createResourceObj('costcentre-create', 'costcentre', 'create'),

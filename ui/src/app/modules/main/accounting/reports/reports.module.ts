@@ -15,7 +15,6 @@ import {MatRadioModule} from '@angular/material/radio';
 
 import { MatDayjsDateModule } from '@tabuckner/material-dayjs-adapter';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
-import {dayJSProviders} from '@fboutil/day-js-providers';
 import { TrialBalanceReportComponent } from './trial-balance/trial-balance-report/trial-balance-report.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {MatIconModule} from '@angular/material/icon';

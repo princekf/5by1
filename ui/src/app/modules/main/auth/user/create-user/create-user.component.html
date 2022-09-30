@@ -194,8 +194,6 @@
         (change)="item.value.operations.delete = $event.checked"></mat-checkbox></td>
     </tr>
 
-
-
     <br>
     <br>
     <h2>SETTINGS</h2>
@@ -219,6 +217,22 @@
         (change)="item.value.operations.update = $event.checked"></mat-checkbox></td>
       <td class="perm-column"><mat-checkbox color="primary" [checked]="item.value.operations.delete"
         (change)="item.value.operations.delete = $event.checked"></mat-checkbox></td>
+    </tr>
+
+    <br>
+    <br>
+    <h2>LOGS</h2>
+    <tr>
+      <th></th>
+      <th>View</th>
+    </tr>
+
+     <tr *ngFor="let item of logsPermissions | keyvalue">
+      <td class="title-column">{{item.key}}</td>
+      <td class="perm-column">
+        <mat-checkbox color="primary" [checked]="item.value.operations.view"
+        (change)="item.value.operations.view = $event.checked"></mat-checkbox>
+      </td>
     </tr>
 
 <br>

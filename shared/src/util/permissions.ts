@@ -106,5 +106,10 @@ export const permissions:Record<string, Permission> = {
     key: 'costcentre',
     name: 'Cost Centres',
     operations: {...CURD_OPERATIONS}
+  },
+  'reqlogs': {
+    key: 'reqlogs',
+    name: 'Request Logs',
+    operations: {view: true}
   }
 };

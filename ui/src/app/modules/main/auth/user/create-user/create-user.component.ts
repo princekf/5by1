@@ -42,6 +42,8 @@ export class CreateUserComponent implements OnInit {
 
   settingsPermissions: Record<string, Permission> = {};
 
+  logsPermissions: Record<string, Permission> = {};
+
   pcMap = [ {
     permisions: [ 'unit', 'tax', 'category', 'product', 'bank' ],
     category: this.itemPermissions,
@@ -70,6 +72,11 @@ export class CreateUserComponent implements OnInit {
   {
     permisions: [ 'user', 'branch', 'finyear' ],
     category: this.settingsPermissions,
+  },
+
+  {
+    permisions: [ 'reqlogs' ],
+    category: this.logsPermissions,
   } ];
 
 
@@ -319,7 +326,8 @@ export class CreateUserComponent implements OnInit {
         ...this.purchasePermissions,
         ...this.accountPermissions,
         ...this.voucherPermissions,
-        ...this.settingsPermissions};
+        ...this.settingsPermissions,
+        ...this.logsPermissions};
       const userPerm: User = {
         permissions,
         ...userP

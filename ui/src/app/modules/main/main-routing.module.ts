@@ -112,6 +112,10 @@ const routes: Routes = [
         path: 'reports',
         loadChildren: () => import('./accounting/reports/reports.module').then((mod) => mod.ReportsModule)
       },
+      {
+        path: 'logs',
+        loadChildren: () => import('./common/logs/logs.module').then((mod) => mod.LogsModule)
+      },
 
     ]
   },
