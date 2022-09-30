@@ -23,6 +23,7 @@
 
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
      <mat-error *ngIf="form.controls['password'].hasError('required')">Please Enter Password</mat-error>
+     <mat-error *ngIf="form.controls['password'].hasError('pattern')">Password must have at least 8 characters</mat-error>
   </mat-form-field>
 
   <mat-form-field class='fbo-create-formTwo'>
