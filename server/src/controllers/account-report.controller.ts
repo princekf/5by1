@@ -98,7 +98,7 @@ export class AccountReportController {
     ...adminAndUserAuthDetails})
   @get(`${ACC_REPORTS_API}/balance-sheet`)
   @response(200, {
-    description: 'Balance sheet as on a specified date. `Date` format should be `YYYY-DD-MM` (2022-03-31)',
+    description: 'Balance sheet within 2 dates. `Date` format should be `YYYY-DD-MM` (2022-03-31)',
     content: {
       'application/json': {schema: BalanceSheetRespSchema},
     },
@@ -118,7 +118,7 @@ export class AccountReportController {
     ...adminAndUserAuthDetails})
   @get(`${ACC_REPORTS_API}/profit-loss`)
   @response(200, {
-    description: 'Profit and loss report as on a specified date. `Date` format should be `YYYY-DD-MM` (2022-03-31)',
+    description: 'Profit and loss report within 2 dates. `Date` format should be `YYYY-DD-MM` (2022-03-31)',
     content: {
       'application/json': {schema: BalanceSheetRespSchema},
     },
