@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { UserService } from '@fboservices/user.service';
-import { PICK_FORMATS } from '@fboutil/date-picker-adapter';
-import { MonthDatePickerAdapter } from '@fboutil/month-date-picker-adapter';
 import { ToastrService } from 'ngx-toastr';
 import { ACCESS_TOKEN_ID } from '@shared/Constants';
 
@@ -12,14 +9,6 @@ import { ACCESS_TOKEN_ID } from '@shared/Constants';
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: [ '../common/login-register.scss' ],
-  providers: [
-    {provide: DateAdapter,
-      useClass: MonthDatePickerAdapter},
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: PICK_FORMATS
-    }
-  ]
 })
 export class SignupComponent {
 
@@ -31,7 +20,6 @@ export class SignupComponent {
   question = '';
 
   form: FormGroup = new FormGroup({
-    name: new FormControl('', [ Validators.required ]),
     email: new FormControl('', [ Validators.required ]),
     answer: new FormControl('', [ Validators.required ]),
   });
@@ -66,12 +54,11 @@ export class SignupComponent {
       }
 
       this.loading = true;
-      const {name, email, answer} = this.form.value as {name:string, email:string, answer: string};
-      this.userService.signUp({name,
-        email,
+      const { email, answer} = this.form.value as {name:string, email:string, answer: string};
+      this.userService.initiateSignUp({email,
         answer}).subscribe((userR) => {
 
-        this.toastr.info(`Sign up completed for the user ${userR.name}, ${userR.email}`, 'Sign-Up');
+        this.toastr.info(`Sign up completed for the user ${userR.email}`, 'Sign-Up');
         localStorage.removeItem(ACCESS_TOKEN_ID);
         this.loading = false;
         this.router.navigateByUrl('/');

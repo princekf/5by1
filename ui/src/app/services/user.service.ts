@@ -26,11 +26,17 @@ export class UserService extends BaseHTTPService<User> {
 
   }
 
-  signUp(params: SignupParams): Observable<SignupParams> {
+  initiateSignUp(params: SignupParams): Observable<SignupParams> {
 
-    return this.http.post<SignupParams>(SIGNUP_API_URI, params).pipe(
+    return this.http.post<SignupParams>(`${SIGNUP_API_URI}/initiate-signup`, params).pipe(
       catchError((err) => throwError(() => err))
     );
+
+  }
+
+  fetchSignUpData(token: string): Observable<{email: string}> {
+
+    return this.http.get<{email: string}>(`${SIGNUP_API_URI}/validate-signup/${token}`, {});
 
   }
 

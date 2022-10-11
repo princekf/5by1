@@ -105,3 +105,16 @@ export const LedgerReportRespSchema = {
     details: {type: 'string'},
   }
 };
+
+export const SignupInitiateResponseSchema = {
+  type: 'object',
+  properties: {
+    status: {type: 'string'},
+    message: {type: 'string'},
+  },
+};
+
+export interface SignupInitiateResponse {
+  status: string;
+  message: string;
+}

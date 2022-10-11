@@ -1,13 +1,16 @@
 import {injectable, BindingScope, inject} from '@loopback/core';
 import { BindingKeys } from '../binding.keys';
 import { PasswordHasher } from './hash-password.service';
-import { signAsync } from './jwt.service';
+import { signAsync, verifyAsync } from './jwt.service';
 
 import {createCanvas} from 'canvas';
 import { SignupLog } from '../models/signup-log.model';
 import { SignupLogRepository } from '../repositories/signup-log.repository';
 import { repository } from '@loopback/repository';
+import sgMail from '@sendgrid/mail';
+import { SignupInitiateResponse } from '../controllers/specs/common-specs';
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY ?? '');
 @injectable({scope: BindingScope.TRANSIENT})
 export class SignupLogService {
 
@@ -45,14 +48,35 @@ export class SignupLogService {
 
   }
 
-  create = async(signupLog:Omit<SignupLog, 'id'>): Promise<SignupLog> => {
+  initiateSignup = async(signupLog:Omit<SignupLog, 'id'>): Promise<SignupInitiateResponse> => {
 
-    const {name, email} = signupLog;
-    const createdAt = new Date();
-    const resp = await this.signupLogRepository.create({name,
-      email,
-      createdAt});
-    return resp;
+    const {email} = signupLog;
+    const token = await signAsync({
+      email
+    }, this.jwtSecret, {
+      expiresIn: 86400,
+    });
+    const msg = {
+      to: email,
+      from: process.env.SENDGRID_FROM_MAIL ?? '',
+      subject: '5By1 - Please verify your email address',
+      text: '5By1 - Please verify your email address',
+      html: `Thanks for choosing 5By1.<br/>
+      <a href="${process.env.VERIFY_EMAIL_URL}/${token}">Click here to verify your eamil address</a>`,
+    };
+    await sgMail.send(msg);
+    return {status: 'success',
+      message: `We have send a verification email to ${email}. Please check your inobx.`};
+
+  }
+
+  validateSignup = async(token: string): Promise<{email: string}> => {
+
+    const tokData = await verifyAsync(token, this.jwtSecret);
+    const {email} = tokData as {email: string};
+    return {
+      email
+    };
 
   }
 

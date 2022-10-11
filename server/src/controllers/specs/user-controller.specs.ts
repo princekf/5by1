@@ -128,9 +128,6 @@ const SignupSchema: SchemaObject = {
       type: 'string',
       format: 'email',
     },
-    name: {
-      type: 'string',
-    },
     answer: {
       type: 'string',
     },

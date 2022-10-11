@@ -11,12 +11,6 @@
       <form [formGroup]="form" (ngSubmit)="submit()">
         <p>
           <mat-form-field>
-            <input type="text" matInput placeholder="Your Name" formControlName="name">
-            <mat-error *ngIf="form.controls['name'].hasError('required')"> Your Name is required</mat-error>
-          </mat-form-field>
-        </p>
-        <p>
-          <mat-form-field>
             <input type="text" matInput placeholder="Your E-Mail" formControlName="email">
             <mat-error *ngIf="form.controls['email'].hasError('required')"> Email Address is required</mat-error>
           </mat-form-field>

@@ -1,0 +1,77 @@
+<div [class.overlay]="loading" [class.spinner]="loading" (click)="$event.stopPropagation();"></div>
+<div class="login-content-wraper logo-container">
+  <div class="logo-wrapper">
+    <app-logo-main></app-logo-main>
+  </div>
+</div>
+<div class="login-content-wraper">
+  <mat-card>
+    <mat-card-title>Sign up</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <p>
+          <mat-form-field>
+            <input type="text" matInput placeholder="Your E-Mail" formControlName="email" readonly>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field>
+            <input type="text" matInput placeholder="Your Name" formControlName="name">
+            <mat-error *ngIf="form.controls['name'].hasError('required')"> Your Name is required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field>
+            <input [type]="showP1 ? 'text' : 'password'" matInput placeholder="Your Password" formControlName="password">
+            <mat-icon matSuffix (click)="showP1 = !showP1">{{showP1 ? 'visibility' : 'visibility_off'}}</mat-icon>
+            <mat-error *ngIf="form.controls['password'].hasError('required')"> Please enter your password</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field>
+            <input [type]="showP2 ? 'text' : 'password'" matInput placeholder="Confirm Password" formControlName="cPassword">
+            <mat-icon matSuffix (click)="showP2 = !showP2">{{showP2 ? 'visibility' : 'visibility_off'}}</mat-icon>
+            <mat-error *ngIf="form.controls['cPassword'].hasError('required')"> Re-enter the password</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field>
+            <input type="text" matInput placeholder="Company Name" formControlName="companyName">
+            <mat-error *ngIf="form.controls['companyName'].hasError('required')"> Company Name is required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field>
+            <input type="text" matInput placeholder="Company Code" formControlName="companyCode">
+            <mat-error *ngIf="form.controls['companyCode'].hasError('required')"> Company Code is required</mat-error>
+          </mat-form-field>
+        </p>
+        <mat-form-field class="fbo-form-field-multi">
+            <mat-label>Financial year start date</mat-label>
+            <input matInput [matDatepicker]="finStartDatePicker" formControlName="finYearStart" [min]="yearStart"
+                [max]="yearEnd">
+            <mat-datepicker-toggle matSuffix [for]="finStartDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #finStartDatePicker></mat-datepicker>
+            <mat-error *ngIf="form.controls['finYearStart'].hasError('required')"> Financial year start date is required </mat-error>
+        </mat-form-field>
+        <p>
+          <img [src]="question"/>
+        </p>
+        <p>
+          <mat-form-field>
+            <input type="text" matInput placeholder="Answer" formControlName="answer">
+            <mat-error *ngIf="form.controls['answer'].hasError('required')"> Captcha answer is required</mat-error>
+          </mat-form-field>
+        </p>
+        <p *ngIf="error" class="error">
+          {{ error }}
+        </p>
+
+
+        <p class="submit-container">
+          <button type="submit" mat-button>Register</button>
+        </p>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

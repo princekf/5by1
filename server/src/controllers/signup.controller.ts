@@ -1,9 +1,11 @@
 import { intercept, service } from '@loopback/core';
-import {post, get, getModelSchemaRef, requestBody, response, } from '@loopback/rest';
+import { FilterExcludingWhere } from '@loopback/repository';
+import {post, get, getModelSchemaRef, requestBody, response, param, } from '@loopback/rest';
 import { SIGNUP_API } from '@shared/server-apis';
 import { ValidateSignupInterceptor } from '../interceptors/validate-signup.interceptor';
 import { SignupLog } from '../models/signup-log.model';
 import { SignupLogService } from '../services/signup-log.service';
+import { SignupInitiateResponse, SignupInitiateResponseSchema } from './specs/common-specs';
 import { AuthResponseSchema, SignupRequestBody } from './specs/user-controller.specs';
 
 export class SignupController {
@@ -11,17 +13,17 @@ export class SignupController {
   constructor(@service(SignupLogService) public signupLogService: SignupLogService,) {}
 
   @intercept(ValidateSignupInterceptor.BINDING_KEY)
-  @post(SIGNUP_API)
+  @post(`${SIGNUP_API}/initiate-signup`)
   @response(200, {
-    description: 'Sign-up API',
-    content: {'application/json': {schema: getModelSchemaRef(SignupLog)}},
+    description: 'Initiate sign-up API',
+    content: {'application/json': {schema: SignupInitiateResponseSchema}},
   })
-  async create(
+  async initiateSignup(
     @requestBody(SignupRequestBody)
       signupLog: Omit<SignupLog, 'id'>,
-  ): Promise<SignupLog> {
+  ): Promise<SignupInitiateResponse> {
 
-    const resp = await this.signupLogService.create(signupLog);
+    const resp = await this.signupLogService.initiateSignup(signupLog);
     return resp;
 
   }
@@ -43,6 +45,24 @@ export class SignupController {
 
     const token = await this.signupLogService.createCaptcha();
     return token;
+
+  }
+
+  @get(`${SIGNUP_API}/validate-signup/{token}`)
+  @response(200, {
+    description: 'Signup log',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(SignupLog, {includeRelations: true}),
+      },
+    },
+  })
+  async validateSignup(
+    @param.path.string('token') token: string,
+  ): Promise<{email: string}> {
+
+    const lgR = await this.signupLogService.validateSignup(token);
+    return lgR;
 
   }
 
