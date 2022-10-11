@@ -16,7 +16,7 @@ import {
   AuthenticationBindings,
   USER_PROFILE_NOT_FOUND,
 } from '@loopback/authentication';
-import { LOGIN_API, INSTALL_API, USER_API, BRANCH_API, FIN_YEAR_API, COMPANY_API } from '@shared/server-apis';
+import { LOGIN_API, INSTALL_API, USER_API, BRANCH_API, FIN_YEAR_API, COMPANY_API, SIGNUP_API } from '@shared/server-apis';
 import { BindingKeys } from './binding.keys';
 import { ProfileUser } from './services';
 const {SequenceActions} = RestBindings;
@@ -74,7 +74,7 @@ export class FBOSequence implements SequenceHandler {
 
     }
 
-    if (routePath.startsWith('/api-docs')) {
+    if (routePath.startsWith('/api-docs') || routePath.startsWith(SIGNUP_API)) {
 
       context.bind(BindingKeys.SESSION_COMPANY_CODE).to(process.env.COMMON_COMPANY_CODE ?? '');
       return;

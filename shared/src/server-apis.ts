@@ -10,7 +10,10 @@ export const MY_ACCOUNT_API = `${USER_API}/my-account`;
 export const MY_ACCOUNT_API_URI = `${BASE_URI}${MY_ACCOUNT_API}`;
 export const SWITCH_FIN_YEAR_API = `${USER_API}/switch-fin-year`;
 export const SWITCH_FIN_YEAR_API_URI = `${BASE_URI}${SWITCH_FIN_YEAR_API}`;
-export const SIGNUP_API = `${BASE_URI}${USER_API}/signup`;
+
+
+export const SIGNUP_API = '/auth/signup';
+export const SIGNUP_API_URI = `${BASE_URI}${SIGNUP_API}`;
 
 export const COMPANY_API = '/auth/company';
 export const COMPANY_API_URI = `${BASE_URI}${COMPANY_API}`;

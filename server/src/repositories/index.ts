@@ -25,3 +25,4 @@ export * from './transaction.repository';
 export * from './document.repository';
 export * from './voucher-document.repository';
 export * from './request-log.repository';
+export * from './signup-log.repository';

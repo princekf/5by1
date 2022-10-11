@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { User } from '@shared/entity/auth/user';
 import { SessionUser } from '@shared/util/session-user';
-import { SIGNUP_API, LOGIN_API_URI, ME_API_URI, USER_API_URI, MY_ACCOUNT_API_URI, SWITCH_FIN_YEAR_API_URI } from '@shared/server-apis';
+import { LOGIN_API_URI, ME_API_URI, USER_API_URI, MY_ACCOUNT_API_URI, SWITCH_FIN_YEAR_API_URI, SIGNUP_API_URI } from '@shared/server-apis';
 import { catchError, shareReplay } from 'rxjs/operators';
 import { AuthResponse } from '@shared/util/auth-resp';
 import { MyAccountResp } from '@shared/util/my-account-resp';
 import { BaseHTTPService } from './base-http.service';
+import { CaptchaResp } from '@fboutil/types/captcha.resp';
+import { SignupParams } from '@fboutil/types/signup-req';
 
 
 @Injectable({
@@ -16,9 +18,17 @@ export class UserService extends BaseHTTPService<User> {
 
   public API_URI = USER_API_URI;
 
-  signUp(user: User): Observable<User> {
+  captcha(): Observable<CaptchaResp> {
 
-    return this.http.post<User>(SIGNUP_API, user).pipe(
+    return this.http.get<CaptchaResp>(`${SIGNUP_API_URI}/captcha`).pipe(
+      catchError((err) => throwError(() => err))
+    );
+
+  }
+
+  signUp(params: SignupParams): Observable<SignupParams> {
+
+    return this.http.post<SignupParams>(SIGNUP_API_URI, params).pipe(
       catchError((err) => throwError(() => err))
     );
 

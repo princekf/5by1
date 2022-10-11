@@ -8,12 +8,12 @@ import {BindingKeys} from '../binding.keys';
 import { ProfileUser } from '.';
 import { INVALID_TOKEN } from '@shared/Constants';
 
-const signAsync = <(
+export const signAsync = <(
   payload: unknown,
   secretOrPrivateKey: jwt.Secret,
   options?: jwt.SignOptions,
 )=> string> <unknown> promisify(jwt.sign);
-const verifyAsync = promisify(jwt.verify);
+export const verifyAsync = promisify(jwt.verify);
 
 export class JWTService implements TokenService {
 

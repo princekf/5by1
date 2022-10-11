@@ -67,6 +67,7 @@
     "@loopback/service-proxy": "3.2.2",
     "@shared": "link:../shared/dist",
     "bcryptjs": "2.4.3",
+    "canvas": "2.10.1",
     "dayjs": "1.10.6",
     "dotenv": "10.0.0",
     "jsonwebtoken": "8.5.1",

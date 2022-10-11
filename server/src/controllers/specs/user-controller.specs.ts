@@ -119,3 +119,28 @@ export const SwitchFinYearResponseSchema = {
     token: {type: 'string'},
   },
 };
+
+const SignupSchema: SchemaObject = {
+  type: 'object',
+  required: [ 'email', 'name', 'answer' ],
+  properties: {
+    email: {
+      type: 'string',
+      format: 'email',
+    },
+    name: {
+      type: 'string',
+    },
+    answer: {
+      type: 'string',
+    },
+  },
+};
+
+export const SignupRequestBody: Partial<RequestBodyObject> = {
+  description: 'The input of sign-up function',
+  required: true,
+  content: {
+    'application/json': {schema: SignupSchema},
+  },
+};

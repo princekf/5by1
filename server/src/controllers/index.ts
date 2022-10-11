@@ -44,3 +44,4 @@ export * from './document.controller';
 export * from './voucher-document.controller';
 export * from './account-report.controller';
 export * from './request-log.controller';
+export * from './signup.controller';

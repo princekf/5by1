@@ -27,3 +27,4 @@ export * from './transaction.model';
 export * from './document.model';
 export * from './voucher-document.model';
 export * from './request-log.model';
+export * from './signup-log.model';

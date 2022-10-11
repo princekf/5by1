@@ -1,16 +1,5 @@
 import { TokenService } from '@loopback/authentication';
-import {
-
-  /* Inject, */
-  globalInterceptor,
-  inject,
-  Interceptor,
-  InvocationContext,
-  InvocationResult,
-  Provider,
-  service,
-  ValueOrPromise,
-} from '@loopback/core';
+import { globalInterceptor, inject, Interceptor, InvocationContext, InvocationResult, Provider, service, ValueOrPromise } from '@loopback/core';
 import { Request, RestBindings } from '@loopback/rest';
 import { BindingKeys } from '../binding.keys';
 import { RequestLog } from '../models';
