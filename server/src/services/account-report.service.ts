@@ -162,7 +162,7 @@ export class AccountReportService {
     const isProfit = rPLTotal > lPLTotal;
     const profLoss = Math.abs(rPLTotal - lPLTotal);
     const plNS = profLoss.toFixed(DECIMAL_PART);
-    bItems.push(this.createSingleItem(isProfit ? '' : 'Net loss', isProfit ? '' : plNS, isProfit ? 'Net Profit' : '', isProfit ? plNS : ''));
+    bItems.push(this.createSingleItem(isProfit ? 'Net Profit' : '', isProfit ? plNS : '', isProfit ? '' : 'Net loss', isProfit ? '' : plNS));
     return {
       bItems,
       isProfit,
