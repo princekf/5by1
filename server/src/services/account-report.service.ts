@@ -228,7 +228,7 @@ export class AccountReportService {
     const {bItems, lTotal, rTotal} = this.generateBLReportItems(ldGrps, filTBs, assetsGrp, lbltsGrp);
     const isPL = profLossR.isProfit;
     const pLGS = profLossR.profLoss.toFixed(DECIMAL_PART);
-    bItems.push(this.createSingleItem(isPL ? '' : 'Net Loss', isPL ? '' : pLGS, isPL ? 'Net Profit' : '', isPL ? 'pLGS' : ''));
+    bItems.push(this.createSingleItem(isPL ? '' : 'Net Loss', isPL ? '' : pLGS, isPL ? 'Net Profit' : '', isPL ? pLGS : ''));
     const lBLTotal = (lTotal + (isPL ? 0 : profLossR.profLoss)).toFixed(DECIMAL_PART);
     const rBLTotal = (rTotal + (isPL ? profLossR.profLoss : 0)).toFixed(DECIMAL_PART);
     bItems.push({
