@@ -1,5 +1,5 @@
 import {injectable, BindingScope} from '@loopback/core';
-import { repository } from '@loopback/repository';
+import { Filter, repository } from '@loopback/repository';
 import { LedgerGroup } from '../models';
 import { LedgerGroupRepository } from '../repositories';
 import { LedgerGroup as LedgerGroupIntf } from '@shared/entity/accounting/ledger-group';
@@ -140,6 +140,13 @@ export class LedgerGroupService {
 
     });
     return rootLGs;
+
+  }
+
+  find = async(filter?: Filter<LedgerGroup>):Promise<LedgerGroup[]> => {
+
+    const resp = await this.ledgerGroupRepository.find(filter);
+    return resp;
 
   }
 
