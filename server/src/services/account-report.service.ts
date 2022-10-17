@@ -9,17 +9,25 @@ import { LedgerReportItem } from '@shared/util/ledger-report-item';
 import { LedgerService } from './ledger.service';
 import { DayBookItem } from '@shared/util/day-book-item';
 import dayjs from 'dayjs';
+import { LedgerGroup } from '../models';
 
-// Get decimal place count from user session.
-const decimal = 2;
+interface BSOneSide {
+  name: string;
+  amount: string;
+}
 
+interface BLReportResp {
+  bItems: Array<BalanceSheetItem>;
+  isProfit: boolean;
+  profLoss: number;
+}
 @injectable({scope: BindingScope.TRANSIENT})
 export class AccountReportService {
 
   constructor(
-    @service(VoucherService) public voucherService: VoucherService,
-    @service(LedgerGroupService) public ledgerGroupService: LedgerGroupService,
-    @service(LedgerService) public ledgerService: LedgerService,
+    @service(VoucherService) private voucherService: VoucherService,
+    @service(LedgerGroupService) private ledgerGroupService: LedgerGroupService,
+    @service(LedgerService) private ledgerService: LedgerService,
   ) {}
 
 
@@ -30,15 +38,51 @@ export class AccountReportService {
     rAmount
   })
 
-  private generateReport =(leftLGs: Array<LedgerGroupIntf>, rightLGs: Array<LedgerGroupIntf>,
-    ldGMap:Record<string, {debit: number, credit: number}>)
-    : {bItems: Array<BalanceSheetItem>; totalLeft: number; totalRight: number} => {
+  private generateBalanceSheetItems =
+  (ldgGroups:LedgerGroup[], parentId: string, ledgers: TrialBalanceItem[], level: number, sign: 1 | -1)
+  :{items: Array<BSOneSide>, total:number} => {
 
+    const items:BSOneSide[] = [];
+    let total = 0;
+    for (const group of ldgGroups) {
 
-    const bItems: Array<BalanceSheetItem> = [];
-    let totalLeft = 0;
-    let totalRight = 0;
-    for (let idx = 0; idx < leftLGs.length || idx < rightLGs.length; idx++) {
+      if (group.parentId === parentId) {
+
+        const nextVals = this.generateBalanceSheetItems(ldgGroups, group.id, ledgers, level + 1, sign);
+        if (nextVals.items.length) {
+
+          items.push({name: `${'  '.repeat(level)}${group.name}`,
+            amount: ''});
+          items.push(...nextVals.items);
+          total += nextVals.total;
+
+        }
+
+      }
+
+    }
+
+    for (const ldg of ledgers) {
+
+      if (ldg.parentId === parentId) {
+
+        const amount = ((ldg.credit ?? 0) + (ldg.obCredit ?? 0) - (ldg.debit ?? 0) - (ldg.obDebit ?? 0)) * sign;
+        total += amount;
+        items.push({name: `${'  '.repeat(level)}${ldg.name}`,
+          amount: amount.toFixed(DECIMAL_PART)});
+
+      }
+
+    }
+    return {items,
+      total};
+
+  }
+
+  private createBLItems = (lItems: BSOneSide[], rItems: BSOneSide[]):BalanceSheetItem[] => {
+
+    const bItems:BalanceSheetItem[] = [];
+    for (let idx = 0; idx < lItems.length || idx < rItems.length; idx++) {
 
       const item: BalanceSheetItem = {
         lItem: '',
@@ -47,147 +91,119 @@ export class AccountReportService {
         rAmount: ''
       };
       bItems.push(item);
-      if (idx < leftLGs.length) {
+      if (idx < lItems.length) {
 
-        const ldG = leftLGs[idx];
-        const amount = (ldGMap[ldG.id ?? ''].debit ?? 0) - (ldGMap[ldG.id ?? ''].credit ?? 0);
-        totalLeft += amount;
-        item.lItem = ldG.name ?? '';
-        item.lAmount = amount.toFixed(decimal);
+        const lItem = lItems[idx];
+        item.lItem = lItem.name;
+        item.lAmount = lItem.amount;
 
       }
-      if (idx < rightLGs.length) {
+      if (idx < rItems.length) {
 
-        const ldG = rightLGs[idx];
-        const amount = (ldGMap[ldG.id ?? ''].credit ?? 0) - (ldGMap[ldG.id ?? ''].debit ?? 0);
-        totalRight += amount;
-        item.rItem = ldG.name ?? '';
-        item.rAmount = amount.toFixed(decimal);
+        const rItem = rItems[idx];
+        item.rItem = rItem.name;
+        item.rAmount = rItem.amount;
 
       }
 
     }
-    return {bItems,
-      totalLeft,
-      totalRight};
-
-  }
-
-  private findLedgerGroupSummaryMap =
-  (filtTBs: Array<TrialBalanceItem>): Record<string, {debit: number, credit: number}> => {
-
-    const ldGMap:Record<string, {debit: number, credit: number}> = {};
-    for (const summTB of filtTBs) {
-
-      const ldgId = summTB.parentId;
-      ldGMap[ldgId] = ldGMap[ldgId] ?? {debit: 0,
-        credit: 0};
-      ldGMap[ldgId].credit += summTB.credit ?? 0;
-      ldGMap[ldgId].debit += summTB.debit ?? 0;
-      ldGMap[ldgId].credit += summTB.obCredit ?? 0;
-      ldGMap[ldgId].debit += summTB.obDebit ?? 0;
-
-    }
-    return ldGMap;
-
-  }
-
-  private generateTradingReport =
-  (lgsWithParents:Array<LedgerGroupIntf>,
-    ldGMap:Record<string, {debit: number, credit: number}>):
-    {bItems: Array<BalanceSheetItem>, isProfit: boolean, profLoss: number} => {
-
-    const bItems: Array<BalanceSheetItem> = [];
-    const dirIncomeLdGs = lgsWithParents.filter((ldG) => ldG.code === 'DIRINCM' || ldG.parents?.find((lgP) => lgP.code === 'DIRINCM'));
-    const dirExpenseLdGs = lgsWithParents.filter((ldG) => ldG.code === 'DIREXPNS' || ldG.parents?.find((lgP) => lgP.code === 'DIREXPNS'));
-    bItems.push(this.createSingleItem('Trading Report', '', '', ''));
-    const tItems = this.generateReport(dirExpenseLdGs, dirIncomeLdGs, ldGMap);
-    bItems.push(...tItems.bItems);
-    const profLoss = Math.abs(tItems.totalRight - tItems.totalLeft);
-    const isProfit = tItems.totalRight > tItems.totalLeft;
-    bItems.push(this.createSingleItem(isProfit ? 'Gross profit' : '', isProfit ? profLoss.toFixed(decimal) : '', !isProfit ? 'Gross loss' : '', !isProfit ? profLoss.toFixed(decimal) : ''));
-    return {bItems,
-      isProfit,
-      profLoss};
-
-  }
-
-  private generateBalanceReport =
-  (lgsWithParents:Array<LedgerGroupIntf>,
-    ldGMap:Record<string, {debit: number, credit: number}>, isProfit: boolean, profLoss:number):
-    Array<BalanceSheetItem> => {
-
-    const bItems: Array<BalanceSheetItem> = [];
-    const asssetsLdGs = lgsWithParents.filter((ldG) => ldG.code === 'ASTS' || ldG.parents?.find((lgP) => lgP.code === 'ASTS'));
-    const liablitiesLdGs = lgsWithParents.filter((ldG) => ldG.code === 'LBLTS' || ldG.parents?.find((lgP) => lgP.code === 'LBLTS'));
-    if (isProfit) {
-
-      liablitiesLdGs.push({
-        name: 'Net Profit',
-        id: 'netprofit'
-      });
-      ldGMap.netprofit = {credit: profLoss,
-        debit: 0};
-
-    } else {
-
-      asssetsLdGs.push({
-        name: 'Net Loss',
-        id: 'netloss'
-      });
-      ldGMap.netloss = {debit: profLoss,
-        credit: 0};
-
-    }
-    const tItems = this.generateReport(asssetsLdGs, liablitiesLdGs, ldGMap);
-    bItems.push(...tItems.bItems);
-    bItems.push(this.createSingleItem('Total', tItems.totalLeft.toFixed(decimal), 'Total', tItems.totalRight.toFixed(decimal)));
     return bItems;
 
   }
 
-  private generatePLReport =
-  (lgsWithParents:Array<LedgerGroupIntf>,
-    ldGMap:Record<string, {debit: number, credit: number}>, isGProfit: boolean, profLossG: number):
-    {bItems: Array<BalanceSheetItem>, isProfit: boolean, profLoss: number} => {
+  private generateBLReportItems =
+  (ldGrps: LedgerGroup[], filTBs: TrialBalanceItem[], leftItems: LedgerGroup[], rightItems: LedgerGroup[])
+  :{bItems: BalanceSheetItem[], lTotal: number, rTotal: number} => {
 
+    const lPLItems:Array<BSOneSide> = [];
+    const rPLItems:Array<BSOneSide> = [];
     const bItems: Array<BalanceSheetItem> = [];
-    bItems.push(this.createSingleItem(!isGProfit ? 'Gross loss' : '', !isGProfit ? profLossG.toFixed(decimal) : '', isGProfit ? 'Gross profit' : '', isGProfit ? profLossG.toFixed(decimal) : ''));
-    const inDirIncomeLdGs = lgsWithParents.filter((ldG) => ldG.code === 'IDRINC' || ldG.parents?.find((lgP) => lgP.code === 'IDRINC'));
-    const inDirExpenseLdGs = lgsWithParents.filter((ldG) => ldG.code === 'IDIREXPNS' || ldG.parents?.find((lgP) => lgP.code === 'IDIREXPNS'));
-    const plItems = this.generateReport(inDirExpenseLdGs, inDirIncomeLdGs, ldGMap);
-    bItems.push(...plItems.bItems);
-    const netProfit = plItems.totalRight - plItems.totalLeft + (isGProfit ? 1 : -1) * profLossG;
-    const isProfit = netProfit > 0;
-    const profLoss = Math.abs(netProfit);
-    bItems.push(this.createSingleItem(isProfit ? 'Net profit' : '', isProfit ? profLoss.toFixed(decimal) : '', !isProfit ? 'Net loss' : '', !isProfit ? profLoss.toFixed(decimal) : ''));
-    return {bItems,
+    let lTotal = 0;
+    let rTotal = 0;
+    for (const leftItem of leftItems) {
+
+      const lItemsRespPL = this.generateBalanceSheetItems(ldGrps, leftItem.id ?? '', filTBs, 0, -1);
+      lPLItems.push(...lItemsRespPL.items);
+      lTotal += lItemsRespPL.total;
+
+    }
+    for (const rightItem of rightItems) {
+
+      const rItemsRespPL = this.generateBalanceSheetItems(ldGrps, rightItem.id ?? '', filTBs, 0, 1);
+      rPLItems.push(...rItemsRespPL.items);
+      rTotal += rItemsRespPL.total;
+
+    }
+    bItems.push(...this.createBLItems(lPLItems, rPLItems));
+
+    return {
+      bItems,
+      lTotal,
+      rTotal
+    };
+
+  }
+
+  private generatePLFinalReport = (isGProfit: boolean, profLossG: number, ldGrps: LedgerGroup[],
+    filTBs: TrialBalanceItem[], dirExpGrp?: LedgerGroup, dirIncomeGrp?: LedgerGroup): BLReportResp => {
+
+    const bItems: BalanceSheetItem[] = [];
+    const pLGS = profLossG.toFixed(DECIMAL_PART);
+    bItems.push(this.createSingleItem('P&L Report', '', '', ''));
+    bItems.push(this.createSingleItem(!isGProfit ? 'Gross loss' : '', !isGProfit ? pLGS : '', isGProfit ? 'Gross profit' : '', isGProfit ? pLGS : ''));
+    const expnId = dirExpGrp?.parentId;
+    const incodeId = dirIncomeGrp?.parentId;
+    const inDirExpenses = ldGrps.filter((ldG) => ldG.code !== 'DIREXPNS' && ldG.parentId === expnId);
+    const inDirIncomes = ldGrps.filter((ldG) => ldG.code !== 'DIRINCM' && ldG.parentId === incodeId);
+    const trBSItems = this.generateBLReportItems(ldGrps, filTBs, inDirExpenses, inDirIncomes);
+    const lPLTotal = isGProfit ? trBSItems.lTotal : profLossG + trBSItems.lTotal;
+    const rPLTotal = isGProfit ? profLossG + trBSItems.rTotal : trBSItems.rTotal;
+    bItems.push(...trBSItems.bItems);
+    const isProfit = rPLTotal > lPLTotal;
+    const profLoss = Math.abs(rPLTotal - lPLTotal);
+    const plNS = profLoss.toFixed(DECIMAL_PART);
+    bItems.push(this.createSingleItem(isProfit ? 'Net Profit' : '', isProfit ? plNS : '', isProfit ? '' : 'Net loss', isProfit ? '' : plNS));
+    return {
+      bItems,
       isProfit,
-      profLoss};
+      profLoss
+    };
+
+  }
+
+  private generatePLReportFromSummary = (ldGrps: LedgerGroup[], filTBs: TrialBalanceItem[]):BLReportResp => {
+
+    const dirExpGrp = ldGrps.find((ldG) => ldG.code === 'DIREXPNS');
+    const lItemsRespTr = this.generateBalanceSheetItems(ldGrps, dirExpGrp?.id ?? '', filTBs, 0, -1);
+    const dirIncomeGrp = ldGrps.find((ldG) => ldG.code === 'DIRINCM');
+    const rItemsRespTr = this.generateBalanceSheetItems(ldGrps, dirIncomeGrp?.id ?? '', filTBs, 0, 1);
+    const bItems: Array<BalanceSheetItem> = [];
+    bItems.push(this.createSingleItem('Trading Report', '', '', ''));
+    bItems.push(...this.createBLItems(lItemsRespTr.items, rItemsRespTr.items));
+
+    const isGProfit = rItemsRespTr.total > lItemsRespTr.total;
+    const profLossG = Math.abs(rItemsRespTr.total - lItemsRespTr.total);
+    const pLGS = profLossG.toFixed(DECIMAL_PART);
+    bItems.push(this.createSingleItem(isGProfit ? 'Gross profit' : '', isGProfit ? pLGS : '', !isGProfit ? 'Gross loss' : '', !isGProfit ? pLGS : ''));
+    const plFinalItems = this.generatePLFinalReport(isGProfit, profLossG, ldGrps, filTBs, dirExpGrp, dirIncomeGrp);
+    bItems.push(...plFinalItems.bItems);
+    return {bItems,
+      isProfit: plFinalItems.isProfit,
+      profLoss: plFinalItems.profLoss};
 
   }
 
   private generateProfitLossReport = async(startDate: Date, endDate: Date):
-  Promise<{ bItems: Array<BalanceSheetItem>; isProfit: boolean; profLoss: number; }> => {
+  Promise<BLReportResp> => {
 
     const smT = await this.voucherService.generateLedgerSummary(startDate, endDate);
     // Filter the ledgers with balance
     const filTBs = smT.filter((sTB) => (sTB.credit ?? 0) - (sTB.debit ?? 0) + (sTB.obCredit ?? 0) - (sTB.obDebit ?? 0));
-    // Find ledger group wise summary
-    const ldGMap = this.findLedgerGroupSummaryMap(filTBs);
-    const lgsWithParents = await this.ledgerGroupService.findLedgerGroupsWithParents(Object.keys(ldGMap));
-    const bItemsP: Array<BalanceSheetItem> = [];
-    // Trading Account Report
-    const trdItems = this.generateTradingReport(lgsWithParents, ldGMap);
-    bItemsP.push(...trdItems.bItems);
-    // P&L Report
-    const {bItems, isProfit, profLoss} =
-    this.generatePLReport(lgsWithParents, ldGMap, trdItems.isProfit, trdItems.profLoss);
-    bItemsP.push(this.createSingleItem('P&L Report', '', '', ''));
-    bItemsP.push(...bItems);
-    return {bItems: bItemsP,
-      isProfit,
-      profLoss};
+    // Create id-name map.
+    const idName: Record<string, string> = {};
+    filTBs.forEach((item) => (idName[item.id] = item.name));
+    const ldGrps = await this.ledgerGroupService.find();
+    return this.generatePLReportFromSummary(ldGrps, filTBs);
 
   }
 
@@ -198,17 +214,29 @@ export class AccountReportService {
     const smT = await this.voucherService.generateLedgerSummary(startDate, endDate);
     // Filter the ledgers with balance
     const filTBs = smT.filter((sTB) => (sTB.credit ?? 0) - (sTB.debit ?? 0) + (sTB.obCredit ?? 0) - (sTB.obDebit ?? 0));
+    // Create id-name map.
+    const idName: Record<string, string> = {};
+    filTBs.forEach((item) => (idName[item.id] = item.name));
+    const ldGrps = await this.ledgerGroupService.find();
     // Find all ledger which don't have transactions but opening balance.
     const lIds = smT.map((lsu) => lsu.id);
     const ldGNTs = await this.findAllTBItemsWithNoTransactionButOpening(lIds);
-    // Find ledger group wise summary
-    const ldGMap = this.findLedgerGroupSummaryMap([ ...filTBs, ...ldGNTs ]);
-    const lgsWithParents = await this.ledgerGroupService.findLedgerGroupsWithParents(Object.keys(ldGMap));
-    // Find profit or loss
-    const profLossR = await this.generateProfitLossReport(startDate, endDate);
-    const {isProfit, profLoss} = profLossR;
-    // Balance sheet Report
-    const bItems = this.generateBalanceReport(lgsWithParents, ldGMap, isProfit, profLoss);
+    filTBs.push(...ldGNTs);
+    const profLossR = this.generatePLReportFromSummary(ldGrps, filTBs);
+    const assetsGrp = ldGrps.filter((ldG) => ldG.code === 'ASTS');
+    const lbltsGrp = ldGrps.filter((ldG) => ldG.code === 'LBLTS');
+    const {bItems, lTotal, rTotal} = this.generateBLReportItems(ldGrps, filTBs, assetsGrp, lbltsGrp);
+    const isPL = profLossR.isProfit;
+    const pLGS = profLossR.profLoss.toFixed(DECIMAL_PART);
+    bItems.push(this.createSingleItem(isPL ? '' : 'Net Loss', isPL ? '' : pLGS, isPL ? 'Net Profit' : '', isPL ? pLGS : ''));
+    const lBLTotal = (lTotal + (isPL ? 0 : profLossR.profLoss)).toFixed(DECIMAL_PART);
+    const rBLTotal = (rTotal + (isPL ? profLossR.profLoss : 0)).toFixed(DECIMAL_PART);
+    bItems.push({
+      lItem: 'Total',
+      lAmount: lBLTotal,
+      rItem: 'Total',
+      rAmount: rBLTotal
+    });
     return bItems;
 
   }

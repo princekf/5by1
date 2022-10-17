@@ -13,12 +13,13 @@ import { DenyDeletionOfDefaultLedgerGroup } from '../interceptors';
 import { LedgerGroupWithParents } from '../models/ledger-group-with-parents.model';
 import xlsx from 'xlsx';
 import { BindingKeys } from '../binding.keys';
-import { ProfileUser } from '../services';
+import { LedgerGroupService, ProfileUser } from '../services';
 import { FileUploadHandler } from '../types';
 import {SecurityBindings} from '@loopback/security';
 import { FinYearRepository } from '../repositories';
 import { LedgerGroupImport } from '../utils/ledgergroup-import-spec';
 import { Save } from '../utils/save-spec';
+import { service } from '@loopback/core';
 @authenticate('jwt')
 @authorize(adminAndUserAuthDetails)
 export class LedgerGroupController {
@@ -26,6 +27,7 @@ export class LedgerGroupController {
   constructor(
     @repository(LedgerGroupRepository)
     public ledgerGroupRepository : LedgerGroupRepository,
+    @service(LedgerGroupService) private ledgerGroupService: LedgerGroupService,
   ) {}
 
   @intercept(ValidateLedgerGroupInterceptor.BINDING_KEY)
@@ -48,9 +50,6 @@ export class LedgerGroupController {
       },
     })
       ledgerGroup: Omit<LedgerGroup, 'id'>,
-      @inject(SecurityBindings.USER) uProfile: ProfileUser,
-      @repository(FinYearRepository)
-      finYearRepository : FinYearRepository,
   ): Promise<LedgerGroup> {
 
 
@@ -93,9 +92,7 @@ export class LedgerGroupController {
     @param.filter(LedgerGroup) filter?: Filter<LedgerGroup>,
   ): Promise<LedgerGroup[]> {
 
-    const lgsR = await this.ledgerGroupRepository.find(filter);
-
-
+    const lgsR = await this.ledgerGroupService.find(filter);
     return lgsR;
 
   }
