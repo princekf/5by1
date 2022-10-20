@@ -75,7 +75,7 @@
 
 
     <tr *ngFor="let item of itemPermissions | keyvalue">
-      <td class="title-column">{{item.key}}</td>
+      <td class="title-column">{{item.value.name}}</td>
       <td class="perm-column">
         <mat-checkbox color="primary" [checked]="item.value.operations.view"
         (change)="item.value.operations.view = $event.checked"></mat-checkbox>
@@ -103,7 +103,7 @@
 
 
      <tr *ngFor="let item of salePermissions | keyvalue">
-      <td class="title-column">{{item.key}}</td>
+      <td class="title-column">{{item.value.name}}</td>
       <td class="perm-column">
         <mat-checkbox color="primary" [checked]="item.value.operations.view"
         (change)="item.value.operations.view = $event.checked"></mat-checkbox>
@@ -129,7 +129,7 @@
 
 
      <tr *ngFor="let item of purchasePermissions | keyvalue">
-      <td class="title-column">{{item.key}}</td>
+      <td class="title-column">{{item.value.name}}</td>
       <td class="perm-column">
         <mat-checkbox color="primary" [checked]="item.value.operations.view"
         (change)="item.value.operations.view = $event.checked"></mat-checkbox>
@@ -155,7 +155,7 @@
     </tr>
 
      <tr *ngFor="let item of accountPermissions | keyvalue">
-      <td class="title-column">{{item.key}}</td>
+      <td class="title-column">{{item.value.name}}</td>
       <td class="perm-column">
         <mat-checkbox color="primary" [checked]="item.value.operations.view"
         (change)="item.value.operations.view = $event.checked"></mat-checkbox>
@@ -181,7 +181,7 @@
     </tr>
 
      <tr *ngFor="let item of voucherPermissions | keyvalue">
-      <td class="title-column">{{item.key}}</td>
+      <td class="title-column">{{item.value.name}}</td>
       <td class="perm-column">
         <mat-checkbox color="primary" [checked]="item.value.operations.view"
         (change)="item.value.operations.view = $event.checked"></mat-checkbox>
@@ -206,7 +206,7 @@
     </tr>
 
      <tr *ngFor="let item of settingsPermissions | keyvalue">
-      <td class="title-column">{{item.key}}</td>
+      <td class="title-column">{{item.value.name}}</td>
       <td class="perm-column">
         <mat-checkbox color="primary" [checked]="item.value.operations.view"
         (change)="item.value.operations.view = $event.checked"></mat-checkbox>
@@ -228,7 +228,7 @@
     </tr>
 
      <tr *ngFor="let item of logsPermissions | keyvalue">
-      <td class="title-column">{{item.key}}</td>
+      <td class="title-column">{{item.value.name}}</td>
       <td class="perm-column">
         <mat-checkbox color="primary" [checked]="item.value.operations.view"
         (change)="item.value.operations.view = $event.checked"></mat-checkbox>
@@ -248,7 +248,7 @@
     <tr>
 
     <tr *ngFor="let item of permissions | keyvalue">
-      <td class="title-column">{{item.key}}</td>
+      <td class="title-column">{{item.value.name}}</td>
       <td class="perm-column">
         <mat-checkbox color="primary" [checked]="item.value.operations.view"
         (change)="item.value.operations.view = $event.checked"></mat-checkbox>
