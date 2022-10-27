@@ -1,0 +1,52 @@
+<div class="filter-item-card"(keydown.tab)="$event.stopPropagation()">
+    <form [formGroup]="filterForm" (ngSubmit)="filterItems()">
+        <div (click)="$event.stopPropagation();$event.preventDefault()">
+            <div class="filter-content-div">
+                <mat-label class="lable">User</mat-label>
+                <mat-select class="select" formControlName="userType">
+                    <mat-option value="">Contains</mat-option>
+                </mat-select>
+                <mat-form-field class="forminput">
+                    <input matInput formControlName="user">
+                </mat-form-field>
+            </div>
+            <div class="filter-content-div">
+                <mat-label class="lable">Branch</mat-label>
+                <mat-select class="select" formControlName="branchIdType">
+                    <mat-option value="">Contains</mat-option>
+                </mat-select>
+                <mat-form-field class="forminput">
+                    <input matInput formControlName="branch">
+                </mat-form-field>
+            </div>
+            <div class="filter-content-div">
+                <mat-label class="lable">Fin Year</mat-label>
+                <mat-select class="select" formControlName="finyearType">
+                    <mat-option value="">Contains</mat-option>
+                </mat-select>
+                <mat-form-field class="forminput">
+                    <input matInput formControlName="finyear">
+                </mat-form-field>
+            </div>
+            <div class="filter-content-div">
+                <mat-label class="lable">Date</mat-label>
+                <mat-select formControlName="datetype" class="select">
+                    <mat-option value="">Equal To</mat-option>
+                </mat-select>
+                <mat-form-field class="forminput">
+                    <input matInput [matDatepicker]="picker" formControlName="date" >
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            </div>
+
+
+        </div>
+
+            <div class='filter-actions-container'>
+                <button mat-button type="button" class="filtercancelbutton">Cancel</button>
+                <button mat-button type="button" class="filterresetbutton"(click)="resetter();$event.stopPropagation()">Reset</button>
+                <button mat-button type="submit" class="filtersavebutton">Submit</button>
+            </div>
+    </form>
+</div>
