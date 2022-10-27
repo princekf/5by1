@@ -1,4 +1,4 @@
-import {Count, CountSchema, Filter, FilterExcludingWhere, property, repository, Where} from '@loopback/repository';
+import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where} from '@loopback/repository';
 import { post, param, get, getModelSchemaRef, patch, put, del, requestBody, response, HttpErrors, RequestContext } from '@loopback/rest';
 import {FinYear} from '../models/fin-year.model';
 import {FinYearRepository} from '../repositories/fin-year.repository';

@@ -20,7 +20,6 @@ export * from './fin-year.repository';
 export * from './ledger-group.repository';
 export * from './ledger.repository';
 export * from './voucher.repository';
-export * from './cost-centre.repository';
 export * from './transaction.repository';
 export * from './document.repository';
 export * from './voucher-document.repository';

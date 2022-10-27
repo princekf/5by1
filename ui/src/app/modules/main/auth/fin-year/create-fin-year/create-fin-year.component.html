@@ -47,7 +47,7 @@
     </mat-form-field>
   </p>
 
-  <p>
+  <p *ngIf="!editing">
     <mat-form-field>
       <mat-label>Reference FinYear</mat-label>
       <input formControlName="refFinYearId" matInput placeholder="Enter Reference FinYear" [matAutocomplete]="autoFinyear">

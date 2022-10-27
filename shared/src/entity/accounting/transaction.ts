@@ -1,4 +1,3 @@
-import { CostCentre } from './cost-centre';
 import { Ledger } from './ledger';
 
 export enum TransactionType {
@@ -15,6 +14,4 @@ export interface Transaction {
     amount: number;
     type: TransactionType;
     details?: string;
-    costCentre?: CostCentre;
-    costCentreId?: string;
 }

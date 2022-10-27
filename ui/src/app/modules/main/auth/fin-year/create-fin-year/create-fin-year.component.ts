@@ -29,6 +29,8 @@ export class CreateFinYearComponent implements OnInit {
 
   loading = true;
 
+  editing = false;
+
   formHeader = 'Create Fin Year';
 
   branchFiltered: Array<Branch> = [];
@@ -44,7 +46,6 @@ export class CreateFinYearComponent implements OnInit {
     endDate: new FormControl('', [ Validators.required ]),
     branch: new FormControl('', [ Validators.required ]),
     refFinYearId: new FormControl(''),
-
 
   });
 
@@ -65,7 +66,7 @@ export class CreateFinYearComponent implements OnInit {
     if (tId) {
 
       this.formHeader = 'Update Fin Year';
-
+      this.editing = true;
       const queryParam:QueryData = {
         include: [
           {relation: 'branch'}
@@ -76,11 +77,11 @@ export class CreateFinYearComponent implements OnInit {
         this.form.setValue({
           id: finyearC.id ?? '',
           name: finyearC.name ?? '',
-          code: finyearC.name ?? '',
+          code: finyearC.code ?? '',
           branch: finyearC.branch ?? '',
           startDate: finyearC.startDate ?? '',
           endDate: finyearC.endDate ?? '',
-
+          refFinYearId: '',
         });
 
         this.loading = false;
@@ -102,9 +103,10 @@ export class CreateFinYearComponent implements OnInit {
       if (typeof branchQ !== 'string') {
 
         const branch = branchQ as Branch;
+        const fsDate = dayjs(branch.finYearStartDate);
         this.rangeStrategy.startDate = {
-          month: branch.finYearStartDate.getMonth(),
-          date: branch.finYearStartDate.getDate(),
+          month: fsDate.month(),
+          date: fsDate.date(),
         };
         this.form.controls.startDate.enable();
         this.form.controls.endDate.enable();
@@ -125,16 +127,16 @@ export class CreateFinYearComponent implements OnInit {
 
       }
       const branch = this.form.controls.branch.value;
-      if(!branch){
+      if (!branch) {
 
         this.toastr.error('Please select a branch', 'Select Branch');
         return;
 
       }
-      
+
       this.finYearService.search({ where: {name: {like: customerQ,
         options: 'i'},
-        branchId: branch?.id ?? ''} })
+      branchId: branch?.id ?? ''} })
         .subscribe((defaultFinYears) => (this.finyearFiltered = defaultFinYears));
 
     });
@@ -144,8 +146,10 @@ export class CreateFinYearComponent implements OnInit {
   extractNameOfObject = (obj: {name: string}): string => obj.name;
 
   findNameById = (id: string): string => {
+
     const fFinYear = this.finyearFiltered.find((fObj) => fObj.id === id);
     return fFinYear?.name ?? '';
+
   };
 
   upsertFinyear(): void {

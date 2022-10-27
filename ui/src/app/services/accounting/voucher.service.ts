@@ -7,6 +7,7 @@ import { BaseHTTPService } from '@fboservices/base-http.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Ledger } from '@shared/entity/accounting/ledger';
+import { environment as env } from '@fboenvironments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class VoucherService extends BaseHTTPService<Voucher> {
 
     const formData: FormData = new FormData();
     formData.append('fileKey', file, file.name);
-    return this.http.post<void>(`${this.API_URI}/import`, formData).pipe(
+    return this.http.post<void>(`${env.serverUrl}${this.API_URI}/import`, formData).pipe(
       catchError((err) => throwError(err))
     );
 
@@ -40,15 +41,7 @@ export class VoucherService extends BaseHTTPService<Voucher> {
 
   public fetchLedgerSummary(): Observable<Array<LedgerSummaryTB>> {
 
-    return this.http.get<Array<LedgerSummaryTB>>(`${this.API_URI}/ledgerSummary`).pipe(
-      catchError((err) => throwError(err))
-    );
-
-  }
-
-  public fetchLedgerGroupSummary(): Observable<Array<LedgerGroupSummary>> {
-
-    return this.http.get<Array<LedgerGroupSummary>>(`${this.API_URI}/ledgerGroupSummary`).pipe(
+    return this.http.get<Array<LedgerSummaryTB>>(`${env.serverUrl}${this.API_URI}/ledgerSummary`).pipe(
       catchError((err) => throwError(err))
     );
 
@@ -56,7 +49,7 @@ export class VoucherService extends BaseHTTPService<Voucher> {
 
   public fetchLedgersUsed(vType: string):Observable<Array<Ledger>> {
 
-    return this.http.get<Array<Ledger>>(`${this.API_URI}/ledgers-used/${vType}`).pipe(
+    return this.http.get<Array<Ledger>>(`${env.serverUrl}${this.API_URI}/ledgers-used/${vType}`).pipe(
       catchError((err) => throwError(err))
     );
 

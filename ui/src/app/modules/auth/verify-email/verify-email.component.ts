@@ -57,11 +57,14 @@ export class VerifyEmailComponent implements OnInit {
   ngOnInit(): void {
 
     this.loading = true;
+    const APRIL = 3;
+    const finStart = new Date(0, APRIL, 1);
     const signLogId = this.route.snapshot.paramMap.get('token');
     this.userService.fetchSignUpData(signLogId).subscribe((signLog) => {
 
       const {email} = signLog;
       this.form.controls.email.setValue(email);
+      this.form.controls.finYearStart.setValue(finStart);
       this.userService.captcha().subscribe((resp) => {
 
         const { question, token } = resp;

@@ -53,21 +53,6 @@
             </td>
         </ng-container>
 
-        <ng-container matColumnDef="costCentre">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Cost Centre </th>
-            <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
-                <mat-form-field class="costCentre-transaction-field">
-                    <input type="text" matInput formControlName="costCentre" [matAutocomplete]="autoCostCentreLedger">
-                    <mat-autocomplete autoActiveFirstOption #autoCostCentreLedger="matAutocomplete"
-                        [displayWith]="extractNameOfObject">
-                        <mat-option *ngFor="let costCentreC of costCentresFiltered" [value]="costCentreC">
-                            {{costCentreC.name}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </td>
-        </ng-container>
-
         <ng-container matColumnDef="details">
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="displayedColumns"> Details </th>
             <td mat-cell *matCellDef="let element; let i = dataIndex" [formGroup]="element">
