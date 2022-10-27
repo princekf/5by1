@@ -6,6 +6,7 @@ import { TrialBalanceReportComponent } from './trial-balance/trial-balance-repor
 import { ProfitLossReportComponent } from './profit-loss/profit-loss-report/profit-loss-report.component';
 import { BalanceSheetReportComponent } from './balance-sheet/balance-sheet-report/balance-sheet-report.component';
 import { DayBookReportComponent } from './day-book/day-book-report/day-book-report.component';
+import { RequestLogsComponent } from '../../common/logs/request-logs/request-logs.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,11 @@ const routes: Routes = [
     path: 'day-book',
     pathMatch: 'full',
     component: DayBookReportComponent
+  },
+  {
+    path: 'request-logs',
+    pathMatch: 'full',
+    component: RequestLogsComponent
   },
 ];
 

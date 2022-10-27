@@ -1,0 +1,29 @@
+<div *ngIf="loading">
+  <ngx-skeleton-loader count="5"></ngx-skeleton-loader>
+</div>
+<div *ngIf="!loading">
+<h2 class="form-header">{{formHeader}} </h2>
+    <table>
+      <div style="width: 100%;display: flex;
+      flex-wrap: wrap;">
+
+        <ng-container *ngFor="let data of fboFormValues|slice:1;index as idx;let odd = odd;">
+          <div *ngIf="odd" class="sep">
+            <tr class="col">
+              <td class="headers" >{{headers[idx]}}</td>
+              <td class="data">{{data}}</td>
+              </tr>
+          </div>
+          <div *ngIf="!odd" class="sep">
+            <tr class="col left_margin">
+              <td class="headers">{{headers[idx]}}</td>
+              <td class="data">{{data}}</td>
+              </tr>
+          </div>
+    </ng-container>
+
+      </div>
+ 
+    </table>
+    <button class="cancel-button" type="button" mat-button (click)="goToPreviousPage(route,router)">Return</button>
+  </div>
