@@ -219,6 +219,16 @@ export class FinyearService {
         }
 
       });
+      const today = dayjs();
+      const years: number[] = [];
+      years.push(today.month() >= fSD.getMonth() ? today.year() : today.year() - 1);
+      years.push(years[0] + 1);
+      years.push(years[0] - 1);
+      if (!years.includes(finStart.year())) {
+
+        throw new Error('Only current, previos and next financial years can be created.');
+
+      }
 
     }
 
