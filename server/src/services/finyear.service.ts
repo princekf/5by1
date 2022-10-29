@@ -1,4 +1,4 @@
-import {injectable, BindingScope, Getter} from '@loopback/core';
+import {injectable, BindingScope, Getter, service} from '@loopback/core';
 import { Count, Filter, FilterExcludingWhere, repository, Where } from '@loopback/repository';
 import { HttpErrors, RequestContext } from '@loopback/rest';
 import { TransactionType } from '@shared/entity/accounting/transaction';
@@ -11,12 +11,13 @@ import { defaultLedgerGroups } from '../install/default.ledgergroups';
 import { defalutLedgerGroupCodes as dlgc } from '@shared/util/ledger-group-codes';
 import { defaultLedgers } from '../install/default.ledgers';
 import dayjs from 'dayjs';
+import { BranchService } from './branch.service';
 
 @injectable({scope: BindingScope.TRANSIENT})
 export class FinyearService {
 
-  constructor(@repository(FinYearRepository)
-    public finYearRepository : FinYearRepository,) {}
+  constructor(@repository(FinYearRepository) private finYearRepository : FinYearRepository,
+  @service(BranchService) private branchService: BranchService,) {}
 
     private findRefYearMasterItems =
     async(refFinYearId: string, uProfile: ProfileUser, branch: Branch, context: RequestContext,
@@ -210,6 +211,11 @@ export class FinyearService {
       const finYears = await this.finYearRepository.find();
       finYears.forEach((finYearC) => {
 
+        if (finYear.id === finYearC.id) {
+
+          return;
+
+        }
         const fsDC = finYearC.startDate;
         if (finStart.date() === fsDC.getDate() && finStart.month() === fsDC.getMonth()
         && finStart.year() === fsDC.getFullYear()) {
@@ -284,10 +290,11 @@ export class FinyearService {
 
     }
 
-    updateAll = async(finYear: FinYear, where?: Where<FinYear>,
+    updateAll = async(finYear: Partial<FinYear>, where?: Where<FinYear>,
     ): Promise<Count> => {
 
-      const countR = await this.finYearRepository.updateAll(finYear, where);
+      const {name} = finYear;
+      const countR = await this.finYearRepository.updateAll({name}, where);
       return countR;
 
     }
@@ -299,16 +306,21 @@ export class FinyearService {
 
     }
 
-    updateById = async(id: string, finYear: FinYear,
+    updateById = async(id: string, finYear: Partial<FinYear>,
     ): Promise<void> => {
 
-      await this.finYearRepository.updateById(id, finYear);
+      const {branchId} = finYear;
+      const branch = await this.branchService.findById(branchId as string);
+      await this.validateCreateInputs(finYear as FinYearTC, branch);
+      const {name} = finYear;
+      await this.finYearRepository.updateById(id, {name});
 
     }
 
     replaceById = async(id: string, finYear: FinYear,): Promise<void> => {
 
-      await this.finYearRepository.replaceById(id, finYear);
+      const {name} = finYear;
+      await this.finYearRepository.replaceById(id, {name});
 
     }
 

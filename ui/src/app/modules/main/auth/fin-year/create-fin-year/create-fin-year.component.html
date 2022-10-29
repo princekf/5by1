@@ -16,7 +16,7 @@
   <p>
     <mat-form-field>
       <mat-label>Code</mat-label>
-      <input formControlName="code" matInput placeholder="Enter Code">
+      <input formControlName="code" matInput placeholder="Enter Code" [readonly]="editing">
       <mat-error *ngIf="form.controls['code'].hasError('required')">Please Enter Name</mat-error>
     </mat-form-field>
   </p>
@@ -24,7 +24,7 @@
   <p>
     <mat-form-field>
       <mat-label>Branch</mat-label>
-      <input formControlName="branch" matInput placeholder="Enter Branch" [matAutocomplete]="autobranch">
+      <input formControlName="branch" matInput placeholder="Enter Branch" [matAutocomplete]="autobranch" [readonly]="editing">
       <mat-autocomplete autoActiveFirstOption #autobranch="matAutocomplete" [displayWith]="extractNameOfObject">
         <mat-option *ngFor="let branchS of branchFiltered" [value]="branchS">
           {{branchS.name}}

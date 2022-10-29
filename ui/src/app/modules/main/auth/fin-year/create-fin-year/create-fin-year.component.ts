@@ -108,8 +108,12 @@ export class CreateFinYearComponent implements OnInit {
           month: fsDate.month(),
           date: fsDate.date(),
         };
-        this.form.controls.startDate.enable();
-        this.form.controls.endDate.enable();
+        if (!this.editing) {
+
+          this.form.controls.startDate.enable();
+          this.form.controls.endDate.enable();
+
+        }
         return;
 
       }
