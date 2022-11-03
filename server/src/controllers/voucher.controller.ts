@@ -249,6 +249,8 @@ export class VoucherController {
       },
     },
   })
+  @authorize({resource: resourcePermissions.voucherCreate.name,
+    ...adminAndUserAuthDetails})
   async importVouchers(
     @requestBody.file()
       req: Request,
