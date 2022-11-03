@@ -9,6 +9,7 @@ export const environment = {
   dateFormat: 'DD-MM-YYYY',
   datePickerFormat: 'dd-MM-YYYY',
   decimalPlaces: 2,
+  serverUrl: 'http://localhost:9000'
 };
 
 /*

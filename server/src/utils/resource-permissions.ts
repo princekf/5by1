@@ -97,11 +97,6 @@ const resourcePs:Record<string, {name: string, key: string, operation: string}> 
 
   requestLogsView: createResourceObj('reqlogs-view', 'reqlogs', 'view'),
 
-  costcentreView: createResourceObj('costcentre-view', 'costcentre', 'view'),
-  costcentreCreate: createResourceObj('costcentre-create', 'costcentre', 'create'),
-  costcentreUpdate: createResourceObj('costcentre-update', 'costcentre', 'update'),
-  costcentreDelete: createResourceObj('costcentre-delete', 'costcentre', 'delete'),
-
   saleView: createResourceObj('sale-view', 'sale', 'view'),
   saleCreate: createResourceObj('sale-create', 'sale', 'create'),
   saleUpdate: createResourceObj('sale-update', 'sale', 'update'),

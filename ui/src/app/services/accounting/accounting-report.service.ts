@@ -6,6 +6,7 @@ import { TrialBalanceItem } from '@shared/util/trial-balance-item';
 import { DayBookItem } from '@shared/util/day-book-item';
 import { LedgerReportItem } from '@shared/util/ledger-report-item';
 import { Observable } from 'rxjs';
+import { environment as env } from '@fboenvironments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class AccountingReportService {
 
     let params = new HttpParams();
     params = params.append('startDate', startDate).append('endDate', endDate);
-    return this.http.get<Array<TrialBalanceItem>>(`${this.API_URI}/ledger-summary`, {params});
+    return this.http.get<Array<TrialBalanceItem>>(`${env.serverUrl}${this.API_URI}/ledger-summary`, {params});
 
   }
 
@@ -30,7 +31,7 @@ export class AccountingReportService {
 
     let params = new HttpParams();
     params = params.append('ason', ason);
-    return this.http.get<Array<TrialBalanceItem>>(`${this.API_URI}/ledger-group-summary`, {params});
+    return this.http.get<Array<TrialBalanceItem>>(`${env.serverUrl}${this.API_URI}/ledger-group-summary`, {params});
 
   }
 
@@ -38,7 +39,7 @@ export class AccountingReportService {
 
     let params = new HttpParams();
     params = params.append('ason', ason).append('plid', plid);
-    return this.http.get<Array<LedgerReportItem>>(`${this.API_URI}/ledger-group-report`, {params});
+    return this.http.get<Array<LedgerReportItem>>(`${env.serverUrl}${this.API_URI}/ledger-group-report`, {params});
 
   }
 
@@ -49,7 +50,7 @@ export class AccountingReportService {
     params = params.append('startDate', startDate).append('endDate', endDate)
       .append('plid', plid)
       .append('clid', clid ?? '');
-    return this.http.get<Array<LedgerReportItem>>(`${this.API_URI}/ledger-report`, {params});
+    return this.http.get<Array<LedgerReportItem>>(`${env.serverUrl}${this.API_URI}/ledger-report`, {params});
 
   }
 
@@ -57,7 +58,7 @@ export class AccountingReportService {
 
     let params = new HttpParams();
     params = params.append('startDate', startDate).append('endDate', endDate);
-    return this.http.get<Array<BalanceSheetItem>>(`${this.API_URI}/profit-loss`, {params});
+    return this.http.get<Array<BalanceSheetItem>>(`${env.serverUrl}${this.API_URI}/profit-loss`, {params});
 
   }
 
@@ -65,7 +66,7 @@ export class AccountingReportService {
 
     let params = new HttpParams();
     params = params.append('startDate', startDate).append('endDate', endDate);
-    return this.http.get<Array<BalanceSheetItem>>(`${this.API_URI}/balance-sheet`, {params});
+    return this.http.get<Array<BalanceSheetItem>>(`${env.serverUrl}${this.API_URI}/balance-sheet`, {params});
 
   }
 
@@ -73,7 +74,7 @@ export class AccountingReportService {
 
     let params = new HttpParams();
     params = params.append('startDate', startDate).append('endDate', endDate);
-    return this.http.get<Array<TrialBalanceItem>>(`${this.API_URI}/trial-balance`, {params});
+    return this.http.get<Array<TrialBalanceItem>>(`${env.serverUrl}${this.API_URI}/trial-balance`, {params});
 
   }
 
@@ -82,7 +83,7 @@ export class AccountingReportService {
     let params = new HttpParams();
     params = params.append('startDate', startDate);
     params = params.append('endDate', endDate);
-    return this.http.get<Array<DayBookItem>>(`${this.API_URI}/day-book`, {params});
+    return this.http.get<Array<DayBookItem>>(`${env.serverUrl}${this.API_URI}/day-book`, {params});
 
   }
 

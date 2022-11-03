@@ -102,11 +102,6 @@ export const permissions:Record<string, Permission> = {
     name: 'Voucher',
     operations: {...CURD_OPERATIONS}
   },
-  'costcentre': {
-    key: 'costcentre',
-    name: 'Cost Centres',
-    operations: {...CURD_OPERATIONS}
-  },
   'reqlogs': {
     key: 'reqlogs',
     name: 'Request Logs',

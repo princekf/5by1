@@ -60,7 +60,7 @@ export class CreateUserComponent implements OnInit {
   },
 
   {
-    permisions: [ 'ledgergroup', 'ledger', 'costcentre' ],
+    permisions: [ 'ledgergroup', 'ledger', ],
     category: this.accountPermissions,
   },
 

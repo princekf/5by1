@@ -5,6 +5,7 @@ import { catchError, flatMap, map } from 'rxjs/internal/operators';
 import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { DEFAULT_MAX_ROWS } from '@fboutil/constants';
+import { environment as env } from '@fboenvironments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class BaseHTTPService<T> {
     const filterParam = JSON.stringify(queryParams);
     let params = new HttpParams();
     params = params.set('filter', filterParam);
-    return this.http.get<Array<T>>(this.API_URI, { params });
+    return this.http.get<Array<T>>(`${env.serverUrl}${this.API_URI}`, { params });
 
   }
 
@@ -33,7 +34,7 @@ export class BaseHTTPService<T> {
     const filterParam = JSON.stringify(queryParams);
     let params = new HttpParams();
     params = params.set('filter', filterParam);
-    return this.http.get<{ data: Array<string> }>(`${this.API_URI}/distinct/${columnName}`, { params });
+    return this.http.get<{ data: Array<string> }>(`${env.serverUrl}${this.API_URI}/distinct/${columnName}`, { params });
 
   }
 
@@ -42,7 +43,7 @@ export class BaseHTTPService<T> {
     const filterParam = JSON.stringify(queryParams);
     let params = new HttpParams();
     params = params.set('filter', filterParam);
-    const itemsR$ = this.http.get<Array<T>>(this.API_URI, { params });
+    const itemsR$ = this.http.get<Array<T>>(`${env.serverUrl}${this.API_URI}`, { params });
     return itemsR$;
 
   }
@@ -56,8 +57,8 @@ export class BaseHTTPService<T> {
     const filterParam = JSON.stringify(queryParams);
     let params = new HttpParams();
     params = params.set('filter', filterParam);
-    const itemsR$ = this.http.get<Array<T>>(this.API_URI, { params });
-    const countR$ = this.http.get<{ count: number }>(`${this.API_URI}/count`, { params });
+    const itemsR$ = this.http.get<Array<T>>(`${env.serverUrl}${this.API_URI}`, { params });
+    const countR$ = this.http.get<{ count: number }>(`${env.serverUrl}${this.API_URI}/count`, { params });
     return forkJoin([ itemsR$, countR$ ]).pipe(
       catchError((err) => throwError(err))
     )
@@ -73,7 +74,7 @@ export class BaseHTTPService<T> {
 
   public save(item: T): Observable<T> {
 
-    return this.http.post<T>(this.API_URI, item).pipe(
+    return this.http.post<T>(`${env.serverUrl}${this.API_URI}`, item).pipe(
       catchError((err) => throwError(err))
     );
 
@@ -83,7 +84,7 @@ export class BaseHTTPService<T> {
   public update(item: T): Observable<T> {
 
     const cObj = item as unknown as { id: string };
-    return this.http.patch<number>(`${this.API_URI}/${cObj.id}`, item).pipe(
+    return this.http.patch<number>(`${env.serverUrl}${this.API_URI}/${cObj.id}`, item).pipe(
       flatMap((count) => of(item))
     );
 
@@ -95,7 +96,7 @@ export class BaseHTTPService<T> {
     const filterParam = JSON.stringify(queryParams);
     let params = new HttpParams();
     params = params.set('filter', filterParam);
-    return this.http.get<T>(`${this.API_URI}/${objId}`, { params }).pipe(
+    return this.http.get<T>(`${env.serverUrl}${this.API_URI}/${objId}`, { params }).pipe(
       catchError((err) => throwError(err))
     );
 
@@ -106,7 +107,7 @@ export class BaseHTTPService<T> {
     const filterParam = JSON.stringify(where);
     let params = new HttpParams();
     params = params.set('where', filterParam);
-    return this.http['delete']<{ count: number }>(this.API_URI, { params }).pipe(
+    return this.http['delete']<{ count: number }>(`${env.serverUrl}${this.API_URI}`, { params }).pipe(
       catchError((err) => throwError(err))
     );
 

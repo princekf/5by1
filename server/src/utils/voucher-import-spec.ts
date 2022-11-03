@@ -7,5 +7,4 @@ export interface VoucherImport {
     VoucherType: string;
     PrimaryLedger: string;
     CompoundLedger: string;
-    CostCentre: string;
 }

@@ -1,10 +1,8 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { CostCentreService } from '@fboservices/accounting/cost-centre.service';
 import { VoucherService } from '@fboservices/accounting/voucher.service';
 import { VoucherDocumentService } from '@fboservices/accounting/voucher-document.service';
-import { CostCentre } from '@shared/entity/accounting/cost-centre';
 import { Ledger } from '@shared/entity/accounting/ledger';
 import { Transaction, TransactionType } from '@shared/entity/accounting/transaction';
 import { Voucher, VoucherType } from '@shared/entity/accounting/voucher';
@@ -58,9 +56,7 @@ export class CreateVoucherComponent implements OnInit {
 
   transactionsDS = new MatTableDataSource<AbstractControl>();
 
-  displayedColumns: string[] = [ 'ledger', 'amount', 'costCentre', 'details', 'action' ];
-
-  costCentresFiltered: Array<CostCentre> = [];
+  displayedColumns: string[] = [ 'ledger', 'amount', 'details', 'action' ];
 
   finYear: FinYear;
 
@@ -75,25 +71,11 @@ export class CreateVoucherComponent implements OnInit {
     public readonly route: ActivatedRoute,
     private voucherService: VoucherService,
     private ledgerService: LedgerService,
-    private costCentreService: CostCentreService,
     private readonly voucherDocumentService: VoucherDocumentService,
     private readonly fBuilder: FormBuilder,
     private readonly toastr: ToastrService,
     @Inject(DOCUMENT) private document: Document,) { }
 
-    private handleCostCentreAutoChange = (costCentreQ: unknown) => {
-
-      if (typeof costCentreQ !== 'string') {
-
-        this.costCentresFiltered = [];
-        return;
-
-      }
-      this.costCentreService.search({ where: {name: {like: costCentreQ,
-        options: 'i'}} })
-        .subscribe((costCentres) => (this.costCentresFiltered = costCentres));
-
-    }
 
     private handleLedgerAutoChange = (ledgerQ: unknown) => {
 
@@ -137,14 +119,12 @@ export class CreateVoucherComponent implements OnInit {
       const ledger = this.fBuilder.control(transaction?.ledger ?? '', [ Validators.required, ]);
       const amount = this.fBuilder.control(transaction?.amount ?? 0, [ Validators.required, ]);
       const type = this.fBuilder.control(transaction?.type ?? TransactionType.CREDIT, [ Validators.required, ]);
-      const costCentre = this.fBuilder.control(transaction?.costCentre ?? '');
       const details = this.fBuilder.control(transaction?.details ?? '');
 
       return this.fBuilder.group({
         ledger,
         amount,
         type,
-        costCentre,
         details,
       });
 
@@ -153,7 +133,6 @@ export class CreateVoucherComponent implements OnInit {
     private createPrimaryTransactionForm = (transaction?: Transaction): FormGroup => {
 
       const fGroup = this.createTransactionForm(transaction);
-      fGroup.controls.costCentre.valueChanges.subscribe(this.handleCostCentreAutoChange);
       fGroup.controls.ledger.valueChanges.subscribe(this.handleLedgerAutoChange);
       return fGroup;
 
@@ -178,7 +157,6 @@ export class CreateVoucherComponent implements OnInit {
 
       const fGroup = this.createTransactionForm(transaction);
       fGroup.controls.ledger.valueChanges.subscribe(this.handleLedgerCompoundAutoChange);
-      fGroup.controls.costCentre.valueChanges.subscribe(this.handleCostCentreAutoChange);
       fGroup.controls.amount.valueChanges.subscribe(this.updateAmountChanges);
       return fGroup;
 
@@ -240,25 +218,11 @@ export class CreateVoucherComponent implements OnInit {
       .pipe(switchMap((voucher) => {
 
         const ledgerIds: Array<string> = [];
-        const cCentreIds: Array<string> = [];
         voucher.transactions.forEach((trns) => {
 
           ledgerIds.push(trns.ledgerId);
-          if (trns.costCentreId) {
-
-            cCentreIds.push(trns.costCentreId);
-
-          }
 
         });
-        const queryDataC: QueryData = {
-          where: {
-            id: {
-              inq: cCentreIds
-            }
-          }
-        };
-        const findcCentresL$ = this.costCentreService.search(queryDataC);
 
         const queryDataL: QueryData = {
           where: {
@@ -268,7 +232,7 @@ export class CreateVoucherComponent implements OnInit {
           }
         };
         const findLedgersL$ = this.ledgerService.search(queryDataL);
-        return zip(of(voucher), findLedgersL$, findcCentresL$);
+        return zip(of(voucher), findLedgersL$);
 
       }));
 
@@ -290,7 +254,7 @@ export class CreateVoucherComponent implements OnInit {
 
       this.loading = true;
       this.createTrnasactionDetailsObserver(tId)
-        .subscribe(([ voucher, ledgers, cCentres ]) => {
+        .subscribe(([ voucher, ledgers ]) => {
 
           this.voucherDocumentService.getAttatchments(tId).subscribe((docs) => {
 
@@ -299,18 +263,11 @@ export class CreateVoucherComponent implements OnInit {
           });
 
           this.formHeader = `Update ${voucher.number}`;
-          const cMap: Record<string, CostCentre> = {};
-          cCentres.forEach((ldg) => (cMap[ldg.id] = ldg));
           const lMap: Record<string, Ledger> = {};
           ledgers.forEach((ldg) => (lMap[ldg.id] = ldg));
           voucher.transactions.forEach((trn) => {
 
             trn.ledger = lMap[trn.ledgerId];
-            if (trn.costCentreId) {
-
-              trn.costCentre = cMap[trn.costCentreId];
-
-            }
 
           });
           this.fillTransactionsInForm(voucher);
@@ -412,18 +369,12 @@ export class CreateVoucherComponent implements OnInit {
     transaction.ledgerId = transaction.ledger.id;
     transaction.type =
     this.primaryTransactionType === TransactionType.CREDIT ? TransactionType.DEBIT : TransactionType.CREDIT;
-    if (transaction.costCentre?.id) {
-
-      transaction.costCentreId = transaction.costCentre.id;
-
-    }
-    const {id, type, ledgerId, amount, details, costCentreId} = transaction;
+    const {id, type, ledgerId, amount, details} = transaction;
     return {id,
       type,
       ledgerId,
       amount,
       details,
-      costCentreId,
       order};
 
   }
@@ -439,16 +390,14 @@ export class CreateVoucherComponent implements OnInit {
     }
     const order = 1;
     primaryTransaction.type = this.primaryTransactionType;
-    const {id, type, ledger, amount, details, costCentre} = primaryTransaction;
+    const {id, type, ledger, amount, details} = primaryTransaction;
     const ledgerId = ledger?.id;
-    const costCentreId = costCentre?.id;
     transactions.push({id,
       type,
       order,
       ledgerId,
       amount: Number(amount),
-      details,
-      costCentreId});
+      details});
 
     for (let idx = 0; idx < compoundTransactions.length; idx++) {
 

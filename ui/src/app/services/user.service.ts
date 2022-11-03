@@ -9,7 +9,7 @@ import { MyAccountResp } from '@shared/util/my-account-resp';
 import { BaseHTTPService } from './base-http.service';
 import { CaptchaResp } from '@fboutil/types/captcha.resp';
 import { SignupParams } from '@fboutil/types/signup-req';
-
+import { environment as env } from '@fboenvironments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class UserService extends BaseHTTPService<User> {
 
   captcha(): Observable<CaptchaResp> {
 
-    return this.http.get<CaptchaResp>(`${SIGNUP_API_URI}/captcha`).pipe(
+    return this.http.get<CaptchaResp>(`${env.serverUrl}${SIGNUP_API_URI}/captcha`).pipe(
       catchError((err) => throwError(() => err))
     );
 
@@ -28,7 +28,7 @@ export class UserService extends BaseHTTPService<User> {
 
   initiateSignUp(params: SignupParams): Observable<SignupParams> {
 
-    return this.http.post<SignupParams>(`${SIGNUP_API_URI}/initiate-signup`, params).pipe(
+    return this.http.post<SignupParams>(`${env.serverUrl}${SIGNUP_API_URI}/initiate-signup`, params).pipe(
       catchError((err) => throwError(() => err))
     );
 
@@ -36,13 +36,13 @@ export class UserService extends BaseHTTPService<User> {
 
   fetchSignUpData(token: string): Observable<{email: string}> {
 
-    return this.http.get<{email: string}>(`${SIGNUP_API_URI}/validate-signup/${token}`, {});
+    return this.http.get<{email: string}>(`${env.serverUrl}${SIGNUP_API_URI}/validate-signup/${token}`, {});
 
   }
 
   login(user: { email: string; password: string; }): Observable<AuthResponse> {
 
-    return this.http.post<AuthResponse>(LOGIN_API_URI, user)
+    return this.http.post<AuthResponse>(`${env.serverUrl}${LOGIN_API_URI}`, user)
       .pipe(shareReplay())
       .pipe(
         catchError((err) => throwError(() => err))
@@ -52,7 +52,7 @@ export class UserService extends BaseHTTPService<User> {
 
   findMe(): Observable<SessionUser> {
 
-    return this.http.get<SessionUser>(ME_API_URI)
+    return this.http.get<SessionUser>(`${env.serverUrl}${ME_API_URI}`)
       .pipe(shareReplay())
       .pipe(
         catchError((err) => throwError(() => err))
@@ -62,7 +62,7 @@ export class UserService extends BaseHTTPService<User> {
 
   myAccount(): Observable<MyAccountResp> {
 
-    return this.http.get<MyAccountResp>(MY_ACCOUNT_API_URI)
+    return this.http.get<MyAccountResp>(`${env.serverUrl}${MY_ACCOUNT_API_URI}`)
       .pipe(shareReplay())
       .pipe(
         catchError((err) => throwError(() => err))
@@ -72,7 +72,7 @@ export class UserService extends BaseHTTPService<User> {
 
   changeFinYear(finYearId: string): Observable<{token: string}> {
 
-    return this.http.post<{token: string}>(SWITCH_FIN_YEAR_API_URI, {finYearId})
+    return this.http.post<{token: string}>(`${env.serverUrl}${SWITCH_FIN_YEAR_API_URI}`, {finYearId})
       .pipe(shareReplay())
       .pipe(
         catchError((err) => throwError(() => err))
