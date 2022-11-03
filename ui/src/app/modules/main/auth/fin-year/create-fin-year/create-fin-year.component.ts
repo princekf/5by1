@@ -125,16 +125,16 @@ export class CreateFinYearComponent implements OnInit {
 
       }
       const branch = this.form.controls.branch.value;
-      if(!branch){
+      if (!branch) {
 
         this.toastr.error('Please select a branch', 'Select Branch');
         return;
 
       }
-      
+
       this.finYearService.search({ where: {name: {like: customerQ,
         options: 'i'},
-        branchId: branch?.id ?? ''} })
+      branchId: branch?.id ?? ''} })
         .subscribe((defaultFinYears) => (this.finyearFiltered = defaultFinYears));
 
     });
@@ -144,8 +144,10 @@ export class CreateFinYearComponent implements OnInit {
   extractNameOfObject = (obj: {name: string}): string => obj.name;
 
   findNameById = (id: string): string => {
+
     const fFinYear = this.finyearFiltered.find((fObj) => fObj.id === id);
     return fFinYear?.name ?? '';
+
   };
 
   upsertFinyear(): void {

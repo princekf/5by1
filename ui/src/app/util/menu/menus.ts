@@ -214,7 +214,7 @@ export const findPermittedMenus = (): MenuNode[] => {
 
     const sessionUser:SessionUser = JSON.parse(userS);
     const { user } = sessionUser;
-    const {permissions} = user;
+    const { permissions } = user;
     const permittedMenus = [];
     for (const menu of menus) {
 
