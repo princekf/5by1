@@ -104,17 +104,17 @@ export const createQueryStringFromFilterForm =
         where[fieldName] = createStringCondition(filterForm, fieldName, typeName);
         break;
       case 'void':
-        where[fieldName] = {ne: filterForm.controls[fieldName]?.value};
+        where[fieldName] = {ne: filterForm?.controls[fieldName]?.value};
         break;
       case 'number':
         const whereNumberN = {};
-        whereNumberN[filterForm.controls[typeName]?.value] = filterForm.controls[fieldName]?.value;
+        whereNumberN[filterForm?.controls[typeName]?.value] = filterForm.controls[fieldName]?.value;
         where[fieldName] = whereNumberN;
         break;
       case 'date':
         const whereNumber = {};
-        const dVal = filterForm.controls[fieldName]?.value;
-        whereNumber[filterForm.controls[typeName]?.value] = dayjs(dVal).format('YYYY-MM-DD');
+        const dVal = filterForm?.controls[fieldName]?.value;
+        whereNumber[filterForm?.controls[typeName]?.value] = dayjs(dVal).format('YYYY-MM-DD');
         where[fieldName] = whereNumber;
         break;
 

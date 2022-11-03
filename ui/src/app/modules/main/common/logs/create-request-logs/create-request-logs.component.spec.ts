@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RequestLogsComponent } from './request-logs.component';
+import { CreateRequestLogsComponent } from './create-request-logs.component';
 
-describe('RequestLogsComponent', () => {
+describe('CreateRequestLogsComponent', () => {
 
-  let component: RequestLogsComponent;
-  let fixture: ComponentFixture<RequestLogsComponent>;
+  let component: CreateRequestLogsComponent;
+  let fixture: ComponentFixture<CreateRequestLogsComponent>;
 
   beforeEach(async() => {
 
     await TestBed.configureTestingModule({
-      declarations: [ RequestLogsComponent ]
+      declarations: [ CreateRequestLogsComponent ]
     })
       .compileComponents();
 
@@ -18,7 +18,7 @@ describe('RequestLogsComponent', () => {
 
   beforeEach(() => {
 
-    fixture = TestBed.createComponent(RequestLogsComponent);
+    fixture = TestBed.createComponent(CreateRequestLogsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
 

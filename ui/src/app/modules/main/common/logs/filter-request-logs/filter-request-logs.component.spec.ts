@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RequestLogsComponent } from './request-logs.component';
+import { FilterRequestLogsComponent } from './filter-request-logs.component';
 
-describe('RequestLogsComponent', () => {
+describe('FilterRequestLogsComponent', () => {
 
-  let component: RequestLogsComponent;
-  let fixture: ComponentFixture<RequestLogsComponent>;
+  let component: FilterRequestLogsComponent;
+  let fixture: ComponentFixture<FilterRequestLogsComponent>;
 
   beforeEach(async() => {
 
     await TestBed.configureTestingModule({
-      declarations: [ RequestLogsComponent ]
+      declarations: [ FilterRequestLogsComponent ]
     })
       .compileComponents();
 
@@ -18,7 +18,7 @@ describe('RequestLogsComponent', () => {
 
   beforeEach(() => {
 
-    fixture = TestBed.createComponent(RequestLogsComponent);
+    fixture = TestBed.createComponent(FilterRequestLogsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
 

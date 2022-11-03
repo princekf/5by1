@@ -1,1 +1,3 @@
-<p>request-logs works!</p>
+
+<app-data-table tableHeader="Request Logs" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" 
+[loading]="loading" [tableData]="reqLog" [columnParsingFn]="columnParsingFn" editUri="/logs/create" [filterItem]="filterItem"></app-data-table>
