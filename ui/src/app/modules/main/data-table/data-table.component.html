@@ -1,11 +1,11 @@
 <div class="table-header-container">
   <span class="table-header">{{tableHeader}}</span>
   <div class="empy-space"></div>
-  <button *ngIf="deleteUri" mat-flat-button class="filter-button" [disabled]="selection.selected.length < 1"
+  <button *ngIf="deleteUri && isPermitted('delete')" mat-flat-button class="filter-button" [disabled]="selection.selected.length < 1"
   (click)="deleteSelected()">
     <mat-icon>delete</mat-icon>
   </button>
-  <button *ngIf="editUri" mat-flat-button class="filter-button" [disabled]="selection.selected.length !== 1"
+  <button *ngIf="editUri && isPermitted('update')" mat-flat-button class="filter-button" [disabled]="selection.selected.length !== 1"
   (click)="editSelected()">
     <mat-icon>edit</mat-icon>
   </button>

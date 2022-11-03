@@ -1,2 +1,2 @@
 <app-tool-bar createUri="/fin-year/create" mainHeader="Fin Year" (exportClickEvent)="exportExcel()"></app-tool-bar>
-<app-data-table tableHeader="List of Fin Years" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="FinYears" editUri="/fin-year/create" deleteUri="/fin-year/delete" [filterItem]="filterItem" [columnParsingFn]="columnParsingFn"></app-data-table>
+<app-data-table tableHeader="List of Fin Years" [displayedColumns]="displayedColumns" [columnHeaders]="columnHeaders" [loading]="loading" [tableData]="FinYears" editUri="/fin-year/create" deleteUri="/fin-year/delete" [filterItem]="filterItem" [columnParsingFn]="columnParsingFn" [actionProvider]="'finyear'"></app-data-table>

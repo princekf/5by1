@@ -4,7 +4,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MainService } from '@fboservices/main.service';
-import { PAGE_SIZE_OPTIONS } from '@fboutil/constants';
+import { LOCAL_USER_KEY, PAGE_SIZE_OPTIONS } from '@fboutil/constants';
 import { QueryData } from '@shared/util/query-data';
 import { ListQueryRespType } from '@fboutil/types/list.query.resp';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -12,6 +12,7 @@ import { fboTableRowExpandAnimation, findColumnValue as _findColumnValue } from 
 import { TableFilterDirective } from '../directives/table-filter/table-filter.directive';
 import { FilterItem } from '../directives/table-filter/filter-item';
 import { FilterComponent } from '../directives/table-filter/filter-component';
+import { SessionUser } from '@shared/util/session-user';
 
 @Component({
   selector: 'app-data-table',
@@ -28,6 +29,9 @@ export class DataTableComponent {
   @Input() numberColumns: Array<string> = [];
 
   @Input() sortDisabledColumns: Array<string> = [];
+
+  @Input() actionProvider: string|null=null;
+
 
   private _tableData:ListQueryRespType<unknown>;
 
@@ -101,12 +105,16 @@ export class DataTableComponent {
 
   @Input() filterItem: FilterItem;
 
-  @ViewChild(TableFilterDirective, {static: true}) filterHost!: TableFilterDirective;
+  @ViewChild(TableFilterDirective, { static: true }) filterHost!: TableFilterDirective;
+
+  permission: Record<string, boolean>
 
   constructor(private router:Router,
     private activatedRoute: ActivatedRoute,
     private readonly mainService: MainService,
-    private componentFactoryResolver: ComponentFactoryResolver) { }
+    private componentFactoryResolver: ComponentFactoryResolver) {
+
+  }
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected(): boolean {
@@ -144,6 +152,15 @@ export class DataTableComponent {
   };
 
   ngOnInit():void {
+
+    const userS = localStorage.getItem(LOCAL_USER_KEY);
+    if (userS) {
+
+      const sessionUser: SessionUser = JSON.parse(userS);
+      const { user } = sessionUser;
+      this.permission = user.permissions[this.actionProvider]?.operations;
+
+    }
 
     this.activatedRoute.queryParams.subscribe((value) => {
 
@@ -271,6 +288,17 @@ export class DataTableComponent {
 
     }
     return 'after';
+
+  }
+
+  isPermitted(action: string):boolean {
+
+    if (!this.permission) {
+
+      return true;
+
+    }
+    return this.permission[action] ?? false;
 
   }
 
