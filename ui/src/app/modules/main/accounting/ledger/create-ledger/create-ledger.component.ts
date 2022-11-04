@@ -26,7 +26,13 @@ export class CreateLedgerComponent implements OnInit {
 
   goToPreviousPage = _goToPreviousPage;
 
+  optionalField = true;
+
+  defaultField = true
+
   loading = true;
+
+  transType = [ 'Credit', 'Debit' ];
 
   formHeader = 'Create Ledger';
 
@@ -113,6 +119,33 @@ export class CreateLedgerComponent implements OnInit {
   private initValueChanges = () => {
 
     this.form.controls.ledgerGroup.valueChanges.subscribe((ledgerQ:unknown) => {
+
+      if (this.form.controls.ledgerGroup.value.name === 'Income' || this.form.controls.ledgerGroup.value.name === 'Expenses') {
+
+        this.optionalField = false;
+
+      } else {
+
+        this.optionalField = true;
+
+      }
+
+      if (this.form.controls.ledgerGroup.value.name === 'Assets') {
+
+        this.transType = [ 'Debit' ];
+        this.form.controls.obType.setValue(TransactionType.DEBIT);
+
+      } else if (this.form.controls.ledgerGroup.value.name === 'Liabilities') {
+
+        this.transType = [ 'Credit' ];
+        this.form.controls.obType.setValue(TransactionType.CREDIT);
+
+      } else {
+
+        this.transType = [ 'Credit', 'Debit' ];
+        this.form.controls.obType.setValue(TransactionType.CREDIT);
+
+      }
 
       if (typeof ledgerQ !== 'string') {
 
