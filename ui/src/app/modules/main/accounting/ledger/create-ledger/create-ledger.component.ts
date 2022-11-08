@@ -25,9 +25,9 @@ const EXTRA_CONTROL_NAME = 'extras';
 })
 export class CreateLedgerComponent implements OnInit {
 
-  asts = []
+  assetsLGS = []
 
-  liblt = []
+  liabilitiesLGS = []
 
   goToPreviousPage = _goToPreviousPage;
 
@@ -71,8 +71,8 @@ export class CreateLedgerComponent implements OnInit {
     const assetLiablity = zip(childsofassets$, childsofliabilities$);
     const subs = assetLiablity.subscribe(([ asts, liblt ]) => {
 
-      this.asts = asts;
-      this.liblt = liblt;
+      this.assetsLGS = asts;
+      this.liabilitiesLGS = liblt;
       this.initValueChanges();
 
     });
@@ -139,13 +139,13 @@ export class CreateLedgerComponent implements OnInit {
       if (typeof ledgerQ !== 'string') {
 
         const selectedLdgId = this.form.controls.ledgerGroup.value.id;
-        if (this.asts.find((ldGrp) => selectedLdgId === ldGrp.id)) {
+        if (this.assetsLGS.find((ldGrp) => selectedLdgId === ldGrp.id)) {
 
           this.transType = [ 'Debit' ];
           this.form.controls.obType.setValue(TransactionType.DEBIT);
           this.optionalField = true;
 
-        } else if (this.liblt.find((ldGrp) => selectedLdgId === ldGrp.id)) {
+        } else if (this.liabilitiesLGS.find((ldGrp) => selectedLdgId === ldGrp.id)) {
 
           this.transType = [ 'Credit' ];
           this.form.controls.obType.setValue(TransactionType.CREDIT);
@@ -154,6 +154,7 @@ export class CreateLedgerComponent implements OnInit {
         } else {
 
           this.optionalField = false;
+          this.form.controls.obAmount.setValue(0);
 
         }
 
