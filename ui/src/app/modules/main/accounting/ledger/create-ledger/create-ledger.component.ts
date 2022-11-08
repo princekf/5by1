@@ -9,6 +9,7 @@ import { LedgerGroupService } from '@fboservices/accounting/ledger-group.service
 import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 import { QueryData } from '@shared/util/query-data';
 import { TransactionType } from '@shared/entity/accounting/transaction';
+import { zip } from 'rxjs';
 
 interface ExtrasInteface {
   extras : {
@@ -23,6 +24,10 @@ const EXTRA_CONTROL_NAME = 'extras';
   styleUrls: [ './create-ledger.component.scss', '../../../../../util/styles/fbo-form-style.scss' ]
 })
 export class CreateLedgerComponent implements OnInit {
+
+  asts = []
+
+  liblt = []
 
   goToPreviousPage = _goToPreviousPage;
 
@@ -60,7 +65,18 @@ export class CreateLedgerComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.initValueChanges();
+    const childsofassets$ = this.ledgergroupService.childs({ code: { inq: [ 'ASTS' ] } });
+    const childsofliabilities$ = this.ledgergroupService.childs({ code: { inq: [ 'LBLTS' ] } });
+
+    const assetLiablity = zip(childsofassets$, childsofliabilities$);
+    const subs = assetLiablity.subscribe(([ asts, liblt ]) => {
+
+      this.asts = asts;
+      this.liblt = liblt;
+      this.initValueChanges();
+
+    });
+
 
     const tId = this.route.snapshot.queryParamMap.get('id');
 
@@ -120,47 +136,44 @@ export class CreateLedgerComponent implements OnInit {
 
     this.form.controls.ledgerGroup.valueChanges.subscribe((ledgerQ:unknown) => {
 
-      if (this.form.controls.ledgerGroup.value.name === 'Income' || this.form.controls.ledgerGroup.value.name === 'Expenses') {
-
-        this.optionalField = false;
-
-      } else {
-
-        this.optionalField = true;
-
-      }
-
-      if (this.form.controls.ledgerGroup.value.name === 'Assets') {
-
-        this.transType = [ 'Debit' ];
-        this.form.controls.obType.setValue(TransactionType.DEBIT);
-
-      } else if (this.form.controls.ledgerGroup.value.name === 'Liabilities') {
-
-        this.transType = [ 'Credit' ];
-        this.form.controls.obType.setValue(TransactionType.CREDIT);
-
-      } else {
-
-        this.transType = [ 'Credit', 'Debit' ];
-        this.form.controls.obType.setValue(TransactionType.CREDIT);
-
-      }
-
       if (typeof ledgerQ !== 'string') {
+
+        const selectedLdgId = this.form.controls.ledgerGroup.value.id;
+        if (this.asts.find((ldGrp) => selectedLdgId === ldGrp.id)) {
+
+          this.transType = [ 'Debit' ];
+          this.form.controls.obType.setValue(TransactionType.DEBIT);
+          this.optionalField = true;
+
+        } else if (this.liblt.find((ldGrp) => selectedLdgId === ldGrp.id)) {
+
+          this.transType = [ 'Credit' ];
+          this.form.controls.obType.setValue(TransactionType.CREDIT);
+          this.optionalField = true;
+
+        } else {
+
+          this.optionalField = false;
+
+        }
+
 
         const lGroup:LedgerGroup & ExtrasInteface = this.form.controls.ledgerGroup.value;
         if (!lGroup.extras) {
 
+
           return;
 
         }
+
         if (this.form.contains(EXTRA_CONTROL_NAME)) {
 
           this.form.removeControl(EXTRA_CONTROL_NAME);
 
         }
         this.form.addControl(EXTRA_CONTROL_NAME, this.createExtraFormGroup(lGroup.extras));
+
+
         return;
 
       }
