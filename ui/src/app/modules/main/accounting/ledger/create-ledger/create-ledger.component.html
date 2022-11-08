@@ -42,7 +42,7 @@
     </mat-form-field>
     <mat-form-field>
       <mat-select formControlName="obType">
-    <mat-option *ngFor="let transformer of transType" [value]="transformer">{{ transformer }}</mat-option>
+    <mat-option *ngFor="let transfer of transType" [value]="transfer">{{ transfer }}</mat-option>
         </mat-select>
       <mat-error *ngIf="form.controls['obType'].hasError('required')">Please select opening balance type</mat-error>
     </mat-form-field>
