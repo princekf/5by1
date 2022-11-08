@@ -69,10 +69,10 @@ export class CreateLedgerComponent implements OnInit {
     const childsofliabilities$ = this.ledgergroupService.childs({ code: { inq: [ 'LBLTS' ] } });
 
     const assetLiablity = zip(childsofassets$, childsofliabilities$);
-    const subs = assetLiablity.subscribe(([ asts, liblt ]) => {
+    const subs = assetLiablity.subscribe(([ assetsLGS, liabilitiesLGS ]) => {
 
-      this.assetsLGS = asts;
-      this.liabilitiesLGS = liblt;
+      this.assetsLGS = assetsLGS;
+      this.liabilitiesLGS = liabilitiesLGS;
       this.initValueChanges();
 
     });
