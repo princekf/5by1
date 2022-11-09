@@ -34,7 +34,7 @@
     </mat-form-field>
   </p>
 
-  <p>
+  <p *ngIf = "optionalField">
     <mat-form-field>
       <mat-label>Opening Balance </mat-label>
       <input formControlName="obAmount" matInput placeholder="Opening Balance" type="number">
@@ -42,8 +42,7 @@
     </mat-form-field>
     <mat-form-field>
       <mat-select formControlName="obType">
-        <mat-option value="Credit">Credit</mat-option>
-        <mat-option value="Debit">Debit</mat-option>
+    <mat-option *ngFor="let transfer of transType" [value]="transfer">{{ transfer }}</mat-option>
         </mat-select>
       <mat-error *ngIf="form.controls['obType'].hasError('required')">Please select opening balance type</mat-error>
     </mat-form-field>

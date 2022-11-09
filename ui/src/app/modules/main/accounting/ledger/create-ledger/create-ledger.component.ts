@@ -9,6 +9,7 @@ import { LedgerGroupService } from '@fboservices/accounting/ledger-group.service
 import { LedgerGroup } from '@shared/entity/accounting/ledger-group';
 import { QueryData } from '@shared/util/query-data';
 import { TransactionType } from '@shared/entity/accounting/transaction';
+import { zip } from 'rxjs';
 
 interface ExtrasInteface {
   extras : {
@@ -24,9 +25,19 @@ const EXTRA_CONTROL_NAME = 'extras';
 })
 export class CreateLedgerComponent implements OnInit {
 
+  assetsLGS = []
+
+  liabilitiesLGS = []
+
   goToPreviousPage = _goToPreviousPage;
 
+  optionalField = true;
+
+  defaultField = true
+
   loading = true;
+
+  transType = [ 'Credit', 'Debit' ];
 
   formHeader = 'Create Ledger';
 
@@ -54,7 +65,18 @@ export class CreateLedgerComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.initValueChanges();
+    const childsofassets$ = this.ledgergroupService.childs({ code: { inq: [ 'ASTS' ] } });
+    const childsofliabilities$ = this.ledgergroupService.childs({ code: { inq: [ 'LBLTS' ] } });
+
+    const assetLiablity = zip(childsofassets$, childsofliabilities$);
+    const subs = assetLiablity.subscribe(([ assetsLGS, liabilitiesLGS ]) => {
+
+      this.assetsLGS = assetsLGS;
+      this.liabilitiesLGS = liabilitiesLGS;
+      this.initValueChanges();
+
+    });
+
 
     const tId = this.route.snapshot.queryParamMap.get('id');
 
@@ -116,18 +138,43 @@ export class CreateLedgerComponent implements OnInit {
 
       if (typeof ledgerQ !== 'string') {
 
+        const selectedLdgId = this.form.controls.ledgerGroup.value.id;
+        if (this.assetsLGS.find((ldGrp) => selectedLdgId === ldGrp.id)) {
+
+          this.transType = [ 'Debit' ];
+          this.form.controls.obType.setValue(TransactionType.DEBIT);
+          this.optionalField = true;
+
+        } else if (this.liabilitiesLGS.find((ldGrp) => selectedLdgId === ldGrp.id)) {
+
+          this.transType = [ 'Credit' ];
+          this.form.controls.obType.setValue(TransactionType.CREDIT);
+          this.optionalField = true;
+
+        } else {
+
+          this.optionalField = false;
+          this.form.controls.obAmount.setValue(0);
+
+        }
+
+
         const lGroup:LedgerGroup & ExtrasInteface = this.form.controls.ledgerGroup.value;
         if (!lGroup.extras) {
+
 
           return;
 
         }
+
         if (this.form.contains(EXTRA_CONTROL_NAME)) {
 
           this.form.removeControl(EXTRA_CONTROL_NAME);
 
         }
         this.form.addControl(EXTRA_CONTROL_NAME, this.createExtraFormGroup(lGroup.extras));
+
+
         return;
 
       }
